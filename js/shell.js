@@ -271,7 +271,7 @@
     host.innerHTML =
       '<div class="fixed right-4 bottom-6 z-[600] flex flex-col items-end gap-2">' +
         '<div data-ai-panel class="hidden card shadow-neo w-80 p-3 mb-1">' +
-          '<div class="flex items-center justify-between mb-2"><span class="font-bold text-sm">🤖 Hỏi AI — trợ lý học tập</span>' +
+          '<div class="flex items-center justify-between mb-2"><span class="font-bold text-sm">🤖 Tiểu Ngữ — trợ lý AI của Nhai HSK</span>' +
           '<button type="button" data-ai-close class="btn-ghost w-7 h-7 text-xs">✕</button></div>' +
           '<div data-ai-log class="space-y-2 max-h-64 overflow-y-auto text-sm">' +
             '<div class="bg-[var(--nhai-soft)] rounded-lg p-2">Xin chào! Mình là trợ lý Nhai HSK. Hỏi về pinyin, từ vựng hoặc bấm một bài để học nhé!</div>' +

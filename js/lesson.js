@@ -56,7 +56,7 @@
     $("#count-badge").textContent = S.words.length + " từ vựng";
     $("#lesson-title").textContent = S.lesson.title || "Bài " + num;
     $("#lesson-sub").textContent = "Bài " + num + " — Từ vựng " + bookLabel;
-    document.title = "Bài " + num + ": " + (S.lesson.title || "") + " | Nhai HSK";
+    document.title = (S.lesson.title || "Bài " + num) + " · HSK 1 3.0 | Nhai HSK";
   }
 
   /* ---------- sidebar ---------- */
