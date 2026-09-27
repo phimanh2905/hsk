@@ -70,6 +70,6 @@
     host.innerHTML = list.map(section).join("");
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
-  else render();
+  if (document.readyState === "complete") render();
+  else document.addEventListener("DOMContentLoaded", render);
 })();

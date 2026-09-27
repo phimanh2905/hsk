@@ -71,6 +71,7 @@
       if (badge === undefined || badge === null) {
         badge = typeof mode.defaultBadge === "function" ? mode.defaultBadge(S) : mode.defaultBadge;
         if (badge === undefined || badge === null) badge = meta.defaultBadge;
+        if (badge === undefined || badge === null) badge = "Chưa học";
       }
       var btn = NHAI.el(
         '<button type="button" data-mode="' + id + '" class="w-full flex items-center justify-between gap-2 px-3 py-2 mb-2 text-sm text-left rounded-lg border-2 ' +
@@ -240,6 +241,6 @@
     switchMode("flashcard");
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  if (document.readyState === "complete") init();
+  else document.addEventListener("DOMContentLoaded", init);
 })();

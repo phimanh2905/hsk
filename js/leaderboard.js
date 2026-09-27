@@ -75,9 +75,9 @@
     render();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
+  if (document.readyState === "complete") {
     boot();
+  } else {
+    document.addEventListener("DOMContentLoaded", boot);
   }
 })();

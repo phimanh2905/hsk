@@ -138,6 +138,6 @@
     buildRound();
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
+  if (document.readyState === "complete") init();
+  else document.addEventListener("DOMContentLoaded", init);
 })();

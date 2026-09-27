@@ -474,6 +474,6 @@
     if (tpl && TPLS[tpl]) renderTemplate(tpl);
     else renderHub();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-  else boot();
+  if (document.readyState === "complete") boot();
+  else document.addEventListener("DOMContentLoaded", boot);
 })();

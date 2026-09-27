@@ -23,9 +23,9 @@
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderCourses);
-  } else {
+  if (document.readyState === "complete") {
     renderCourses();
+  } else {
+    document.addEventListener("DOMContentLoaded", renderCourses);
   }
 })();
