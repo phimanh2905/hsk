@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài tập Pinyin | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/pinyin-utils.js" defer></script>
+  <script src="js/data/pinyin.js" defer></script>
+  <script src="js/pinyin-practice.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold">Bài tập Pinyin</h1>
+      <p class="text-sm mt-2">Luyện nghe và gõ pinyin — nhận biết thanh điệu.</p>
+    </header>
+
+    <section class="max-w-xl mx-auto card shadow-neo p-5 sm:p-6">
+      <div class="flex items-center justify-between mb-4">
+        <span data-counter class="pill text-xs py-0.5 font-bold">Câu 1/10</span>
+        <span data-score class="text-sm font-bold text-[var(--nhai-muted)]">Đúng 0</span>
+      </div>
+
+      <div id="quiz-area"></div>
+    </section>
+  </main>
+</body>
+</html>

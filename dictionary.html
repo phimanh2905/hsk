@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tra từ điển | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/dictionary.js" defer></script>
+  <script src="js/draw-modal.js" defer></script>
+  <script src="js/dictionary.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-4xl px-4 py-6">
+    <h1 class="text-3xl font-extrabold tracking-tight mb-2">Tra từ điển</h1>
+    <p class="text-[var(--nhai-muted)] mb-5">Tra nghĩa tiếng Việt của từ tiếng Trung bằng chữ Hán, pinyin hoặc nghĩa tiếng Việt: kèm âm Hán Việt, phồn thể, cấp độ HSK và phát âm.</p>
+
+    <!-- Search bar -->
+    <div class="card shadow-neo p-4 mb-6">
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input id="dict-q" type="text" autocomplete="off"
+          placeholder="Chữ Hán, pinyin hoặc nghĩa tiếng Việt… (vd: 学习, xuexi, học)"
+          class="zh flex-1 border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2.5 bg-[var(--nhai-bg)] focus:outline-none focus:border-[var(--nhai-main)]">
+        <button type="button" id="dict-search" class="btn-main px-5 py-2.5" disabled>Tra từ</button>
+        <button type="button" id="dict-clear" class="btn-ghost px-3 py-2.5 hidden" title="Xoá từ khoá" aria-label="Xoá từ khoá">✕</button>
+        <button type="button" id="dict-draw" class="btn-ghost px-4 py-2.5">✍️ Vẽ chữ để tra</button>
+      </div>
+    </div>
+
+    <!-- Kết quả / gợi ý -->
+    <div id="dict-results"></div>
+  </main>
+</body>
+</html>

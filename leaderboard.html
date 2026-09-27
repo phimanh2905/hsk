@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bảng xếp hạng | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/leaderboard.js" defer></script>
+  <script src="js/leaderboard.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <h1 class="text-3xl font-extrabold tracking-tight mb-4">Bảng xếp hạng</h1>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-3" role="tablist" aria-label="Loại bảng xếp hạng">
+      <button type="button" role="tab" data-tab="xp" class="pill">XP tổng</button>
+      <button type="button" role="tab" data-tab="battle" class="pill">Đấu trí tháng</button>
+    </div>
+
+    <p class="text-sm text-[var(--nhai-muted)] mb-5">Top 10 học viên chăm nhất — mỗi câu trả lời đúng +1 XP.</p>
+
+    <!-- Danh sách 10 hàng -->
+    <ol id="lb-list" class="space-y-2 mb-8"></ol>
+
+    <!-- Cách tính điểm -->
+    <section class="card shadow-neo p-5">
+      <h2 class="font-extrabold mb-2">Cách tính điểm</h2>
+      <p class="text-sm text-[var(--nhai-muted)] mb-2">XP = mỗi câu trả lời đúng ở các chế độ Flashcard, Trắc nghiệm và các bài luyện tập (mỗi câu +1). Điểm được đồng bộ khi bạn đăng nhập.</p>
+      <p class="text-sm text-[var(--nhai-muted)]">Bảng xếp hạng cập nhật tối đa 10 phút một lần. Khi bằng điểm, ai đạt trước xếp trước.</p>
+    </section>
+  </main>
+</body>
+</html>

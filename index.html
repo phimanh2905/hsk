@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trang chủ | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/courses.js" defer></script>
+  <script src="js/home.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <!-- 1. Chào mừng -->
+    <section class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight mb-2">Chào bạn 👋</h1>
+      <p class="text-[var(--nhai-muted)]">Tiếp tục hành trình từ vựng tiếng Trung của bạn — mỗi ngày một chút là đủ.</p>
+    </section>
+
+    <!-- 2. Card nhóm Facebook -->
+    <section class="card shadow-neo p-5 mb-8 flex items-center gap-4">
+      <span class="text-3xl" aria-hidden="true">📘</span>
+      <div>
+        <p class="font-semibold mb-1">Vào nhóm học cùng mọi người nhé:</p>
+        <a href="https://www.facebook.com/groups/nhaihsk" target="_blank" rel="noopener"
+           class="font-bold text-[var(--nhai-main)] hover:underline">Nhai tiếng Trung mỗi ngày</a>
+      </div>
+    </section>
+
+    <!-- 3. Section HSK 3.0 -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-extrabold tracking-tight">HSK 3.0</h2>
+      <p class="text-sm text-[var(--nhai-muted)] mb-4">Bản cải tiến</p>
+      <div id="course-grid" class="grid sm:grid-cols-2 gap-4">
+        <!-- 7 card khóa học render bởi js/home.js -->
+      </div>
+    </section>
+
+    <!-- 4. Footer nhỏ -->
+    <p class="text-xs text-[var(--nhai-muted)] text-center py-4">Nhai tiếng Trung mỗi ngày — facebook.com/groups/nhaihsk</p>
+  </main>
+</body>
+</html>

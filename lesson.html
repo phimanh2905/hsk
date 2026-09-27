@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài học từ vựng | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/pinyin-utils.js" defer></script>
+  <script src="js/data/vocab.js" defer></script>
+  <script src="js/lesson.js" defer></script>
+  <script src="js/lesson-flashcard.js" defer></script>
+  <script src="js/lesson-quiz.js" defer></script>
+  <script src="js/lesson-typing.js" defer></script>
+  <script src="js/lesson-reading.js" defer></script>
+  <script src="js/lesson-listen.js" defer></script>
+  <script src="js/lesson-dance.js" defer></script>
+  <script src="js/lesson-battle.js" defer></script>
+  <style>
+    /* ---- flashcard 3D flip ---- */
+    .flip-scene { perspective: 1200px; }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform .5s cubic-bezier(.4,.2,.2,1);
+      transform-style: preserve-3d;
+    }
+    .flip-inner.flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    /* ---- feedback ---- */
+    @keyframes nhai-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .shake { animation: nhai-shake .35s ease; }
+
+    @keyframes nhai-jump {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(-26px) rotate(-8deg); }
+      60% { transform: translateY(-10px) rotate(8deg); }
+    }
+    .jump { animation: nhai-jump .55s ease; display: inline-block; }
+    @keyframes nhai-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .bob { animation: nhai-bob 1.1s ease-in-out infinite; display: inline-block; }
+  </style>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <!-- Header -->
+    <header class="mb-4">
+      <a id="back-link" href="course.html?book=hsk1&amp;skill=vocab" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Danh sách bài</a>
+      <div class="flex items-center gap-2 mt-2">
+        <span id="lesson-badge" class="pill pill-active text-sm">Bài 1</span>
+        <span id="count-badge" class="pill text-sm">13 từ vựng</span>
+      </div>
+      <h1 id="lesson-title" class="text-3xl font-extrabold mt-2">Xin chào!</h1>
+      <p id="lesson-sub" class="text-sm text-[var(--nhai-muted)] font-semibold">Bài 1 — Từ vựng HSK1</p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-4 no-print">
+      <button type="button" data-tab="vocab" class="pill pill-active">Từ vựng</button>
+      <button type="button" data-tab="examples" class="pill">Ví dụ</button>
+    </div>
+
+    <!-- Tab: Từ vựng (khu chế độ học + sidebar) -->
+    <section id="tab-vocab">
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+          <div id="mode-area" class="card shadow-neo p-4 sm:p-6 min-h-[430px]">
+            <div class="flex items-center justify-between mb-4">
+              <span id="mode-name" class="text-xs font-bold uppercase tracking-wide text-[var(--nhai-muted)]">Flashcard</span>
+              <span id="mode-counter" class="text-sm font-extrabold text-[var(--nhai-muted)]">1 / 13</span>
+            </div>
+            <div id="mode-content"></div>
+          </div>
+        </div>
+        <aside class="lg:col-span-1 no-print">
+          <div class="lg:sticky lg:top-4">
+            <div class="card shadow-neo p-4">
+              <h2 class="font-extrabold mb-3">Chọn chế độ học</h2>
+              <div id="sidebar-modes"></div>
+              <div class="border-t-2 border-[var(--nhai-border)] mt-3 pt-3 space-y-2">
+                <button type="button" id="btn-print" class="btn-ghost w-full py-2 text-sm">🖨️ In file</button>
+                <button type="button" id="btn-add-all" class="btn-main w-full py-2 text-sm">⭐ Thêm cả bài vào ôn tập</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Tab: Ví dụ -->
+    <section id="tab-examples" class="hidden">
+      <div class="card shadow-neo p-4 sm:p-6">
+        <h2 class="font-extrabold text-xl mb-3">Câu ví dụ của bài</h2>
+        <div id="examples-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- Danh sách từ (luôn hiện) -->
+    <section id="word-list-section" class="mt-8">
+      <h2 class="font-extrabold text-xl mb-3">Danh sách từ</h2>
+      <ol id="word-list" class="space-y-3"></ol>
+    </section>
+  </main>
+</body>
+</html>

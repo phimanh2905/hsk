@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bảng chữ cái Pinyin — Học theo lộ trình | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/roadmapPinyin.js" defer></script>
+  <script src="js/roadmap-pinyin.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-4xl px-4 py-6">
+    <section class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight mb-2">Bảng chữ cái Pinyin — Học theo lộ trình</h1>
+      <p class="text-[var(--nhai-muted)]">6 bước từ thanh mẫu đầu tiên đến tổng ôn — đi hết một lượt là bạn đọc được mọi phiên âm.</p>
+    </section>
+
+    <!-- Stepper 6 bước (render bởi js/roadmap-pinyin.js) -->
+    <nav id="stepper" class="mb-6 flex flex-wrap gap-2" aria-label="Các bước lộ trình pinyin"></nav>
+
+    <!-- Nội dung bước (render bởi js/roadmap-pinyin.js) -->
+    <div id="step-content" class="mb-6"></div>
+
+    <!-- Prev / next (render bởi js/roadmap-pinyin.js) -->
+    <div id="step-nav" class="flex items-center justify-between gap-3 mb-8"></div>
+
+    <p class="text-xs text-[var(--nhai-muted)] text-center py-4">Nhai tiếng Trung mỗi ngày — facebook.com/groups/nhaihsk</p>
+  </main>
+</body>
+</html>

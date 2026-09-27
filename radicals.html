@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>214 Bộ Thủ | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/radicals.js" defer></script>
+  <script src="js/radicals.js" defer></script>
+  <style>
+    /* ---- flashcard 3D flip (giống lesson.html) ---- */
+    .flip-scene { perspective: 1200px; }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform .5s cubic-bezier(.4,.2,.2,1);
+      transform-style: preserve-3d;
+    }
+    .flip-inner.flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+    .flip-back { transform: rotateY(180deg); }
+  </style>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold">214 Bộ Thủ</h1>
+      <p class="text-sm text-[var(--nhai-muted)] font-semibold mt-1">部首 — nền móng để nhớ mặt chữ Hán</p>
+      <p class="text-sm mt-2">214 bộ thủ — phân loại theo số nét, bấm thẻ để nghe âm đọc.</p>
+      <a href="create-file.html?tpl=radicals" class="inline-block mt-3 btn-ghost px-4 py-2 text-sm no-print">📄 Tạo file luyện viết (214 bộ)</a>
+    </header>
+
+    <!-- ============ Flashcard deck ============ -->
+    <section class="card shadow-neo p-4 sm:p-6 mb-8">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <button type="button" data-auto class="btn-ghost px-3 py-2 text-sm">⏩ Tự động</button>
+        <button type="button" data-shuffle class="btn-ghost px-3 py-2 text-sm">🔀 Xáo trộn</button>
+        <button type="button" data-autoplay class="btn-ghost px-3 py-2 text-sm" title="Cài đặt tự động phát âm khi sang thẻ">🔊 Tự phát</button>
+        <span class="ml-auto flex items-center gap-2">
+          <span data-counter class="pill text-xs py-0.5 font-bold">1 / 214</span>
+          <button type="button" data-speak class="btn-ghost w-10 h-10" title="Phát âm bộ thủ">🔊</button>
+        </span>
+      </div>
+
+      <div class="flip-scene w-full max-w-md mx-auto h-64 sm:h-72 cursor-pointer select-none" data-card>
+        <div class="flip-inner" data-inner>
+          <div class="flip-face card shadow-neo flex flex-col items-center justify-center p-4">
+            <span data-front-chip class="pill text-xs py-0.5 mb-3"></span>
+            <h2 data-front-main class="zh text-6xl sm:text-7xl font-extrabold"></h2>
+            <span class="text-xs text-[var(--nhai-muted)] mt-4">Click để lật</span>
+          </div>
+          <div class="flip-face flip-back card shadow-neo flex flex-col items-center justify-center p-4">
+            <h2 data-back-hv class="text-3xl sm:text-4xl font-extrabold text-[var(--nhai-main)]"></h2>
+            <p data-back-char class="zh text-2xl font-bold mt-2"></p>
+            <p data-back-mean class="text-base mt-2 text-center"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6 max-w-2xl mx-auto">
+        <button type="button" data-prev class="btn-ghost py-2 text-xs sm:text-sm">Thẻ trước<br><span class="text-[10px] font-normal">(←/A)</span></button>
+        <button type="button" data-unknown class="py-2 text-xs sm:text-sm font-bold rounded-lg border-2 border-red-600 text-red-600 bg-red-50">Chưa thuộc<br><span class="text-[10px] font-normal">(↓/X)</span></button>
+        <button type="button" data-known class="py-2 text-xs sm:text-sm font-bold rounded-lg border-2 border-green-600 text-green-700 bg-green-50">Đã thuộc<br><span class="text-[10px] font-normal">(↑/Z)</span></button>
+        <button type="button" data-next class="btn-ghost py-2 text-xs sm:text-sm">Thẻ sau<br><span class="text-[10px] font-normal">(→/D)</span></button>
+      </div>
+    </section>
+
+    <!-- ============ Grid theo số nét ============ -->
+    <section>
+      <h2 class="font-extrabold text-xl mb-1">Bộ thủ theo số nét</h2>
+      <p class="text-sm text-[var(--nhai-muted)] font-semibold mb-4">Bấm một thẻ để flashcard nhảy tới bộ thủ đó.</p>
+      <div id="radical-groups" class="space-y-8"></div>
+    </section>
+  </main>
+</body>
+</html>
