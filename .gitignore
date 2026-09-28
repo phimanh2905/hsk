@@ -21,3 +21,7 @@ Thumbs.db
 dist/
 build/
 *.pdf
+
+# SDD scratch / worktrees
+.worktrees/
+.superpowers/
