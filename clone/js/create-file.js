@@ -249,12 +249,56 @@
       "</div>";
   }
 
+  /* ---------- SVG nét thật (PLAN-13) ---------- */
+  function strokeData(ch) {
+    var s = window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.strokes;
+    return (s && s[ch]) || null;
+  }
+  /* fallback generic 4 nét (khung ô vuông) cho chữ chưa có data */
+  function genericStrokes() {
+    return [
+      [[20, 25], [80, 25]],
+      [[22, 27], [22, 80]],
+      [[78, 27], [78, 80]],
+      [[20, 80], [80, 80]]
+    ];
+  }
+  /* mode: "full" (đen) | "upto"(k số) — nét 0..k-1 đen, nét k đỏ | "faint" (mờ) */
+  function renderStrokeSVG(ch, mode) {
+    var data = strokeData(ch) || genericStrokes();
+    var k = typeof mode === "number" ? mode : -1;
+    var inner = "";
+    for (var i = 0; i < data.length; i++) {
+      if (k >= 0 && i > k) continue;
+      var color = (k >= 0 && i === k) ? "#c23b22" : "#17150f";
+      var op = mode === "faint" ? 0.14 : 1;
+      var pts = data[i].map(function (p) { return p[0] + "," + p[1]; }).join(" ");
+      inner += '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-opacity="' + op +
+        '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">' + inner + "</svg>";
+  }
+  /* dòng meta: Hán Việt IN HOA + pinyin + nghĩa (từ CF) */
+  function metaLine(ch) {
+    var info = cfInfo(ch);
+    var h = '<div class="text-sm mb-1">';
+    h += '<span class="font-bold">' + esc((info.hanViet || "").toUpperCase() || "—") + "</span>";
+    if (info.pinyin) h += ' <span class="zh">' + esc(info.pinyin) + "</span>";
+    if (info.meaning) h += ' <span style="color:#888">— ' + esc(info.meaning) + "</span>";
+    return h + "</div>";
+  }
+
   function strokeBlock(ch) {
+    var data = strokeData(ch) || genericStrokes();
+    var n = data.length;
+    var steps = Math.min(n, 5);
     var h = '<div class="mb-5 break-inside-avoid">';
+    h += metaLine(ch);
     h += '<div class="grid mb-1" style="grid-template-columns:repeat(6,minmax(0,1fr))">';
-    h += cell('<span class="zh" style="font-size:2.4em">' + esc(ch) + "</span>");
-    for (var i = 0; i < 5; i++) {
-      h += cell('<span class="absolute top-0.5 left-1 text-[10px] font-bold" style="color:#c23b22">' + NUMS[i] + "</span>" + fadedChar(ch, 1.7));
+    h += cell(renderStrokeSVG(ch, "full"));
+    for (var s = 0; s < steps; s++) {
+      var k = Math.round(s * (n - 1) / Math.max(steps - 1, 1));
+      h += cell('<span class="absolute top-0.5 left-1 text-[10px] font-bold" style="color:#c23b22">' + NUMS[s] + "</span>" + renderStrokeSVG(ch, k));
     }
     h += "</div>";
     for (var r = 0; r < 2; r++) h += rowOf(8, fadedChar(ch, 1.5));
@@ -262,15 +306,10 @@
   }
 
   function bigBlock(ch, cfg) {
-    var info = charInfo(ch);
     var h = '<div class="flex gap-3 mb-6 items-stretch break-inside-avoid">';
-    h += '<div class="grid-cell w-32 shrink-0"><span class="zh" style="font-size:4.2em">' + esc(ch) + "</span></div>";
+    h += '<div class="grid-cell w-32 shrink-0">' + renderStrokeSVG(ch, "full") + "</div>";
     h += '<div class="flex-1 min-w-0">';
-    var top = '<div class="text-sm mb-2">';
-    if (cfg.showPy) top += '<span class="font-bold">' + esc(info.pinyin || "—") + "</span>";
-    if (info.hanViet) top += ' <span style="color:#888">· ' + esc(info.hanViet) + "</span>";
-    if (cfg.showMeaning && info.meaning) top += ' <span>— ' + esc(info.meaning) + "</span>";
-    h += top + "</div>";
+    h += metaLine(ch);
     h += rowOf(6, fadedChar(ch, 1.6));
     return h + "</div></div>";
   }
