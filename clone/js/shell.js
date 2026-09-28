@@ -151,7 +151,8 @@
         g.items.forEach(function (item) {
           var ext = isExternal(item.href) ? ' target="_blank" rel="noopener"' : "";
           var on = item.href === currentPage() ? " bg-[var(--nhai-soft)] text-[var(--nhai-main)]" : "";
-          links += '<a href="' + item.href + '"' + ext + ' class="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[var(--nhai-soft)] whitespace-nowrap' + on + '">' + item.label + "</a>";
+          var badge = item.label === "Bảng Pinyin" ? '<span class="absolute -top-1 -right-2 border-2 border-[#c03922] bg-[var(--nhai-card)] rounded-full px-1 text-[9px] font-bold leading-tight text-[#c03922]">học kỹ ×99</span>' : "";
+          links += '<a href="' + item.href + '"' + ext + ' class="relative block px-3 py-2 rounded-md text-sm font-medium hover:bg-[var(--nhai-soft)] whitespace-nowrap' + on + '">' + item.label + badge + "</a>";
         });
         var r = btn.getBoundingClientRect();
         var panel = NHAI.el('<div data-side-panel="' + gi + '" class="hidden card shadow-neo p-1 z-[500] fixed w-52" style="left:76px;top:' + Math.max(8, r.top - 4) + 'px">' + links + "</div>");
@@ -206,7 +207,8 @@
 
     var mobileLinks = "";
     ALL_LINKS.forEach(function (l) {
-      mobileLinks += '<a href="' + l.href + '" class="block px-4 py-2 text-sm font-medium border-b border-[var(--nhai-border)]">' + (l.group ? l.group + " · " : "") + l.label + "</a>";
+      var badge = l.label === "Bảng Pinyin" ? '<span class="absolute -top-1 -right-2 border-2 border-[#c03922] bg-[var(--nhai-card)] rounded-full px-1 text-[9px] font-bold leading-tight text-[#c03922]">học kỹ ×99</span>' : "";
+      mobileLinks += '<a href="' + l.href + '" class="relative block px-4 py-2 text-sm font-medium border-b border-[var(--nhai-border)]">' + (l.group ? l.group + " · " : "") + l.label + badge + "</a>";
     });
 
     host.innerHTML =
@@ -426,7 +428,10 @@
           '<div class="flex gap-2 mt-2"><input data-ai-input class="flex-1 border-2 border-[var(--nhai-border)] rounded-lg px-2 py-1.5 bg-[var(--nhai-bg)]" placeholder="Nhập câu hỏi…">' +
           '<button type="button" data-ai-send class="btn-main px-3">➤</button></div>' +
         "</div>" +
-        '<button type="button" data-ai class="card shadow-neo w-[90px] h-[58px] text-3xl hover:-translate-y-0.5 transition-transform">🤖</button>' +
+        '<button type="button" data-ai class="card shadow-neo relative w-[90px] h-[58px] hover:-translate-y-0.5 transition-transform">' +
+          '<span class="absolute inset-0 flex items-center justify-center text-3xl" aria-hidden="true">🤖</span>' +
+          '<span class="absolute bottom-0.5 right-1 text-lg -rotate-12" aria-hidden="true">🍅</span>' +
+        "</button>" +
         '<button type="button" data-msg class="btn-ghost px-3 py-2 text-sm">💬 Nhắn tin</button>' +
         '<button type="button" data-donate class="btn-main px-3 py-2 text-sm">❤️ Ủng hộ Nhai HSK</button>' +
       "</div>";

@@ -67,6 +67,26 @@
     return btn;
   }
 
+  /* grammar card (SPEC-15): grid 2 cột — title + 2 dòng placeholder + nút TTS vuông phải */
+  function grammarCard(item) {
+    var locked = !NHAI.isLoggedIn();
+    var card = NHAI.el(
+      '<div class="card shadow-neo p-4 flex items-start gap-3">' +
+        '<div class="min-w-0 flex-1">' +
+          '<h3 class="font-extrabold text-sm mb-1.5 truncate">' + item.title + (locked ? ' <span aria-label="Cần đăng nhập">🔒</span>' : "") + "</h3>" +
+          '<div class="h-3 rounded bg-[var(--nhai-soft)] mb-1.5 w-full"></div>' +
+          '<div class="h-3 rounded bg-[var(--nhai-soft)] w-2/3"></div>' +
+        "</div>" +
+        '<button type="button" data-tts class="grid-cell rounded-md w-9 h-9 shrink-0 text-base" aria-label="Đọc mẫu" title="Đọc mẫu">🔊</button>' +
+      "</div>"
+    );
+    card.querySelector("[data-tts]").addEventListener("click", function () {
+      if (locked) { NHAI.openLogin(); return; }
+      NHAI.speak(item.title, "zh-CN");
+    });
+    return card;
+  }
+
   function renderBook(slug) {
     var book = NHAI_DATA.courses[slug];
     var skill = currentSkill();
@@ -116,12 +136,15 @@
     ));
 
     /* danh sách bài theo skill */
-    var list = NHAI.el('<div class="space-y-3 mb-6" data-lesson-list></div>');
+    var list = NHAI.el('<div class="mb-6" data-lesson-list></div>');
     if (skill === "vocab") {
+      list.className = "space-y-3 mb-6";
       book.list.forEach(function (item) { list.appendChild(lessonRowVocab(slug, item)); });
     } else if (skill === "grammar") {
-      book.grammar.forEach(function (item) { list.appendChild(lessonRowLocked(item)); });
+      list.className = "grid sm:grid-cols-2 gap-3 mb-6";
+      book.grammar.forEach(function (item) { list.appendChild(grammarCard(item)); });
     } else {
+      list.className = "space-y-3 mb-6";
       book.hanzi.forEach(function (item) { list.appendChild(lessonRowLocked(item)); });
     }
     host.appendChild(list);

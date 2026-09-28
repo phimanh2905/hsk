@@ -178,10 +178,71 @@
     });
   }
 
+  /* ---------- chi tiết ôn tập (SPEC-15) ---------- */
+  function dueLabel(c) {
+    if (c.state !== "learned" || !c.learnedAt) return "Hôm nay";
+    var d = new Date(c.learnedAt + SRS_DAYS * DAY);
+    return ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
+  }
+
+  function renderDetail(kind) {
+    var host = document.getElementById("detail-list");
+    if (!host) return;
+    var cards = collectCards(kind);
+    host.innerHTML = "";
+    if (!cards.length) {
+      /* skeleton: 4 card khung viền + 3 thanh xám */
+      var grid = NHAI.el('<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3"></div>');
+      for (var i = 0; i < 4; i++) {
+        grid.appendChild(NHAI.el(
+          '<div class="card shadow-neo p-4">' +
+            '<div class="h-8 rounded bg-[var(--nhai-soft)] mb-2 w-1/2"></div>' +
+            '<div class="h-3 rounded bg-[var(--nhai-soft)] mb-1.5 w-full"></div>' +
+            '<div class="h-3 rounded bg-[var(--nhai-soft)] w-2/3"></div>' +
+          "</div>"
+        ));
+      }
+      host.appendChild(grid);
+      return;
+    }
+    var wrap = NHAI.el('<div class="space-y-3"></div>');
+    cards.forEach(function (c) {
+      var learned = c.state === "learned";
+      var row = NHAI.el(
+        '<div class="card shadow-neo p-4 flex flex-wrap items-center gap-3">' +
+          '<span class="zh text-2xl font-extrabold min-w-[2.5rem] text-center">' + c.hanzi + "</span>" +
+          '<span class="text-sm font-bold min-w-[6rem]">' + (c.pinyin || "—") + "</span>" +
+          '<span class="text-sm font-semibold text-[var(--nhai-muted)] flex-1 min-w-[8rem]">' + (c.meaning || c.source) + "</span>" +
+          '<span class="text-xs font-semibold text-[var(--nhai-muted)] whitespace-nowrap">Hạn ôn: ' + dueLabel(c) + "</span>" +
+          '<div class="flex gap-2 shrink-0">' +
+            '<button type="button" data-know="yes" class="' + (learned ? "btn-main" : "btn-ghost") + ' px-3 py-2 text-sm">Đã thuộc</button>' +
+            '<button type="button" data-know="no" class="' + (!learned ? "btn-main" : "btn-ghost") + ' px-3 py-2 text-sm">Chưa thuộc</button>' +
+          "</div>" +
+        "</div>"
+      );
+      row.querySelector('[data-know="yes"]').addEventListener("click", function () {
+        c.state = "learned";
+        setLS("nhai.srs.st." + c.key, "learned");
+        if (!getLS("nhai.srs.t." + c.key)) setLS("nhai.srs.t." + c.key, String(Date.now()));
+        NHAI.toast("Tốt lắm! “" + c.hanzi + "” vào nhóm đã thuộc ✅");
+        renderAll();
+      });
+      row.querySelector('[data-know="no"]').addEventListener("click", function () {
+        c.state = "learning";
+        setLS("nhai.srs.st." + c.key, "learning");
+        removeLS("nhai.srs.t." + c.key);
+        renderAll();
+      });
+      wrap.appendChild(row);
+    });
+    host.appendChild(wrap);
+  }
+
   function renderAll() {
     renderStats(state.tab);
     renderCards(state.tab);
     renderEmpty(state.tab);
+    renderDetail(state.tab);
   }
 
   function switchTab(tab) {
