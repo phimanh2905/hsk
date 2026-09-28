@@ -11,8 +11,12 @@
   <link rel="stylesheet" href="assets/theme.css">
   <script src="js/shell.js" defer></script>
   <script src="js/data/radicals.js" defer></script>
+  <script src="js/data/stroke-rules.js" defer></script>
   <script src="js/radicals.js" defer></script>
   <style>
+    /* PLAN-20: token nền vàng nhạt cho card lưu ý (không có trong theme.css) */
+    :root { --nhai-warn-bg: #fef3c7; }
+    html.dark { --nhai-warn-bg: #3a2f14; }
     /* ---- flashcard 3D flip (giống lesson.html) ---- */
     .flip-scene { perspective: 1200px; }
     .flip-inner {
@@ -20,7 +24,7 @@
       transition: transform .5s cubic-bezier(.4,.2,.2,1);
       transform-style: preserve-3d;
     }
-    .flip-inner.flipped { transform: rotateY(180deg); }
+    .flip-inner.flipped, .flip-inner.is-flipped { transform: rotateY(180deg); }
     .flip-face {
       position: absolute; inset: 0;
       backface-visibility: hidden; -webkit-backface-visibility: hidden;
@@ -42,7 +46,7 @@
     <!-- ============ Flashcard deck ============ -->
     <section class="card shadow-neo p-4 sm:p-6 mb-8">
       <div class="flex flex-wrap items-center gap-2 mb-4">
-        <button type="button" data-auto class="btn-ghost px-3 py-2 text-sm">⏩ Tự động</button>
+        <button type="button" data-auto class="btn-ghost px-3 py-2 text-sm" title="Cài đặt tự động phát thẻ">⚙ Tự động</button>
         <button type="button" data-shuffle class="btn-ghost px-3 py-2 text-sm">🔀 Xáo trộn</button>
         <button type="button" data-autoplay class="btn-ghost px-3 py-2 text-sm" title="Cài đặt tự động phát âm khi sang thẻ">🔊 Tự phát</button>
         <span class="ml-auto flex items-center gap-2">
@@ -80,6 +84,9 @@
       <p class="text-sm text-[var(--nhai-muted)] font-semibold mb-4">Bấm một thẻ để flashcard nhảy tới bộ thủ đó.</p>
       <div id="radical-groups" class="space-y-8"></div>
     </section>
+
+    <!-- ============ 7 quy tắc thứ tự nét (PLAN-20, render bằng JS) ============ -->
+    <div id="stroke-rules"></div>
   </main>
 </body>
 </html>
