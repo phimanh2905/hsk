@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sổ tay từ vựng | Nhai HSK</title>
+  <title>Sổ tay | Nhai HSK</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="assets/theme.css">
   <script src="js/shell.js" defer></script>
@@ -13,7 +13,7 @@
 </head>
 <body data-kind="vocab">
   <div data-shell></div>
-  <!-- PLAN-18: #nb-root rỗng — list render toàn bộ bằng js/notebook.js (template dùng chung) -->
-  <main id="nb-root" class="mx-auto max-w-5xl px-4 py-6"></main>
+  <!-- PLAN-18: trang chi tiết sổ tay — ?kind=vocab|grammar&id=<id>; kind thật lấy từ query -->
+  <main id="nb-root" data-detail class="mx-auto max-w-5xl px-4 py-6"></main>
 </body>
 </html>
