@@ -19,6 +19,7 @@
     .sheet .grid-cell { border-color: #cfc4ae; }
     @media print {
       .fixed { display: none !important; }
+      [data-formcol] { display: none !important; } /* chỉ in header + cột preview */
       main { max-width: none !important; padding: 0 !important; }
       .print-page {
         border: none !important;
