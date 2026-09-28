@@ -257,4 +257,43 @@
       ]
     }
   };
+
+  /* PLAN-19: thư viện theo playlist — schema { playlists:[{id,name,total,desc}], videos:[{id,title,playlistId,hsk,views,viewsSuffix,duration}] }.
+     5 video đầu mỗi playlist theo SPEC-19 (verbatim), 4 video bổ sung cùng kiểu (tự viết). */
+  var SHADOW_PLAYLISTS = [
+    {
+      id: "daihua",
+      name: "DaihuaXiyou 呆話西遊",
+      total: 84,
+      desc: "DaihuaXiyou Official – Laugh out your six-pack abs! 《呆話西遊》，目標讓你笑出腹肌！"
+    },
+    {
+      id: "baba",
+      name: "我的爸爸是條龍",
+      total: 111,
+      desc: "我的爸爸是條龍 — 家庭 What a funny family! + 愛情 What is true love?"
+    }
+  ];
+
+  var SHADOW_VIDEOS = [
+    { id: "EA3rwvr99Q0", title: "墓碑上的QR碼，別掃。QR code on the tombstone, don't scan. #daihuaxiyou #呆話西遊", playlistId: "daihua", hsk: "HSK3", views: 397, viewsSuffix: "", duration: "2:46" },
+    { id: "sXo-yHFkAio", title: "就這智商，還佔便宜？With that IQ, Still trying take advantage? #呆話西遊", playlistId: "daihua", hsk: "HSK3", views: 75, viewsSuffix: "", duration: "1:06" },
+    { id: "NkYwdZhkHF0", title: "又要漲工資？！#呆話西遊 #daihuaxiyou #搞笑", playlistId: "daihua", hsk: "HSK3", views: 29, viewsSuffix: "", duration: "2:21" },
+    { id: "daihua-x4", title: "「老闆，我想請假。」Boss, I want a day off. #呆話西遊 #daihuaxiyou", playlistId: "daihua", hsk: "HSK3", views: 24, viewsSuffix: "", duration: "1:33" },
+    { id: "daihua-x5", title: "「這是我最後一次警告你！」This is my last warning! #呆話西遊 #搞笑", playlistId: "daihua", hsk: "HSK3", views: 18, viewsSuffix: "", duration: "2:05" },
+    { id: "FuIOkW6eaRA", title: "Why does he always drive me crazy?! 😡😂 #daihoo #plush #animation #dubbing", playlistId: "baba", hsk: "HSK3", views: 11, viewsSuffix: "", duration: "1:01" },
+    { id: "J0P6fPl6cho", title: "【我的爸爸是條龍】原來和老婆一起洗澡是這麽刺激的事情… #恩愛 #夫妻", playlistId: "baba", hsk: "HSK3", views: 47, viewsSuffix: "", duration: "1:18" },
+    { id: "FxpyzLt3wRQ", title: "【我的爸爸是條龍】孩子：爸媽總在我面前秀恩愛？！Being PDA in front of our SON…", playlistId: "baba", hsk: "HSK3", views: 12, viewsSuffix: "", duration: "3:04" },
+    { id: "baba-x8", title: "【我的爸爸是條龍】爸爸的私房錢被發現了？！Dad's secret money has been found… #搞笑 #家庭", playlistId: "baba", hsk: "HSK3", views: 33, viewsSuffix: "", duration: "2:12" },
+    { id: "baba-x9", title: "【我的爸爸是條龍】誰說龍不能哄孩子？Who says a dragon can't comfort kids? #父子 #溫馨", playlistId: "baba", hsk: "HSK3", views: 21, viewsSuffix: "", duration: "1:47" }
+  ];
+
+  window.NHAI_DATA.shadowing.playlists = SHADOW_PLAYLISTS;
+  window.NHAI_DATA.shadowing.videos = SHADOW_VIDEOS;
+  window.NHAI_DATA.shadowing.videoById = function (id) {
+    for (var i = 0; i < SHADOW_VIDEOS.length; i++) {
+      if (SHADOW_VIDEOS[i].id === id) return SHADOW_VIDEOS[i];
+    }
+    return null;
+  };
 })();

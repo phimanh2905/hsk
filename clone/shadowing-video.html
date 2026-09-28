@@ -13,10 +13,16 @@
   <script src="js/shell.js" defer></script>
   <script src="js/data/shadowing.js" defer></script>
   <script src="js/shadowing-video.js" defer></script>
+  <script src="js/shadowing.js" defer></script>
 </head>
 <body>
   <div data-shell></div>
   <main class="mx-auto max-w-6xl px-4 py-6">
+    <!-- breadcrumb -->
+    <div class="mb-3">
+      <a href="shadowing.html" class="text-sm font-bold text-[var(--nhai-main)] hover:underline">‹ Shadowing</a>
+    </div>
+
     <!-- Thanh công cụ trên -->
     <div class="flex flex-wrap items-center gap-2 mb-4">
       <a href="shadowing.html" class="text-sm font-bold text-[var(--nhai-main)] hover:underline">← Quay lại</a>
@@ -30,7 +36,7 @@
 
     <div class="flex items-center gap-3 mb-4 flex-wrap">
       <h1 data-title class="text-2xl md:text-3xl font-extrabold tracking-tight">…</h1>
-      <span data-hsk class="pill pill-active text-xs font-bold">HSK3</span>
+      <span data-badges class="flex items-center gap-2 flex-wrap"><span data-hsk class="pill pill-active text-xs font-bold">HSK3</span><span data-duration class="pill text-xs font-bold"></span><span data-views class="pill text-xs font-bold"></span></span>
     </div>
     <p data-channel class="text-sm text-[var(--nhai-muted)] -mt-3 mb-4"></p>
 
@@ -128,6 +134,12 @@
       </div>
       <div data-sentences data-font="lg" class="space-y-2"></div>
       <p data-transcript-hidden class="hidden text-sm text-[var(--nhai-muted)]">Bản chép đang ẩn — bấm “Ẩn” một lần nữa để hiện lại.</p>
+    </section>
+
+    <!-- Video liên quan (cùng playlist) -->
+    <section class="mt-8">
+      <h2 class="text-xl font-extrabold mb-3">Video liên quan</h2>
+      <div data-related class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
     </section>
   </main>
 </body>
