@@ -31,7 +31,54 @@
     return m ? m[1] : "1";
   }
 
+  function readStore(key) {
+    try {
+      var v = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+
   function loadData() {
+    /* PLAN-12: deck tùy chỉnh (?custom=<deckId>) — nạp từ nhai.decks / nhai.grammarDecks */
+    var customId = NHAI.q("custom", "");
+    if (customId) {
+      var decks = readStore("nhai.decks");
+      var gDecks = readStore("nhai.grammarDecks");
+      var deck = null;
+      var backPage = "my-vocab.html";
+      decks.forEach(function (d) { if (!deck && String(d.id) === String(customId)) deck = d; });
+      gDecks.forEach(function (d) { if (!deck && String(d.id) === String(customId)) { deck = d; backPage = "my-grammar.html"; } });
+      if (deck) {
+        var rows = Array.isArray(deck.rows) ? deck.rows : [];
+        var words = rows.map(function (r) {
+          return {
+            hanzi: (r && r.hanzi) || "",
+            pinyin: (r && r.pinyin) || "",
+            meaning: (r && r.meaning) || "",
+            hanViet: "",
+            pos: "—",
+            example: null
+          };
+        });
+        S.lesson = { title: deck.name || "Bộ của tôi", words: words };
+        S.words = words;
+        S.book = "custom";
+        S.page = "custom-" + String(customId);
+        S.customNoExample = !words.some(function (w) { return w.example; });
+        (function fixCustomChrome() {
+          function fix() {
+            var back = document.getElementById("back-link");
+            if (back) back.setAttribute("href", backPage);
+            var addAll = document.getElementById("btn-add-all");
+            if (addAll) addAll.classList.add("hidden");
+          }
+          if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fix);
+          else fix();
+        })();
+        return;
+      }
+      NHAI.toast("Không tìm thấy bộ deck — quay lại bài học mẫu");
+    }
     var data = (window.NHAI_DATA && NHAI_DATA.vocab) || {};
     S.book = NHAI.q("book", "hsk1");
     S.page = NHAI.q("page", "lesson-1");
@@ -67,6 +114,8 @@
       var meta = MODE_META[id];
       var mode = (window.NHAI.lessonModes || {})[id];
       if (!mode) return;
+      /* PLAN-12: deck tùy chỉnh không có ví dụ → ẩn Đọc hiểu + Nghe ghép câu */
+      if (S.customNoExample && (id === "reading" || id === "listen")) return;
       var badge = S.badges[id];
       if (badge === undefined || badge === null) {
         badge = typeof mode.defaultBadge === "function" ? mode.defaultBadge(S) : mode.defaultBadge;
@@ -160,6 +209,7 @@
     var host = $("#examples-list");
     host.innerHTML = "";
     S.words.forEach(function (w) {
+      if (!w || !w.example) return; /* PLAN-12: bỏ qua từ không có ví dụ */
       var card = NHAI.el(
         '<div class="card p-3 flex items-start justify-between gap-3">' +
           "<div>" +
@@ -195,9 +245,7 @@
                 '<span class="text-sm font-extrabold text-[var(--nhai-main)]">' + w.hanViet + "</span>" +
               "</div>" +
               '<div class="text-sm mt-1 font-semibold">' + w.meaning + "</div>" +
-              '<div class="text-sm mt-1.5"><span class="zh font-semibold">' + w.example.zh + "</span>" +
-                ' <span class="text-xs text-[var(--nhai-muted)]">' + NHAI.pinyinLine(w.example.pinyinPerChar) + "</span></div>" +
-              '<div class="text-xs text-[var(--nhai-muted)] mt-0.5">→ ' + w.example.vi + "</div>" +
+              (w.example ? '<div class="text-sm mt-1.5"><span class="zh font-semibold">' + w.example.zh + '</span> <span class="text-xs text-[var(--nhai-muted)]">' + NHAI.pinyinLine(w.example.pinyinPerChar) + "</span></div>" + '<div class="text-xs text-[var(--nhai-muted)] mt-0.5">→ ' + w.example.vi + "</div>" : "") +
             "</div>" +
             '<div class="flex flex-col sm:flex-row gap-1 shrink-0 no-print">' +
               '<button type="button" data-act="report" class="btn-ghost w-9 h-9 text-sm" title="Báo lỗi">⚠️</button>' +
