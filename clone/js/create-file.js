@@ -1,6 +1,6 @@
 /* Nhai HSK clone — Tạo file luyện viết (PLAN-16 / SPEC-16).
-   Catalog 9 mẫu + form 7 nhóm tuỳ chọn ?tpl=<id>, preview A4 render động,
-   gate mã FREEHSK + window.print(). SVG stroke renderer giữ từ PLAN-13. */
+   Catalog 9 mẫu (mặc định) + form 7 nhóm tuỳ chọn ?tpl=<id>, preview A4 render động,
+   gate mã FREEHSK + window.print(). SVG stroke renderer (renderStrokeSVG) giữ từ PLAN-13. */
 (function () {
   "use strict";
 
@@ -27,36 +27,10 @@
     "字": { pinyin: "zì", hanViet: "TỰ", meaning: "chữ" }
   };
 
-  var FALLBACK_RADICALS = [
-    { char: "一", hanViet: "Nhất" }, { char: "丨", hanViet: "Cổn" },
-    { char: "丶", hanViet: "Chủ" }, { char: "丿", hanViet: "Phiệt" },
-    { char: "乙", hanViet: "Ất" }, { char: "亅", hanViet: "Quyết" },
-    { char: "二", hanViet: "Nhị" }, { char: "人", hanViet: "Nhân" },
-    { char: "亠", hanViet: "Đầu" }, { char: "二", hanViet: "Nhị" }
-  ];
-
-  var FALLBACK_WORDS = [
-    { hanzi: "你好", pinyin: "nǐ hǎo", hanViet: "NHĨ HẢO", meaning: "Xin chào", example: { zh: "李明，你好。", vi: "Chào Lý Minh" } },
-    { hanzi: "王老师", pinyin: "Wáng lǎoshī", hanViet: "VƯƠNG LÃO SƯ", meaning: "Cô Vương", example: { zh: "王老师，您好。", vi: "Xin chào cô Vương" } },
-    { hanzi: "大家", pinyin: "dàjiā", hanViet: "ĐẠI GIA", meaning: "Mọi người", example: { zh: "大家好，我是新学生。", vi: "Chào mọi người, tôi là học sinh mới" } },
-    { hanzi: "好", pinyin: "hǎo", hanViet: "HẢO", meaning: "Tốt, khỏe", example: { zh: "老师，您好。", vi: "Xin chào thầy" } }
-  ];
-
-  function vocabSource() {
-    var v = window.NHAI_DATA && NHAI_DATA.vocab;
-    var lesson = v && v.hsk1 && v.hsk1["lesson-1"];
-    return (lesson && lesson.words && lesson.words.length) ? lesson.words : FALLBACK_WORDS;
-  }
-
   function charInfo(ch) {
     var h = window.NHAI_DATA && NHAI_DATA.hanzi;
     if (h && h.chars && h.chars[ch]) return h.chars[ch];
     return CHAR_INFO_FALLBACK[ch] || { pinyin: "", hanViet: "", meaning: "" };
-  }
-
-  function radicalsList() {
-    var r = window.NHAI_DATA && NHAI_DATA.radicals;
-    return (r && r.length) ? r : FALLBACK_RADICALS;
   }
 
   /* ---------- helpers ---------- */
@@ -64,29 +38,14 @@
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
-  function cell(inner, cls) {
-    return '<div class="grid-cell ' + (cls || "") + '">' + (inner || "") + "</div>";
+  function fadedChar(ch, size, opacity) {
+    var op = opacity != null ? opacity : CF.opacity / 100;
+    return '<span class="zh zh-faded" style="font-size:' + (size || 1.6) + 'em;opacity:' + op + '">' + esc(ch) + "</span>";
   }
-  function fadedChar(ch, size) {
-    return '<span class="zh zh-faded" style="font-size:' + (size || 1.6) + 'em">' + esc(ch) + "</span>";
-  }
-  function rowOf(cols, inner, cls) {
-    var h = '<div class="grid ' + (cls || "") + '" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
-    for (var i = 0; i < cols; i++) h += cell(inner);
+  function rowOf(cols, inner) {
+    var h = '<div class="grid" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
+    for (var i = 0; i < cols; i++) h += shapeCell(inner);
     return h + "</div>";
-  }
-  /* 4 dòng kẻ pinyin (giấy 4 dòng) bên trong 1 ô / dải */
-  function pyGuideInner() {
-    var line = '<i style="display:block;border-top:1px solid #dccfb8"></i>';
-    return '<div style="position:absolute;left:10%;right:10%;top:18%;bottom:18%;display:flex;flex-direction:column;justify-content:space-between">' +
-      line + line + line + line + "</div>";
-  }
-  function diagSvg() {
-    return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">' +
-      '<line x1="0" y1="0" x2="100" y2="100" stroke="#cfc4ae" stroke-width="1" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/></svg>';
-  }
-  function parseItems(input) {
-    return String(input || "").trim().split(/[\s,、，]+/).filter(Boolean);
   }
 
   /* ---------- state CF v2 (PLAN-16): mọi tuỳ chọn form + danh sách từ ----------
@@ -144,37 +103,14 @@
     } catch (e) { /* silent */ }
     return false;
   }
-  function cfReset() {
+  function cfReset(tplId) {
     CF = cfDefaults();
+    CF.tpl = tplId || null;
     persist();
   }
   function cfFind(hz) {
     for (var i = 0; i < CF.chars.length; i++) if (CF.chars[i].hanzi === hz) return CF.chars[i];
     return null;
-  }
-  function cfAdd(hz) {
-    if (!hz || cfFind(hz)) return;
-    var info = charInfo(hz);
-    CF.chars.push({ hanzi: hz, pinyin: info.pinyin || "", hv: (info.hanViet || "").toUpperCase(), meaning: info.meaning || "" });
-    persist();
-  }
-  /* meta info ưu tiên dữ liệu đã sửa trong CF, fallback về NHAI_DATA.hanzi.chars */
-  function cfInfo(ch) {
-    var base = charInfo(ch), c = cfFind(ch);
-    return {
-      hanViet: base.hanViet || "",
-      pinyin: c ? c.pinyin : (base.pinyin || ""),
-      meaning: c ? c.meaning : (base.meaning || "")
-    };
-  }
-  function paginate(items, per, fn) {
-    var pages = [], cur = [];
-    items.forEach(function (it, i) {
-      if (i && i % per === 0) { pages.push(cur.join("")); cur = []; }
-      cur.push(fn(it));
-    });
-    if (cur.length) pages.push(cur.join(""));
-    return pages.length ? pages : [""];
   }
 
   /* ---------- gate mã ---------- */
@@ -220,23 +156,14 @@
     });
   }
 
+  /* ================= FORM VIEW (PLAN-16) ================= */
 
-  /* ================= TEMPLATE VIEW ================= */
-  function sheetHtml(content) {
-    return '<div class="print-page sheet card shadow-neo mx-auto w-full max-w-[794px] p-10 mb-8">' +
-      '<div class="flex justify-between text-sm mb-4 pb-2 border-b-2 border-[#dccfb8]">' +
-        "<span>Họ tên: ______________</span><span>Ngày: ____________</span></div>" +
-      '<div class="sheet-body">' + content + "</div>" +
-      '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">nhaihsk.com · facebook.com/groups/nhaihsk</div>' +
-      "</div>";
-  }
-
-  /* ---------- SVG nét thật (PLAN-13) ---------- */
+  /* ---------- SVG nét thật (giữ từ PLAN-13 / SPEC-13) ---------- */
   function strokeData(ch) {
     var s = window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.strokes;
     return (s && s[ch]) || null;
   }
-  /* fallback generic 4 nét (khung ô vuông) cho chữ chưa có data */
+  /* fallback generic 4 nét (khung ô vuông) cho chữ chưa có data — không throw */
   function genericStrokes() {
     return [
       [[20, 25], [80, 25]],
@@ -245,7 +172,7 @@
       [[20, 80], [80, 80]]
     ];
   }
-  /* mode: "full" (đen) | "upto"(k số) — nét 0..k-1 đen, nét k đỏ | "faint" (mờ) */
+  /* mode: "full" (đen) | k (số) — nét 0..k-1 đen, nét k đỏ | "faint" (mờ) */
   function renderStrokeSVG(ch, mode) {
     var data = strokeData(ch) || genericStrokes();
     var k = typeof mode === "number" ? mode : -1;
@@ -260,213 +187,446 @@
     }
     return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">' + inner + "</svg>";
   }
-  /* dòng meta: Hán Việt IN HOA + pinyin + nghĩa (từ CF) */
-  function metaLine(ch) {
-    var info = cfInfo(ch);
+  /* dòng meta: Hán Việt IN HOA + pinyin + nghĩa (từ CF.chars) */
+  function metaLine(c) {
     var h = '<div class="text-sm mb-1">';
-    h += '<span class="font-bold">' + esc((info.hanViet || "").toUpperCase() || "—") + "</span>";
-    if (info.pinyin) h += ' <span class="zh">' + esc(info.pinyin) + "</span>";
-    if (info.meaning) h += ' <span style="color:#888">— ' + esc(info.meaning) + "</span>";
+    h += '<span class="font-bold">' + esc((c.hv || "").toUpperCase() || "—") + "</span>";
+    if (CF.showPinyin && c.pinyin) h += ' <span class="zh">' + esc(c.pinyin) + "</span>";
+    if (CF.showMeaning && c.meaning) h += ' <span style="color:#888">— ' + esc(c.meaning) + "</span>";
     return h + "</div>";
   }
 
-  function strokeBlock(ch) {
-    var data = strokeData(ch) || genericStrokes();
+  /* ---------- ô theo loại + màu (PLAN-16) ---------- */
+  /* map màu ô → giá trị CSS var --cell-c */
+  function cellColorVar(color) {
+    var map = { green: "#16a34a", red: "#dc2626", blue: "#2563eb", gray: "#9ca3af" };
+    return map[color] || map.gray;
+  }
+  /* shape: decoration bên trong 1 ô theo CF.cellType */
+  function cellShape() {
+    var c = "var(--cell-c)";
+    switch (CF.cellType) {
+      case "dien-tu": /* điền tự: bo tròn nhẹ */
+        return '<i style="position:absolute;inset:5%;border:1px solid ' + c + ';border-radius:16%;pointer-events:none"></i>';
+      case "mi": /* mễ tự: chéo + chữ thập nét đứt */
+        return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">' +
+          '<line x1="0" y1="0" x2="100" y2="100" stroke="' + c + '" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>' +
+          '<line x1="100" y1="0" x2="0" y2="100" stroke="' + c + '" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>' +
+          '<line x1="50" y1="0" x2="50" y2="100" stroke="' + c + '" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>' +
+          '<line x1="0" y1="50" x2="100" y2="50" stroke="' + c + '" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/></svg>';
+      case "vuong": /* ô vuông: dùng khung sẵn của .grid-cell */
+        return "";
+      case "hoi-cung": /* hồi cung: ô trong lồng ô */
+        return '<i style="position:absolute;inset:16%;border:1px solid ' + c + ';pointer-events:none"></i>';
+      case "cuu-cung": /* cửu cung: chữ thập giữa ô */
+        return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">' +
+          '<line x1="50" y1="0" x2="50" y2="100" stroke="' + c + '" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+          '<line x1="0" y1="50" x2="100" y2="50" stroke="' + c + '" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>';
+      default: return "";
+    }
+  }
+  function shapeCell(inner, extraStyle) {
+    return '<div class="grid-cell relative" style="--cell-c:' + cellColorVar(CF.cellColor) + ";" + (extraStyle || "") + '">' +
+      cellShape() + (inner || "") + "</div>";
+  }
+
+  /* ---------- sheet A4 ---------- */
+  function sheetHtml(content) {
+    var head = "";
+    if (CF.title) head += '<div class="text-center font-extrabold text-lg mb-2">' + esc(CF.title) + "</div>";
+    if (CF.nameDate) head += '<div class="flex justify-between text-sm mb-4 pb-2 border-b-2 border-[#dccfb8]">' +
+      "<span>Họ tên: ______________</span><span>Ngày: ____________</span></div>";
+    return '<div class="print-page sheet card shadow-neo mx-auto w-full max-w-[794px] p-10 mb-8">' + head +
+      '<div class="sheet-body">' + content + "</div>" +
+      '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">nhaihsk.com · facebook.com/groups/nhaihsk</div>' +
+      "</div>";
+  }
+
+  /* ---------- preview blocks ---------- */
+  function strokeBlock(c) {
+    var data = strokeData(c.hanzi) || genericStrokes();
     var n = data.length;
     var steps = Math.min(n, 5);
     var h = '<div class="mb-5 break-inside-avoid">';
-    h += metaLine(ch);
+    h += metaLine(c);
     h += '<div class="grid mb-1" style="grid-template-columns:repeat(6,minmax(0,1fr))">';
-    h += cell(renderStrokeSVG(ch, "full"));
+    h += shapeCell(renderStrokeSVG(c.hanzi, "full"));
     for (var s = 0; s < steps; s++) {
       var k = Math.round(s * (n - 1) / Math.max(steps - 1, 1));
-      h += cell('<span class="absolute top-0.5 left-1 text-[10px] font-bold" style="color:#c23b22">' + NUMS[s] + "</span>" + renderStrokeSVG(ch, k));
+      h += shapeCell('<span class="absolute top-0.5 left-1 text-[10px] font-bold" style="color:#c23b22">' + NUMS[s] + "</span>" + renderStrokeSVG(c.hanzi, k));
     }
     h += "</div>";
-    for (var r = 0; r < 2; r++) h += rowOf(8, fadedChar(ch, 1.5));
+    for (var r = 0; r < 2; r++) h += rowOf(8, fadedChar(c.hanzi, 1.5));
     return h + "</div>";
   }
 
-  function bigBlock(ch, cfg) {
+  function bigBlock(c) {
     var h = '<div class="flex gap-3 mb-6 items-stretch break-inside-avoid">';
-    h += '<div class="grid-cell w-32 shrink-0">' + renderStrokeSVG(ch, "full") + "</div>";
+    h += '<div class="shrink-0">' + shapeCell(renderStrokeSVG(c.hanzi, "full"), "width:7rem;height:7rem") + "</div>";
     h += '<div class="flex-1 min-w-0">';
-    h += metaLine(ch);
-    h += rowOf(6, fadedChar(ch, 1.6));
+    h += metaLine(c);
+    h += rowOf(6, fadedChar(c.hanzi, 1.6));
     return h + "</div></div>";
   }
 
-  function resolveWords(items) {
-    var src = vocabSource(), map = {};
-    src.forEach(function (w) { map[w.hanzi] = w; });
-    if (!items.length) return src;
-    return items.map(function (t) {
-      return map[t] || { hanzi: t, pinyin: "", hanViet: "", meaning: "", example: null };
-    });
+  function traceCharSpan(ch) {
+    /* chữ tô theo Kiểu chữ tô + Độ đậm + Cỡ chữ */
+    var size = "font-size:" + (CF.fontSize / 62) + "em;";
+    var op = CF.opacity / 100;
+    if (CF.traceStyle.indexOf("thin-dashed") >= 0)
+      return '<span class="zh" style="' + size + "opacity:" + op + ';-webkit-text-stroke:0.5px #17150f;-webkit-text-fill-color:transparent">' + esc(ch) + "</span>";
+    if (CF.traceStyle.indexOf("dashed-hollow") >= 0)
+      return '<span class="zh" style="' + size + "color:transparent;-webkit-text-stroke:1px dashed #17150f;opacity:" + op + '">' + esc(ch) + "</span>";
+    if (CF.traceStyle.indexOf("hollow") >= 0)
+      return '<span class="zh" style="' + size + "color:transparent;-webkit-text-stroke:1px #17150f;opacity:" + Math.max(op, 0.5) + '">' + esc(ch) + "</span>";
+    if (CF.traceStyle.indexOf("faint") >= 0)
+      return '<span class="zh zh-faded" style="' + size + "opacity:" + op + '">' + esc(ch) + "</span>";
+    return '<span class="zh" style="' + size + '">' + esc(ch) + "</span>";
   }
 
-  function wordBlock(w, cfg, check) {
-    var chars = Array.from(w.hanzi);
-    var cols = Math.max(chars.length, 2);
+  /* hàng ô: fillRows hàng có chữ mờ + blankRows hàng trống, pinyin trên hàng đầu */
+  function traceRows(word, cols) {
+    var chars = Array.from(word.hanzi);
+    var perCharPy = word.pinyin ? String(word.pinyin).trim().split(/\s+/) : [];
+    var exact = perCharPy.length === chars.length;
+    var h = "";
+    for (var r = 0; r < CF.fillRows; r++) {
+      if (CF.showPinyin && word.pinyin && r === 0) {
+        h += '<div class="grid text-center text-xs zh-faded" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
+        for (var i = 0; i < cols; i++) h += "<div>" + (exact ? esc(perCharPy[i]) : (i === 0 ? esc(word.pinyin) : "")) + "</div>";
+        h += "</div>";
+      }
+      h += '<div class="grid" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
+      for (var c2 = 0; c2 < cols; c2++) {
+        var show = r * cols + c2 < CF.faintCount;
+        h += shapeCell(show ? traceCharSpan(chars[c2 % chars.length] || "") : "");
+      }
+      h += "</div>";
+    }
+    for (var b = 0; b < CF.blankRows; b++) {
+      h += '<div class="grid" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
+      for (var j = 0; j < cols; j++) h += shapeCell("");
+      h += "</div>";
+    }
+    return h;
+  }
+
+  function wordBlock(w) {
     var h = '<div class="mb-6 break-inside-avoid">';
     h += '<div class="flex items-baseline gap-2 flex-wrap mb-1">';
     h += '<span class="zh font-bold" style="font-size:1.4em">' + esc(w.hanzi) + "</span>";
-    if (cfg.showPy && w.pinyin) h += '<span class="text-sm">(' + esc(w.pinyin) + ")</span>";
-    h += '<span class="text-sm font-semibold">' + esc(w.hanViet || "") +
-      (cfg.showMeaning && w.meaning ? " — " + esc(w.meaning) : "") + "</span>";
+    if (CF.showPinyin && w.pinyin) h += '<span class="text-sm zh">(' + esc(w.pinyin) + ")</span>";
+    if (CF.showMeaning && w.meaning) h += '<span class="text-sm font-semibold">' + esc((w.hv || "").toUpperCase()) + " — " + esc(w.meaning) + "</span>";
     h += "</div>";
-    if (w.example) {
-      h += '<div class="text-sm zh mb-0.5">' + esc(w.example.zh) + "</div>";
-      h += '<div class="text-xs mb-2" style="color:#888">' + esc(w.example.vi || "") + "</div>";
-    }
-    if (cfg.showPy && w.pinyin) {
-      var pys = String(w.pinyin).trim().split(/\s+/);
-      var perChar = pys.length === chars.length;
-      h += '<div class="grid" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
-      for (var i = 0; i < cols; i++) {
-        h += '<div class="text-center text-xs zh-faded">' +
-          (perChar ? esc(pys[i] || "") : (i === 0 ? esc(w.pinyin) : "")) + "</div>";
-      }
-      h += "</div>";
-    }
-    for (var r = 0; r < cfg.rows; r++) {
-      h += '<div class="grid" style="grid-template-columns:repeat(' + cols + ',minmax(0,1fr))">';
-      for (var c = 0; c < cols; c++) {
-        h += cell(check ? "" : fadedChar(chars[c] || "", 1.5));
-      }
-      h += "</div>";
-    }
+    h += traceRows(w, Math.max(Array.from(w.hanzi).length, 2));
     return h + "</div>";
   }
 
-  function pageVocab(items, cfg, check) {
-    var words = resolveWords(items);
-    return paginate(words, check ? 3 : 2, function (w) { return wordBlock(w, cfg, check); });
-  }
-
-  function copyBlock(ch, rows) {
-    var h = '<div class="mb-4 break-inside-avoid">';
-    h += rowOf(8, '<span class="zh font-bold" style="font-size:1.5em">' + esc(ch) + "</span>");
-    for (var r = 1; r < rows; r++) h += rowOf(8, "");
-    return h + "</div>";
-  }
-
-  function pagePinyinLines(items, cfg) {
-    var syl = items.length ? items : ["nǐ", "hǎo", "mā", "ma", "xiè", "xie"];
-    var lines = [];
-    for (var i = 0; i < syl.length; i += 2) lines.push(syl.slice(i, i + 2).join(" "));
-    lines = lines.slice(0, Math.max(cfg.rows, 3));
+  function gridRows(count) {
     var h = "";
-    lines.forEach(function (line) {
-      h += '<div class="mb-4 break-inside-avoid">';
-      h += '<div class="text-sm zh-faded mb-1">' + esc(line) + "</div>";
-      h += rowOf(8, pyGuideInner());
+    for (var r = 0; r < count; r++) {
+      h += '<div class="grid" style="grid-template-columns:repeat(' + CF.perRow + ',minmax(0,1fr))">';
+      for (var i = 0; i < CF.perRow; i++) h += shapeCell("");
       h += "</div>";
+    }
+    return h;
+  }
+
+  function flatChars() {
+    var out = [];
+    CF.chars.forEach(function (w) {
+      var cs = Array.from(w.hanzi);
+      var pys = w.pinyin ? w.pinyin.trim().split(/\s+/) : [];
+      cs.forEach(function (ch, i) {
+        out.push({ ch: ch, py: pys.length === cs.length ? (pys[i] || "") : (i === 0 ? w.pinyin : "") });
+      });
     });
-    return [h];
+    return out;
   }
 
-  function pagePinyinWrite(cfg) {
-    var h = "";
-    for (var r = 0; r < cfg.rows; r++) {
-      h += rowOf(8, "");
-      h += '<div class="mx-[6%] my-3 h-10 flex flex-col justify-between">' +
-        '<i style="display:block;border-top:1px solid #dccfb8"></i>' +
-        '<i style="display:block;border-top:1px solid #dccfb8"></i>' +
-        '<i style="display:block;border-top:1px solid #dccfb8"></i>' +
-        '<i style="display:block;border-top:1px solid #dccfb8"></i></div>';
-    }
-    return [h];
-  }
-
-  function pageBlankGrid() {
-    var h = '<div class="grid" style="grid-template-columns:repeat(12,minmax(0,1fr))">';
-    for (var i = 0; i < 12 * 14; i++) h += cell(diagSvg());
-    return [h + "</div>"];
-  }
-
-  function pageCover() {
-    function field(label) {
-      return '<div class="border-2 border-[#dccfb8] rounded-md px-3 py-2 text-sm" style="color:#999">' + label + ": ________________</div>";
-    }
-    return ['<div class="min-h-[820px] flex flex-col items-center justify-center text-center gap-6">' +
-      '<div class="grid-cell" style="width:112px;height:112px"><span class="zh" style="font-size:4em">练</span></div>' +
-      '<h2 class="text-3xl font-extrabold">Sổ luyện viết chữ Hán</h2>' +
-      '<div class="w-72 space-y-3 text-left">' + field("Họ tên") + field("Lớp") + field("Năm học") + "</div></div>"];
-  }
-
-  function pageRadicals(cfg) {
-    var list = radicalsList();
-    var perRow = 12, rowsPer = Math.max(cfg.rows, 3) * 4, per = perRow * rowsPer;
-    var pages = [];
-    for (var i = 0; i < list.length; i += per) {
-      var h = '<div class="grid" style="grid-template-columns:repeat(12,minmax(0,1fr))">';
-      for (var j = i; j < Math.min(i + per, list.length); j++) {
-        var r = list[j];
-        h += '<div class="grid-cell flex-col"><span class="zh" style="font-size:1.6em">' + esc(r.char) + "</span>" +
-          '<span style="font-size:9px;color:#888">' + esc(r.hanViet || "") + "</span></div>";
-      }
-      pages.push(h + "</div>");
-    }
-    return pages;
-  }
-
-  function buildPages(id, items, cfg) {
+  function buildPages(id) {
+    var totalRows = Math.max(CF.fillRows + CF.blankRows, 1);
     switch (id) {
-      case "stroke-order": return paginate(items, 2, function (ch) { return strokeBlock(ch); });
-      case "big-char": return paginate(items, 3, function (ch) { return bigBlock(ch, cfg); });
-      case "vocab": return pageVocab(items, cfg, false);
-      case "vocab-check": return pageVocab(items, cfg, true);
-      case "copy":
-        return [items.length ? items.map(function (ch) { return copyBlock(ch, cfg.rows); }).join("") : ""];
-      case "pinyin-lines": return pagePinyinLines(items, cfg);
-      case "pinyin-write": return pagePinyinWrite(cfg);
-      case "blank-grid": return pageBlankGrid();
-      case "cover": return pageCover();
-      case "radicals": return pageRadicals(cfg);
+      case "stroke-order":
+        return paginate(CF.chars, 2, function (c) { return strokeBlock(c); });
+      case "big-char":
+        return paginate(CF.chars, 3, function (c) { return bigBlock(c); });
+      case "vocab":
+      case "vocab-check":
+        return paginate(CF.chars, 2, function (c) { return wordBlock(c); });
+      case "pinyin-write": {
+        var h = "";
+        CF.chars.forEach(function (w) {
+          if (CF.showPinyin && w.pinyin) h += '<div class="text-sm zh-faded mb-1">' + esc(w.pinyin) + "</div>";
+          h += traceRows(w, Math.max(Array.from(w.hanzi).length, 2));
+        });
+        if (!CF.chars.length) h += gridRows(totalRows);
+        return [h];
+      }
+      case "paragraph": {
+        var flat = flatChars();
+        var body = "";
+        for (var i = 0; i < flat.length || i === 0; i += CF.perRow) {
+          var row = flat.slice(i, i + CF.perRow);
+          if (!row.length && i > 0) break;
+          if (CF.showPinyin) {
+            body += '<div class="grid text-center text-xs zh-faded" style="grid-template-columns:repeat(' + CF.perRow + ',minmax(0,1fr))">';
+            for (var j = 0; j < CF.perRow; j++) body += "<div>" + (row[j] ? esc(row[j].py) : "") + "</div>";
+            body += "</div>";
+          }
+          body += '<div class="grid" style="grid-template-columns:repeat(' + CF.perRow + ',minmax(0,1fr))">';
+          for (var k = 0; k < CF.perRow; k++) {
+            var show = k < CF.faintCount && row[k];
+            body += shapeCell(show ? traceCharSpan(row[k].ch) : "");
+          }
+          body += "</div>";
+          if (i >= flat.length) break;
+        }
+        body += gridRows(CF.blankRows);
+        return [body];
+      }
+      case "lined-paper": {
+        var lh = "";
+        CF.chars.forEach(function (w) {
+          lh += '<div class="mb-4 break-inside-avoid">';
+          if (CF.showPinyin && w.pinyin) lh += '<div class="text-sm zh-faded mb-1">' + esc(w.pinyin) + "</div>";
+          lh += '<div class="border-t border-b border-[#dccfb8] py-1 flex gap-2 items-center">';
+          Array.from(w.hanzi).forEach(function (ch, idx) {
+            lh += '<span style="font-size:' + (CF.fontSize / 50) + 'em">' +
+              (idx < CF.faintCount ? traceCharSpan(ch) : '<span class="zh">' + esc(ch) + "</span>") + "</span>";
+          });
+          lh += "</div></div>";
+        });
+        for (var e = 0; e < CF.blankRows; e++) lh += '<div class="border-t border-[#dccfb8] h-10"></div>';
+        return [lh];
+      }
+      case "grid-paper": {
+        /* giấy ô trống: luôn đủ ít nhất 1 trang đầy (14 hàng) */
+        var pages = [], rowsPerPage = 14;
+        var rows = Math.max(totalRows, rowsPerPage);
+        for (var p = 0; p * rowsPerPage < rows; p++) {
+          pages.push(gridRows(Math.min(rowsPerPage, rows - p * rowsPerPage)));
+        }
+        return pages.length ? pages : [gridRows(rowsPerPage)];
+      }
+      case "cover": {
+        function field(label) {
+          return '<div class="border-2 border-[#dccfb8] rounded-md px-3 py-2 text-sm" style="color:#999">' + label + ": ________________</div>";
+        }
+        return ['<div class="min-h-[820px] flex flex-col items-center justify-center text-center gap-6">' +
+          '<div class="grid-cell relative" style="width:112px;height:112px;--cell-c:' + cellColorVar(CF.cellColor) + '">' + cellShape() +
+          '<span class="zh" style="font-size:4em;opacity:' + Math.max(CF.opacity / 100, 0.5) + '">练</span></div>' +
+          '<h2 class="text-3xl font-extrabold">' + esc(CF.title || "Sổ luyện viết chữ Hán") + "</h2>" +
+          (CF.nameDate ? '<div class="w-72 space-y-3 text-left">' + field("Họ tên") + field("Lớp") + field("Năm học") + "</div>" : "") +
+          "</div>"];
+      }
       default: return [""];
     }
   }
 
-  /* ---------- panel "Chữ Hán cần luyện" (PLAN-13) ---------- */
-  var PANEL_TPLS = { "stroke-order": 1, "big-char": 1 };
-
-  function cfChips() {
-    return CF.chars.map(function (c, i) {
-      return '<span class="pill pill-active inline-flex items-center gap-1 text-sm">' +
-        '<span class="zh font-bold">' + esc(c.hanzi) + "</span>" +
-        '<button type="button" data-del="' + i + '" class="font-bold leading-none hover:opacity-70" aria-label="Xoá ' + esc(c.hanzi) + '">✕</button></span>';
-    }).join("") || '<span class="text-sm text-[var(--nhai-muted)]">Chưa có chữ nào — bấm bộ thủ bên dưới để thêm.</span>';
+  function paginate(items, per, fn) {
+    var pages = [], cur = [];
+    items.forEach(function (it, i) {
+      if (i && i % per === 0) { pages.push(cur.join("")); cur = []; }
+      cur.push(fn(it));
+    });
+    if (cur.length) pages.push(cur.join(""));
+    return pages.length ? pages : [""];
   }
 
-  function panelHtml(t) {
-    var h = '<div data-panel class="no-print card shadow-neo p-4 space-y-3 lg:sticky lg:top-4">';
-    h += '<h3 class="font-bold">Chữ Hán cần luyện</h3>';
-    h += '<div data-chips class="flex flex-wrap gap-1.5">' + cfChips() + "</div>";
-    h += '<p class="text-xs font-semibold text-[var(--nhai-muted)]">Bấm bộ thủ / chữ để thêm:</p>';
-    h += '<div data-radrow class="flex flex-wrap gap-1 max-h-44 overflow-y-auto border-2 border-[var(--nhai-border)] rounded-lg p-2 bg-[var(--nhai-bg)]">';
-    radicalsList().forEach(function (r) {
-      h += '<button type="button" data-add="' + esc(r.char) + '" title="' + esc(r.hanViet || "") +
-        '" class="pill zh px-2 py-0.5 text-base leading-none hover:opacity-80">' + esc(r.char) + "</button>";
+  /* tách 1 dòng "hanzi pinyin nghĩa": các token pinyin đứng đầu (chỉ chứa chữ cái
+     latin + dấu thanh pinyin), dừng ở token đầu tiên chứa ký tự Việt đặc trưng */
+  function parseLine(line) {
+    var tokens = String(line).trim().split(/\s+/);
+    if (!tokens.length) return null;
+    var pyRe = /^[a-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]+$/;
+    var hz = tokens[0];
+    var py = [], mean = [];
+    for (var i = 1; i < tokens.length; i++) {
+      if (!mean.length && pyRe.test(tokens[i])) py.push(tokens[i]);
+      else mean.push(tokens[i]);
+    }
+    return { hanzi: hz, pinyin: py.join(" "), meaning: mean.join(" ") };
+  }
+
+  /* ---------- field helpers (mọi control có data-key) ---------- */
+  function groupCard(title, inner) {
+    return '<div class="no-print card shadow-neo p-4 space-y-2">' +
+      '<h3 class="font-bold">' + title + "</h3>" + inner + "</div>";
+  }
+  function textInput(label, key) {
+    return '<label class="block text-sm font-bold">' + label +
+      '<input type="text" data-key="' + key + '" value="' + esc(CF[key]) +
+      '" class="mt-1 w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] text-sm font-normal"></label>';
+  }
+  function checkRow(label, key, checked, extra) {
+    return '<label class="flex items-center gap-2 text-sm font-semibold cursor-pointer">' +
+      '<input type="checkbox" data-key="' + key + '"' + (checked ? " checked" : "") + (extra || "") + "> " + label + "</label>";
+  }
+  function radioRow(label, key, options) {
+    var h = label ? '<div class="text-sm font-bold">' + label + "</div>" : "";
+    options.forEach(function (o) {
+      h += '<label class="flex items-center gap-2 text-sm font-semibold cursor-pointer">' +
+        '<input type="radio" name="r-' + key + '" data-key="' + key + '" value="' + esc(o.v) + '"' +
+        (CF[key] === o.v ? " checked" : "") + "> " + o.label + "</label>";
     });
-    h += "</div>";
-    h += '<button type="button" data-hsk class="btn-ghost px-3 py-1.5 text-sm w-full">📂 Chọn chữ theo cấp HSK</button>';
-    h += '<div data-hskpop class="hidden flex-wrap gap-1.5">';
-    var levels = ((window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.levels) || [])
-      .filter(function (lv) { return lv.id !== "radicals" && !lv.href; });
-    levels.forEach(function (lv) {
-      h += '<button type="button" data-level="' + esc(lv.label) + '" class="pill px-2.5 py-1 text-sm hover:opacity-80">' + esc(lv.label) + "</button>";
+    return h;
+  }
+  function checkGroup(label, arrKey, options) {
+    var h = '<div class="text-sm font-bold">' + label + "</div>";
+    options.forEach(function (o) {
+      h += checkRow(o.label, arrKey, CF[arrKey].indexOf(o.v) >= 0, ' data-style="' + esc(o.v) + '"');
     });
-    h += "</div>";
-    h += '<button type="button" data-clear class="text-sm font-semibold hover:underline" style="color:#c23b22">🗑 Xoá tất cả</button>';
-    h += '<button type="button" data-edit class="block text-left text-sm font-semibold text-[var(--nhai-main)] hover:underline">' +
-      '<span data-count>' + CF.chars.length + "</span> chữ sẽ có trong bản in · sửa pinyin / nghĩa</button>";
-    h += modalHtml();
-    h += "</div>";
+    return h;
+  }
+  function scriptChecks() {
+    /* checkbox 1 chọn: Khải thư ✓ / Hành thư */
+    return '<div class="text-sm font-bold">Kiểu khung chữ</div>' +
+      checkRow("Khải thư", "script", CF.script === "khai", ' data-value="khai"') +
+      checkRow("Hành thư", "script", CF.script === "hanh", ' data-value="hanh"');
+  }
+  function stepper(label, key, min, max) {
+    return '<div class="flex items-center justify-between gap-2 text-sm font-bold">' +
+      "<span>" + label + "</span>" +
+      '<span class="flex items-center gap-1">' +
+      '<button type="button" data-step="' + key + '" data-dir="-1" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">−</button>' +
+      '<span data-val="' + key + '" class="w-8 text-center font-semibold">' + CF[key] + "</span>" +
+      '<button type="button" data-step="' + key + '" data-dir="1" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">+</button>' +
+      "</span></div>";
+  }
+  function slider(label, key, min, max, suffix) {
+    return '<label class="block text-sm font-bold">' + label +
+      ' <span data-val="' + key + '" class="font-semibold text-[var(--nhai-main)]">' + CF[key] + (suffix || "") + "</span>" +
+      '<input type="range" data-key="' + key + '" min="' + min + '" max="' + max + '" value="' + CF[key] +
+      '" class="mt-1 w-full accent-[var(--nhai-main)]"></label>';
+  }
+
+  /* ---------- nhóm 1: Từ vựng cần luyện ---------- */
+  var CHARS_TPLS = { "stroke-order": 1, "big-char": 1, "vocab": 1, "vocab-check": 1, "pinyin-write": 1, "paragraph": 1, "lined-paper": 1 };
+
+  function charRowHtml(c, i) {
+    return '<div class="group flex items-center gap-3 py-1.5 border-b border-[var(--nhai-border)]">' +
+      '<span class="zh text-2xl font-bold w-12 text-center shrink-0">' + esc(c.hanzi) + "</span>" +
+      '<span class="w-28 shrink-0"><span class="block text-sm zh">' + esc(c.pinyin) + "</span>" +
+      '<span class="block text-xs font-bold tracking-wide">' + esc((c.hv || "").toUpperCase()) + "</span></span>" +
+      '<input type="text" data-mean-i="' + i + '" value="' + esc(c.meaning) + '" placeholder="Nghĩa…"' +
+      ' class="flex-1 min-w-0 border-2 border-[var(--nhai-border)] rounded px-2 py-1 bg-white text-sm">' +
+      '<button type="button" data-del-char="' + i + '" aria-label="Xoá ' + esc(c.hanzi) +
+      '" class="shrink-0 opacity-0 group-hover:opacity-100 font-bold leading-none px-1 hover:opacity-70" style="color:#c23b22">✕</button>' +
+      "</div>";
+  }
+  function charRowsInner() {
+    var h = '<div class="flex flex-wrap gap-1.5">' +
+      '<button type="button" data-cf-help class="btn-ghost px-3 py-1.5 text-sm">Hướng dẫn nhập từ vựng</button>' +
+      '<button type="button" data-cf-import class="btn-ghost px-3 py-1.5 text-sm">Nhập vào danh sách</button>' +
+      '<button type="button" data-cf-ai class="btn-ghost px-3 py-1.5 text-sm">Format bằng AI</button></div>';
+    h += '<div data-charrows>' + CF.chars.map(charRowHtml).join("") + "</div>";
+    h += '<div class="flex items-center justify-between text-sm">' +
+      '<span class="font-semibold"><span data-count>' + CF.chars.length + "</span> từ sẽ có trong bản in</span>" +
+      '<button type="button" data-clear-chars class="font-semibold hover:underline" style="color:#c23b22">Xóa tất cả</button></div>';
     return h;
   }
 
-  /* ---------- "Mẫu in cùng loại": đổi mẫu giữ CF (PLAN-16) ---------- */
+  function modalShell(title, body) {
+    return '<div data-modal class="hidden fixed inset-0 z-50 p-4 items-center justify-center no-print" style="background:rgba(0,0,0,.45)">' +
+      '<div class="card shadow-neo p-4 w-full max-w-lg max-h-[80vh] overflow-y-auto" style="background:var(--nhai-bg)">' +
+      '<div class="flex items-center justify-between mb-3"><h3 class="font-bold">' + title +
+      '<button type="button" data-modal-close class="text-xl leading-none px-2 font-bold hover:opacity-70" aria-label="Đóng">✕</button></div>' +
+      '<div data-modal-body>' + body + "</div></div></div>";
+  }
+  function helpModalBody() {
+    return '<div class="text-sm space-y-2">' +
+      "<p>Mỗi dòng 1 từ, theo dạng: <code class='font-bold'>hanzi pinyin nghĩa</code></p>" +
+      "<p>Ví dụ:</p><pre class='bg-[var(--nhai-bg)] border-2 border-[var(--nhai-border)] rounded p-2 zh'>学习 xué xí học tập\n朋友 péng yǒu bạn bè</pre>" +
+      "<p>Sau khi thêm, bạn vẫn sửa được pinyin / nghĩa ngay trong danh sách.</p></div>" +
+      '<button type="button" data-modal-close class="btn-main px-4 py-2 text-sm mt-3">Đã hiểu</button>';
+  }
+  function importModalBody() {
+    return '<label class="block text-sm font-bold">Danh sách từ (mỗi dòng: hanzi pinyin nghĩa)' +
+      '<textarea data-import rows="6" class="mt-1 w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-white text-sm zh" placeholder="学习 xué xí học tập"></textarea></label>' +
+      '<div class="flex justify-end gap-2 mt-3">' +
+      '<button type="button" data-modal-close class="btn-ghost px-4 py-2 text-sm">Huỷ</button>' +
+      '<button type="button" data-import-ok class="btn-main px-4 py-2 text-sm">Thêm vào danh sách</button></div>';
+  }
+
+  /* ---------- form 7 nhóm ---------- */
+  function formHtml(id) {
+    var h = "";
+    if (CHARS_TPLS[id]) h += groupCard("Từ vựng cần luyện", charRowsInner());
+    h += groupCard("Trang", textInput("Tiêu đề", "title") + checkRow("Tiêu đề + Họ tên/Ngày", "nameDate", CF.nameDate));
+    h += groupCard("Loại ô", radioRow("", "cellType", [
+      { v: "dien-tu", label: "Điền tự" }, { v: "mi", label: "Mễ tự" }, { v: "vuong", label: "Ô vuông" },
+      { v: "hoi-cung", label: "Hồi cung" }, { v: "cuu-cung", label: "Cửu cung" }
+    ]));
+    h += groupCard("Màu ô", radioRow("", "cellColor", [
+      { v: "green", label: "🟩 green" }, { v: "red", label: "🟥 red" },
+      { v: "blue", label: "🟦 blue" }, { v: "gray", label: "⬜ gray" }
+    ]));
+    h += groupCard("Bố cục",
+      stepper("Số ô mỗi hàng", "perRow", 6, 16) +
+      stepper("Số hàng tô", "fillRows", 0, 12) +
+      stepper("Số hàng trống", "blankRows", 0, 12) +
+      slider("Số từ mờ", "faintCount", 0, 12, "/12"));
+    h += groupCard("Chữ",
+      scriptChecks() +
+      radioRow("Nguồn nét", "strokeSource", [
+        { v: "CNstrokeorder", label: '<span class="zh">笔顺</span> CNstrokeorder <span class="zh">永远</span>' },
+        { v: "qingfeng", label: '<span class="zh">清风体</span> <span class="zh">永远</span>' }
+      ]) +
+      checkGroup("Kiểu chữ tô", "traceStyle", [
+        { v: "faint", label: "Tô mờ" }, { v: "hollow", label: "Chữ rỗng" },
+        { v: "dashed-hollow", label: "Rỗng nét đứt" }, { v: "thin-dashed", label: "Nét đứt mảnh" }
+      ]) +
+      slider("Độ đậm", "opacity", 0, 100, "%") +
+      slider("Cỡ chữ", "fontSize", 50, 120, "%"));
+    h += groupCard("Hiển thị", checkRow("Pinyin", "showPinyin", CF.showPinyin) + checkRow("Nghĩa", "showMeaning", CF.showMeaning));
+    h += '<div class="no-print flex items-center justify-between gap-2">' +
+      '<button type="button" data-reset class="btn-ghost px-3 py-1.5 text-sm">Khôi phục mặc định</button>' +
+      '<p class="text-xs text-[var(--nhai-muted)] text-right">Bấm In rồi chọn “Lưu dưới dạng PDF” trong hộp thoại của trình duyệt.</p></div>';
+    return h;
+  }
+
+  /* ---------- render preview theo tpl hiện tại ---------- */
+  function renderPreviewFor(id) {
+    var preview = page.querySelector("[data-preview]");
+    var badge = page.querySelector("[data-pages]");
+    if (!preview || !badge) return;
+    var pages = buildPages(id);
+    preview.innerHTML = pages.map(sheetHtml).join("");
+    badge.textContent = pages.length + " trang";
+  }
+
+  /* ---------- render form view ---------- */
+  function renderForm(id) {
+    var t = TPL_BY_ID[id];
+    cfLoadAll();
+    CF.tpl = id;
+    persist();
+
+    var h = "";
+    /* header tầng 1 */
+    h += '<div class="no-print mb-2"><a href="create-file.html" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">‹ Thư viện mẫu</a></div>';
+    h += '<div class="flex flex-wrap items-center gap-3 mb-4">' +
+      '<h1 class="text-3xl font-extrabold">' + esc(t.name) + "</h1>" +
+      '<span data-pages class="pill pill-active text-sm no-print">1 trang</span>' +
+      '<button type="button" data-print class="no-print btn-main px-4 py-2 text-sm ml-auto">🔒 Đăng nhập để in</button>' +
+      '<p class="no-print w-full text-sm text-[var(--nhai-muted)]">' + esc(t.desc) + "</p></div>";
+
+    /* tầng 2: preview trái + form phải */
+    h += '<div class="grid gap-6 items-start lg:grid-cols-[1fr_360px]">';
+    h += '<section aria-label="Xem trước bản in" data-preview class="min-w-0"></section>';
+    h += '<div class="space-y-4" data-formcol>';
+    h += formHtml(id);
+    h += switcherHtml(id);
+    h += modalShell("Hướng dẫn nhập từ vựng", helpModalBody());
+    h += "</div></div>";
+
+    page.innerHTML = h;
+    wireForm(id);
+    renderPreviewFor(id);
+    syncPrintBtn();
+  }
+
   function switcherHtml(curId) {
     var cur = TPL_BY_ID[curId] || {};
     var h = '<div class="no-print card shadow-neo p-4 space-y-2">';
@@ -474,203 +634,167 @@
     h += '<p class="text-xs text-[var(--nhai-muted)]">Đổi mẫu không mất nội dung</p>';
     TPLS.forEach(function (t) {
       if (t.group !== cur.group) return;
+      var active = t.id === curId ? " pill-active" : "";
       h += '<a href="create-file.html?tpl=' + encodeURIComponent(t.id) + '" data-switch="' + esc(t.id) +
-        '" class="block card p-2 hover:-translate-y-0.5 transition-transform">' +
-        '<p class="text-sm font-semibold">' + esc(t.name) + "</p></a>";
+        '" class="pill block text-center text-sm font-semibold hover:opacity-80' + active + '">' + esc(t.name) + "</a>";
     });
     h += "</div>";
     return h;
   }
 
-  function modalHtml() {
-    return '<div data-modal class="hidden fixed inset-0 z-50 p-4 items-center justify-center no-print" style="background:rgba(0,0,0,.45)">' +
-      '<div class="card shadow-neo p-4 w-full max-w-lg max-h-[80vh] overflow-y-auto" style="background:var(--nhai-bg)">' +
-      '<div class="flex items-center justify-between mb-3"><h3 class="font-bold">Sửa pinyin / nghĩa</h3>' +
-      '<button type="button" data-modal-close class="text-xl leading-none px-2 font-bold hover:opacity-70" aria-label="Đóng">✕</button></div>' +
-      '<table class="w-full text-sm"><thead><tr>' +
-      '<th class="text-left pb-1 w-12">Chữ</th><th class="text-left pb-1 w-28">Pinyin</th><th class="text-left pb-1">Nghĩa</th>' +
-      "</tr></thead><tbody data-modal-rows>" + modalRows() + "</tbody></table>" +
-      "</div></div>";
-  }
-  function modalRows() {
-    return CF.chars.map(function (c, i) {
-      return '<tr><td class="zh py-1 pr-2 text-lg font-bold">' + esc(c.hanzi) + "</td>" +
-        '<td class="py-1 pr-2"><input data-py-i="' + i + '" value="' + esc(c.pinyin) +
-        '" class="w-full border-2 border-[var(--nhai-border)] rounded px-2 py-1 bg-white text-sm"></td>' +
-        '<td class="py-1"><input data-mean-i="' + i + '" value="' + esc(c.meaning) +
-        '" class="w-full border-2 border-[var(--nhai-border)] rounded px-2 py-1 bg-white text-sm"></td></tr>';
-    }).join("");
-  }
-
-  function renderTemplate(id) {
-    var t = TPL_BY_ID[id];
-    var state = {
-      input: "",
-      rows: 3,
-      showPy: true,
-      showMeaning: true
-    };
-    var f = t.fields || {};
-    var usePanel = !!PANEL_TPLS[id];
-
-    /* CF v2: khôi phục toàn bộ state từ sessionStorage (đổi mẫu giữ nội dung) */
-    cfLoadAll();
-    CF.tpl = id;
-    persist();
-
-    var h = "";
-    h += '<div class="no-print mb-2"><a href="create-file.html" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Thư viện mẫu</a></div>';
-    h += '<div class="flex flex-wrap items-center gap-3 mb-4">' +
-      '<h1 class="text-3xl font-extrabold">' + esc(t.name) + "</h1>" +
-      '<span data-pages class="pill pill-active text-sm">1 trang</span>' +
-      '<button type="button" data-print class="btn-main px-4 py-2 text-sm ml-auto">🔒 Đăng nhập để in</button></div>';
-    h += '<div class="grid gap-6 items-start ' + (usePanel
-      ? "lg:grid-cols-[300px_minmax(0,1fr)_300px]"
-      : "lg:grid-cols-[300px_minmax(0,1fr)]") + '">';
-
-    /* form cấu hình */
-    h += '<form data-cfg class="no-print card shadow-neo p-4 space-y-4 lg:sticky lg:top-4" onsubmit="return false">';
-    var any = false;
-    if (f.input && !usePanel) {
-      any = true;
-      h += '<label class="block text-sm font-bold">Danh sách chữ/từ' +
-        '<textarea data-input rows="2" class="mt-1 w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] text-sm">' + esc(state.input) + "</textarea></label>";
-    }
-    if (f.rows) {
-      any = true;
-      h += '<label class="block text-sm font-bold">Số hàng ô (3-6)' +
-        '<input data-rows type="number" min="3" max="6" value="' + state.rows + '" class="mt-1 w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] text-sm"></label>';
-    }
-    if (f.py) {
-      any = true;
-      h += '<label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" data-py checked> Hiện pinyin</label>';
-    }
-    if (f.mean) {
-      any = true;
-      h += '<label class="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" data-mean checked> Hiện nghĩa</label>';
-    }
-    if (!any) h += '<p class="text-sm text-[var(--nhai-muted)]">Mẫu này không cần cấu hình.</p>';
-    h += '<p class="text-xs text-[var(--nhai-muted)]">Đổi cấu hình → bản xem trước cập nhật ngay.</p>';
-    h += "</form>";
-
-    /* preview A4 */
-    h += '<section aria-label="Xem trước bản in" data-preview class="min-w-0"></section>';
-
-    /* panel chữ Hán cần luyện + "Mẫu in cùng loại" (cột phải) */
-    if (usePanel) h += '<div class="space-y-4">' + panelHtml(t) + switcherHtml(id) + "</div>";
-
-    page.innerHTML = h;
-
-    var form = page.querySelector("[data-cfg]");
+  /* ---------- wiring form ---------- */
+  function wireForm(id) {
     var preview = page.querySelector("[data-preview]");
     var badge = page.querySelector("[data-pages]");
+    var modal = page.querySelector("[data-modal]");
+    var modalTitle = modal.querySelector("h3");
 
-    function items() {
-      return usePanel ? CF.chars.map(function (c) { return c.hanzi; }) : parseItems(state.input);
-    }
-    function renderPreview() {
-      var pages = buildPages(id, items(), state);
-      preview.innerHTML = pages.map(sheetHtml).join("");
-      badge.textContent = pages.length + " trang";
-    }
-    function refreshPanel() {
-      var chips = page.querySelector("[data-chips]");
-      if (chips) chips.innerHTML = cfChips();
+    function renderPreview() { renderPreviewFor(id); }
+    function refreshCharRows() {
+      var rows = page.querySelector("[data-charrows]");
+      if (rows) rows.innerHTML = CF.chars.map(charRowHtml).join("");
       var count = page.querySelector("[data-count]");
       if (count) count.textContent = CF.chars.length;
-      var rows = page.querySelector("[data-modal-rows]");
-      if (rows) rows.innerHTML = modalRows();
-      persist();
     }
-
-    function update() {
-      var inp = form.querySelector("[data-input]");
-      var rowsInp = form.querySelector("[data-rows]");
-      var pyCb = form.querySelector("[data-py]");
-      var meanCb = form.querySelector("[data-mean]");
-      if (inp) state.input = inp.value;
-      if (rowsInp) {
-        var v = parseInt(rowsInp.value, 10);
-        if (isNaN(v)) v = 3;
-        state.rows = Math.min(6, Math.max(3, v));
-      }
-      if (pyCb) state.showPy = pyCb.checked;
-      if (meanCb) state.showMeaning = meanCb.checked;
+    function stepVal(key, dir) {
+      var inp = page.querySelector('[data-key="' + key + '"]');
+      var min = inp ? parseInt(inp.min, 10) : 0, max = inp ? parseInt(inp.max, 10) : 99;
+      var v = (parseInt(CF[key], 10) || 0) + dir;
+      CF[key] = Math.min(max, Math.max(min, v));
+      if (inp) inp.value = CF[key];
+      var val = page.querySelector('[data-val="' + key + '"]');
+      if (val) val.textContent = CF[key];
+      persist();
       renderPreview();
     }
 
-    form.addEventListener("input", update);
-    form.addEventListener("change", update);
-
-    if (usePanel) {
-      var panel = page.querySelector("[data-panel]");
-      var modal = page.querySelector("[data-modal]");
-
-      function addLevel(label) {
-        var hz = window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.chars;
-        var added = 0;
-        if (hz) {
-          Object.keys(hz).forEach(function (k) {
-            if (hz[k].level === label) { cfAdd(k); added++; }
-          });
-        }
-        return added;
+    /* mọi control có data-key → input/change → CF[k]=… → persist() → renderPreview() */
+    page.addEventListener("input", function (e) {
+      var t = e.target;
+      if (!t.hasAttribute) return;
+      if (t.hasAttribute("data-mean-i")) {
+        var row = CF.chars[parseInt(t.getAttribute("data-mean-i"), 10)];
+        if (row) { row.meaning = t.value; persist(); renderPreview(); }
+        return;
       }
-
-      panel.addEventListener("click", function (e) {
-        var tgt = e.target.closest ? e.target.closest("button") : null;
-        if (!tgt) return;
-        if (tgt.hasAttribute("data-add")) {
-          cfAdd(tgt.getAttribute("data-add"));
-          refreshPanel(); renderPreview();
-        } else if (tgt.hasAttribute("data-del")) {
-          CF.chars.splice(parseInt(tgt.getAttribute("data-del"), 10), 1);
-          refreshPanel(); renderPreview();
-        } else if (tgt.hasAttribute("data-clear")) {
-          CF.chars = [];
-          refreshPanel(); renderPreview();
-          NHAI.toast("Đã xoá tất cả chữ.");
-        } else if (tgt.hasAttribute("data-hsk")) {
-          var pop = page.querySelector("[data-hskpop]");
-          if (pop) pop.classList.toggle("hidden");
-        } else if (tgt.hasAttribute("data-level")) {
-          var addedN = addLevel(tgt.getAttribute("data-level"));
-          refreshPanel(); renderPreview();
-          if (!addedN) NHAI.toast("Chưa có dữ liệu chữ cho cấp này");
-        } else if (tgt.hasAttribute("data-edit")) {
-          if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); }
-        } else if (tgt.hasAttribute("data-modal-close")) {
-          if (modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
+      if (t.hasAttribute("data-key")) onControl(t);
+    });
+    page.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t && t.hasAttribute && t.hasAttribute("data-key")) onControl(t);
+    });
+    function onControl(t) {
+      var k = t.getAttribute("data-key");
+      if (t.type === "checkbox") {
+        if (t.hasAttribute("data-style")) {
+          /* checkbox group traceStyle */
+          var sv = t.getAttribute("data-style");
+          var arr = CF[k].slice();
+          var ix = arr.indexOf(sv);
+          if (t.checked && ix < 0) arr.push(sv);
+          if (!t.checked && ix >= 0) arr.splice(ix, 1);
+          if (!arr.length) arr.push("faint");
+          CF[k] = arr;
+        } else if (t.hasAttribute("data-value")) {
+          /* checkbox 1 chọn (script) — bỏ chọn 1 trong 2 thì về lại cái còn lại */
+          if (t.checked) CF[k] = t.getAttribute("data-value");
+          else CF[k] = t.getAttribute("data-value") === "khai" ? "hanh" : "khai";
+        } else {
+          CF[k] = t.checked;
         }
-      });
-
-      /* sửa pinyin / nghĩa → CF → preview realtime (không re-render modal để giữ focus) */
-      modal.addEventListener("input", function (e) {
-        var t2 = e.target;
-        if (!t2.hasAttribute) return;
-        if (t2.hasAttribute("data-py-i")) {
-          var r1 = CF.chars[parseInt(t2.getAttribute("data-py-i"), 10)];
-          if (r1) { r1.pinyin = t2.value; persist(); renderPreview(); }
-        } else if (t2.hasAttribute("data-mean-i")) {
-          var r2 = CF.chars[parseInt(t2.getAttribute("data-mean-i"), 10)];
-          if (r2) { r2.meaning = t2.value; persist(); renderPreview(); }
-        }
-      });
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
-      });
+      } else if (t.type === "radio") {
+        CF[k] = t.value;
+      } else if (t.type === "range" || t.type === "number") {
+        CF[k] = parseInt(t.value, 10) || 0;
+        var val = page.querySelector('[data-val="' + k + '"]');
+        if (val) val.textContent = CF[k];
+      } else {
+        CF[k] = t.value;
+      }
+      persist();
+      renderPreview();
     }
 
-    update();
-    syncPrintBtn();
+    page.addEventListener("click", function (e) {
+      var t = e.target.closest ? e.target.closest("button, a") : null;
+      if (!t || !page.contains(t)) return;
+      if (t.hasAttribute("data-step")) {
+        e.preventDefault();
+        stepVal(t.getAttribute("data-step"), parseInt(t.getAttribute("data-dir"), 10));
+      } else if (t.hasAttribute("data-del-char")) {
+        CF.chars.splice(parseInt(t.getAttribute("data-del-char"), 10), 1);
+        persist(); refreshCharRows(); renderPreview();
+      } else if (t.hasAttribute("data-clear-chars")) {
+        CF.chars = [];
+        persist(); refreshCharRows(); renderPreview();
+        NHAI.toast("Đã xoá tất cả từ.");
+      } else if (t.hasAttribute("data-cf-help")) {
+        modalTitle.innerHTML = "Hướng dẫn nhập từ vựng";
+        modal.querySelector("[data-modal-body]").innerHTML = helpModalBody();
+        modal.classList.remove("hidden"); modal.classList.add("flex");
+      } else if (t.hasAttribute("data-cf-import")) {
+        modalTitle.innerHTML = "Nhập vào danh sách";
+        modal.querySelector("[data-modal-body]").innerHTML = importModalBody();
+        modal.classList.remove("hidden"); modal.classList.add("flex");
+      } else if (t.hasAttribute("data-import-ok")) {
+        var ta = modal.querySelector("[data-import]");
+        var lines = String(ta ? ta.value : "").split("\n").map(function (l) { return l.trim(); }).filter(Boolean);
+        var added = 0;
+        lines.forEach(function (line) {
+          var p = parseLine(line);
+          if (!p || !p.hanzi || cfFind(p.hanzi)) return;
+          var hv = Array.from(p.hanzi).map(function (ch) {
+            return (charInfo(ch).hanViet || "").split(/\s+/)[0] || "";
+          }).join(" ").trim().toUpperCase();
+          CF.chars.push({ hanzi: p.hanzi, pinyin: p.pinyin, hv: hv, meaning: p.meaning });
+          added++;
+        });
+        persist(); refreshCharRows(); renderPreview();
+        modal.classList.add("hidden"); modal.classList.remove("flex");
+        NHAI.toast(added ? "Đã thêm " + added + " từ." : "Không có từ mới nào được thêm.");
+      } else if (t.hasAttribute("data-cf-ai")) {
+        /* mock "AI": chuẩn hoá pinyin + Hán Việt IN HOA từ dữ liệu có sẵn */
+        CF.chars.forEach(function (c) {
+          c.pinyin = c.pinyin.replace(/\s+/g, " ").trim();
+          var hv = Array.from(c.hanzi).map(function (ch) {
+            return (charInfo(ch).hanViet || "").split(/\s+/)[0] || "";
+          }).join(" ").trim();
+          if (hv) c.hv = hv.toUpperCase();
+          if (!c.meaning) c.meaning = charInfo(Array.from(c.hanzi)[0] || "").meaning || "";
+        });
+        persist(); refreshCharRows(); renderPreview();
+        NHAI.toast("Đã format " + CF.chars.length + " từ");
+      } else if (t.hasAttribute("data-modal-close")) {
+        modal.classList.add("hidden"); modal.classList.remove("flex");
+      } else if (t.hasAttribute("data-reset")) {
+        cfReset(id);
+        renderForm(id);
+        NHAI.toast("Đã khôi phục mặc định.");
+      } else if (t.hasAttribute("data-switch")) {
+        e.preventDefault();
+        var nid = t.getAttribute("data-switch");
+        if (TPL_BY_ID[nid] && nid !== id) {
+          CF.tpl = nid; persist();
+          history.replaceState(null, "", "create-file.html?tpl=" + encodeURIComponent(nid));
+          renderForm(nid); /* giữ nguyên CF state */
+        }
+      }
+    });
+
+    /* click nền modal → đóng */
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
+    });
+
+    CF._renderPreview = renderPreview; /* harness/debug */
   }
 
-  /* ---------- nút in / đăng nhập ---------- */
+  /* ---------- nút in / đăng nhập (gate FREEHSK/mockLogin) ---------- */
   function syncPrintBtn() {
     var btn = document.querySelector("[data-print]");
     if (!btn) return;
     if (canPrint()) {
-      btn.textContent = "🖨️ In / Lưu PDF";
+      btn.textContent = "🖨 In / Lưu PDF";
       btn.onclick = function () { window.print(); };
     } else {
       btn.textContent = "🔒 Đăng nhập để in";
@@ -684,10 +808,10 @@
   /* ---------- boot ---------- */
   window.addEventListener("beforeunload", persist);
   function boot() {
-    page = document.querySelector("[data-page]");
+    page = document.querySelector("#cf-root") || document.querySelector("[data-page]");
     if (!page) return;
     var tpl = NHAI.q("tpl");
-    if (tpl && TPL_BY_ID[tpl]) renderTemplate(tpl);
+    if (tpl && TPL_BY_ID[tpl]) renderForm(tpl);
     else renderCatalog();
   }
   if (document.readyState === "complete") boot();
