@@ -91,7 +91,7 @@
   function render() {
     var key = pageKey();
     /* PLAN-12: trang bộ deck tùy chỉnh (đã đăng nhập) */
-    if (key === "my-vocab" && window.NHAI && NHAI.isLoggedIn && NHAI.isLoggedIn() && window.NHAI.renderDeckPage) {
+    if ((key === "my-vocab" || key === "my-grammar") && window.NHAI && NHAI.isLoggedIn && NHAI.isLoggedIn() && window.NHAI.renderDeckPage) {
       window.NHAI.renderDeckPage(key);
       return;
     }
@@ -137,6 +137,19 @@
       defaultName: "Bộ từ vựng của tôi",
       twoCols: true /* "hanzi pinyin meaning" */,
       backPage: "my-vocab.html"
+    },
+    "my-grammar": {
+      storage: "nhai.grammarDecks",
+      icon: "📘",
+      emptyTitle: "Chưa có sổ tay ngữ pháp nào",
+      emptySub: "Tạo bộ đầu tiên để nhập mẫu câu từ tài liệu của bạn.",
+      listTitle: "Bộ ngữ pháp của tôi",
+      modalHint: "Dán danh sách — mỗi dòng một mẫu câu, định dạng: mẫu câu — nghĩa",
+      modalPlaceholder: "因为…所以… vì… nên…",
+      rowHint: "mẫu câu — nghĩa",
+      defaultName: "Bộ ngữ pháp của tôi",
+      twoCols: false,
+      backPage: "my-grammar.html"
     }
   };
 
