@@ -449,7 +449,7 @@
   }
 
   /* ---------- panel "Chữ Hán cần luyện" (PLAN-13) ---------- */
-  var PANEL_TPLS = { "stroke-order": 1, "big-char": 1, "copy": 1 };
+  var PANEL_TPLS = { "stroke-order": 1, "big-char": 1 };
 
   function cfChips() {
     return CF.chars.map(function (c, i) {
@@ -472,7 +472,8 @@
     h += "</div>";
     h += '<button type="button" data-hsk class="btn-ghost px-3 py-1.5 text-sm w-full">📂 Chọn chữ theo cấp HSK</button>';
     h += '<div data-hskpop class="hidden flex-wrap gap-1.5">';
-    var levels = (window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.levels) || [];
+    var levels = ((window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.levels) || [])
+      .filter(function (lv) { return lv.id !== "radicals" && !lv.href; });
     levels.forEach(function (lv) {
       h += '<button type="button" data-level="' + esc(lv.label) + '" class="pill px-2.5 py-1 text-sm hover:opacity-80">' + esc(lv.label) + "</button>";
     });
@@ -634,7 +635,7 @@
             if (hz[k].level === label) { cfAdd(k); added++; }
           });
         }
-        if (!added) parseItems(t.defInput || "").forEach(function (ch) { cfAdd(ch); });
+        return added;
       }
 
       panel.addEventListener("click", function (e) {
@@ -654,8 +655,9 @@
           var pop = page.querySelector("[data-hskpop]");
           if (pop) pop.classList.toggle("hidden");
         } else if (tgt.hasAttribute("data-level")) {
-          addLevel(tgt.getAttribute("data-level"));
+          var addedN = addLevel(tgt.getAttribute("data-level"));
           refreshPanel(); renderPreview();
+          if (!addedN) NHAI.toast("Chưa có dữ liệu chữ cho cấp này");
         } else if (tgt.hasAttribute("data-edit")) {
           if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); }
         } else if (tgt.hasAttribute("data-modal-close")) {
