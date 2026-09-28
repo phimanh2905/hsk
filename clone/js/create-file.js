@@ -84,6 +84,8 @@
   var CF = { chars: [], tpl: null };
 
   function cfSave() {
+    /* ngoài template view (hub) không ghi — tránh xoá state đang lưu khi rẽ qua hub */
+    if (!CF.tpl) return;
     try { sessionStorage.setItem("nhai.cf.state", JSON.stringify(CF)); } catch (e) { /* silent */ }
   }
   function cfLoad() {
@@ -483,6 +485,21 @@
     return h;
   }
 
+  /* ---------- "Mẫu in cùng loại": đổi mẫu giữ CF (PLAN-13) ---------- */
+  function switcherHtml() {
+    var h = '<div class="no-print card shadow-neo p-4 space-y-2">';
+    h += '<h3 class="font-bold">Mẫu in cùng loại</h3>';
+    h += '<p class="text-xs text-[var(--nhai-muted)]">Đổi mẫu không mất nội dung</p>';
+    ["stroke-order", "big-char"].forEach(function (id) {
+      if (!TPLS[id]) return;
+      h += '<a href="create-file.html?tpl=' + encodeURIComponent(id) + '" data-switch="' + esc(id) +
+        '" class="block card p-2 hover:-translate-y-0.5 transition-transform">' + mini(id) +
+        '<p class="text-sm font-semibold">' + esc(TPLS[id].name) + "</p></a>";
+    });
+    h += "</div>";
+    return h;
+  }
+
   function modalHtml() {
     return '<div data-modal class="hidden fixed inset-0 z-50 p-4 items-center justify-center no-print" style="background:rgba(0,0,0,.45)">' +
       '<div class="card shadow-neo p-4 w-full max-w-lg max-h-[80vh] overflow-y-auto" style="background:var(--nhai-bg)">' +
@@ -559,8 +576,8 @@
     /* preview A4 */
     h += '<section aria-label="Xem trước bản in" data-preview class="min-w-0"></section>';
 
-    /* panel chữ Hán cần luyện */
-    if (usePanel) h += panelHtml(t);
+    /* panel chữ Hán cần luyện + "Mẫu in cùng loại" (cột phải) */
+    if (usePanel) h += '<div class="space-y-4">' + panelHtml(t) + switcherHtml() + "</div>";
 
     page.innerHTML = h;
 
@@ -684,6 +701,7 @@
   document.addEventListener("click", function () { setTimeout(syncPrintBtn, 300); });
 
   /* ---------- boot ---------- */
+  window.addEventListener("beforeunload", cfSave);
   function boot() {
     page = document.querySelector("[data-page]");
     if (!page) return;
