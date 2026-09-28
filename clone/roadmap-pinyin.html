@@ -8,7 +8,18 @@
   <link rel="stylesheet" href="assets/theme.css">
   <script src="js/shell.js" defer></script>
   <script src="js/data/roadmapPinyin.js" defer></script>
+  <script src="js/data/roadmap.js" defer></script>
   <script src="js/roadmap-pinyin.js" defer></script>
+  <style>
+    /* PLAN-21: timeline 8 buổi — xen kẽ trái/phải trên desktop */
+    @media (min-width: 768px) {
+      #timeline-nodes > .tl-row:nth-child(odd) .tl-card-wrap { transform: translateX(-3rem); }
+      #timeline-nodes > .tl-row:nth-child(even) .tl-card-wrap { transform: translateX(3rem); }
+    }
+    .tl-tooltip { display: none; }
+    .tl-row.tl-locked:hover .tl-tooltip,
+    .tl-row.tl-locked:focus-within .tl-tooltip { display: block; }
+  </style>
 </head>
 <body>
   <div data-shell></div>
@@ -26,6 +37,17 @@
 
     <!-- Prev / next (render bởi js/roadmap-pinyin.js) -->
     <div id="step-nav" class="flex items-center justify-between gap-3 mb-8"></div>
+
+    <!-- PLAN-21: Timeline 8 buổi (render bởi js/roadmap-pinyin.js) -->
+    <section class="mb-8">
+      <h1 class="text-3xl font-extrabold tracking-tight mb-2">Lộ trình pinyin</h1>
+      <p class="text-[var(--nhai-muted)] mb-6">8 buổi, mỗi buổi 15–20 phút — hoàn thành bài kiểm tra để mở buổi tiếp theo.</p>
+      <div id="timeline" class="relative">
+        <div class="absolute top-2 bottom-2 left-7 md:left-1/2 md:-translate-x-1/2 w-0.5 bg-[var(--nhai-border)]" aria-hidden="true"></div>
+        <div id="timeline-nodes" class="relative"></div>
+        <div id="timeline-end"></div>
+      </div>
+    </section>
 
     <p class="text-xs text-[var(--nhai-muted)] text-center py-4">Nhai tiếng Trung mỗi ngày — facebook.com/groups/nhaihsk</p>
   </main>
