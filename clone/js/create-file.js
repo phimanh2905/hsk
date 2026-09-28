@@ -181,106 +181,30 @@
   function hasCode() { try { return localStorage.getItem("nhai.fileCode") === "1"; } catch (e) { return false; } }
   function canPrint() { return NHAI.isLoggedIn() || hasCode(); }
 
-  /* ================= HUB ================= */
-  var SECTIONS = [
-    { h2: "Mẫu chữ Hán", ids: ["stroke-order", "big-char"], cols: "md:grid-cols-2" },
-    { h2: "Mẫu từ vựng", ids: ["vocab", "vocab-check", "pinyin-write"], cols: "md:grid-cols-3" },
-    { h2: "Đoạn văn & giấy ô", ids: ["paragraph", "lined-paper", "grid-paper", "cover"], cols: "md:grid-cols-2" }
-  ];
-
-  function miniFrame(inner) {
-    return '<div class="rounded-md border-2 border-[#cfc4ae] bg-white text-[#17150f] p-2 aspect-[3/4] mb-3 overflow-hidden">' + inner + "</div>";
-  }
-  function miniCell(inner) { return '<div class="grid-cell">' + (inner || "") + "</div>"; }
-
-  function mini(id) {
-    var f = function (ch, sz) { return fadedChar(ch, sz || 1.1); };
-    var pyG = pyGuideInner(), dg = diagSvg();
-    switch (id) {
-      case "stroke-order": return miniFrame(
-        '<div class="grid grid-cols-4 mb-1">' +
-          miniCell('<span class="zh" style="font-size:1.3em">永</span>') +
-          miniCell('<span class="absolute top-0 left-0.5 text-[8px] font-bold" style="color:#c23b22">①</span>' + f("永")) +
-          miniCell(f("永")) + miniCell(f("永")) + "</div>" +
-        '<div class="grid grid-cols-4">' + miniCell(f("永")) + miniCell(f("永")) + miniCell(f("永")) + miniCell(f("永")) + "</div>");
-      case "big-char": return miniFrame(
-        '<div class="flex gap-1 h-full py-1"><div class="grid-cell w-1/3"><span class="zh" style="font-size:1.8em">永</span></div>' +
-        '<div class="flex-1 grid grid-cols-2">' + miniCell(f("永")) + miniCell(f("永")) + miniCell(f("永")) + miniCell(f("永")) + "</div></div>");
-      case "vocab": return miniFrame(
-        '<div class="text-[8px] mb-0.5" style="color:#999">nǐ hǎo nǐ hǎo</div>' +
-        '<div class="grid grid-cols-4">' + miniCell(f("你")) + miniCell(f("好")) + miniCell(f("你")) + miniCell(f("好")) + "</div>" +
-        '<div class="grid grid-cols-4 mt-1">' + miniCell(f("你")) + miniCell(f("好")) + miniCell(f("你")) + miniCell(f("好")) + "</div>");
-      case "vocab-check": return miniFrame(
-        '<div class="text-[8px] mb-1" style="color:#999">你好 — Xin chào</div>' +
-        '<div class="grid grid-cols-4">' + miniCell() + miniCell() + miniCell() + miniCell() + "</div>");
-      case "copy": return miniFrame(
-        '<div class="grid grid-cols-4">' +
-          miniCell('<span class="zh font-bold" style="font-size:1.1em">你</span>') +
-          miniCell('<span class="zh font-bold" style="font-size:1.1em">好</span>') +
-          miniCell('<span class="zh font-bold" style="font-size:1.1em">你</span>') +
-          miniCell('<span class="zh font-bold" style="font-size:1.1em">好</span>') + "</div>" +
-        '<div class="grid grid-cols-4 mt-1">' + miniCell() + miniCell() + miniCell() + miniCell() + "</div>");
-      case "cover": return miniFrame(
-        '<div class="h-full flex flex-col items-center justify-center gap-1.5">' +
-          '<span class="zh" style="font-size:2em">练</span>' +
-          '<div class="text-[9px] font-bold">Sổ luyện viết</div>' +
-          '<div class="w-3/4 border-t border-[#ccc]"></div><div class="w-3/4 border-t border-[#ccc]"></div></div>');
-      case "pinyin-lines": return miniFrame(
-        '<div class="text-[8px] mb-0.5" style="color:#999">nǐ hǎo</div>' +
-        '<div class="grid grid-cols-4">' + miniCell(pyG) + miniCell(pyG) + miniCell(pyG) + miniCell(pyG) + "</div>");
-      case "pinyin-write": return miniFrame(
-        '<div class="grid grid-cols-4">' + miniCell() + miniCell() + miniCell() + miniCell() + "</div>" +
-        '<div class="mx-1 mt-1 h-4 flex flex-col justify-between">' +
-          '<i style="display:block;border-top:1px solid #dccfb8"></i><i style="display:block;border-top:1px solid #dccfb8"></i><i style="display:block;border-top:1px solid #dccfb8"></i></div>');
-      case "paragraph": return miniFrame(
-        '<div class="text-[8px] mb-0.5" style="color:#999">pīnyīn</div>' +
-        '<div class="grid grid-cols-6">' + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) +
-        miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + "</div>" +
-        '<div class="grid grid-cols-6 mt-1">' + miniCell() + miniCell() + miniCell() + miniCell() + miniCell() + miniCell() + "</div>");
-      case "lined-paper": return miniFrame(
-        '<div class="text-[8px] mb-0.5" style="color:#999">pīnyīn</div>' +
-        '<div class="border-t border-[#dccfb8] my-1.5"></div>' +
-        '<div class="zh-faded text-lg leading-none pl-2">学</div>' +
-        '<div class="border-t border-[#dccfb8] my-1.5"></div>' +
-        '<div class="zh-faded text-lg leading-none pl-2">习</div>' +
-        '<div class="border-t border-[#dccfb8] my-1.5"></div>');
-      case "grid-paper": return miniFrame(
-        '<div class="grid grid-cols-4">' + miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) +
-        miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) + "</div>");
-      case "blank-grid": return miniFrame(
-        '<div class="grid grid-cols-4">' + miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) +
-        miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) + "</div>");
-      default: return miniFrame('<div class="grid grid-cols-4">' + miniCell() + miniCell() + miniCell() + miniCell() + "</div>");
-    }
+  /* ================= CATALOG (PLAN-16) ================= */
+  function bannerHtml() {
+    return '<div class="no-print card shadow-neo p-4 mt-5 flex flex-col md:flex-row md:items-center gap-3" style="background:#fdf6d8">' +
+      '<div class="flex-1"><p class="font-bold">Cần mã tải file để in. Tham gia nhóm Facebook Nhai HSK, mã n…</p></div>' +
+      '<a href="#" data-join class="font-bold whitespace-nowrap hover:underline" style="color:#c23b22">Tham gia nhóm để lấy mã</a>' +
+      "</div>";
   }
 
-  function renderHub() {
-    var unlocked = hasCode();
+  function renderCatalog() {
     var h = "";
-    h += '<h1 class="text-3xl font-extrabold">Tạo file</h1>';
-    h += '<p class="zh text-[var(--nhai-muted)] mt-1">生成练习本 — Tạo bản in luyện viết chữ Hán theo thứ tự nét</p>';
+    h += '<div class="flex flex-wrap items-center gap-3">' +
+      '<h1 class="text-3xl font-extrabold">Tạo file</h1>' +
+      '<span class="pill zh pill-active text-sm">生成练习本</span></div>';
+    h += '<p class="text-[var(--nhai-muted)] mt-1">— Tạo bản in luyện viết chữ Hán theo thứ tự nét</p>';
+    h += bannerHtml();
 
-    h += '<div class="card shadow-neo p-4 mt-5 flex flex-col md:flex-row md:items-center gap-3">' +
-      '<div class="flex-1"><p class="font-bold">🔐 Cần mã tải file để in</p>' +
-      '<p class="text-sm text-[var(--nhai-muted)]">Tham gia nhóm Facebook Nhai HSK, mã nằm ở phần mô tả nhóm.</p></div>';
-    if (unlocked) {
-      h += '<span class="font-bold text-green-600 whitespace-nowrap">✅ Đã mở khóa in</span>';
-    } else {
-      h += '<div class="flex gap-2">' +
-        '<input data-code placeholder="Nhập mã" class="border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] w-40">' +
-        '<button type="button" data-unlock class="btn-main px-4 py-2 text-sm whitespace-nowrap">Mở khóa in</button></div>';
-    }
-    h += '<a href="https://www.facebook.com/groups/nhaihsk" target="_blank" rel="noopener" class="btn-ghost px-4 py-2 text-sm text-center whitespace-nowrap">Tham gia nhóm để lấy mã</a>';
-    h += "</div>";
-
-    SECTIONS.forEach(function (s) {
-      h += '<h2 class="text-xl font-extrabold mt-8 mb-3">' + s.h2 + "</h2>";
-      h += '<div class="grid gap-4 ' + s.cols + '">';
-      s.ids.forEach(function (id) {
-        var t = TPL_BY_ID[id];
-        if (!t) return;
-        h += '<a href="create-file.html?tpl=' + encodeURIComponent(id) + '" class="card shadow-neo p-4 block hover:-translate-y-0.5 transition-transform">' +
-          mini(id) +
+    GROUPS.forEach(function (g) {
+      h += '<h2 class="text-xl font-extrabold mt-8 mb-3">' + esc(g.label) + "</h2>";
+      h += '<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">';
+      TPLS.forEach(function (t) {
+        if (t.group !== g.id) return;
+        h += '<a href="create-file.html?tpl=' + encodeURIComponent(t.id) + '" class="card shadow-neo p-4 block hover:-translate-y-0.5 transition-transform">' +
+          '<div class="rounded-md border-2 border-[#cfc4ae] bg-white mb-3 overflow-hidden" style="aspect-ratio:3/4">' +
+          '<div class="w-full h-full [&>svg]:w-full [&>svg]:h-full">' + (t.thumb || "") + "</div></div>" +
           '<h3 class="font-bold">' + esc(t.name) + "</h3>" +
           '<p class="text-sm text-[var(--nhai-muted)] mt-0.5">' + esc(t.desc) + "</p></a>";
       });
@@ -289,23 +213,13 @@
 
     page.innerHTML = h;
 
-    var unlockBtn = page.querySelector("[data-unlock]");
-    if (unlockBtn) {
-      unlockBtn.addEventListener("click", function () {
-        var inp = page.querySelector("[data-code]");
-        var code = inp ? inp.value.trim().toUpperCase() : "";
-        if (code === "FREEHSK") {
-          try { localStorage.setItem("nhai.fileCode", "1"); } catch (e) { /* silent */ }
-          NHAI.toast("Đã mở khóa in! Bạn có thể in từ các trang mẫu. 🎉");
-          renderHub();
-        } else {
-          NHAI.toast("Mã không đúng. Mã nằm ở mô tả nhóm Facebook");
-        }
-      });
-      var codeInp = page.querySelector("[data-code]");
-      codeInp.addEventListener("keydown", function (e) { if (e.key === "Enter") unlockBtn.click(); });
-    }
+    var join = page.querySelector("[data-join]");
+    if (join) join.addEventListener("click", function (e) {
+      e.preventDefault();
+      NHAI.toast("Mã tải file nằm ở phần mô tả của nhóm Facebook Nhai HSK.");
+    });
   }
+
 
   /* ================= TEMPLATE VIEW ================= */
   function sheetHtml(content) {
@@ -552,16 +466,17 @@
     return h;
   }
 
-  /* ---------- "Mẫu in cùng loại": đổi mẫu giữ CF (PLAN-13) ---------- */
-  function switcherHtml() {
+  /* ---------- "Mẫu in cùng loại": đổi mẫu giữ CF (PLAN-16) ---------- */
+  function switcherHtml(curId) {
+    var cur = TPL_BY_ID[curId] || {};
     var h = '<div class="no-print card shadow-neo p-4 space-y-2">';
     h += '<h3 class="font-bold">Mẫu in cùng loại</h3>';
     h += '<p class="text-xs text-[var(--nhai-muted)]">Đổi mẫu không mất nội dung</p>';
-    ["stroke-order", "big-char"].forEach(function (id) {
-      if (!TPL_BY_ID[id]) return;
-      h += '<a href="create-file.html?tpl=' + encodeURIComponent(id) + '" data-switch="' + esc(id) +
-        '" class="block card p-2 hover:-translate-y-0.5 transition-transform">' + mini(id) +
-        '<p class="text-sm font-semibold">' + esc(TPL_BY_ID[id].name) + "</p></a>";
+    TPLS.forEach(function (t) {
+      if (t.group !== cur.group) return;
+      h += '<a href="create-file.html?tpl=' + encodeURIComponent(t.id) + '" data-switch="' + esc(t.id) +
+        '" class="block card p-2 hover:-translate-y-0.5 transition-transform">' +
+        '<p class="text-sm font-semibold">' + esc(t.name) + "</p></a>";
     });
     h += "</div>";
     return h;
@@ -642,7 +557,7 @@
     h += '<section aria-label="Xem trước bản in" data-preview class="min-w-0"></section>';
 
     /* panel chữ Hán cần luyện + "Mẫu in cùng loại" (cột phải) */
-    if (usePanel) h += '<div class="space-y-4">' + panelHtml(t) + switcherHtml() + "</div>";
+    if (usePanel) h += '<div class="space-y-4">' + panelHtml(t) + switcherHtml(id) + "</div>";
 
     page.innerHTML = h;
 
@@ -773,7 +688,7 @@
     if (!page) return;
     var tpl = NHAI.q("tpl");
     if (tpl && TPL_BY_ID[tpl]) renderTemplate(tpl);
-    else renderHub();
+    else renderCatalog();
   }
   if (document.readyState === "complete") boot();
   else document.addEventListener("DOMContentLoaded", boot);
