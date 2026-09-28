@@ -112,6 +112,14 @@
     });
   }
 
+  /* Fix round 1 (review): video pseudo-id (daihua-x4…, routing-only) không phải YouTube ID hợp lệ.
+     Khi nhúng iframe, map về 1 video thật làm placeholder (id thật đầu tiên của dữ liệu PLAN-06). */
+  var PLACEHOLDER_EMBED = "EA3rwvr99Q0"; // 墓碑上的QR碼，別掃。 — video thật đầu tiên trong clone
+
+  function embedIdOf(v) {
+    return /^[A-Za-z0-9_-]{11}$/.test(v.id) ? v.id : PLACEHOLDER_EMBED;
+  }
+
   function applyVideo(v) {
     document.title = v.title + " | Shadowing | Nhai HSK";
     var h1 = document.querySelector("[data-title]");
@@ -119,8 +127,9 @@
     var badges = document.querySelector("[data-badges]");
     if (badges) badges.innerHTML = videoBadges(v);
     var frame = document.getElementById("ytplayer");
-    if (frame && frame.src.indexOf(v.id) === -1) {
-      frame.src = "https://www.youtube-nocookie.com/embed/" + v.id + "?enablejsapi=1&rel=0&playsinline=1";
+    var embedId = embedIdOf(v);
+    if (frame && frame.src.indexOf("/embed/" + embedId + "?") === -1) {
+      frame.src = "https://www.youtube-nocookie.com/embed/" + embedId + "?enablejsapi=1&rel=0&playsinline=1";
     }
     renderRelated(v);
   }
