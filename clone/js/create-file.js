@@ -489,9 +489,9 @@
     return '<div class="flex items-center justify-between gap-2 text-sm font-bold">' +
       "<span>" + label + "</span>" +
       '<span class="flex items-center gap-1">' +
-      '<button type="button" data-step="' + key + '" data-dir="-1" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">−</button>' +
+      '<button type="button" data-step="' + key + '" data-dir="-1" data-min="' + min + '" data-max="' + max + '" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">−</button>' +
       '<span data-val="' + key + '" class="w-8 text-center font-semibold">' + CF[key] + "</span>" +
-      '<button type="button" data-step="' + key + '" data-dir="1" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">+</button>' +
+      '<button type="button" data-step="' + key + '" data-dir="1" data-min="' + min + '" data-max="' + max + '" class="w-7 h-7 rounded-md border-2 border-[var(--nhai-border)] font-bold leading-none hover:bg-[var(--nhai-bg)]">+</button>' +
       "</span></div>";
   }
   function slider(label, key, min, max, suffix) {
@@ -656,12 +656,12 @@
       var count = page.querySelector("[data-count]");
       if (count) count.textContent = CF.chars.length;
     }
-    function stepVal(key, dir) {
-      var inp = page.querySelector('[data-key="' + key + '"]');
-      var min = inp ? parseInt(inp.min, 10) : 0, max = inp ? parseInt(inp.max, 10) : 99;
+    function stepVal(key, dir, btn) {
+      /* min/max khai báo trên chính nút stepper (input ẩn không tồn tại) */
+      var min = btn ? parseInt(btn.getAttribute("data-min"), 10) : 0;
+      var max = btn ? parseInt(btn.getAttribute("data-max"), 10) : 99;
       var v = (parseInt(CF[key], 10) || 0) + dir;
       CF[key] = Math.min(max, Math.max(min, v));
-      if (inp) inp.value = CF[key];
       var val = page.querySelector('[data-val="' + key + '"]');
       if (val) val.textContent = CF[key];
       persist();
@@ -695,10 +695,12 @@
           if (!t.checked && ix >= 0) arr.splice(ix, 1);
           if (!arr.length) arr.push("faint");
           CF[k] = arr;
+          syncChecks(); /* uncheck ô cuối → về Tô mờ, giữ UI khớp preview */
         } else if (t.hasAttribute("data-value")) {
           /* checkbox 1 chọn (script) — bỏ chọn 1 trong 2 thì về lại cái còn lại */
           if (t.checked) CF[k] = t.getAttribute("data-value");
           else CF[k] = t.getAttribute("data-value") === "khai" ? "hanh" : "khai";
+          syncChecks();
         } else {
           CF[k] = t.checked;
         }
@@ -715,12 +717,23 @@
       renderPreview();
     }
 
+    /* đồng bộ lại checked state của các checkbox nhóm (traceStyle / script) sau khi CF đổi */
+    function syncChecks() {
+      page.querySelectorAll("input[data-style]").forEach(function (cb) {
+        var v = cb.getAttribute("data-style");
+        cb.checked = Array.isArray(CF.traceStyle) && CF.traceStyle.indexOf(v) >= 0;
+      });
+      page.querySelectorAll("input[data-value]").forEach(function (cb) {
+        cb.checked = CF.script === cb.getAttribute("data-value");
+      });
+    }
+
     page.addEventListener("click", function (e) {
       var t = e.target.closest ? e.target.closest("button, a") : null;
       if (!t || !page.contains(t)) return;
       if (t.hasAttribute("data-step")) {
         e.preventDefault();
-        stepVal(t.getAttribute("data-step"), parseInt(t.getAttribute("data-dir"), 10));
+        stepVal(t.getAttribute("data-step"), parseInt(t.getAttribute("data-dir"), 10), t);
       } else if (t.hasAttribute("data-del-char")) {
         CF.chars.splice(parseInt(t.getAttribute("data-del-char"), 10), 1);
         persist(); refreshCharRows(); renderPreview();
@@ -785,8 +798,6 @@
     modal.addEventListener("click", function (e) {
       if (e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
     });
-
-    CF._renderPreview = renderPreview; /* harness/debug */
   }
 
   /* ---------- nút in / đăng nhập (gate FREEHSK/mockLogin) ---------- */
@@ -806,13 +817,20 @@
   document.addEventListener("click", function () { setTimeout(syncPrintBtn, 300); });
 
   /* ---------- boot ---------- */
-  window.addEventListener("beforeunload", persist);
+  window.addEventListener("beforeunload", function () {
+    /* chỉ ghi khi đang ở form view — qua catalog không được xoá state đã lưu */
+    if (CF.tpl) persist();
+  });
   function boot() {
     page = document.querySelector("#cf-root") || document.querySelector("[data-page]");
     if (!page) return;
     var tpl = NHAI.q("tpl");
     if (tpl && TPL_BY_ID[tpl]) renderForm(tpl);
-    else renderCatalog();
+    else {
+      /* catalog: reset CF trong bộ nhớ (KHÔNG ghi) — giữ nguyên state đã lưu trong sessionStorage */
+      CF = cfDefaults();
+      renderCatalog();
+    }
   }
   if (document.readyState === "complete") boot();
   else document.addEventListener("DOMContentLoaded", boot);
