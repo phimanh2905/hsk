@@ -87,3 +87,11 @@ html.dark .shadow-neo { box-shadow: 3px 3px 0 0 #000; }
   body { background: #fff; color: #000; }
   .print-area { box-shadow: none !important; }
 }
+
+/* SPEC-10 task 2: nền giấy kẻ ô (24px, border 0.35) */
+.paper-grid {
+  background-image:
+    linear-gradient(to right, rgba(107, 102, 92, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(107, 102, 92, 0.35) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

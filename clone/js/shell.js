@@ -104,7 +104,7 @@
     return (it.match || []).indexOf(f) >= 0;
   }
   function closeSidePanels() {
-    document.querySelectorAll("[data-side-panel]").forEach(function (p) { p.remove(); });
+    document.querySelectorAll("[data-side-panel], [data-top-panel]").forEach(function (p) { p.remove(); });
     document.querySelectorAll("[data-side-group]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
   }
 
@@ -134,10 +134,6 @@
           '<span class="text-lg" aria-hidden="true">' + it.icon + "</span><span>" + it.label + "</span></a>";
       }
     });
-    /* login/logout — đơn giản cho task 1 (topbar XP/bell/avatar là task 2) */
-    html += '<span data-user class="hidden"><span class="text-xs"></span></span>' +
-      '<button type="button" data-login class="mt-auto mb-2 w-14 py-1.5 rounded-lg border-2 border-transparent flex flex-col items-center gap-0.5 text-[10px] font-semibold leading-tight text-center text-[var(--nhai-muted)] hover:text-[var(--nhai-main)] hover:border-[var(--nhai-border)]">' +
-        '<span class="text-lg" aria-hidden="true">👤</span><span>Đăng nhập</span></button>';
     sb.innerHTML = html;
     document.body.insertBefore(sb, document.body.firstChild);
 
@@ -161,19 +157,18 @@
         var panel = NHAI.el('<div data-side-panel="' + gi + '" class="hidden card shadow-neo p-1 z-[500] fixed w-52" style="left:76px;top:' + Math.max(8, r.top - 4) + 'px">' + links + "</div>");
         panel.classList.remove("hidden");
         document.body.appendChild(panel);
+        /* clamp: không tràn đáy viewport */
+        var maxTop = window.innerHeight - panel.offsetHeight - 8;
+        panel.style.top = Math.max(8, Math.min(r.top - 4, maxTop)) + "px";
         btn.setAttribute("aria-expanded", "true");
       });
     });
     sb.querySelectorAll("[data-side-settings]").forEach(function (btn) {
       btn.addEventListener("click", toggleSettings);
     });
-    sb.querySelector("[data-login]").addEventListener("click", function () {
-      var b = this;
-      if (b.textContent.indexOf("Đăng nhập") >= 0) openLogin();
-      else { localStorage.removeItem("nhai.mockLogin"); location.reload(); }
-    });
     document.addEventListener("click", function (e) {
-      if (!e.target.closest || (!e.target.closest("[data-side-panel]") && !e.target.closest("[data-side-group]"))) closeSidePanels();
+      if (!e.target.closest || (!e.target.closest("[data-side-panel]") && !e.target.closest("[data-side-group]") &&
+          !e.target.closest("[data-top-panel]") && !e.target.closest("[data-bell]"))) closeSidePanels();
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeSidePanels();
@@ -191,6 +186,7 @@
       st.textContent = "@media (min-width:1024px){body{padding-left:72px}}";
       document.head.appendChild(st);
     }
+    document.body.classList.add("paper-grid");
     renderSidebar(host);
 
     var nav = '<nav class="hidden md:flex items-center gap-1" data-nav-group>';
@@ -214,6 +210,20 @@
     });
 
     host.innerHTML =
+      /* topbar desktop (trong vùng content, bên phải sidebar) */
+      '<div class="hidden lg:flex items-center gap-3 px-6 py-3 border-b-2 border-[var(--nhai-border)] bg-[var(--nhai-card)]" data-topbar>' +
+        '<a href="index.html" class="flex items-center gap-2 text-xl font-extrabold tracking-tight">' +
+          '<span class="w-8 h-8 rounded-md bg-[var(--nhai-main)] text-white flex items-center justify-center text-base font-extrabold zh">奈</span>' +
+          '<span>Nhai <span class="text-[var(--nhai-main)]">HSK</span></span>' +
+        "</a>" +
+        '<div class="ml-auto flex items-center gap-2">' +
+          '<span data-user class="hidden xl:inline-flex items-center gap-1">' +
+            '<span class="text-xs font-semibold text-[var(--nhai-muted)]" title="mỗi câu trả lời đúng +1">⚡ 0 — mỗi câu trả lời đúng +1</span>' +
+          "</span>" +
+          '<button type="button" data-bell class="btn-ghost w-9 h-9" title="Thông báo">🔔</button>' +
+          '<button type="button" data-login class="btn-main px-3 py-2 text-sm">Đăng nhập</button>' +
+        "</div>" +
+      "</div>" +
       '<div class="border-b-2 border-[var(--nhai-border)] bg-[var(--nhai-card)] lg:hidden">' +
         '<div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">' +
           '<a href="index.html" class="text-xl font-extrabold tracking-tight">Nhai<span class="text-[var(--nhai-main)]">HSK</span></a>' +
@@ -229,10 +239,36 @@
         "</div>" +
         '<div data-mobile-panel class="hidden border-t-2 border-[var(--nhai-border)] md:hidden">' + mobileLinks + "</div>" +
       "</div>" +
-      '<div class="mx-auto max-w-6xl px-4 pt-3 text-center text-xs font-semibold text-[var(--nhai-muted)]">' +
+      '<div class="hidden lg:block absolute right-4 top-16 z-[350] text-right text-xs font-semibold leading-snug text-[#c0392b99]">' +
+        '<div>HOÀNG SA, TRƯỜNG SA LÀ CỦA VIỆT NAM</div>' +
+        '<div class="zh">西沙（黄沙）群岛、南沙（长沙）群岛属于越南</div>' +
+      "</div>" +
+      '<div class="lg:hidden mx-auto max-w-6xl px-4 pt-3 text-center text-xs font-semibold text-[var(--nhai-muted)]">' +
         '<div>HOÀNG SA, TRƯỜNG SA LÀ CỦA VIỆT NAM</div>' +
         '<div class="zh">西沙（黄沙）群岛、南沙（长沙）群岛属于越南</div>' +
       "</div>";
+
+    /* chuông thông báo (desktop topbar): popup 3 thông báo demo */
+    var NOTIFS = [
+      { icon: "📘", text: "Bài mới: HSK 1 — Bài 1 Đồ ăn đã mở", href: "reading.html" },
+      { icon: "🔔", text: "Nhắc học: hoàn thành 10 từ ôn tập hôm nay", href: "review.html" },
+      { icon: "🏆", text: "Bạn đã vào top 10 Bảng xếp hạng XP tuần này", href: "leaderboard.html?tab=xp" }
+    ];
+    host.querySelector("[data-bell]").addEventListener("click", function (e) {
+      e.stopPropagation();
+      var existing = document.querySelector("[data-top-panel]");
+      closeSidePanels();
+      if (existing) return;
+      var rows = "";
+      NOTIFS.forEach(function (n) {
+        rows += '<a href="' + n.href + '" class="block px-3 py-2.5 rounded-md text-sm hover:bg-[var(--nhai-soft)] border-b border-[var(--nhai-border)] last:border-b-0"><span aria-hidden="true">' + n.icon + "</span> " + n.text + "</a>";
+      });
+      var panel = NHAI.el('<div data-top-panel class="card shadow-neo fixed right-4 top-16 w-80 p-1 z-[500]">' +
+        '<div class="px-3 py-2 text-sm font-extrabold border-b-2 border-[var(--nhai-border)] mb-1">Thông báo</div>' + rows + "</div>");
+      document.body.appendChild(panel);
+    });
+
+    host.querySelector("[data-login]").addEventListener("click", openLogin);
 
     /* dropdown behavior */
     host.querySelectorAll("[data-menu]").forEach(function (btn) {
@@ -300,14 +336,15 @@
   NHAI.openLogin = openLogin;
 
   function renderLoggedIn() {
-    var btns = document.querySelectorAll("[data-login], [data-login-mobile]");
+    var btns = document.querySelectorAll("[data-topbar] [data-login], [data-login-mobile]");
     var xp = document.querySelectorAll("[data-user] .text-xs");
+    var name = localStorage.getItem("nhai.mockName") || "T";
+    var initials = name.trim().slice(0, 2).toUpperCase();
     btns.forEach(function (btn) {
-      var name = localStorage.getItem("nhai.mockName") || "T";
-      btn.textContent = name;
+      btn.textContent = initials;
       btn.classList.remove("btn-main");
-      btn.classList.add("btn-ghost");
-      btn.title = "Đăng xuất (demo)";
+      btn.classList.add("btn-ghost", "rounded-full", "w-9", "h-9", "flex", "items-center", "justify-center", "font-bold");
+      btn.title = "Đăng xuất (demo) — " + name;
     });
     var first = btns[0];
     if (first) {
@@ -317,7 +354,7 @@
         location.reload();
       });
     }
-    xp.forEach(function (el) { el.textContent = "128 điểm — mỗi câu trả lời đúng +1"; });
+    xp.forEach(function (el) { el.textContent = "⚡ 128 — mỗi câu trả lời đúng +1"; });
   }
 
   /* ---------- settings panel ---------- */
