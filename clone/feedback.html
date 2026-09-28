@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Góp ý | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/feedback.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <h1 class="text-3xl font-extrabold tracking-tight mb-2">Góp ý</h1>
+    <p class="text-[var(--nhai-muted)] mb-5">Cảm nhận của bạn giúp Nhai HSK tốt hơn…</p>
+
+    <form id="feedback-form" class="card shadow-neo p-5">
+      <label for="feedback-text" class="block text-sm font-bold mb-2">Nội dung góp ý</label>
+      <textarea id="feedback-text" rows="6" required
+        placeholder="Cảm nhận của bạn giúp Nhai HSK tốt hơn…"
+        class="w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 mb-4 bg-[var(--nhai-bg)] focus:outline-none focus:border-[var(--nhai-main)]"></textarea>
+      <button type="submit" class="btn-main px-6 py-2.5">Gửi góp ý</button>
+    </form>
+  </main>
+</body>
+</html>

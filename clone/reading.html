@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài khoá | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/reading.js" defer></script>
+  <script src="js/reading.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Bài khoá</h1>
+    <p class="text-[var(--nhai-muted)] mt-2 mb-6 max-w-3xl">
+      Dán một đoạn văn hoặc bài báo tiếng Trung — hệ thống tạo audio giọng bản xứ kèm bản dịch,
+      audio đọc tới đâu chữ sáng tới đó để bạn luyện đọc theo kiểu shadowing.
+    </p>
+
+    <div class="grid gap-6 lg:grid-cols-3 items-start">
+      <!-- Sidebar -->
+      <aside class="space-y-4 lg:col-span-1" aria-label="Danh sách bài đọc">
+        <section class="card shadow-neo p-4">
+          <h2 class="text-xl font-extrabold">Bài demo</h2>
+          <p class="text-sm text-[var(--nhai-muted)] mt-1 mb-3">
+            Xem trước kết quả: audio đọc chuẩn, bấm từng câu, bản dịch, câu hỏi &amp; từ vựng — miễn phí, không tốn lượt.
+          </p>
+          <div data-demo-list class="space-y-2"></div>
+        </section>
+        <section class="card shadow-neo p-4">
+          <h2 class="text-xl font-extrabold">Bài của bạn</h2>
+          <p class="text-sm text-[var(--nhai-muted)] mt-1 mb-3">
+            Bài đã tạo được lưu vào tài khoản — mở lại trên mọi thiết bị, không tốn lượt.
+          </p>
+          <div data-account></div>
+        </section>
+      </aside>
+
+      <!-- Khu chính -->
+      <section class="lg:col-span-2 space-y-4">
+        <div class="card p-0 overflow-hidden">
+          <button type="button" data-callout-toggle class="w-full flex items-center gap-2 px-4 py-3 text-left font-bold hover:bg-[var(--nhai-soft)]" aria-expanded="false">
+            <span aria-hidden="true">💡</span>
+            <span class="flex-1">Phương pháp đọc hiểu hiệu quả nhất (6 bước với 1 bài)</span>
+            <span data-callout-arrow class="text-sm text-[var(--nhai-muted)]">▾</span>
+          </button>
+          <div data-callout-body class="hidden px-5 pb-4">
+            <ol class="list-decimal ml-5 space-y-1 text-sm text-[var(--nhai-muted)]">
+              <li>Đọc lướt cả bài một lần để nắm đại ý, không cần hiểu từng chữ.</li>
+              <li>Bật audio đọc cả bài, vừa nghe vừa nhìn chữ — đừng dừng lại.</li>
+              <li>Đọc từng câu: bấm ▶, theo dõi chữ sáng, bắt chước ngữ điệu (shadowing).</li>
+              <li>Mở bản dịch và pinyin, đối chiếu với những chỗ mình hiểu sai.</li>
+              <li>Tìm từ vựng mới, bấm ⭐ thêm vào sổ tay để ôn lại sau.</li>
+              <li>Ngày hôm sau nghe lại bài đó một lần — bạn sẽ hiểu sâu hơn hẳn.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card shadow-neo p-4">
+          <label for="reading-input" class="sr-only">Văn bản tiếng Trung</label>
+          <textarea id="reading-input" data-input rows="9"
+            class="zh w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] text-lg leading-relaxed resize-y"
+            placeholder="Dán một đoạn đọc ngắn, đoạn văn hoặc bài báo tiếng Trung (tối đa 3000 ký tự) vào đây…"></textarea>
+          <div class="flex items-center justify-between gap-2 mt-3 flex-wrap">
+            <span data-counter class="text-sm text-[var(--nhai-muted)] tabular-nums">0/3000</span>
+            <div class="flex items-center gap-2">
+              <button type="button" data-sample-btn class="btn-ghost px-4 py-2 rounded-lg text-sm font-bold">Dùng văn bản mẫu</button>
+              <button type="button" data-create-btn class="btn-main px-5 py-2 rounded-lg font-extrabold">Tạo bài đọc</button>
+            </div>
+          </div>
+        </div>
+
+        <div data-result></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

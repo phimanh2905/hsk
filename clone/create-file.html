@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tạo file | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <!-- data files before page js -->
+  <script src="js/data/vocab.js" defer></script>
+  <script src="js/data/radicals.js" defer></script>
+  <script src="js/data/hanzi.js" defer></script>
+  <script src="js/data/templates.js" defer></script>
+  <script src="js/create-file.js" defer></script>
+  <style>
+    /* giấy in luôn trắng, chữ đậm dù dark mode */
+    .sheet { background: #fff; color: #17150f; }
+    .sheet .grid-cell { border-color: #cfc4ae; }
+    @media print {
+      .fixed { display: none !important; }
+      main { max-width: none !important; padding: 0 !important; }
+      .print-page {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
+        page-break-after: always;
+      }
+      .print-page:last-child { page-break-after: auto; }
+      .break-inside-avoid { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <div data-page></div>
+  </main>
+</body>
+</html>

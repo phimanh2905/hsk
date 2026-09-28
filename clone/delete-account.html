@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xoá tài khoản | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <h1 class="text-3xl font-extrabold tracking-tight mb-2">Xoá tài khoản</h1>
+    <p class="text-[var(--nhai-muted)] mb-6">Nhập email của tài khoản để yêu cầu xoá vĩnh viễn. Toàn bộ tiến trình học, từ vựng đã lưu và dữ liệu liên quan sẽ bị xoá và không thể khôi phục.</p>
+
+    <form id="delete-form" class="card shadow-neo p-5">
+      <label for="delete-email" class="block text-sm font-bold mb-2">Email tài khoản</label>
+      <input id="delete-email" type="email" required placeholder="email@example.com"
+        class="w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2.5 mb-4 bg-[var(--nhai-bg)] focus:outline-none focus:border-[var(--nhai-main)]">
+      <button type="submit" id="delete-submit" class="btn-main px-6 py-2.5">Yêu cầu xoá</button>
+    </form>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+      var form = document.getElementById("delete-form");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = document.getElementById("delete-email").value.trim();
+        if (!email) return;
+        if (window.NHAI && NHAI.toast) NHAI.toast("Đã gửi yêu cầu xoá tài khoản. Chúng tôi sẽ xác nhận qua email " + email + ".");
+        var btn = document.getElementById("delete-submit");
+        btn.disabled = true;
+        btn.textContent = "Đã gửi yêu cầu";
+        document.getElementById("delete-email").disabled = true;
+        btn.classList.remove("btn-main");
+        btn.classList.add("btn-ghost");
+      });
+    })();
+  </script>
+</body>
+</html>

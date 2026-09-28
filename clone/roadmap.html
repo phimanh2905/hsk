@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lộ trình | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/roadmap.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <!-- Header -->
+    <section class="mb-6">
+      <div class="flex flex-wrap items-center gap-3 mb-2">
+        <h1 class="text-3xl font-extrabold tracking-tight">Lộ trình</h1>
+        <span class="pill text-xs py-1">🚧 Tính năng đang phát triển</span>
+      </div>
+      <p class="text-[var(--nhai-muted)]">Một con đường liền mạch từ bảng Pinyin đến HSK 7–9. Đã có nền tảng? Vào thẳng chặng bạn muốn — không cần học lại từ đầu.</p>
+    </section>
+
+    <!-- Hành trình của bạn -->
+    <section class="card shadow-neo p-5 mb-8">
+      <h2 class="text-lg font-extrabold mb-3">Hành trình của bạn 🚩</h2>
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <p class="font-semibold">Bạn đang ở: <span class="zh text-[var(--nhai-main)] font-extrabold">拼音</span> · Bảng chữ cái Pinyin</p>
+        <a href="roadmap-pinyin.html" class="btn-main px-4 py-2 text-sm ml-auto">Tiếp tục học</a>
+      </div>
+      <div>
+        <div class="flex items-center justify-between text-xs font-bold mb-1">
+          <span class="text-[var(--nhai-muted)]">Tiến độ</span>
+          <span>0% toàn lộ trình</span>
+        </div>
+        <div class="h-3 rounded-full bg-[var(--nhai-soft)] border-2 border-[var(--nhai-border)] overflow-hidden">
+          <div class="h-full bg-[var(--nhai-main)]" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline 6 chặng (render bởi js/roadmap.js) -->
+    <section class="mb-8">
+      <div id="timeline" class="relative"></div>
+    </section>
+
+    <!-- Card Tổng ôn (render bởi js/roadmap.js) -->
+    <div id="review-card" class="mb-8"></div>
+
+    <!-- Đích đến -->
+    <section class="card shadow-neo p-5 mb-4">
+      <p class="font-bold mb-1">Đích đến: HSK 7–9</p>
+      <p class="text-sm text-[var(--nhai-muted)]">Đọc hiểu văn bản học thuật, báo chí chuyên sâu và giao tiếp thành thạo như người bản ngữ.</p>
+    </section>
+
+    <p class="text-xs text-[var(--nhai-muted)] text-center py-4">Nhai tiếng Trung mỗi ngày — facebook.com/groups/nhaihsk</p>
+  </main>
+</body>
+</html>

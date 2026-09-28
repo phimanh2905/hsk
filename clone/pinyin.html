@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bảng Pinyin | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/pinyin-utils.js" defer></script>
+  <script src="js/data/pinyin.js" defer></script>
+  <script src="js/pinyin.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold">Bảng Pinyin</h1>
+      <p class="text-sm text-[var(--nhai-muted)] font-semibold mt-1">拼音表 — Thanh mẫu (声母) × Vận mẫu (韵母)</p>
+      <p class="text-sm mt-2">406 âm tiết chuẩn — bấm ô bất kỳ để xem chi tiết và nghe phát âm.</p>
+      <div class="flex flex-wrap gap-3 mt-3 text-sm font-semibold">
+        <a href="roadmap-pinyin.html" class="text-[var(--nhai-accent)] hover:underline">→ Học theo lộ trình</a>
+        <a href="pinyin-practice.html" class="text-[var(--nhai-accent)] hover:underline">→ Bài tập</a>
+      </div>
+    </header>
+
+    <!-- filter thanh mẫu -->
+    <section class="mb-5 no-print">
+      <h2 class="text-sm font-bold uppercase tracking-wide text-[var(--nhai-muted)] mb-2">Lọc thanh mẫu</h2>
+      <div id="initial-pills" class="flex flex-wrap gap-2"></div>
+    </section>
+
+    <!-- bảng ma trận -->
+    <section class="card shadow-neo p-3 sm:p-4 overflow-x-auto">
+      <table class="border-collapse text-center min-w-[1100px]">
+        <thead>
+          <tr>
+            <th class="sticky left-0 z-10 bg-[var(--nhai-card)] border-2 border-[var(--nhai-border)] px-2 py-1.5 text-xs font-bold">Thanh mẫu ↓<br>Vận mẫu →</th>
+          </tr>
+        </thead>
+        <tbody id="pinyin-body"></tbody>
+      </table>
+    </section>
+
+    <p class="text-xs text-[var(--nhai-muted)] font-semibold mt-3">Ô "·" là tổ hợp không tồn tại trong tiếng Trung chuẩn. Hàng Ø là âm không thanh mẫu (yi, ya, wu, wa, yu…).</p>
+  </main>
+</body>
+</html>

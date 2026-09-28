@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phân tích Hán tự | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/hanzi.js" defer></script>
+  <script src="js/draw-pad.js" defer></script>
+  <script src="js/hanzi-writer.js" defer></script>
+  <script src="js/hanzi.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-6xl px-4 py-6">
+
+    <!-- ============ MÀN 1: Phân tích Hán tự ============ -->
+    <section id="view-home">
+      <header class="mb-6">
+        <h1 class="text-3xl font-extrabold">Phân tích Hán tự</h1>
+        <p class="text-sm text-[var(--nhai-muted)] font-semibold mt-1">Gõ hoặc vẽ một chữ Hán để xem nghĩa, pinyin, âm Hán Việt, thứ tự nét, bộ thủ và cấu tạo chữ.</p>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card shadow-neo p-4 sm:p-5">
+          <h2 class="font-extrabold text-lg mb-3">🔍 Tìm chữ Hán</h2>
+          <div data-search-card></div>
+        </div>
+        <div class="card shadow-neo p-4 sm:p-5">
+          <h2 class="font-extrabold text-lg mb-3">✍️ Hoặc vẽ chữ Hán</h2>
+          <div data-draw-card></div>
+        </div>
+      </div>
+
+      <section class="mt-8">
+        <h2 class="font-extrabold text-xl mb-3">Khám phá chữ Hán theo cấp độ</h2>
+        <div id="level-pills" class="flex flex-wrap gap-2 mb-4"></div>
+        <div id="level-info" class="text-sm font-bold text-[var(--nhai-muted)] mb-3"></div>
+        <div id="level-actions" class="flex flex-wrap gap-2 mb-4">
+          <button type="button" data-level-action="Flashcard" class="btn-ghost px-4 py-2 text-sm">🃏 Flashcard</button>
+          <button type="button" data-level-action="Luyện viết" class="btn-ghost px-4 py-2 text-sm">✍️ Luyện viết</button>
+          <button type="button" data-level-action="Tạo file" class="btn-ghost px-4 py-2 text-sm">📄 Tạo file</button>
+        </div>
+        <div id="level-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2"></div>
+      </section>
+    </section>
+
+    <!-- ============ MÀN 2: Chi tiết chữ ?char= ============ -->
+    <section id="view-detail" class="hidden">
+      <header class="mb-4">
+        <a href="hanzi.html" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Phân tích Hán tự</a>
+      </header>
+
+      <div class="grid lg:grid-cols-10 gap-6">
+        <!-- Sidebar trái -->
+        <aside class="lg:col-span-3 space-y-4 order-2 lg:order-1">
+          <div class="card shadow-neo p-4">
+            <h2 class="font-extrabold mb-2">🔍 Tìm chữ Hán</h2>
+            <div data-search-card></div>
+          </div>
+          <div class="card shadow-neo p-4">
+            <h2 class="font-extrabold mb-2">✍️ Vẽ chữ Hán</h2>
+            <div data-draw-card></div>
+          </div>
+        </aside>
+
+        <!-- Trung tâm -->
+        <div class="lg:col-span-4 order-1 lg:order-2">
+          <div class="relative mx-auto" style="width:260px;height:260px">
+            <div class="absolute inset-0 card flex items-center justify-center" style="border-width:2px">
+              <span id="detail-glyph" class="zh font-black" style="font-size:150px;line-height:1">你</span>
+            </div>
+            <div id="writer-host" class="absolute inset-0"></div>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 mt-3">
+            <button type="button" id="btn-replay" class="btn-ghost px-3 py-2 text-sm" title="Xem lại thứ tự nét">▶️ Thứ tự nét</button>
+            <button type="button" id="btn-arrows" class="btn-ghost px-3 py-2 text-sm" aria-pressed="false" title="Hiển thị hạt mũi tên">🏹 Mũi tên</button>
+            <button type="button" id="btn-contains" class="btn-ghost px-3 py-2 text-sm" aria-pressed="false" title="Hiển thị chữ chứa chữ này">🔤 Chữ chứa</button>
+            <button type="button" id="btn-zoom" class="btn-ghost px-3 py-2 text-sm" aria-pressed="false" title="Thu phóng vừa khít">🔎 Vừa khít</button>
+          </div>
+          <div id="contains-box" class="hidden card p-3 mt-3">
+            <p class="text-xs font-bold uppercase tracking-wide text-[var(--nhai-muted)] mb-2">Chữ chứa chữ này</p>
+            <div id="contains-list" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="flex items-center gap-3 flex-wrap mt-5">
+            <h1 id="detail-title" class="text-4xl font-extrabold">你 - NHĨ</h1>
+            <button type="button" id="btn-speak" class="btn-ghost w-11 h-11 text-xl" title="Phát âm">🔊</button>
+          </div>
+          <a href="sound-rules.html" class="inline-block mt-2 text-sm font-semibold text-[var(--nhai-accent)] hover:underline">→ Quy tắc chuyển âm</a>
+          <div id="detail-info" class="mt-4 space-y-2 text-sm"></div>
+        </div>
+
+        <!-- Sidebar phải -->
+        <aside class="lg:col-span-3 order-3 space-y-4">
+          <div class="card shadow-neo p-4">
+            <h2 class="font-extrabold text-lg mb-3">Từ vựng trong sách</h2>
+            <div id="vocab-book" class="space-y-3"></div>
+          </div>
+          <div class="card shadow-neo p-4">
+            <h2 class="font-extrabold text-lg mb-3">Từ vựng thực chiến</h2>
+            <div id="vocab-practical" class="space-y-2"></div>
+          </div>
+          <div class="text-right">
+            <a id="next-char" href="hanzi.html?char=%E5%A5%BD" class="font-bold text-[var(--nhai-main)] hover:underline">Chữ sau 好 →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
