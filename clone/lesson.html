@@ -57,16 +57,21 @@
 </head>
 <body>
   <div data-shell></div>
-  <main class="mx-auto max-w-6xl px-4 py-6">
+  <main class="relative mx-auto max-w-6xl px-4 py-6">
+    <!-- Watermark bản đồ Việt Nam (nền mờ toàn trang) -->
+    <img src="assets/vietnam-map.svg" alt="" aria-hidden="true" class="absolute left-2 top-24 h-[560px] w-auto opacity-[0.08] pointer-events-none select-none">
     <!-- Header -->
-    <header class="mb-4">
+    <header class="relative mb-4">
       <a id="back-link" href="course.html?book=hsk1&amp;skill=vocab" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Danh sách bài</a>
       <div class="flex items-center gap-2 mt-2">
-        <span id="lesson-badge" class="pill pill-active text-sm">Bài 1</span>
+        <span id="lesson-badge" class="inline-flex items-center rounded-full bg-black text-white text-sm font-extrabold px-3 py-1">Bài 1</span>
         <span id="count-badge" class="pill text-sm">13 từ vựng</span>
       </div>
-      <h1 id="lesson-title" class="text-3xl font-extrabold mt-2">Xin chào!</h1>
-      <p id="lesson-sub" class="text-sm text-[var(--nhai-muted)] font-semibold">Bài 1 — Từ vựng HSK1</p>
+      <div class="flex items-center gap-3 mt-2">
+        <span class="text-[44px] leading-none select-none" aria-hidden="true">🍅</span>
+        <h1 id="lesson-title" class="text-3xl font-extrabold bg-[#f5d76e]/50 rounded px-2">Xin chào!</h1>
+      </div>
+      <p id="lesson-sub" class="text-sm text-[var(--nhai-muted)] font-semibold mt-1">Bài 1 — Từ vựng HSK1</p>
     </header>
 
     <!-- Tabs -->
@@ -79,12 +84,14 @@
     <section id="tab-vocab">
       <div class="grid lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2">
-          <div id="mode-area" class="card shadow-neo p-4 sm:p-6 min-h-[430px]">
-            <div class="flex items-center justify-between mb-4">
+          <div id="mode-area" class="relative overflow-hidden card shadow-neo p-4 sm:p-6 min-h-[430px]">
+            <!-- Watermark bản đồ Việt Nam trong card (giữa-trái) -->
+            <img src="assets/vietnam-map.svg" alt="" aria-hidden="true" class="absolute left-4 top-1/2 -translate-y-1/2 h-[80%] w-auto opacity-[0.08] pointer-events-none select-none">
+            <div class="relative flex items-center justify-between mb-4">
               <span id="mode-name" class="text-xs font-bold uppercase tracking-wide text-[var(--nhai-muted)]">Flashcard</span>
               <span id="mode-counter" class="text-sm font-extrabold text-[var(--nhai-muted)]">1 / 13</span>
             </div>
-            <div id="mode-content"></div>
+            <div id="mode-content" class="relative"></div>
           </div>
         </div>
         <aside class="lg:col-span-1 no-print">
