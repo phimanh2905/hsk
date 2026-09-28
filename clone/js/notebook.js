@@ -220,6 +220,9 @@
     var kind = qs.get("kind") || c.kind;
     var id = qs.get("id") || "";
     c.kind = kind;
+    /* kind trên query string quyết định cả data lẫn storage — fix round 1: trước đây storage
+       giữ giá trị theo body data-kind (mặc định vocab) nên ?kind=grammar đọc nhầm nhai.decks */
+    c.storage = kind === "grammar" ? "nhai.notebooks" : "nhai.decks";
     c.data = (window.NHAI_DATA && NHAI_DATA.notebooks[kind]) || c.data;
 
     var store = loadStore(c.storage);
