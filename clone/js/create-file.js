@@ -1,9 +1,18 @@
-/* Nhai HSK clone — Tạo file luyện viết (PLAN-08).
-   Hub 9 mẫu + template view ?tpl=<tên> với preview A4 render động + gate mã FREEHSK + window.print(). */
+/* Nhai HSK clone — Tạo file luyện viết (PLAN-16 / SPEC-16).
+   Catalog 9 mẫu + form 7 nhóm tuỳ chọn ?tpl=<id>, preview A4 render động,
+   gate mã FREEHSK + window.print(). SVG stroke renderer giữ từ PLAN-13. */
 (function () {
   "use strict";
 
-  var TPLS = (window.NHAI_DATA && NHAI_DATA.templates) || {};
+  var TPLS = (window.NHAI_DATA && NHAI_DATA.templates) || [];
+  /* lookup map: mảng [{id,...}] → tra theo id */
+  var TPL_BY_ID = {};
+  TPLS.forEach(function (t) { TPL_BY_ID[t.id] = t; });
+  var GROUPS = [
+    { id: "hanzi", label: "Mẫu chữ Hán" },
+    { id: "vocab", label: "Mẫu từ vựng" },
+    { id: "paper", label: "Đoạn văn & giấy ô" }
+  ];
   var page = null;
 
   /* ---------- dữ liệu phụ / fallback ---------- */
@@ -80,22 +89,64 @@
     return String(input || "").trim().split(/[\s,、，]+/).filter(Boolean);
   }
 
-  /* ---------- state CF (PLAN-13): danh sách chữ + pinyin/nghĩa đã sửa ---------- */
-  var CF = { chars: [], tpl: null };
+  /* ---------- state CF v2 (PLAN-16): mọi tuỳ chọn form + danh sách từ ----------
+     sessionStorage "nhai.cf.state" — merge với default, mọi key đều có default. */
+  var CF_KEY = "nhai.cf.state";
 
-  function cfSave() {
-    /* ngoài template view (hub) không ghi — tránh xoá state đang lưu khi rẽ qua hub */
-    if (!CF.tpl) return;
-    try { sessionStorage.setItem("nhai.cf.state", JSON.stringify(CF)); } catch (e) { /* silent */ }
+  var DEFAULT_CHARS = [
+    { hanzi: "学习", pinyin: "xué xí", hv: "HỌC TẬP", meaning: "học tập" },
+    { hanzi: "朋友", pinyin: "péng yǒu", hv: "BẰNG HỮU", meaning: "bạn bè" },
+    { hanzi: "老师", pinyin: "lǎo shī", hv: "LÃO SƯ", meaning: "giáo viên" },
+    { hanzi: "工作", pinyin: "gōng zuò", hv: "CÔNG TÁC", meaning: "công việc" }
+  ];
+
+  function cfDefaults() {
+    return {
+      tpl: null,
+      chars: DEFAULT_CHARS.map(function (c) { return { hanzi: c.hanzi, pinyin: c.pinyin, hv: c.hv, meaning: c.meaning }; }),
+      title: "",
+      nameDate: true,
+      cellType: "dien-tu",
+      cellColor: "gray",
+      perRow: 12,
+      fillRows: 1,
+      blankRows: 0,
+      faintCount: 3,
+      script: "khai",
+      strokeSource: "CNstrokeorder",
+      traceStyle: ["faint"],
+      opacity: 30,
+      fontSize: 78,
+      showPinyin: true,
+      showMeaning: true
+    };
   }
-  function cfLoad() {
+
+  var CF = cfDefaults();
+
+  function persist() {
+    try { sessionStorage.setItem(CF_KEY, JSON.stringify(CF)); } catch (e) { /* silent */ }
+  }
+  function cfLoadAll() {
+    /* đọc state đã lưu, merge mọi key với default (mảng traceStyle / chars thay nguyên) */
     try {
-      var s = sessionStorage.getItem("nhai.cf.state");
+      var s = sessionStorage.getItem(CF_KEY);
       if (!s) return false;
       var o = JSON.parse(s);
-      if (o && o.chars && o.chars.length) { CF.chars = o.chars; CF.tpl = o.tpl || null; return true; }
+      if (!o || typeof o !== "object") return false;
+      var d = cfDefaults();
+      Object.keys(d).forEach(function (k) {
+        if (o[k] !== undefined) CF[k] = o[k];
+      });
+      if (!Array.isArray(CF.chars)) CF.chars = d.chars;
+      if (!Array.isArray(CF.traceStyle) || !CF.traceStyle.length) CF.traceStyle = d.traceStyle;
+      return true;
     } catch (e) { /* silent */ }
     return false;
+  }
+  function cfReset() {
+    CF = cfDefaults();
+    persist();
   }
   function cfFind(hz) {
     for (var i = 0; i < CF.chars.length; i++) if (CF.chars[i].hanzi === hz) return CF.chars[i];
@@ -104,8 +155,8 @@
   function cfAdd(hz) {
     if (!hz || cfFind(hz)) return;
     var info = charInfo(hz);
-    CF.chars.push({ hanzi: hz, pinyin: info.pinyin || "", meaning: info.meaning || "" });
-    cfSave();
+    CF.chars.push({ hanzi: hz, pinyin: info.pinyin || "", hv: (info.hanViet || "").toUpperCase(), meaning: info.meaning || "" });
+    persist();
   }
   /* meta info ưu tiên dữ liệu đã sửa trong CF, fallback về NHAI_DATA.hanzi.chars */
   function cfInfo(ch) {
@@ -133,8 +184,8 @@
   /* ================= HUB ================= */
   var SECTIONS = [
     { h2: "Mẫu chữ Hán", ids: ["stroke-order", "big-char"], cols: "md:grid-cols-2" },
-    { h2: "Mẫu từ vựng", ids: ["vocab", "vocab-check", "copy", "cover"], cols: "md:grid-cols-2" },
-    { h2: "Mẫu pinyin & ô trống", ids: ["pinyin-lines", "pinyin-write", "blank-grid"], cols: "md:grid-cols-3" }
+    { h2: "Mẫu từ vựng", ids: ["vocab", "vocab-check", "pinyin-write"], cols: "md:grid-cols-3" },
+    { h2: "Đoạn văn & giấy ô", ids: ["paragraph", "lined-paper", "grid-paper", "cover"], cols: "md:grid-cols-2" }
   ];
 
   function miniFrame(inner) {
@@ -181,6 +232,21 @@
         '<div class="grid grid-cols-4">' + miniCell() + miniCell() + miniCell() + miniCell() + "</div>" +
         '<div class="mx-1 mt-1 h-4 flex flex-col justify-between">' +
           '<i style="display:block;border-top:1px solid #dccfb8"></i><i style="display:block;border-top:1px solid #dccfb8"></i><i style="display:block;border-top:1px solid #dccfb8"></i></div>');
+      case "paragraph": return miniFrame(
+        '<div class="text-[8px] mb-0.5" style="color:#999">pīnyīn</div>' +
+        '<div class="grid grid-cols-6">' + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) +
+        miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + miniCell(f("永", 0.9)) + "</div>" +
+        '<div class="grid grid-cols-6 mt-1">' + miniCell() + miniCell() + miniCell() + miniCell() + miniCell() + miniCell() + "</div>");
+      case "lined-paper": return miniFrame(
+        '<div class="text-[8px] mb-0.5" style="color:#999">pīnyīn</div>' +
+        '<div class="border-t border-[#dccfb8] my-1.5"></div>' +
+        '<div class="zh-faded text-lg leading-none pl-2">学</div>' +
+        '<div class="border-t border-[#dccfb8] my-1.5"></div>' +
+        '<div class="zh-faded text-lg leading-none pl-2">习</div>' +
+        '<div class="border-t border-[#dccfb8] my-1.5"></div>');
+      case "grid-paper": return miniFrame(
+        '<div class="grid grid-cols-4">' + miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) +
+        miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) + "</div>");
       case "blank-grid": return miniFrame(
         '<div class="grid grid-cols-4">' + miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) +
         miniCell(dg) + miniCell(dg) + miniCell(dg) + miniCell(dg) + "</div>");
@@ -211,7 +277,7 @@
       h += '<h2 class="text-xl font-extrabold mt-8 mb-3">' + s.h2 + "</h2>";
       h += '<div class="grid gap-4 ' + s.cols + '">';
       s.ids.forEach(function (id) {
-        var t = TPLS[id];
+        var t = TPL_BY_ID[id];
         if (!t) return;
         h += '<a href="create-file.html?tpl=' + encodeURIComponent(id) + '" class="card shadow-neo p-4 block hover:-translate-y-0.5 transition-transform">' +
           mini(id) +
@@ -492,10 +558,10 @@
     h += '<h3 class="font-bold">Mẫu in cùng loại</h3>';
     h += '<p class="text-xs text-[var(--nhai-muted)]">Đổi mẫu không mất nội dung</p>';
     ["stroke-order", "big-char"].forEach(function (id) {
-      if (!TPLS[id]) return;
+      if (!TPL_BY_ID[id]) return;
       h += '<a href="create-file.html?tpl=' + encodeURIComponent(id) + '" data-switch="' + esc(id) +
         '" class="block card p-2 hover:-translate-y-0.5 transition-transform">' + mini(id) +
-        '<p class="text-sm font-semibold">' + esc(TPLS[id].name) + "</p></a>";
+        '<p class="text-sm font-semibold">' + esc(TPL_BY_ID[id].name) + "</p></a>";
     });
     h += "</div>";
     return h;
@@ -522,9 +588,9 @@
   }
 
   function renderTemplate(id) {
-    var t = TPLS[id];
+    var t = TPL_BY_ID[id];
     var state = {
-      input: t.defInput || "",
+      input: "",
       rows: 3,
       showPy: true,
       showMeaning: true
@@ -532,12 +598,10 @@
     var f = t.fields || {};
     var usePanel = !!PANEL_TPLS[id];
 
-    /* CF: khôi phục từ sessionStorage (đổi mẫu giữ nội dung) hoặc seed từ defInput */
+    /* CF v2: khôi phục toàn bộ state từ sessionStorage (đổi mẫu giữ nội dung) */
+    cfLoadAll();
     CF.tpl = id;
-    if (!cfLoad()) {
-      CF.chars = [];
-      parseItems(state.input).forEach(function (ch) { cfAdd(ch); });
-    }
+    persist();
 
     var h = "";
     h += '<div class="no-print mb-2"><a href="create-file.html" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Thư viện mẫu</a></div>';
@@ -601,7 +665,7 @@
       if (count) count.textContent = CF.chars.length;
       var rows = page.querySelector("[data-modal-rows]");
       if (rows) rows.innerHTML = modalRows();
-      cfSave();
+      persist();
     }
 
     function update() {
@@ -671,10 +735,10 @@
         if (!t2.hasAttribute) return;
         if (t2.hasAttribute("data-py-i")) {
           var r1 = CF.chars[parseInt(t2.getAttribute("data-py-i"), 10)];
-          if (r1) { r1.pinyin = t2.value; cfSave(); renderPreview(); }
+          if (r1) { r1.pinyin = t2.value; persist(); renderPreview(); }
         } else if (t2.hasAttribute("data-mean-i")) {
           var r2 = CF.chars[parseInt(t2.getAttribute("data-mean-i"), 10)];
-          if (r2) { r2.meaning = t2.value; cfSave(); renderPreview(); }
+          if (r2) { r2.meaning = t2.value; persist(); renderPreview(); }
         }
       });
       modal.addEventListener("click", function (e) {
@@ -703,12 +767,12 @@
   document.addEventListener("click", function () { setTimeout(syncPrintBtn, 300); });
 
   /* ---------- boot ---------- */
-  window.addEventListener("beforeunload", cfSave);
+  window.addEventListener("beforeunload", persist);
   function boot() {
     page = document.querySelector("[data-page]");
     if (!page) return;
     var tpl = NHAI.q("tpl");
-    if (tpl && TPLS[tpl]) renderTemplate(tpl);
+    if (tpl && TPL_BY_ID[tpl]) renderTemplate(tpl);
     else renderHub();
   }
   if (document.readyState === "complete") boot();
