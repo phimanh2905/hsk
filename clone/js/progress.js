@@ -42,6 +42,13 @@
     if (st) {
       Object.keys(st).forEach(function (k) { if (st[k] === "known" || st[k] === "learned") n++; });
     }
+    /* Format lesson.js: key rời "nhai.srs.w.<key>" = "1" → mỗi key là một từ đã thuộc */
+    try {
+      for (var j = 0; j < localStorage.length; j++) {
+        var wk = localStorage.key(j);
+        if (wk && wk.indexOf("nhai.srs.w.") === 0) n++;
+      }
+    } catch (e) { /* silent */ }
     return n;
   }
   function doneLessons() {

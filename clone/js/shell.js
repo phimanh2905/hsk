@@ -348,15 +348,16 @@
       btn.classList.add("btn-ghost", "rounded-full", "w-9", "h-9", "flex", "items-center", "justify-center", "font-bold");
       btn.title = "Đăng xuất (demo) — " + name;
     });
-    var first = btns[0];
-    if (first) {
-      first.removeEventListener("click", openLogin);
-      first.addEventListener("click", function () {
+    btns.forEach(function (btn) {
+      btn.removeEventListener("click", openLogin);
+      btn.addEventListener("click", function () {
         localStorage.removeItem("nhai.mockLogin");
         location.reload();
       });
-    }
-    xp.forEach(function (el) { el.textContent = "⚡ 128 — mỗi câu trả lời đúng +1"; });
+    });
+    var xpVal = 0;
+    try { xpVal = parseInt(localStorage.getItem("nhai.xp"), 10) || 0; } catch (e) { /* silent */ }
+    xp.forEach(function (el) { el.textContent = "⚡ " + xpVal + " — mỗi câu trả lời đúng +1"; });
   }
 
   /* ---------- settings panel ---------- */

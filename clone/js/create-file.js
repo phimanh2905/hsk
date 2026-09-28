@@ -643,13 +643,14 @@
   }
 
   /* ---------- wiring form ---------- */
+  /* Delegated handlers gắn MỘT LẦN trên #cf-root: renderForm chạy lại (reset/đổi mẫu)
+     không được chồng thêm listener. Toạ độ modal/preview tra cứu LAZY theo lần click. */
   function wireForm(id) {
-    var preview = page.querySelector("[data-preview]");
-    var badge = page.querySelector("[data-pages]");
-    var modal = page.querySelector("[data-modal]");
-    var modalTitle = modal.querySelector("h3");
+    if (page.__cfWired) return;
+    page.__cfWired = true;
 
-    function renderPreview() { renderPreviewFor(id); }
+    function getModal() { return page.querySelector("[data-modal]"); }
+    function renderPreview() { renderPreviewFor(CF.tpl || id); }
     function refreshCharRows() {
       var rows = page.querySelector("[data-charrows]");
       if (rows) rows.innerHTML = CF.chars.map(charRowHtml).join("");
@@ -729,8 +730,14 @@
     }
 
     page.addEventListener("click", function (e) {
+      var modal = getModal();
+      var modalTitle = modal ? modal.querySelector("h3") : null;
       var t = e.target.closest ? e.target.closest("button, a") : null;
-      if (!t || !page.contains(t)) return;
+      if (!t || !page.contains(t)) {
+        /* click nền modal → đóng */
+        if (modal && e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
+        return;
+      }
       if (t.hasAttribute("data-step")) {
         e.preventDefault();
         stepVal(t.getAttribute("data-step"), parseInt(t.getAttribute("data-dir"), 10), t);
@@ -792,11 +799,6 @@
           renderForm(nid); /* giữ nguyên CF state */
         }
       }
-    });
-
-    /* click nền modal → đóng */
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
     });
   }
 
