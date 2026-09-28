@@ -295,9 +295,10 @@
       "</div>"
     );
     var essayInput = essayBox.querySelector("[data-essay]");
+    essayInput.value = _essayVal;
+    essayInput.addEventListener("input", function () { _essayVal = essayInput.value; });
     if (testGraded) {
-      var essayOk = normPinyin(essayInputVal()) === normPinyin(essay.answer);
-      essayInput.value = essayInputVal();
+      var essayOk = normPinyin(_essayVal) === normPinyin(essay.answer);
       var fb = essayBox.querySelector("[data-essay-fb]");
       fb.classList.remove("hidden");
       fb.className = "text-xs mt-2 font-semibold " + (essayOk ? "text-green-700" : "text-[var(--nhai-main)]");
