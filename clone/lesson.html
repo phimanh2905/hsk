@@ -74,10 +74,14 @@
       <p id="lesson-sub" class="text-sm text-[var(--nhai-muted)] font-semibold mt-1">Bài 1 — Từ vựng HSK1</p>
     </header>
 
-    <!-- Tabs -->
-    <div class="flex gap-2 mb-4 no-print">
-      <button type="button" data-tab="vocab" class="pill pill-active">Từ vựng</button>
-      <button type="button" data-tab="examples" class="pill">Ví dụ</button>
+    <!-- Hàng điều khiển trên: tabs — counter — tools -->
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-4 no-print">
+      <div class="flex gap-2">
+        <button type="button" data-tab="vocab" class="pill pill-active">Từ vựng</button>
+        <button type="button" data-tab="examples" class="pill">Ví dụ</button>
+      </div>
+      <span id="mode-counter" class="pill pill-active text-sm font-extrabold">1 / 13</span>
+      <div id="mode-tools" class="flex flex-wrap items-center gap-2"><!-- controls của chế độ Flashcard được JS đưa vào đây --></div>
     </div>
 
     <!-- Tab: Từ vựng (khu chế độ học + sidebar) -->
@@ -89,7 +93,6 @@
             <img src="assets/vietnam-map.svg" alt="" aria-hidden="true" class="absolute left-4 top-1/2 -translate-y-1/2 h-[80%] w-auto opacity-[0.08] pointer-events-none select-none">
             <div class="relative flex items-center justify-between mb-4">
               <span id="mode-name" class="text-xs font-bold uppercase tracking-wide text-[var(--nhai-muted)]">Flashcard</span>
-              <span id="mode-counter" class="text-sm font-extrabold text-[var(--nhai-muted)]">1 / 13</span>
             </div>
             <div id="mode-content" class="relative"></div>
           </div>

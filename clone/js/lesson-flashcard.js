@@ -18,11 +18,11 @@
       ctx.addCleanup(function () { dead = true; });
 
       root.innerHTML =
-        '<div class="flex flex-wrap items-center gap-2 mb-4">' +
+        '<div data-controls class="flex flex-wrap items-center gap-2">' +
           '<button type="button" data-dir class="btn-ghost px-3 py-2 text-sm font-extrabold">ZH → VI</button>' +
           '<button type="button" data-auto class="btn-ghost px-3 py-2 text-sm">⏩ Tự động</button>' +
           '<button type="button" data-shuffle class="btn-ghost px-3 py-2 text-sm">🔀 Xáo trộn</button>' +
-          '<button type="button" data-autoplay class="btn-ghost px-3 py-2 text-sm" title="Cài đặt tự động phát">🔊 Tự phát</button>' +
+          '<button type="button" data-autoplay class="btn-ghost px-3 py-2 text-sm" title="Cài đặt tự động phát">⚙</button>' +
           '<span class="ml-auto flex items-center gap-2">' +
             '<span data-status class="pill text-xs py-0.5"></span>' +
             '<button type="button" data-speak class="btn-ghost w-10 h-10" title="Phát âm chữ Hán">🔊</button>' +
@@ -36,22 +36,29 @@
               '<span data-front-sub class="text-sm font-semibold text-[var(--nhai-muted)] mt-2"></span>' +
               '<span class="text-xs text-[var(--nhai-muted)] mt-4">Click để lật</span>' +
             "</div>" +
-            '<div class="flip-face flip-back card shadow-neo flex flex-col items-center justify-center p-4">' +
-              '<h2 data-back-main class="zh text-4xl sm:text-5xl font-extrabold"></h2>' +
+            '<div class="flip-face flip-back card shadow-neo bg-[#f7e9c8] flex flex-col items-center justify-center p-4">' +
+              '<h2 data-back-main class="zh text-6xl sm:text-7xl font-extrabold"></h2>' +
+              '<span class="pill text-xs py-0.5 mt-3">Cụm từ</span>' +
               '<p data-back-py class="text-xl font-bold mt-2"></p>' +
               '<p data-back-hv class="text-lg font-extrabold text-[var(--nhai-main)]"></p>' +
               '<p data-back-mean class="text-base mt-1 text-center"></p>' +
             "</div>" +
           "</div>" +
         "</div>" +
-        '<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6 max-w-2xl mx-auto">' +
-          '<button type="button" data-prev class="btn-ghost py-2 text-xs sm:text-sm">Thẻ trước<br><span class="text-[10px] font-normal">(←/A)</span></button>' +
-          '<button type="button" data-unknown class="py-2 text-xs sm:text-sm font-bold rounded-lg border-2 border-red-600 text-red-600 bg-red-50">Chưa thuộc<br><span class="text-[10px] font-normal">(↓/X)</span></button>' +
-          '<button type="button" data-known class="py-2 text-xs sm:text-sm font-bold rounded-lg border-2 border-green-600 text-green-700 bg-green-50">Đã thuộc<br><span class="text-[10px] font-normal">(↑/Z)</span></button>' +
-          '<button type="button" data-next class="btn-ghost py-2 text-xs sm:text-sm">Thẻ sau<br><span class="text-[10px] font-normal">(→/D)</span></button>' +
+        '<div class="flex flex-wrap items-center justify-center gap-3 mt-6">' +
+          '<button type="button" data-prev class="btn-ghost px-8 py-2.5 text-sm font-extrabold">‹ Trước</button>' +
+          '<button type="button" data-unknown class="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#c03922] hover:opacity-90 transition-opacity">✕ Chưa thuộc</button>' +
+          '<button type="button" data-known class="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#2e7d32] hover:opacity-90 transition-opacity">✓ Đã thuộc</button>' +
+          '<button type="button" data-next class="btn-ghost px-8 py-2.5 text-sm font-extrabold">Sau ›</button>' +
         "</div>";
 
-      var q = function (sel) { return root.querySelector(sel); };
+      // hàng controls đã được chuyển vào #mode-tools (ngoài root) -> tra cả document
+      var q = function (sel) { return root.querySelector(sel) || document.querySelector(sel); };
+
+      // Đưa hàng điều khiển lên hàng trên cùng của trang (bên phải counter)
+      var toolsHost = document.getElementById("mode-tools");
+      var controlsRow = q("[data-controls]");
+      if (toolsHost && controlsRow) toolsHost.appendChild(controlsRow);
 
       function cur() { return words[order[pos]]; }
       function curIndex() { return order[pos]; }
@@ -160,6 +167,7 @@
       ctx.addCleanup(function () {
         document.removeEventListener("keydown", onKey);
         stopAuto();
+        if (controlsRow && controlsRow.parentNode) controlsRow.parentNode.removeChild(controlsRow);
       });
     }
   };
