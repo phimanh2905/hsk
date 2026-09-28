@@ -79,6 +79,41 @@
   function parseItems(input) {
     return String(input || "").trim().split(/[\s,、，]+/).filter(Boolean);
   }
+
+  /* ---------- state CF (PLAN-13): danh sách chữ + pinyin/nghĩa đã sửa ---------- */
+  var CF = { chars: [], tpl: null };
+
+  function cfSave() {
+    try { sessionStorage.setItem("nhai.cf.state", JSON.stringify(CF)); } catch (e) { /* silent */ }
+  }
+  function cfLoad() {
+    try {
+      var s = sessionStorage.getItem("nhai.cf.state");
+      if (!s) return false;
+      var o = JSON.parse(s);
+      if (o && o.chars && o.chars.length) { CF.chars = o.chars; CF.tpl = o.tpl || null; return true; }
+    } catch (e) { /* silent */ }
+    return false;
+  }
+  function cfFind(hz) {
+    for (var i = 0; i < CF.chars.length; i++) if (CF.chars[i].hanzi === hz) return CF.chars[i];
+    return null;
+  }
+  function cfAdd(hz) {
+    if (!hz || cfFind(hz)) return;
+    var info = charInfo(hz);
+    CF.chars.push({ hanzi: hz, pinyin: info.pinyin || "", meaning: info.meaning || "" });
+    cfSave();
+  }
+  /* meta info ưu tiên dữ liệu đã sửa trong CF, fallback về NHAI_DATA.hanzi.chars */
+  function cfInfo(ch) {
+    var base = charInfo(ch), c = cfFind(ch);
+    return {
+      hanViet: base.hanViet || "",
+      pinyin: c ? c.pinyin : (base.pinyin || ""),
+      meaning: c ? c.meaning : (base.meaning || "")
+    };
+  }
   function paginate(items, per, fn) {
     var pages = [], cur = [];
     items.forEach(function (it, i) {
@@ -372,6 +407,63 @@
     }
   }
 
+  /* ---------- panel "Chữ Hán cần luyện" (PLAN-13) ---------- */
+  var PANEL_TPLS = { "stroke-order": 1, "big-char": 1, "copy": 1 };
+
+  function cfChips() {
+    return CF.chars.map(function (c, i) {
+      return '<span class="pill pill-active inline-flex items-center gap-1 text-sm">' +
+        '<span class="zh font-bold">' + esc(c.hanzi) + "</span>" +
+        '<button type="button" data-del="' + i + '" class="font-bold leading-none hover:opacity-70" aria-label="Xoá ' + esc(c.hanzi) + '">✕</button></span>';
+    }).join("") || '<span class="text-sm text-[var(--nhai-muted)]">Chưa có chữ nào — bấm bộ thủ bên dưới để thêm.</span>';
+  }
+
+  function panelHtml(t) {
+    var h = '<div data-panel class="no-print card shadow-neo p-4 space-y-3 lg:sticky lg:top-4">';
+    h += '<h3 class="font-bold">Chữ Hán cần luyện</h3>';
+    h += '<div data-chips class="flex flex-wrap gap-1.5">' + cfChips() + "</div>";
+    h += '<p class="text-xs font-semibold text-[var(--nhai-muted)]">Bấm bộ thủ / chữ để thêm:</p>';
+    h += '<div data-radrow class="flex flex-wrap gap-1 max-h-44 overflow-y-auto border-2 border-[var(--nhai-border)] rounded-lg p-2 bg-[var(--nhai-bg)]">';
+    radicalsList().forEach(function (r) {
+      h += '<button type="button" data-add="' + esc(r.char) + '" title="' + esc(r.hanViet || "") +
+        '" class="pill zh px-2 py-0.5 text-base leading-none hover:opacity-80">' + esc(r.char) + "</button>";
+    });
+    h += "</div>";
+    h += '<button type="button" data-hsk class="btn-ghost px-3 py-1.5 text-sm w-full">📂 Chọn chữ theo cấp HSK</button>';
+    h += '<div data-hskpop class="hidden flex-wrap gap-1.5">';
+    var levels = (window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.levels) || [];
+    levels.forEach(function (lv) {
+      h += '<button type="button" data-level="' + esc(lv.label) + '" class="pill px-2.5 py-1 text-sm hover:opacity-80">' + esc(lv.label) + "</button>";
+    });
+    h += "</div>";
+    h += '<button type="button" data-clear class="text-sm font-semibold hover:underline" style="color:#c23b22">🗑 Xoá tất cả</button>';
+    h += '<button type="button" data-edit class="block text-left text-sm font-semibold text-[var(--nhai-main)] hover:underline">' +
+      '<span data-count>' + CF.chars.length + "</span> chữ sẽ có trong bản in · sửa pinyin / nghĩa</button>";
+    h += modalHtml();
+    h += "</div>";
+    return h;
+  }
+
+  function modalHtml() {
+    return '<div data-modal class="hidden fixed inset-0 z-50 p-4 items-center justify-center no-print" style="background:rgba(0,0,0,.45)">' +
+      '<div class="card shadow-neo p-4 w-full max-w-lg max-h-[80vh] overflow-y-auto" style="background:var(--nhai-bg)">' +
+      '<div class="flex items-center justify-between mb-3"><h3 class="font-bold">Sửa pinyin / nghĩa</h3>' +
+      '<button type="button" data-modal-close class="text-xl leading-none px-2 font-bold hover:opacity-70" aria-label="Đóng">✕</button></div>' +
+      '<table class="w-full text-sm"><thead><tr>' +
+      '<th class="text-left pb-1 w-12">Chữ</th><th class="text-left pb-1 w-28">Pinyin</th><th class="text-left pb-1">Nghĩa</th>' +
+      "</tr></thead><tbody data-modal-rows>" + modalRows() + "</tbody></table>" +
+      "</div></div>";
+  }
+  function modalRows() {
+    return CF.chars.map(function (c, i) {
+      return '<tr><td class="zh py-1 pr-2 text-lg font-bold">' + esc(c.hanzi) + "</td>" +
+        '<td class="py-1 pr-2"><input data-py-i="' + i + '" value="' + esc(c.pinyin) +
+        '" class="w-full border-2 border-[var(--nhai-border)] rounded px-2 py-1 bg-white text-sm"></td>' +
+        '<td class="py-1"><input data-mean-i="' + i + '" value="' + esc(c.meaning) +
+        '" class="w-full border-2 border-[var(--nhai-border)] rounded px-2 py-1 bg-white text-sm"></td></tr>';
+    }).join("");
+  }
+
   function renderTemplate(id) {
     var t = TPLS[id];
     var state = {
@@ -381,6 +473,14 @@
       showMeaning: true
     };
     var f = t.fields || {};
+    var usePanel = !!PANEL_TPLS[id];
+
+    /* CF: khôi phục từ sessionStorage (đổi mẫu giữ nội dung) hoặc seed từ defInput */
+    CF.tpl = id;
+    if (!cfLoad()) {
+      CF.chars = [];
+      parseItems(state.input).forEach(function (ch) { cfAdd(ch); });
+    }
 
     var h = "";
     h += '<div class="no-print mb-2"><a href="create-file.html" class="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]">← Thư viện mẫu</a></div>';
@@ -388,12 +488,14 @@
       '<h1 class="text-3xl font-extrabold">' + esc(t.name) + "</h1>" +
       '<span data-pages class="pill pill-active text-sm">1 trang</span>' +
       '<button type="button" data-print class="btn-main px-4 py-2 text-sm ml-auto">🔒 Đăng nhập để in</button></div>';
-    h += '<div class="grid lg:grid-cols-[300px_minmax(0,1fr)] gap-6 items-start">';
+    h += '<div class="grid gap-6 items-start ' + (usePanel
+      ? "lg:grid-cols-[300px_minmax(0,1fr)_300px]"
+      : "lg:grid-cols-[300px_minmax(0,1fr)]") + '">';
 
     /* form cấu hình */
     h += '<form data-cfg class="no-print card shadow-neo p-4 space-y-4 lg:sticky lg:top-4" onsubmit="return false">';
     var any = false;
-    if (f.input) {
+    if (f.input && !usePanel) {
       any = true;
       h += '<label class="block text-sm font-bold">Danh sách chữ/từ' +
         '<textarea data-input rows="2" class="mt-1 w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] text-sm">' + esc(state.input) + "</textarea></label>";
@@ -417,13 +519,33 @@
 
     /* preview A4 */
     h += '<section aria-label="Xem trước bản in" data-preview class="min-w-0"></section>';
-    h += "</div>";
+
+    /* panel chữ Hán cần luyện */
+    if (usePanel) h += panelHtml(t);
 
     page.innerHTML = h;
 
     var form = page.querySelector("[data-cfg]");
     var preview = page.querySelector("[data-preview]");
     var badge = page.querySelector("[data-pages]");
+
+    function items() {
+      return usePanel ? CF.chars.map(function (c) { return c.hanzi; }) : parseItems(state.input);
+    }
+    function renderPreview() {
+      var pages = buildPages(id, items(), state);
+      preview.innerHTML = pages.map(sheetHtml).join("");
+      badge.textContent = pages.length + " trang";
+    }
+    function refreshPanel() {
+      var chips = page.querySelector("[data-chips]");
+      if (chips) chips.innerHTML = cfChips();
+      var count = page.querySelector("[data-count]");
+      if (count) count.textContent = CF.chars.length;
+      var rows = page.querySelector("[data-modal-rows]");
+      if (rows) rows.innerHTML = modalRows();
+      cfSave();
+    }
 
     function update() {
       var inp = form.querySelector("[data-input]");
@@ -438,14 +560,70 @@
       }
       if (pyCb) state.showPy = pyCb.checked;
       if (meanCb) state.showMeaning = meanCb.checked;
-      var items = parseItems(state.input);
-      var pages = buildPages(id, items, state);
-      preview.innerHTML = pages.map(sheetHtml).join("");
-      badge.textContent = pages.length + " trang";
+      renderPreview();
     }
 
     form.addEventListener("input", update);
     form.addEventListener("change", update);
+
+    if (usePanel) {
+      var panel = page.querySelector("[data-panel]");
+      var modal = page.querySelector("[data-modal]");
+
+      function addLevel(label) {
+        var hz = window.NHAI_DATA && NHAI_DATA.hanzi && NHAI_DATA.hanzi.chars;
+        var added = 0;
+        if (hz) {
+          Object.keys(hz).forEach(function (k) {
+            if (hz[k].level === label) { cfAdd(k); added++; }
+          });
+        }
+        if (!added) parseItems(t.defInput || "").forEach(function (ch) { cfAdd(ch); });
+      }
+
+      panel.addEventListener("click", function (e) {
+        var tgt = e.target.closest ? e.target.closest("button") : null;
+        if (!tgt) return;
+        if (tgt.hasAttribute("data-add")) {
+          cfAdd(tgt.getAttribute("data-add"));
+          refreshPanel(); renderPreview();
+        } else if (tgt.hasAttribute("data-del")) {
+          CF.chars.splice(parseInt(tgt.getAttribute("data-del"), 10), 1);
+          refreshPanel(); renderPreview();
+        } else if (tgt.hasAttribute("data-clear")) {
+          CF.chars = [];
+          refreshPanel(); renderPreview();
+          NHAI.toast("Đã xoá tất cả chữ.");
+        } else if (tgt.hasAttribute("data-hsk")) {
+          var pop = page.querySelector("[data-hskpop]");
+          if (pop) pop.classList.toggle("hidden");
+        } else if (tgt.hasAttribute("data-level")) {
+          addLevel(tgt.getAttribute("data-level"));
+          refreshPanel(); renderPreview();
+        } else if (tgt.hasAttribute("data-edit")) {
+          if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); }
+        } else if (tgt.hasAttribute("data-modal-close")) {
+          if (modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
+        }
+      });
+
+      /* sửa pinyin / nghĩa → CF → preview realtime (không re-render modal để giữ focus) */
+      modal.addEventListener("input", function (e) {
+        var t2 = e.target;
+        if (!t2.hasAttribute) return;
+        if (t2.hasAttribute("data-py-i")) {
+          var r1 = CF.chars[parseInt(t2.getAttribute("data-py-i"), 10)];
+          if (r1) { r1.pinyin = t2.value; cfSave(); renderPreview(); }
+        } else if (t2.hasAttribute("data-mean-i")) {
+          var r2 = CF.chars[parseInt(t2.getAttribute("data-mean-i"), 10)];
+          if (r2) { r2.meaning = t2.value; cfSave(); renderPreview(); }
+        }
+      });
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) { modal.classList.add("hidden"); modal.classList.remove("flex"); }
+      });
+    }
+
     update();
     syncPrintBtn();
   }
