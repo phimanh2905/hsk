@@ -82,9 +82,116 @@
 
   function isExternal(href) { return /^https?:/.test(href); }
 
+  /* ---------- sidebar data (SPEC-10) ---------- */
+  var SIDEBAR = [
+    { label: "Trang chủ", icon: "🏠", href: "index.html", match: ["index.html"] },
+    { label: "Nền tảng", icon: "📚", group: 0, match: ["pinyin.html", "radicals.html", "sound-rules.html", "pinyin-practice.html"] },
+    { label: "Cá nhân hoá", icon: "🎯", group: 1, match: ["roadmap.html", "roadmap-pinyin.html", "review.html", "my-vocab.html", "my-grammar.html", "progress.html"] },
+    { label: "Tra từ điển", icon: "🔍", group: 2, match: ["dictionary.html", "hanzi.html"] },
+    { label: "Shadowing", icon: "🎧", href: "shadowing.html", match: ["shadowing.html", "shadowing-video.html"] },
+    { label: "Bài khoá", icon: "📖", href: "reading.html", match: ["reading.html"] },
+    { label: "Luyện thi chứng chỉ", icon: "📝", href: "certificate-test.html", match: ["certificate-test.html"] },
+    { label: "Tạo file", icon: "🖨️", href: "create-file.html", match: ["create-file.html"] },
+    { label: "Cài đặt", icon: "⚙️", action: "settings" }
+  ];
+
+  function currentPage() {
+    var f = location.pathname.split("/").pop();
+    return f === "" ? "index.html" : f;
+  }
+  function isSidebarActive(it) {
+    var f = currentPage();
+    return (it.match || []).indexOf(f) >= 0;
+  }
+  function closeSidePanels() {
+    document.querySelectorAll("[data-side-panel]").forEach(function (p) { p.remove(); });
+    document.querySelectorAll("[data-side-group]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+  }
+
+  function renderSidebar(host) {
+    var sb = document.createElement("aside");
+    sb.setAttribute("data-sidebar", "");
+    sb.className = "hidden lg:flex fixed left-0 top-0 h-full w-[72px] z-[400] flex-col items-center gap-1 py-3 bg-[var(--nhai-card)] border-r-2 border-[var(--nhai-border)] overflow-y-auto";
+
+    var html =
+      '<a href="index.html" class="flex flex-col items-center gap-1 mb-2 shrink-0" title="Nhai HSK — Trang chủ">' +
+        '<span class="w-9 h-9 rounded-md bg-[var(--nhai-main)] text-white flex items-center justify-center text-lg font-extrabold zh">奈</span>' +
+        '<span class="text-[10px] font-extrabold tracking-tight">Nhai<span class="text-[var(--nhai-main)]">HSK</span></span>' +
+      "</a>";
+    SIDEBAR.forEach(function (it, si) {
+      var active = isSidebarActive(it);
+      var cls = "w-14 py-1.5 rounded-lg border-2 flex flex-col items-center gap-0.5 text-[10px] font-semibold leading-tight text-center " +
+        (active
+          ? "bg-[var(--nhai-soft)] border-[var(--nhai-border)] text-[var(--nhai-main)]"
+          : "border-transparent text-[var(--nhai-muted)] hover:text-[var(--nhai-main)] hover:border-[var(--nhai-border)]");
+      if (it.action === "settings") {
+        html += '<button type="button" data-side-settings class="' + cls + '"><span class="text-lg" aria-hidden="true">' + it.icon + '</span><span>' + it.label + "</span></button>";
+      } else if (it.group !== undefined) {
+        html += '<button type="button" data-side-group="' + it.group + '" aria-expanded="false" class="' + cls + '">' +
+          '<span class="text-lg" aria-hidden="true">' + it.icon + "</span><span>" + it.label + " ›</span></button>";
+      } else {
+        html += '<a href="' + it.href + '" class="' + cls + '">' +
+          '<span class="text-lg" aria-hidden="true">' + it.icon + "</span><span>" + it.label + "</span></a>";
+      }
+    });
+    /* login/logout — đơn giản cho task 1 (topbar XP/bell/avatar là task 2) */
+    html += '<span data-user class="hidden"><span class="text-xs"></span></span>' +
+      '<button type="button" data-login class="mt-auto mb-2 w-14 py-1.5 rounded-lg border-2 border-transparent flex flex-col items-center gap-0.5 text-[10px] font-semibold leading-tight text-center text-[var(--nhai-muted)] hover:text-[var(--nhai-main)] hover:border-[var(--nhai-border)]">' +
+        '<span class="text-lg" aria-hidden="true">👤</span><span>Đăng nhập</span></button>';
+    sb.innerHTML = html;
+    document.body.insertBefore(sb, document.body.firstChild);
+
+    /* submenu popover: position fixed, mở bằng click, đóng outside/Escape */
+    sb.querySelectorAll("[data-side-group]").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var gi = btn.getAttribute("data-side-group");
+        var existing = document.querySelector('[data-side-panel="' + gi + '"]');
+        var wasOpen = !!existing;
+        closeSidePanels();
+        if (wasOpen) return;
+        var g = NAV[parseInt(gi, 10)];
+        var links = "";
+        g.items.forEach(function (item) {
+          var ext = isExternal(item.href) ? ' target="_blank" rel="noopener"' : "";
+          var on = item.href === currentPage() ? " bg-[var(--nhai-soft)] text-[var(--nhai-main)]" : "";
+          links += '<a href="' + item.href + '"' + ext + ' class="block px-3 py-2 rounded-md text-sm font-medium hover:bg-[var(--nhai-soft)] whitespace-nowrap' + on + '">' + item.label + "</a>";
+        });
+        var r = btn.getBoundingClientRect();
+        var panel = NHAI.el('<div data-side-panel="' + gi + '" class="hidden card shadow-neo p-1 z-[500] fixed w-52" style="left:76px;top:' + Math.max(8, r.top - 4) + 'px">' + links + "</div>");
+        panel.classList.remove("hidden");
+        document.body.appendChild(panel);
+        btn.setAttribute("aria-expanded", "true");
+      });
+    });
+    sb.querySelectorAll("[data-side-settings]").forEach(function (btn) {
+      btn.addEventListener("click", toggleSettings);
+    });
+    sb.querySelector("[data-login]").addEventListener("click", function () {
+      var b = this;
+      if (b.textContent.indexOf("Đăng nhập") >= 0) openLogin();
+      else { localStorage.removeItem("nhai.mockLogin"); location.reload(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest || (!e.target.closest("[data-side-panel]") && !e.target.closest("[data-side-group]"))) closeSidePanels();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeSidePanels();
+    });
+  }
+
   function renderShell() {
     var host = document.querySelector("[data-shell]");
     if (!host) return;
+
+    /* desktop: fixed sidebar 72px + body padding-left 72px (không move DOM) */
+    if (!document.getElementById("nhai-shell-style")) {
+      var st = document.createElement("style");
+      st.id = "nhai-shell-style";
+      st.textContent = "@media (min-width:1024px){body{padding-left:72px}}";
+      document.head.appendChild(st);
+    }
+    renderSidebar(host);
 
     var nav = '<nav class="hidden md:flex items-center gap-1" data-nav-group>';
     NAV.forEach(function (g, gi) {
@@ -107,7 +214,7 @@
     });
 
     host.innerHTML =
-      '<div class="border-b-2 border-[var(--nhai-border)] bg-[var(--nhai-card)]">' +
+      '<div class="border-b-2 border-[var(--nhai-border)] bg-[var(--nhai-card)] lg:hidden">' +
         '<div class="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">' +
           '<a href="index.html" class="text-xl font-extrabold tracking-tight">Nhai<span class="text-[var(--nhai-main)]">HSK</span></a>' +
           nav +
@@ -116,7 +223,7 @@
             '<button type="button" data-settings class="btn-ghost px-3 py-2 text-sm">Cài đặt</button>' +
             '<span data-user class="hidden sm:flex items-center gap-2">' +
               '<span class="text-xs font-semibold text-[var(--nhai-muted)]" title="mỗi câu trả lời đúng +1">0 điểm — mỗi câu trả lời đúng +1</span>' +
-              '<button type="button" data-login class="btn-main px-3 py-2 text-sm">Đăng nhập</button>' +
+              '<button type="button" data-login-mobile class="btn-main px-3 py-2 text-sm">Đăng nhập</button>' +
             "</span>" +
           "</div>" +
         "</div>" +
@@ -153,7 +260,7 @@
       host.querySelector("[data-mobile-panel]").classList.toggle("hidden");
     });
 
-    host.querySelector("[data-login]").addEventListener("click", openLogin);
+    host.querySelector("[data-login-mobile]").addEventListener("click", openLogin);
     host.querySelector("[data-settings]").addEventListener("click", toggleSettings);
     if (NHAI.isLoggedIn()) renderLoggedIn();
   }
@@ -193,21 +300,24 @@
   NHAI.openLogin = openLogin;
 
   function renderLoggedIn() {
-    var btn = document.querySelector("[data-login]");
-    var xp = document.querySelector("[data-user] .text-xs");
-    if (btn) {
+    var btns = document.querySelectorAll("[data-login], [data-login-mobile]");
+    var xp = document.querySelectorAll("[data-user] .text-xs");
+    btns.forEach(function (btn) {
       var name = localStorage.getItem("nhai.mockName") || "T";
       btn.textContent = name;
       btn.classList.remove("btn-main");
       btn.classList.add("btn-ghost");
-      btn.removeEventListener("click", openLogin);
-      btn.addEventListener("click", function () {
+      btn.title = "Đăng xuất (demo)";
+    });
+    var first = btns[0];
+    if (first) {
+      first.removeEventListener("click", openLogin);
+      first.addEventListener("click", function () {
         localStorage.removeItem("nhai.mockLogin");
         location.reload();
       });
-      btn.title = "Đăng xuất (demo)";
     }
-    if (xp) xp.textContent = "128 điểm — mỗi câu trả lời đúng +1";
+    xp.forEach(function (el) { el.textContent = "128 điểm — mỗi câu trả lời đúng +1"; });
   }
 
   /* ---------- settings panel ---------- */
