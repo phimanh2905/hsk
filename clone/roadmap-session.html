@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buổi học lộ trình pinyin | Nhai HSK</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="assets/theme.css">
+  <script src="js/shell.js" defer></script>
+  <script src="js/data/roadmap.js" defer></script>
+  <script src="js/roadmap-session.js" defer></script>
+</head>
+<body>
+  <div data-shell></div>
+  <main class="mx-auto max-w-3xl px-4 py-6">
+    <a href="roadmap-pinyin.html" class="inline-block text-sm font-bold text-[var(--nhai-accent)] mb-3 hover:underline">‹ Lộ trình pinyin</a>
+
+    <header class="mb-4">
+      <h2 id="session-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight">Buổi học</h2>
+      <p id="session-meta" class="text-sm text-[var(--nhai-muted)] mt-1"></p>
+    </header>
+
+    <!-- Progress bar mỏng -->
+    <div class="h-1.5 w-full bg-[var(--nhai-soft)] rounded-full overflow-hidden mb-5">
+      <div id="session-progress" class="h-full bg-[var(--nhai-main)] rounded-full transition-all duration-300" style="width:25%"></div>
+    </div>
+
+    <!-- 4 pill tabs -->
+    <nav id="session-tabs" class="flex flex-wrap gap-2 mb-6" aria-label="Các phần của buổi học"></nav>
+
+    <!-- Nội dung tab -->
+    <div id="tab-content"></div>
+
+    <p class="text-xs text-[var(--nhai-muted)] text-center py-4">Nhai tiếng Trung mỗi ngày — facebook.com/groups/nhaihsk</p>
+  </main>
+</body>
+</html>
