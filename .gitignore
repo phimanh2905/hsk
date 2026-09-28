@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Node (chưa dùng nhưng để sẵn)
+node_modules/
+
+# Tài liệu sinh tự động / file tạm
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Bản build / export thử nghiệm
+dist/
+build/
+*.pdf
