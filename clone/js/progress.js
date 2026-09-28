@@ -26,9 +26,22 @@
   function todayCount() { return num("nhai.today", 0); }
 
   function knownWords() {
-    var st = lsMap("nhai.srs.st") || {};
+    /* Format chính (review.js sản xuất): key rời "nhai.srs.st.<key>" = "known"/"learned"/"learning" */
     var n = 0;
-    Object.keys(st).forEach(function (k) { if (st[k] === "known") n++; });
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf("nhai.srs.st.") === 0) {
+          var v = localStorage.getItem(k);
+          if (v === "known" || v === "learned") n++;
+        }
+      }
+    } catch (e) { /* silent */ }
+    /* Format phụ: một JSON object "nhai.srs.st" (map key → status) */
+    var st = lsMap("nhai.srs.st");
+    if (st) {
+      Object.keys(st).forEach(function (k) { if (st[k] === "known" || st[k] === "learned") n++; });
+    }
     return n;
   }
   function doneLessons() {
