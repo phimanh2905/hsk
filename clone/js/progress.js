@@ -149,7 +149,9 @@
     var body = document.getElementById("page-body");
     if (!body) return;
     body.innerHTML = "";
+    /* NHAI.el chỉ trả firstElementChild → bọc tất cả trong MỘT root div */
     body.appendChild(NHAI.el(
+      "<div>" +
       /* Card Điểm của bạn */
       '<div class="card shadow-neo p-6 mb-6">' +
         '<div class="flex items-start gap-4 flex-wrap">' +
@@ -178,7 +180,8 @@
         statCard("🎯", "Hôm nay", todayCount() + " câu", "Số câu trả lời đúng trong ngày") +
       "</div>" +
       /* Lịch học */
-      renderHeatmap()
+      renderHeatmap() +
+      "</div>"
     ));
 
     /* tooltip "Xp: N" khi hover ô heatmap (song song với title attr) */
