@@ -42,7 +42,8 @@ function WordListInner() {
                 <span className="text-sm font-extrabold text-[var(--nhai-main)]">{w.hanViet}</span>
               </div>
               <div className="text-sm mt-1 font-semibold">{w.meaning}</div>
-              {w.example && (
+              {/* example.zh === hanzi là fallback của custom deck (C10) → không có ví dụ riêng để hiện */}
+              {w.example && w.example.zh !== w.hanzi && (
                 <>
                   <div className="text-sm mt-1.5">
                     <span className="zh font-semibold">{w.example.zh}</span>{" "}

@@ -13,13 +13,19 @@ import { progressStore } from "@/lib/store/progress-store";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import WordList from "./word-list";
 
+/* Item có câu ví dụ RIÊNG không? Custom deck (C10) fallback example.zh = hanzi
+   khi row không có exampleZh — coi như không có ví dụ (khớp clone example:null). */
+function hasOwnExample(w: LessonItem): boolean {
+  return Boolean(w.example) && w.example.zh !== w.hanzi;
+}
+
 function ExampleTab() {
   const { items } = useLesson();
   const { speak } = useTts();
   return (
     <div id="tab-examples" className="space-y-2">
       {items
-        .filter((w) => w.example)
+        .filter(hasOwnExample)
         .map((w) => (
           <div key={w.itemKey} className="card p-3 flex items-start justify-between gap-3">
             <div>
@@ -69,6 +75,8 @@ function LessonBody() {
   const { items, mode, setMode, index, setIndex } = useLesson();
   const [tab, setTab] = useState<"vocab" | "examples">("vocab");
   const Mode = modeRegistry[mode];
+  // customNoExample (clone/js/lesson.js:66,118): deck không có ví dụ nào → ẩn Đọc hiểu + Nghe ghép câu
+  const hasExample = items.some(hasOwnExample);
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_240px]">
@@ -145,6 +153,8 @@ function LessonBody() {
           <div className="text-sm font-extrabold mb-2">Chọn chế độ học</div>
           <div id="sidebar-modes">
             {modeOrder.map((id: LessonMode) => {
+              // PLAN-12/customNoExample: deck tùy chỉnh không có ví dụ → ẩn Đọc hiểu + Nghe ghép câu
+              if (!hasExample && (id === "reading" || id === "listen")) return null;
               const meta = modeLabels[id];
               const active = mode === id;
               return (
