@@ -52,6 +52,12 @@ export function LessonProvider({
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState<Record<number, KnownFlag>>({});
 
+  // RULING Task 12: đổi mode phải reset index về 0 (khớp switchMode của clone/js/lesson.js)
+  const setModeAndReset = (m: LessonMode) => {
+    setMode(m);
+    setIndex(0);
+  };
+
   const value = useMemo<LessonCtx>(
     () => ({
       items,
@@ -59,7 +65,7 @@ export function LessonProvider({
       page,
       deckName,
       mode,
-      setMode,
+      setMode: setModeAndReset,
       index,
       setIndex,
       known,

@@ -37,6 +37,20 @@ describe("LessonProvider state machine", () => {
     expect(container.querySelector("[data-known='known']")).toBeTruthy();
   });
 
+  it("đổi mode reset index về 0 (RULING Task 12, khớp switchMode của clone)", () => {
+    const { container } = render(
+      <LessonProvider items={items} book="hsk1" page="lesson-1">
+        <Probe />
+      </LessonProvider>
+    );
+    const btn = (label: string) => Array.from(container.querySelectorAll("button")).find((b) => b.textContent === label)!;
+    act(() => btn("next").click());
+    expect(container.querySelector("[data-index='1']")).toBeTruthy();
+    act(() => btn("to-quiz").click());
+    expect(container.querySelector("[data-mode='quiz']")).toBeTruthy();
+    expect(container.querySelector("[data-index='0']")).toBeTruthy();
+  });
+
   it("useLesson throw nếu dùng ngoài provider", () => {
     // excerpt qua console.error do React báo lỗi render
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
