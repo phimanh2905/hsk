@@ -109,3 +109,11 @@ html.dark .shadow-neo { box-shadow: 3px 3px 0 0 #000; }
     linear-gradient(to bottom, rgba(107, 102, 92, 0.35) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+/* rung khi trả lời sai (mode quiz, port class .shake của clone/js/lesson-quiz.js) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+}
