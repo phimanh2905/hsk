@@ -9,6 +9,9 @@ import type { LessonItem, LessonMode } from "./lesson-provider";
 import { modeRegistry, modeLabels, modeOrder } from "./modes";
 import { pinyinLine } from "@/lib/pinyin-utils";
 import { useTts } from "@/lib/tts/use-tts";
+import { progressStore } from "@/lib/store/progress-store";
+import { useToastSafe } from "@/components/shell/toast-provider";
+import WordList from "./word-list";
 
 function ExampleTab() {
   const { items } = useLesson();
@@ -37,6 +40,28 @@ function ExampleTab() {
           </div>
         ))}
     </div>
+  );
+}
+
+/* "Thêm cả bài vào ôn tập" — port clone/js/lesson.js:130-140, idempotent qua
+   progressStore.addSrsBatch (spec 10 §3.2: từ đã có trong SRS không thêm lại). */
+function AddAllButton() {
+  const { items } = useLesson();
+  const toast = useToastSafe();
+  return (
+    <button
+      type="button"
+      id="btn-add-all"
+      className="btn-ghost w-full px-3 py-2 text-sm"
+      onClick={() => {
+        const added = progressStore.addSrsBatch(items.map((it) => it.itemKey));
+        toast(added > 0 ? `Đã thêm ${added} từ vào ôn tập` : "Tất cả từ đã có trong bộ ôn tập");
+        // nhai:progress để Topbar update (đồng bộ nhai.srs.new như clone)
+        window.dispatchEvent(new CustomEvent("nhai:progress"));
+      }}
+    >
+      ⭐ Thêm cả bài vào ôn tập
+    </button>
   );
 }
 
@@ -107,6 +132,11 @@ function LessonBody() {
             </div>
           </div>
         )}
+
+        {/* danh sách từ cuối trang — luôn hiện (port lesson.js:229-280) */}
+        <div className="mt-6">
+          <WordList />
+        </div>
       </div>
 
       {/* sidebar chế độ học (port lesson.js:110-141) */}
@@ -139,10 +169,7 @@ function LessonBody() {
           <button type="button" id="btn-print" className="btn-ghost w-full px-3 py-2 mb-2 text-sm" onClick={() => window.print()}>
             🖨️ In file
           </button>
-          {/* TODO Task 18: thêm cả bài vào ôn tập qua progressStore.addSrsBatch */}
-          <button type="button" id="btn-add-all" className="btn-ghost w-full px-3 py-2 text-sm">
-            ⭐ Thêm cả bài vào ôn tập
-          </button>
+          <AddAllButton />
         </div>
       </aside>
     </div>
