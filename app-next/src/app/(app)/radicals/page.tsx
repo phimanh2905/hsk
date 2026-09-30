@@ -6,7 +6,8 @@ import RadicalsClient from "@/components/radicals/deck-client";
 import StrokeRules from "@/components/radicals/stroke-rules";
 
 export const metadata = {
-  title: "214 Bộ Thủ — Nhai HSK",
+  title: "214 Bộ Thủ",
+  description: "214 Bộ Thủ Hán tự — deck flashcard, tra theo số nét, autoplay và quy tắc viết chữ.",
 };
 
 export default function RadicalsPage() {

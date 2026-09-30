@@ -2,6 +2,8 @@ import Link from "next/link";
 import { books } from "@/content/courses";
 import ContinueCard from "@/components/home/continue-card";
 
+export const metadata = { title: "Trang chủ", description: "Tiếp tục hành trình từ vựng tiếng Trung của bạn — mỗi ngày một chút là đủ." };
+
 export default function HomePage() {
   return (
     <div className="space-y-8">

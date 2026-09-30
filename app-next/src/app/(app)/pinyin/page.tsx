@@ -5,7 +5,8 @@ import Link from "next/link";
 import MatrixClient from "@/components/pinyin/matrix-client";
 
 export const metadata = {
-  title: "Bảng Pinyin — Nhai HSK",
+  title: "Bảng Pinyin",
+  description: "Bảng Pinyin 406 âm tiết chuẩn — thanh mẫu × vận mẫu, bấm ô bất kỳ để xem chi tiết và nghe phát âm.",
 };
 
 export default function PinyinPage() {

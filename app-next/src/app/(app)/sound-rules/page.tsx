@@ -6,7 +6,8 @@ import SoundQuiz from "@/components/sound-rules/quiz-client";
 import SpeakText from "@/components/sound-rules/speak-text";
 
 export const metadata = {
-  title: "Quy tắc chuyển âm — Nhai HSK",
+  title: "Quy tắc chuyển âm",
+  description: "Quy tắc chuyển âm tiếng Trung — bảng thanh điệu, quy tắc âm đầu, âm cuối & vần kèm bài tập.",
 };
 
 const D = soundRulesData;

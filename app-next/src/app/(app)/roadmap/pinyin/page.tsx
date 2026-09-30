@@ -6,7 +6,10 @@ import { Suspense } from "react";
 import StepsClient from "@/components/roadmap/steps-client";
 import TimelineClient from "@/components/roadmap/timeline-client";
 
-export const metadata = { title: "Lộ trình Pinyin — Nhai HSK" };
+export const metadata = {
+  title: "Lộ trình Pinyin",
+  description: "Bảng chữ cái Pinyin — học theo lộ trình 8 buổi, mỗi buổi 15-20 phút, hoàn thành bài kiểm tra để mở buổi tiếp theo.",
+};
 
 export default function RoadmapPinyinPage() {
   return (

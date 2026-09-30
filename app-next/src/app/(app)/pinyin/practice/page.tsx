@@ -4,7 +4,8 @@
 import PracticeClient from "@/components/pinyin/practice-client";
 
 export const metadata = {
-  title: "Bài tập Pinyin — Nhai HSK",
+  title: "Bài tập Pinyin",
+  description: "Bài tập Pinyin 10 câu luân phiên luyện nghe và nhận diện thanh điệu.",
 };
 
 export default function PinyinPracticePage() {

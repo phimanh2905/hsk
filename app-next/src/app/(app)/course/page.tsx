@@ -4,6 +4,8 @@
 import Link from "next/link";
 import { books } from "@/content/courses";
 
+export const metadata = { title: "Bài khoá", description: "Kệ sách 7 khoá HSK 3.0 — từ HSK 1 đến HSK 7-9, mỗi khoá học theo bài với flashcard, trắc nghiệm và tổng ôn." };
+
 export default function CourseShelfPage() {
   return (
     <div className="mb-8">

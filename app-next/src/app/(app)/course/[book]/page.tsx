@@ -2,6 +2,7 @@
    + CourseProgress + danh sách bài + nút "Tổng ôn" → /review.
    Port từ clone/js/course.js renderBook + SPEC-01 §2. */
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { books } from "@/content/courses";
@@ -10,6 +11,16 @@ import CourseProgress from "@/components/course/course-progress";
 
 export function generateStaticParams() {
   return books.map((b) => ({ book: b.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ book: string }> }): Promise<Metadata> {
+  const { book: slug } = await params;
+  const book = books.find((b) => b.slug === slug);
+  if (!book) return {};
+  return {
+    title: `${book.name} 3.0`,
+    description: `Học ${book.cardMeta} theo giáo trình 标准教程 ${book.name} 3.0 — flashcard, trắc nghiệm, tổng ôn.`,
+  };
 }
 
 export default async function CourseBookPage({ params }: { params: Promise<{ book: string }> }) {

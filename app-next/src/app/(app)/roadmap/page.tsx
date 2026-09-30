@@ -2,6 +2,11 @@ import Link from "next/link";
 import { roadmapStages, roadmapCopy } from "@/content/roadmap";
 import JourneyCard from "@/components/roadmap/journey-card";
 
+export const metadata = {
+  title: "Lộ trình",
+  description: "Một con đường liền mạch từ bảng Pinyin đến HSK 7-9 — vào thẳng chặng bạn muốn, không cần học lại từ đầu.",
+};
+
 /* Roadmap tổng quan (E1) — port từ clone/roadmap.html + clone/js/roadmap.js + SPEC-05 §1.
    Badge "🚧 Tính năng đang phát triển" + JourneyCard + timeline dọc 6 chặng + card Tổng ôn + đoạn kết. */
 
