@@ -51,6 +51,7 @@ export interface ProgressStore {
   isLoggedIn(): boolean;
   setMockLogin(on: boolean): void;
   getStreak(): number;
+  getHeat(): Record<string, number> | null;
   listDecks(kind: NotebookKind): DeckItem[];
   getDeckItem(kind: NotebookKind, id: string): DeckItem | null;
   createDeck(kind: NotebookKind, name: string): DeckItem;
@@ -390,6 +391,18 @@ export class ProgressStore implements ProgressStore {
 
   getStreak(): number {
     return readNum("nhai.streak");
+  }
+
+  /* sp1-personal-tools Task 6 — heat map cho /progress: JSON parse nhai.heat, hỏng → null. */
+  getHeat(): Record<string, number> | null {
+    try {
+      const raw = localStorage.getItem("nhai.heat");
+      if (!raw) return null;
+      const v = JSON.parse(raw) as Record<string, number>;
+      return v && typeof v === "object" ? v : null;
+    } catch {
+      return null;
+    }
   }
 
   /* ---------- decks CRUD — shape mảng [{ id, name, rows, updatedAt }] của clone ---------- */
