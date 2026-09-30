@@ -81,9 +81,18 @@ function LessonBody() {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_240px]">
       {/* khu chính */}
-      <div className="min-w-0">
-        {/* tabs + counter (port lesson.js:196-226) */}
-        <div className="flex items-center justify-between gap-2 mb-3">
+      <div className="relative min-w-0">
+        {/* Watermark bản đồ Việt Nam (SPEC-14 §1, port lesson.html:64) */}
+        <img
+          src="/assets/vietnam-map.svg"
+          alt=""
+          aria-hidden="true"
+          data-watermark
+          className="absolute left-8 top-1/3 opacity-[0.08] pointer-events-none select-none w-40"
+        />
+
+        {/* tabs — counter (giữa) — controls của mode (port lesson.js:196-226, SPEC-14 §3) */}
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3 no-print">
           <div className="flex gap-1">
             <button
               type="button"
@@ -105,6 +114,9 @@ function LessonBody() {
           <span className="pill text-xs" data-testid="mode-counter">
             {Math.min(index + 1, items.length)} / {items.length}
           </span>
+          <div id="mode-tools" className="flex flex-wrap items-center gap-2">
+            {/* controls của chế độ Flashcard được portal vào đây (port lesson.html #mode-tools) */}
+          </div>
         </div>
 
         {tab === "examples" ? (
@@ -191,14 +203,48 @@ export default function LessonClient({
   book,
   page,
   deckName,
+  title,
 }: {
-  items: LessonItem[];
+  items?: LessonItem[];
   book?: string;
   page?: string;
   deckName?: string;
+  title?: string;
 }) {
+  const num = page ? (/^lesson-(\d+)$/.exec(page)?.[1] ?? page) : null;
+  const heading = title ?? deckName ?? "Bài học";
   return (
-    <LessonProvider items={items} book={book} page={page} deckName={deckName}>
+    <LessonProvider items={items ?? []} book={book} page={page} deckName={deckName}>
+      {/* header bài học (SPEC-14 §2, §6 — port clone/lesson.html:64-75) */}
+      <div className="relative mb-4">
+        {book && (
+          <a
+            href={`/course/${book}?skill=vocab`}
+            className="text-sm font-bold text-[var(--nhai-muted)] hover:underline"
+          >
+            ← Danh sách bài
+          </a>
+        )}
+        <div className="flex items-center gap-2 mt-2">
+          {num && (
+            <span
+              data-badge="page"
+              className="bg-black text-white px-2 py-0.5 rounded text-sm font-bold"
+            >
+              Bài {num}
+            </span>
+          )}
+          <span className="pill text-xs">{items?.length ?? 0} từ vựng</span>
+        </div>
+        <div className="flex items-center gap-3 mt-2">
+          <span data-mascot className="text-[44px] leading-none select-none" aria-hidden="true">
+            🍅
+          </span>
+          <h1 className="text-3xl font-extrabold">
+            <span className="bg-[#f5d76e]/50 rounded px-2">{heading}</span>
+          </h1>
+        </div>
+      </div>
       <LessonBody />
     </LessonProvider>
   );

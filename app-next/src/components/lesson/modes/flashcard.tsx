@@ -6,6 +6,7 @@
    Khác clone: mặt sau chỉ render khi flipped (React; clone dùng CSS backface). */
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLesson } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { shuffle } from "@/lib/pinyin-utils";
@@ -90,12 +91,17 @@ export default function FlashcardMode() {
 
   const status = item ? known[realIndex] : undefined;
 
+  // SPEC-14 §3: controls đưa lên hàng trên (#mode-tools trong lesson-client, port lesson.html);
+  // fallback render tại chỗ khi slot chưa có (test standalone / hydration trước).
+  const [toolsSlot, setToolsSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    setToolsSlot(document.getElementById("mode-tools"));
+  }, []);
+
   if (!item) return null;
 
-  return (
-    <div>
-      {/* hàng controls — 1 hàng trên (SPEC-14 §3, port lesson-flashcard.js:21-29) */}
-      <div className="flex flex-wrap items-center gap-2 mb-3 no-print">
+  const controls = (
+    <div className="flex flex-wrap items-center gap-2 no-print">
         <button
           type="button"
           data-dir
@@ -173,6 +179,11 @@ export default function FlashcardMode() {
           </button>
         </span>
       </div>
+  );
+
+  return (
+    <div>
+      {toolsSlot ? createPortal(controls, toolsSlot) : controls}
 
       {/* thẻ 3D flip (port flip-scene/flip-inner) */}
       <div

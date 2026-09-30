@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, act, cleanup } from "@testing-library/react";
 import { LessonProvider, useLesson, type LessonItem } from "../lesson-provider";
 import FlashcardMode from "../modes/flashcard";
+import LessonClient from "../lesson-client";
 
 const words: LessonItem[] = [0, 1].map((i) => ({
   hanzi: `字${i}`, pinyin: `zì${i}`, hanViet: "TỰ", meaning: `nghĩa ${i}`, pos: "Danh từ",
@@ -49,5 +50,18 @@ describe("FlashcardMode", () => {
     await act(async () => screen.getByRole("button", { name: /Xáo trộn/ }).click());
     const hanzi = ["字0", "字1"];
     expect(hanzi.includes(screen.getByText(/字[01]/).textContent!)).toBe(true);
+  });
+});
+
+describe("Lesson polish (SPEC-14)", () => {
+  it("header: badge Bài N nền đen, mascot 🍅 trước h1, watermark có mặt (render qua LessonClient)", () => {
+    const { container } = render(
+      <LessonProvider items={words} book="hsk1" page="lesson-1">
+        <LessonClient book="hsk1" page="lesson-1" />
+      </LessonProvider>
+    );
+    expect(container.querySelector("[data-badge='page']")?.className).toContain("bg-black");
+    expect(container.querySelector("[data-mascot]")?.textContent).toBe("🍅");
+    expect(container.querySelector("[data-watermark]")).not.toBeNull();
   });
 });
