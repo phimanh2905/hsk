@@ -5,7 +5,7 @@
    Tab Bài kiểm tra gated bởi sessionStatus(getRoadmapDone(), n) (Task 26);
    hoàn thành → progressStore.markRoadmapSession(n) (Task 6) → timeline mở buổi kế. */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { roadmapSessions } from "@/content/roadmap";
@@ -53,7 +53,7 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
   const { speak } = useTts();
 
   const [tab, setTab] = useState<Tab>("learn");
-  const [learnSeen, setLearnSeen] = useState<number[]>(() => readLearnSeen());
+  const [learnSeen, setLearnSeen] = useState<number[]>([]);
 
   const [fcIndex, setFcIndex] = useState(0);
   const [fcKnown, setFcKnown] = useState(0);
@@ -65,7 +65,19 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
   const [essay, setEssay] = useState("");
   const [writtenGraded, setWrittenGraded] = useState(false);
 
-  const locked = sessionStatus(progressStore.getRoadmapDone(), n) === "locked";
+  /* Mount-gate như TimelineClient (Task 26): server/pre-mount dùng default an toàn
+     (done = [] → n===1 "current", buổi khác "locked"; learnSeen rỗng) — chỉ đọc
+     localStorage sau mount để tránh hydration mismatch. */
+  const [mounted, setMounted] = useState(false);
+  const [done, setDone] = useState<number[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+    setDone(progressStore.getRoadmapDone());
+    setLearnSeen(readLearnSeen());
+  }, []);
+
+  const locked = sessionStatus(mounted ? done : [], n) === "locked";
 
   const mcItem = session.test.find((x) => x.kind === "quiz");
   const essayItem = session.test.find((x) => x.kind === "written");
