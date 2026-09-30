@@ -7,6 +7,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
+    globals: true, // bật RTL auto-cleanup giữa các test
     include: ["src/**/*.test.{ts,tsx}"],
   },
   resolve: { alias: { "@": path.resolve(__dirname, "src") } },
