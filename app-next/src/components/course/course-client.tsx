@@ -11,7 +11,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { courses, genGrammar, genHanzi, type LessonMeta, type Skill } from "@/content/courses";
 import { progressStore } from "@/lib/store/progress-store";
-import { useLoginModal } from "@/components/shell/login-modal";
+import { useLoginModal, useMockLogin } from "@/components/shell/login-modal";
+import { useTts } from "@/lib/tts/use-tts";
 
 const SKILLS: { key: Skill; label: string }[] = [
   { key: "vocab", label: "Từ vựng · 词汇" },
@@ -23,6 +24,8 @@ const PROGRESS_EVENT = "nhai:progress";
 
 function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
   const { openLogin } = useLoginModal();
+  const { loggedIn } = useMockLogin();
+  const { speak } = useTts();
   const [mounted, setMounted] = useState(false);
   const [doneSet, setDoneSet] = useState<Set<string>>(new Set());
 
@@ -43,21 +46,34 @@ function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
         : genHanzi(4);
 
   if (skill === "grammar") {
+    /* SPEC-15 §3 + clone course.js grammarCard: card 2 cột — title (+🔒 khi chưa login)
+       + 2 dòng placeholder + nút TTS vuông phải; click 🔊: chưa login → Login modal, đã login → speak. */
     return (
       <div className="grid sm:grid-cols-2 gap-3 mb-6">
         {items.map((item) => (
-          <button
-            key={item.pageId}
-            type="button"
-            onClick={openLogin}
-            className="card shadow-neo p-4 flex items-start gap-3 text-left hover:-translate-y-0.5 transition-transform"
-          >
-            <span className="grid-cell rounded-md w-9 h-9 shrink-0 font-extrabold text-sm">{item.order}</span>
-            <span className="font-semibold min-w-0 truncate">
-              {item.title} <span aria-label="Cần đăng nhập">🔒</span>
-            </span>
-            <span className="ml-auto shrink-0 text-xs text-nhai-muted">{item.meta}</span>
-          </button>
+          <div key={item.pageId} className="card shadow-neo p-4 flex items-start gap-3">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-extrabold text-sm mb-1.5 truncate">
+                {item.title}
+                {!loggedIn && <span aria-label="Cần đăng nhập"> 🔒</span>}
+              </h3>
+              <div className="h-3 rounded bg-nhai-soft mb-1.5 w-full" />
+              <div className="h-3 rounded bg-nhai-soft w-2/3" />
+            </div>
+            <button
+              type="button"
+              data-tts
+              className="grid-cell rounded-md w-9 h-9 shrink-0 text-base"
+              aria-label="Đọc mẫu"
+              title="Đọc mẫu"
+              onClick={() => {
+                if (!loggedIn) { openLogin(); return; }
+                speak(item.title, { lang: "zh-CN" });
+              }}
+            >
+              🔊
+            </button>
+          </div>
         ))}
       </div>
     );
