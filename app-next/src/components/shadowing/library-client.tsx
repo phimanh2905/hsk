@@ -30,7 +30,7 @@ export default function LibraryClient({ playlists, videos }: { playlists: Shadow
               className="inline-block mt-1 text-xs font-extrabold tracking-wide text-nhai-main hover:underline"
             >XEM TẤT CẢ →</a>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-              {vids.map((v, i) => <VideoCard key={v.id} video={v} gradIndex={pl.slug === "daihuaxiyou" ? i : i + 2} />)}
+              {vids.map((v, i) => <VideoCard key={v.id} video={v} gradIndex={pl.slug === "daihuaxiyou" ? i : i + 2} playlistName={pl.name} />)}
             </div>
           </section>
         );

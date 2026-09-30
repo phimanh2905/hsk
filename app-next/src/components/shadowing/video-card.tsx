@@ -12,7 +12,7 @@ export function posterChar(title: string): string {
   const m = title.replace(/[【「]/g, "").match(/[\u4e00-\u9fff]/);
   return m ? m[0] : "片";
 }
-export default function VideoCard({ video, gradIndex }: { video: ShadowingVideo; gradIndex: number }) {
+export default function VideoCard({ video, gradIndex, playlistName }: { video: ShadowingVideo; gradIndex: number; playlistName?: string }) {
   const views = video.views + (video.viewsSuffix || "");
   return (
     <Link href={`/shadowing/${video.id}`} className="card shadow-neo block overflow-hidden hover:-translate-y-0.5 transition-transform">
@@ -27,6 +27,7 @@ export default function VideoCard({ video, gradIndex }: { video: ShadowingVideo;
       </div>
       <div className="p-3">
         <h3 className="font-bold leading-snug line-clamp-2">{video.title}</h3>
+        {playlistName && <p className="text-xs text-[var(--nhai-muted)] mt-1">{playlistName}</p>}
         <span className="pill text-[11px] font-bold mt-2 inline-block">Shadowing</span>
       </div>
     </Link>
