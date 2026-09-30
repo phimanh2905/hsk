@@ -39,6 +39,7 @@ export interface ProgressStore {
   markPageDone(book: string, page: string): void;
   listPageDone(book?: string): string[];
   getSrs(key: string): SrsItem | null;
+  getAllSrs(): SrsItem[];
   toggleSrs(key: string): boolean;
   addSrsBatch(keys: string[]): number;
   countSrsNew(): number;
@@ -243,6 +244,16 @@ export class ProgressStore implements ProgressStore {
   getSrs(key: string): SrsItem | null {
     const item = this.readSrsItems()[key];
     return item && typeof item === "object" && typeof item.status === "string" ? item : null;
+  }
+
+  /* sp1-personal-tools Task 5 — đọc toàn bộ SRS items cho dashboard /review. */
+  getAllSrs(): SrsItem[] {
+    try {
+      const v = JSON.parse(localStorage.getItem("nhai.srs.items") || "{}");
+      return v && typeof v === "object" ? Object.values(v as Record<string, SrsItem>) : [];
+    } catch {
+      return [];
+    }
   }
 
   toggleSrs(key: string): boolean {
