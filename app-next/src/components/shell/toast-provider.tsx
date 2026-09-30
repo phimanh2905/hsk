@@ -15,6 +15,12 @@ export function useToast(): ToastFn {
   return fn;
 }
 
+/* Biến thể an toàn cho mode có thể được render ngoài provider (test/mount đơn lẻ):
+   không có provider → no-op thay vì throw. */
+export function useToastSafe(): ToastFn {
+  return useContext(ToastContext) ?? (() => {});
+}
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [msg, setMsg] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
