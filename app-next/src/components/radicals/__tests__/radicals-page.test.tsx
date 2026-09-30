@@ -19,7 +19,7 @@ describe("RadicalsClient (D3)", () => {
     render(<AutoplayModal onStart={(c) => cfgs.push(c)} onClose={() => {}} />);
     expect(screen.getByLabelText(/Thời gian lật thẻ/)).toHaveValue("3");
     expect(screen.getByLabelText(/Số lần nghe lại/)).toBeDisabled();
-    act(() => screen.getByRole("button", { name: /Bất đầu/ }).click());
+    act(() => screen.getByRole("button", { name: /Bắt đầu/ }).click());
     expect(cfgs[0]).toEqual({ flipSec: 3, nextSec: 2, speakOn: false, repeat: 1 });
   });
   it("7 quy tắc nét + card 3 nét cuối", () => {

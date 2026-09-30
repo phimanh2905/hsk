@@ -94,7 +94,7 @@ export default function AutoplayModal({
             Huỷ
           </button>
           <button type="button" className="btn-main px-4 py-2 text-sm" onClick={() => onStart(cfg)}>
-            Bất đầu
+            Bắt đầu
           </button>
         </div>
       </div>
