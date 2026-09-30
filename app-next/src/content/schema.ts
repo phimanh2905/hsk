@@ -22,3 +22,49 @@ export const lessonMetaSchema = z.object({
   skill: z.enum(["vocab", "grammar", "hanzi"]),
 });
 export const courseSchema = z.object({ pages: z.array(lessonMetaSchema).min(1) });
+
+/* ================= Foundation data (Task 8) ================= */
+export const pinyinValidSchema = z.record(z.string(), z.record(z.string(), z.string()));
+export const pinyinExamplesSchema = z.record(z.string(), z.array(z.tuple([z.string(), z.string(), z.string()])));
+export const radicalSchema = z.object({
+  i: z.number(),
+  char: z.string().min(1),
+  hanViet: z.string().min(1),
+  meaning: z.string().min(1),
+  strokes: z.number(),
+});
+export const radicalsSchema = z.array(radicalSchema);
+export const strokeRuleSchema = z.object({
+  n: z.number(),
+  name: z.string().min(1),
+  chars: z.array(z.string().min(1)).min(1),
+  desc: z.string().min(1),
+});
+export const strokeRulesSchema = z.array(strokeRuleSchema);
+export const lastStrokesSchema = z.array(z.object({ glyph: z.string().min(1), name: z.string().min(1) }));
+export const toneRowSchema = z.object({
+  name: z.string().min(1),
+  count: z.number(),
+  sample: z.boolean().optional(),
+  tones: z.array(z.object({ label: z.string(), mark: z.string(), pct: z.number() })),
+  examples: z.array(z.tuple([z.string(), z.string(), z.string()])),
+});
+export const soundRuleSchema = z.object({
+  rule: z.string().min(1),
+  examples: z.array(z.tuple([z.string(), z.string(), z.string()])),
+});
+export const soundQuizSchema = z.object({
+  q: z.string().min(1),
+  options: z.array(z.string()).min(2),
+  answer: z.number(),
+  explain: z.string().min(1),
+});
+export const soundRulesDataSchema = z.object({
+  note: z.string().min(1),
+  toneTotal: z.number(),
+  toneColors: z.record(z.string(), z.string()),
+  toneRows: z.array(toneRowSchema).min(1),
+  initialRules: z.array(soundRuleSchema),
+  finalRules: z.array(soundRuleSchema),
+  quiz: z.array(soundQuizSchema).min(1),
+});
