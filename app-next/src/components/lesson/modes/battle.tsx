@@ -110,13 +110,8 @@ export default function BattleMode() {
   const { items, book, page } = useLesson();
   const toast = useToastSafe();
 
-  /* useLoginModal có thể vắng provider (mount đơn lẻ/test) → no-op thay vì throw */
-  let openLogin: () => void = () => {};
-  try {
-    openLogin = useLoginModal().openLogin;
-  } catch {
-    /* không có LoginProvider → nút Đăng nhập no-op */
-  }
+  /* fail loud nếu thiếu LoginProvider — tránh nút Đăng nhập no-op im lặng */
+  const openLogin = useLoginModal().openLogin;
 
   const ctx = book && page ? `${book}.${page}` : "";
   const [phase, setPhase] = useState<"intro" | "running" | "done">("intro");

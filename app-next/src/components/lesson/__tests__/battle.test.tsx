@@ -3,6 +3,7 @@ import { render, screen, act } from "@testing-library/react";
 import { LessonProvider, type LessonItem } from "../lesson-provider";
 import BattleMode, { buildBattleQuestions } from "../modes/battle";
 import { progressStore } from "@/lib/store/progress-store";
+import { LoginProvider } from "@/components/shell/login-modal";
 
 const words: LessonItem[] = Array.from({ length: 13 }, (_, i) => ({
   hanzi: `词${i}`, pinyin: `cí${i}`, hanViet: "TỪ", meaning: `nghĩa ${i}`, pos: "Danh từ",
@@ -28,7 +29,9 @@ describe("BattleMode", () => {
     vi.useFakeTimers();
     render(
       <LessonProvider items={words} book="hsk1" page="lesson-1">
-        <BattleMode />
+        <LoginProvider>
+          <BattleMode />
+        </LoginProvider>
       </LessonProvider>
     );
     await act(async () => screen.getByRole("button", { name: /Bắt đầu thi/ }).click());
@@ -43,7 +46,7 @@ describe("BattleMode", () => {
     vi.useRealTimers();
   });
   it("Top-10 cứng hiển thị cả khi chưa thi", () => {
-    render(<LessonProvider items={words} book="hsk1" page="lesson-1"><BattleMode /></LessonProvider>);
+    render(<LessonProvider items={words} book="hsk1" page="lesson-1"><LoginProvider><BattleMode /></LoginProvider></LessonProvider>);
     expect(screen.getByText(/Top 10 bài này/)).toBeInTheDocument();
     expect(screen.getByText(/Thùy Trâm/)).toBeInTheDocument(); // 🥇 13/13 0:25.9 theo SPEC-02 §7
   });
