@@ -12,7 +12,7 @@ export type SrsStatus = "new" | "learning" | "learned" | "known";
 export type SrsItem = {
   key: string;
   status: SrsStatus;
-  dueAt: number;
+  dueAt: number | null;
   reviewCount: number;
   lastReviewedAt: number | null;
   updatedAt: number;
