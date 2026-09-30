@@ -22,6 +22,7 @@ function chunkText(text: string): string[] {
 
 export function useTts() {
   const [speaking, setSpeaking] = useState(false);
+  const speakingRef = useRef(false);
   const chunksRef = useRef<SpeechSynthesisUtterance[]>([]);
   const retryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelRef = useRef<() => void>(() => {});
@@ -31,11 +32,26 @@ export function useTts() {
     retryRef.current = null;
     window.speechSynthesis.cancel();
     chunksRef.current = [];
+    speakingRef.current = false;
     setSpeaking(false);
   }, []);
   cancelRef.current = cancel;
 
   useEffect(() => () => cancelRef.current(), []); // dọn dẹp khi unmount (C1)
+
+  /* Chọn voice theo preference "nhai.voice" (female/male), port shell.js:33-35 */
+  const pickVoice = (lang: string): SpeechSynthesisVoice | null => {
+    let pref: string | null = null;
+    try {
+      pref = localStorage.getItem("nhai.voice");
+    } catch {
+      pref = null;
+    }
+    const voicePref = pref || "female";
+    const voices = window.speechSynthesis.getVoices().filter((v) => /^zh/i.test(v.lang));
+    const re = voicePref === "male" ? /male|daniel|tington/i : /female|mei|tingting|hui/i;
+    return voices.find((v) => re.test(v.name)) ?? voices[0] ?? null;
+  };
 
   const makeUtterance = (t: string, lang: string, rate: number, voice: SpeechSynthesisVoice | null) => {
     const u = new SpeechSynthesisUtterance(t);
@@ -50,13 +66,15 @@ export function useTts() {
       cancel();
       const lang = opts?.lang ?? "zh-CN";
       const rate = opts?.rate ?? 1;
-      const voice = window.speechSynthesis.getVoices().find((v) => v.lang.startsWith("zh")) ?? null;
+      const voice = pickVoice(lang);
       const chunks = chunkText(text);
+      speakingRef.current = true;
       setSpeaking(true);
       chunks.forEach((t, i) => {
         const u = makeUtterance(t, lang, rate, voice);
         if (i === chunks.length - 1) {
           u.onend = () => {
+            speakingRef.current = false;
             setSpeaking(false);
             opts?.onEnd?.();
           };
@@ -66,12 +84,12 @@ export function useTts() {
       });
       // Safari đôi khi nuốt speak() — nếu sau ~15s vẫn "đang nói" mà không có utterance active thì thử lại
       retryRef.current = setTimeout(() => {
-        if (speaking && !window.speechSynthesis.speaking) {
+        if (speakingRef.current && !window.speechSynthesis.speaking) {
           chunks.forEach((t) => window.speechSynthesis.speak(makeUtterance(t, lang, rate, voice)));
         }
       }, SAFARI_RETRY_MS);
     },
-    [cancel, speaking]
+    [cancel]
   );
 
   return { speak, cancel, speaking };
