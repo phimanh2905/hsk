@@ -3,6 +3,7 @@
 
 import { soundRulesData } from "@/content/soundrules";
 import SoundQuiz from "@/components/sound-rules/quiz-client";
+import SpeakText from "@/components/sound-rules/speak-text";
 
 export const metadata = {
   title: "Quy tắc chuyển âm — Nhai HSK",
@@ -15,15 +16,15 @@ function toneColor(label: string): string {
   return (D.toneColors && D.toneColors[toneNum]) || "#c23b22";
 }
 
-function ExampleList({ examples }: { examples: [string, string, string][] }) {
+function ExampleList({ examples, zhClass = "text-base" }: { examples: [string, string, string][]; zhClass?: string }) {
   return (
     <p className="flex flex-wrap gap-y-1">
       {examples.map((ex) => (
-        <span key={ex[2]} className="inline-flex items-baseline gap-1.5 mr-3">
-          <span className="zh text-base font-bold">{ex[0]}</span>
+        <SpeakText key={ex[2]} text={ex[2]}>
+          <span className={`zh ${zhClass} font-bold`}>{ex[0]}</span>
           <span className="text-xs font-semibold">{ex[1]}</span>
           <span className="text-xs text-nhai-accent font-bold zh">{ex[2]}</span>
-        </span>
+        </SpeakText>
       ))}
     </p>
   );
@@ -94,13 +95,7 @@ export default function SoundRulesPage() {
                     ))}
                   </td>
                   <td className="border-2 border-nhai-border px-3 py-2 align-top">
-                    {row.examples.map((ex) => (
-                      <span key={ex[2]} className="inline-flex items-baseline gap-1.5 mr-3 mb-1">
-                        <span className="zh text-lg font-bold">{ex[0]}</span>
-                        <span className="text-xs font-semibold">{ex[1]}</span>
-                        <span className="text-xs text-nhai-accent font-bold zh">{ex[2]}</span>
-                      </span>
-                    ))}
+                    <ExampleList examples={row.examples} zhClass="text-lg" />
                   </td>
                 </tr>
               ))}
