@@ -190,7 +190,7 @@ hsk1["lesson-10"] = {
     W("他", "ta1", "THA", "Anh ấy, bạn ấy (nam)", "Đại từ", "他是老师。", "ta1 shi4 lao3 shi1 .", "Anh ấy là giáo viên"),
     W("她", "ta1", "THA", "Cô ấy, bạn ấy (nữ)", "Đại từ", "她是我的同学。", "ta1 shi4 wo3 de5 tong2 xue2 .", "Cô ấy là bạn học của tôi"),
     W("我们", "wo3 men5", "NGÃ MÔN", "Chúng tôi, chúng tớ", "Đại từ", "我们去学校。", "wo3 men5 qu4 xue2 xiao4 .", "Chúng tôi đi trường"),
-    W("他们", "ta1 men5", "THA MÔN", "Họ", "Đại từ", "他们是中国人。", "ta1 men5 shi4 zhong1 guo2 .", "Họ là người Trung Quốc"),
+    W("他们", "ta1 men5", "THA MÔN", "Họ", "Đại từ", "他们是中国人。", "ta1 men5 shi4 zhong1 guo2 ren2 .", "Họ là người Trung Quốc"),
     W("谁", "shei2", "THỪA", "Ai", "Đại từ", "他是谁？", "ta1 shi4 shei2 ?", "Anh ấy là ai?"),
     W("什么", "shen2 me5", "THẬP MÔ", "Cái gì", "Đại từ", "这是什么？", "zhe4 shi4 shen2 me5 ?", "Đây là cái gì?")
   ]
