@@ -20,6 +20,14 @@ export type SrsItem = {
 
 export type FeedbackEntry = { text: string; at: string };
 
+export type DeckRow = { hanzi: string; pinyin?: string; hanviet?: string; meaning?: string };
+
+export type DeckItem = { id: string; name: string; rows: DeckRow[]; updatedAt: string };
+
+export type NotebookKind = "vocab" | "grammar";
+
+export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
+
 export type ProgressSnapshot = { xp: number };
 
 export interface ProgressStore {
@@ -39,6 +47,16 @@ export interface ProgressStore {
   getRoadmapDone(): number[];
   markRoadmapSession(n: number): void;
   migrateLegacySrs(): void;
+  isLoggedIn(): boolean;
+  setMockLogin(on: boolean): void;
+  getStreak(): number;
+  listDecks(kind: NotebookKind): DeckItem[];
+  getDeckItem(kind: NotebookKind, id: string): DeckItem | null;
+  createDeck(kind: NotebookKind, name: string): DeckItem;
+  renameDeck(kind: NotebookKind, id: string, name: string): void;
+  deleteDeck(kind: NotebookKind, id: string): void;
+  getVocabBook(): VocabBookEntry[];
+  addToVocabBook(entry: VocabBookEntry): boolean;
 }
 
 const PROGRESS_EVENT = "nhai:progress";
@@ -337,6 +355,88 @@ export class ProgressStore implements ProgressStore {
     }
 
     this.writeSrsItems(items);
+  }
+
+  /* ---------- mock login + streak (sp1-personal-tools Task 1) ---------- */
+
+  isLoggedIn(): boolean {
+    try {
+      return localStorage.getItem("nhai.mockLogin") === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  setMockLogin(on: boolean): void {
+    try {
+      if (on) localStorage.setItem("nhai.mockLogin", "1");
+      else localStorage.removeItem("nhai.mockLogin");
+    } catch {
+      /* silent */
+    }
+    dispatchProgress();
+  }
+
+  getStreak(): number {
+    return readNum("nhai.streak");
+  }
+
+  /* ---------- decks CRUD — shape mảng [{ id, name, rows, updatedAt }] của clone ---------- */
+
+  private deckKey(kind: NotebookKind): string {
+    return kind === "grammar" ? "nhai.notebooks" : "nhai.decks";
+  }
+
+  listDecks(kind: NotebookKind): DeckItem[] {
+    const v = readJSON<DeckItem[] | null>(this.deckKey(kind), null);
+    return Array.isArray(v) ? v : [];
+  }
+
+  getDeckItem(kind: NotebookKind, id: string): DeckItem | null {
+    return this.listDecks(kind).find((d) => d.id === id) ?? null;
+  }
+
+  createDeck(kind: NotebookKind, name: string): DeckItem {
+    const item: DeckItem = {
+      id: "nb-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7),
+      name,
+      rows: [],
+      updatedAt: new Date().toISOString(),
+    };
+    this.saveDecks(kind, [item, ...this.listDecks(kind)]);
+    dispatchProgress();
+    return item;
+  }
+
+  renameDeck(kind: NotebookKind, id: string, name: string): void {
+    this.saveDecks(
+      kind,
+      this.listDecks(kind).map((d) => (d.id === id ? { ...d, name, updatedAt: new Date().toISOString() } : d))
+    );
+    dispatchProgress();
+  }
+
+  deleteDeck(kind: NotebookKind, id: string): void {
+    this.saveDecks(kind, this.listDecks(kind).filter((d) => d.id !== id));
+    dispatchProgress();
+  }
+
+  private saveDecks(kind: NotebookKind, items: DeckItem[]): void {
+    writeJSON(this.deckKey(kind), items);
+  }
+
+  /* ---------- vocabBook (nhai.vocabBook) ---------- */
+
+  getVocabBook(): VocabBookEntry[] {
+    const v = readJSON<VocabBookEntry[] | null>("nhai.vocabBook", null);
+    return Array.isArray(v) ? v : [];
+  }
+
+  addToVocabBook(entry: VocabBookEntry): boolean {
+    if (this.getVocabBook().some((v) => v.hanzi === entry.hanzi)) return false;
+    writeJSON("nhai.vocabBook", [...this.getVocabBook(), entry]);
+    dispatchProgress();
+    return true;
   }
 }
 

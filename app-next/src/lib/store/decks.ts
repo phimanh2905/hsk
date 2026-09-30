@@ -1,57 +1,42 @@
-/* Đọc deck tự tạo từ ProgressStore storage (key `nhai.decks`) — port clone/js/lesson.js:41-52 (readStore + loadData nhánh ?custom=).
-   Shape clone là MẢNG [{ id, name, rows: [{ hanzi, pinyin, hanviet, meaning }] }] — CHỈ ĐỌC,
-   không ghi (CRUD deck thuộc trang my-vocab/notebook, domain khác). */
+/* Đọc deck tự tạo qua ProgressStore (key `nhai.decks`, shape MẢNG [{ id, name, rows, updatedAt }] của clone) —
+   port clone/js/lesson.js:41-52 (readStore + loadData nhánh ?custom=).
+   CHỈ ĐỌC: CRUD deck thuộc ProgressStore (sp1-personal-tools Task 1); file này chỉ map
+   DeckRow.hanviet → Deck.hanViet để route /lesson/custom/[deckId] tiếp tục dùng được. */
 
-export type DeckRow = {
-  hanzi: string;
-  pinyin?: string;
-  hanViet?: string;
-  meaning?: string;
-  exampleZh?: string;
-};
+import { progressStore, type DeckRow } from "./progress-store";
 
 export type Deck = {
   id: string;
   name: string;
-  rows: DeckRow[];
+  rows: {
+    hanzi: string;
+    pinyin?: string;
+    hanViet?: string;
+    meaning?: string;
+    exampleZh?: string;
+  }[];
 };
 
-type RawDeck = {
-  id?: string;
-  name?: string;
-  rows?: { hanzi?: string; pinyin?: string; hanviet?: string; meaning?: string; exampleZh?: string }[];
-};
-
-/* Đọc raw JSON, trả mảng (shape MẢNG của clone); JSON hỏng / không phải mảng → []. */
-function readRawDecks(): RawDeck[] {
-  try {
-    const v = JSON.parse(localStorage.getItem("nhai.decks") || "[]");
-    return Array.isArray(v) ? v : [];
-  } catch {
-    return [];
-  }
-}
-
-function mapDeck(d: RawDeck): Deck {
-  const rows = Array.isArray(d.rows) ? d.rows : [];
+function toDeck(d: { id: string; name: string; rows: DeckRow[] }): Deck {
   return {
-    id: String(d.id ?? ""),
-    name: String(d.name ?? ""),
-    rows: rows.map((r) => ({
-      hanzi: (r && r.hanzi) || "",
-      pinyin: (r && r.pinyin) || undefined,
-      hanViet: (r && r.hanviet) || undefined, // clone ghi thường `hanviet` → map sang `hanViet`
-      meaning: (r && r.meaning) || undefined,
-      exampleZh: (r && r.exampleZh) || undefined,
+    id: d.id,
+    name: d.name,
+    rows: d.rows.map((r) => ({
+      hanzi: r.hanzi,
+      pinyin: r.pinyin,
+      hanViet: r.hanviet,
+      meaning: r.meaning,
+      // trường phụ clone ghi thêm trong rows (nếu có) — giữ cho lesson custom dùng được
+      exampleZh: (r as DeckRow & { exampleZh?: string }).exampleZh,
     })),
   };
 }
 
-export function getDeck(deckId: string): Deck | null {
-  const d = readRawDecks().find((x) => String(x && x.id) === String(deckId));
-  return d ? mapDeck(d) : null;
+export function listDecks(): Deck[] {
+  return progressStore.listDecks("vocab").map(toDeck);
 }
 
-export function listDecks(): Deck[] {
-  return readRawDecks().map(mapDeck);
+export function getDeck(deckId: string): Deck | null {
+  const d = progressStore.getDeckItem("vocab", deckId);
+  return d ? toDeck(d) : null;
 }
