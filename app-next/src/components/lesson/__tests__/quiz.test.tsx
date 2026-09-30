@@ -31,6 +31,18 @@ describe("pickDistractors", () => {
     expect(d.every((x) => x.index !== 0)).toBe(true);
     expect(new Set(d.map((x) => x.index)).size).toBe(3);
   });
+  it("bài có pinyin trùng (hsk1.lesson-10: 他/她 = tā) không sinh distractor cùng nhãn đáp án", () => {
+    const l10: LessonItem[] = [
+      { ...mk(0), hanzi: "他", pinyin: "tā" },
+      { ...mk(1), hanzi: "她", pinyin: "tā" },
+      { ...mk(2), hanzi: "猫", pinyin: "māo" },
+      { ...mk(3), hanzi: "狗", pinyin: "gǒu" },
+      { ...mk(4), hanzi: "鸟", pinyin: "niǎo" },
+    ];
+    const d = pickDistractors(l10, l10[0]); // correct = 他 (tā)
+    expect(d.every((x) => x.pinyin !== "tā")).toBe(true); // 她 bị loại theo giá trị pinyin
+    expect(new Set(d.map((x) => x.pinyin)).size).toBe(d.length); // không trùng nhãn nhau
+  });
 });
 
 describe("QuizMode", () => {

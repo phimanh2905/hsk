@@ -22,13 +22,12 @@ type QMode = (typeof QMODES)[number]["id"];
 
 const NEXT_DELAY_MS = 800;
 
-/** 3 item nhiễu KHÁC đáp án đúng từ cùng bài, không trùng nhau; fallback lặp nếu bài < 4 từ. */
+/** 3 item nhiễu KHÁC đáp án đúng từ cùng bài, dedupe theo GIÁ TRỊ pinyin (như clone/js/lesson-quiz.js
+ *  distractors(): v !== correct && arr.indexOf(v) === i) — tránh 2 nút cùng nhãn khi bài có pinyin trùng.
+ *  Nếu bài ít pinyin unique hơn n thì trả ít hơn n (không lặp nhãn). */
 export function pickDistractors(all: LessonItem[], correct: LessonItem, n: number = 3): LessonItem[] {
-  const pool = shuffle(all.filter((w) => w.index !== correct.index));
-  const out = pool.slice(0, n);
-  let i = 0;
-  while (out.length < n && pool.length > 0) out.push(pool[i++ % pool.length]);
-  return out;
+  const seen = new Set<string>([correct.pinyin]);
+  return shuffle(all).filter((w) => !seen.has(w.pinyin) && seen.add(w.pinyin)).slice(0, n);
 }
 
 export default function QuizMode() {
