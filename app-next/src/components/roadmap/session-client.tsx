@@ -23,27 +23,15 @@ const TAB_LABELS: Record<Tab, string> = {
   quiz: "Trắc nghiệm",
   test: "Bài kiểm tra",
 };
-const LEARN_SEEN_KEY = "nhai.roadmap.learnSeen";
+// Đọc/ghi qua ProgressStore (không đụng localStorage trực tiếp) để SP2 sync được.
 
 function readLearnSeen(): number[] {
-  try {
-    const arr = JSON.parse(localStorage.getItem(LEARN_SEEN_KEY) || "[]") as unknown;
-    return Array.isArray(arr) ? arr.filter((x): x is number => typeof x === "number") : [];
-  } catch {
-    return [];
-  }
+  return progressStore.getRoadmapLearnSeen();
 }
 
+
 function markLearnSeen(n: number): void {
-  try {
-    const seen = readLearnSeen();
-    if (!seen.includes(n)) {
-      seen.push(n);
-      localStorage.setItem(LEARN_SEEN_KEY, JSON.stringify(seen));
-    }
-  } catch {
-    /* silent */
-  }
+  progressStore.markRoadmapLearnSeen(n);
 }
 
 export default function SessionClient({ n }: { n: number }): React.JSX.Element {

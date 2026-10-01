@@ -66,9 +66,5 @@ function StatCard({ icon, label, value, sub }: { icon: string; label: string; va
 }
 
 function readToday(): number {
-  try {
-    return parseInt(localStorage.getItem("nhai.today") || "0", 10) || 0;
-  } catch {
-    return 0;
-  }
+  return progressStore.getToday();
 }

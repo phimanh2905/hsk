@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/shell/toast-provider";
 
 const REPLY_TEXT = "Mình là bản demo — thử bấm ⭐ trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!";
@@ -13,7 +13,12 @@ export default function AiWidget() {
     { role: "ai", text: "Xin chào! Mình là trợ lý Nhai HSK. Hỏi về pinyin, từ vựng hoặc bấm một bài để học nhé!" },
   ]);
   // SP1 mock: chatBubble=0 chỉ ẩn nút mascot (giữ clone — panel vẫn mở được nếu đang mở)
-  const bubbleHidden = typeof window !== "undefined" && localStorage.getItem("nhai.chatBubble") === "0";
+  // Mount-gate: đọc localStorage SAU mount, nếu không server/client render
+  // khác nhau khi user đã tắt bubble → hydration mismatch.
+  const [bubbleHidden, setBubbleHidden] = useState(false);
+  useEffect(() => {
+    setBubbleHidden(localStorage.getItem("nhai.chatBubble") === "0");
+  }, []);
 
   function send() {
     const value = input.trim();

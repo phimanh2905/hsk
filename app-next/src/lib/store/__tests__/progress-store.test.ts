@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { ProgressStore } from "../progress-store";
+import { ProgressStore, progressStore } from "../progress-store";
 
 const KEY = "nhai.pageDone";
 
@@ -81,5 +81,36 @@ describe("feedback (contract plan sp1-social-legal)", () => {
     expect(s.getFeedback()).toEqual([]);
     s.appendFeedback({ text: "Ổn!", at: new Date().toISOString() });
     expect(s.getFeedback()).toEqual([{ text: "Ổn!", at: expect.any(String) }]);
+  });
+});
+
+describe("getToday + roadmap learnSeen (fix wave 2026-10-01)", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("getToday đọc nhai.today, mặc định 0 khi rỗng/hỏng", () => {
+    expect(progressStore.getToday()).toBe(0);
+    localStorage.setItem("nhai.today", "7");
+    expect(progressStore.getToday()).toBe(7);
+    localStorage.setItem("nhai.today", "{broken");
+    expect(progressStore.getToday()).toBe(0);
+  });
+
+  it("getRoadmapLearnSeen đọc qua store (không đọc localStorage ở component)", () => {
+    expect(progressStore.getRoadmapLearnSeen()).toEqual([]);
+    localStorage.setItem("nhai.roadmap.learnSeen", JSON.stringify([2, 1, "x"]));
+    // bỏ phần tử không phải số
+    expect(progressStore.getRoadmapLearnSeen()).toEqual([2, 1]);
+  });
+
+  it("markRoadmapLearnSeen thêm duy nhất, sort tăng, phát event nhai:progress", () => {
+    const events: string[] = [];
+    window.addEventListener("nhai:progress", () => events.push("evt"));
+    progressStore.markRoadmapLearnSeen(3);
+    progressStore.markRoadmapLearnSeen(1);
+    progressStore.markRoadmapLearnSeen(3);
+    expect(localStorage.getItem("nhai.roadmap.learnSeen")).toBe("[1,3]");
+    expect(progressStore.getRoadmapLearnSeen()).toEqual([1, 3]);
+    expect(events.length).toBe(2);
+    window.removeEventListener("nhai:progress", () => events.push("evt"));
   });
 });

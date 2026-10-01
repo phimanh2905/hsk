@@ -32,6 +32,7 @@ export type ProgressSnapshot = { xp: number };
 
 export interface ProgressStoreApi {
   getXp(): number;
+  getToday(): number;
   addXp(n: number): void;
   getFeedback(): FeedbackEntry[];
   appendFeedback(entry: FeedbackEntry): void;
@@ -47,6 +48,8 @@ export interface ProgressStoreApi {
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
   getRoadmapDone(): number[];
   markRoadmapSession(n: number): void;
+  getRoadmapLearnSeen(): number[];
+  markRoadmapLearnSeen(n: number): void;
   migrateLegacySrs(): void;
   isLoggedIn(): boolean;
   setMockLogin(on: boolean): void;
@@ -86,6 +89,20 @@ function writeNum(key: string, n: number): void {
   } catch {
     /* silent */
   }
+}
+
+/* Roadmap "đã đọc tab Học" — key riêng khỏi nhai.roadmap.pinyin (buổi đã
+   hoàn thành) nhưng CÙNG họ progress → phải nằm trong store để HybridStore
+   (SP2) đồng bộ được, không đọc localStorage trực tiếp ở component. */
+const ROADMAP_LEARN_SEEN_KEY = "nhai.roadmap.learnSeen";
+
+function readNumArray(key: string): number[] {
+  const arr = readJSON<unknown>(key, []);
+  return Array.isArray(arr) ? arr.filter((n): n is number => typeof n === "number") : [];
+}
+
+function writeNumArray(key: string, arr: number[]): void {
+  writeJSON(key, arr);
 }
 
 function readJSON<T>(key: string, fallback: T): T {
@@ -298,6 +315,10 @@ export class ProgressStore implements ProgressStoreApi {
     return isBetter;
   }
 
+  getToday(): number {
+    return readNum("nhai.today", 0);
+  }
+
   /* ---------- roadmap ---------- */
 
   getRoadmapDone(): number[] {
@@ -312,6 +333,18 @@ export class ProgressStore implements ProgressStoreApi {
       done.sort((a, b) => a - b);
       writeJSON("nhai.roadmap.pinyin", done);
     }
+  }
+
+  getRoadmapLearnSeen(): number[] {
+    return readNumArray(ROADMAP_LEARN_SEEN_KEY);
+  }
+
+  markRoadmapLearnSeen(n: number): void {
+    const seen = new Set(this.getRoadmapLearnSeen());
+    if (seen.has(n)) return;
+    seen.add(n);
+    writeNumArray(ROADMAP_LEARN_SEEN_KEY, [...seen].sort((a, b) => a - b));
+    dispatchProgress();
   }
 
   /* ---------- migration 3 format SRS cũ ---------- */

@@ -36,7 +36,9 @@ test.describe("G5 shadowing video player (YouTube stubbed)", () => {
   test("phím tắt Space/←/→/R hoạt động; không kích hoạt khi focus input dictation", async ({ page }) => {
     await page.route("**/www.youtube-nocookie.com/embed/**", (route) => route.fulfill({ contentType: "text/html", body: YT_STUB }));
     await page.goto("/shadowing/EA3rwvr99Q0");
-    await page.waitForTimeout(300);
+    // Chờ player thật sự sẵn sàng (overlay biến mất = đã nhận onReady từ stub)
+    // thay vì sleep cố định — sleep fail khi CPU bận (CI chạy song song worker).
+    await expect(page.getByTestId("video-overlay")).toBeHidden();
     await page.click('[data-sent="2"]');
     await expect(page.getByTestId("pos")).toHaveText("Câu 3/9");
     await page.keyboard.press("ArrowRight");

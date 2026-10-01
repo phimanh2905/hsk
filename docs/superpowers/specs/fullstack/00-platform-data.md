@@ -145,6 +145,7 @@ entitlements(user_id TEXT, product TEXT NOT NULL
 | `vocabBook` | `decks` (bộ "Từ điển đã lưu") | Union |
 | `battle.best.*` | `battle_best` | max correct, rồi min time_ms |
 | `roadmap.pinyin` | `roadmap_progress` | Union |
+| `roadmap.learnSeen` | `roadmap_progress` (tab `learn`) | Union |
 | `theme`, `voice`, các flag/pref | `settings` | Server win khi rỗng |
 | `feedback` | `feedback` | Push rồi xoá local |
 | `mockLogin`, `mockName`, `fileCode`, `radAutoplay`, `shadow.*` | mock/`settings`/`free_codes` redeem | fileCode → nợ redeem code FREEHSK ở SP4 |
