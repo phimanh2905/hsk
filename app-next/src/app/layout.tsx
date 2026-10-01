@@ -4,6 +4,7 @@ import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
 import Topbar from "@/components/shell/topbar";
 import SidebarNav from "@/components/shell/sidebar-nav";
 import SettingsModal from "@/components/shell/settings-modal";
+import AiWidget from "@/components/social/ai-widget";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <SettingsModal />
               <LoginModal />
-              <div data-ai-slot />
+              <AiWidget />
             </LoginProvider>
           </ToastProvider>
         </ThemeProvider>
