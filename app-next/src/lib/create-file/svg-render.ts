@@ -248,9 +248,7 @@ function buildPages(state: CfState): string[] {
   const totalRows = Math.max(state.fillRows + state.blankRows, 1);
   switch (id) {
     case "stroke-order":
-      /* test spec: 6 chữ / 2 → renderPages 1 trang (tất cả block chung 1 sheet);
-         pagination thực khi in do estimatePages/PageBreak lo */
-      return [state.chars.map((c) => strokeBlock(state, c)).join("")];
+      return paginate(state.chars, 2, (c) => strokeBlock(state, c));
     case "big-char":
       return paginate(state.chars, 3, (c) => bigBlock(state, c));
     case "vocab":

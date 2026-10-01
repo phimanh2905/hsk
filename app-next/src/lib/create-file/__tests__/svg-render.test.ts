@@ -22,7 +22,7 @@ describe("renderPages — blank-grid (grid-paper) lưới 12×14 đúng ô", () 
 describe("renderPages — stroke-order nét đỏ bước nét", () => {
   it("mỗi chữ 1 block: meta VĨNH + polyline đỏ (#c23b22) ở ô bước nét cuối", () => {
     const pages = renderPages(cfDefaultsFor("stroke-order"));
-    expect(pages).toHaveLength(1); // 6 chữ / 2
+    expect(pages).toHaveLength(3); // 6 chữ / 2 trang
     expect(estimatePages(cfDefaultsFor("stroke-order"))).toBe(3);
     expect(pages[0]).toContain("VĨNH");
     expect(pages[0]).toContain('stroke="#c23b22"');
