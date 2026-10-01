@@ -7,6 +7,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
+import DictationPanel from "@/components/shadowing/dictation-panel";
+import RecorderPanel from "@/components/shadowing/recorder-panel";
 import { getShadowFont, setShadowFont, getAutoscroll, setAutoscroll, getVoicePref, type ShadowFont } from "@/lib/shadowing/prefs";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 
@@ -48,6 +50,8 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
 
   // slice hiển thị
   const [cur, setCur] = useState(0);
+  const [mode, setMode] = useState<"shadow" | "dictation">("shadow");
+  const [ytReady, setYtReady] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [tts, setTts] = useState(false);
   const [showPy, setShowPy] = useState(false);
@@ -97,6 +101,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
   function markYtReady() {
     if (st.current.ytReady) return;
     st.current.ytReady = true;
+    setYtReady(true); // Ruling Task 5 review: render-from-ref → React state
     ytCmd("setPlaybackRate", [st.current.rate]);
   }
 
@@ -192,6 +197,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (t && ((t.matches && t.matches("input, textarea, select")) || t.isContentEditable)) return;
+      if (shortcutsOpen || settingsOpen) return; // dialog mở → bỏ qua phím tắt
       if (e.code === "Space") { e.preventDefault(); togglePlay(); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
       else if (e.key === "ArrowRight") { e.preventDefault(); next(); }
@@ -200,7 +206,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [shortcutsOpen, settingsOpen]);
 
   /* ---------- autoscroll câu active — port renderActive ---------- */
   useEffect(() => {
@@ -212,17 +218,23 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
 
   const fontClass = font === "sm" ? "text-sm" : font === "base" ? "text-base" : "text-lg";
 
+  /* ---------- nghe lại câu cho DictationPanel — port shadowing-video.js ---------- */
+  const listenCurrent = () => {
+    if (tts) speakSentence(cur);
+    else { ytCmd("seekTo", [subs[cur].start, true]); ytCmd("playVideo"); }
+  };
+
   return (
     <div>
       {/* ---------- toolbar ---------- */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
-        <button type="button" data-mode="shadow" onClick={() => { st.current.mode = "shadow"; }}
-          className={"py-2 text-sm " + (st.current.mode === "shadow" ? "btn-main" : "btn-ghost")}>
-          🎧 Shadowing
+        <button type="button" data-mode="shadow" onClick={() => { st.current.mode = "shadow"; setMode("shadow"); }}
+          className={"py-2 text-sm " + (mode === "shadow" ? "btn-main" : "btn-ghost")}>
+          Bắt chước phát âm
         </button>
-        <button type="button" data-mode="dictation" onClick={() => { st.current.mode = "dictation"; }}
-          className={"py-2 text-sm " + (st.current.mode === "dictation" ? "btn-main" : "btn-ghost")}>
-          ✍️ Chính tả
+        <button type="button" data-mode="dictation" onClick={() => { st.current.mode = "dictation"; setMode("dictation"); }}
+          className={"py-2 text-sm " + (mode === "dictation" ? "btn-main" : "btn-ghost")}>
+          Nghe - Viết chính tả
         </button>
         <button type="button" className="btn-ghost py-2 text-sm" onClick={() => setVideoHidden(!videoHidden)}>
           {videoHidden ? "👁 Hiện video" : "👁 Ẩn video"}
@@ -256,7 +268,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
         />
         <div
           data-testid="video-overlay"
-          className={"absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl bg-black/80 text-white text-center p-4" + (st.current.ytReady ? " hidden" : "")}
+          className={"absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl bg-black/80 text-white text-center p-4" + (ytReady ? " hidden" : "")}
         >
           <p className="font-bold">Video YouTube — cần kết nối mạng</p>
           {tts && <p className="text-sm text-nhai-accent">Dùng TTS đọc câu — không cần mạng cũng học được.</p>}
@@ -268,9 +280,13 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
         </p>
       )}
 
-      {/* ---------- khu dictation / record — Task 6 nhận props slot ---------- */}
-      <div data-dictation className={st.current.mode === "dictation" ? "" : "hidden"} />
-      <div data-record className={st.current.mode !== "dictation" ? "" : "hidden"} />
+      {/* ---------- khu dictation / record — panel Task 6 cắm vào slot ---------- */}
+      <div data-dictation className={mode === "dictation" ? "" : "hidden"}>
+        {mode === "dictation" && <DictationPanel sentence={subs[cur]} onListen={listenCurrent} onSkip={next} />}
+      </div>
+      <div data-record className={mode !== "dictation" ? "" : "hidden"}>
+        {mode !== "dictation" && <RecorderPanel />}
+      </div>
 
       {/* ---------- transcript ---------- */}
       <div className="flex flex-wrap items-center gap-3 mb-3">
