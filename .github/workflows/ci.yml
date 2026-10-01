@@ -23,8 +23,14 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm exec opennextjs-cloudflare build
-      - name: Deploy preview (main only)
+        env:
+          # Trang public được prerender lúc build: thiếu biến này thì sitemap,
+          # robots và metadataBase sẽ bị bake cứng localhost/nhaihsk.example.
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      - name: Deploy to Cloudflare Workers (main only)
         if: github.ref == 'refs/heads/main'
         run: pnpm exec opennextjs-cloudflare deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
