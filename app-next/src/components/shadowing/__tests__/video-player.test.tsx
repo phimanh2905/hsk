@@ -35,11 +35,18 @@ describe("VideoPlayer — render + transcript + fallback TTS 4s", () => {
     expect(frame.src).toContain("https://www.youtube-nocookie.com/embed/EA3rwvr99Q0?enablejsapi=1");
     expect(screen.getAllByText(/^#\d+$/)).toHaveLength(9);
   });
-  it("4s không ytReady → overlay + banner TTS + speak câu hiện tại", () => {
+  it("4s không ytReady, chưa play → overlay + banner TTS, KHÔNG speak (khớp clone)", () => {
     render(<VideoPlayer video={video} subtitles={subs} />);
     act(() => { vi.advanceTimersByTime(4100); });
     expect(screen.getByTestId("video-overlay")).not.toHaveClass("hidden");
     expect(screen.getByText(/Dùng TTS đọc câu/)).toBeTruthy();
+    expect((window as unknown as { __lastSpeak?: string }).__lastSpeak).toBeUndefined();
+  });
+  it("4s không ytReady, đang play → speak câu hiện tại", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<VideoPlayer video={video} subtitles={subs} />);
+    await user.click(screen.getByLabelText("Phát / tạm dừng"));
+    act(() => { vi.advanceTimersByTime(4100); });
     expect((window as unknown as { __lastSpeak?: string }).__lastSpeak).toContain("我才离开几天");
   });
   it("bấm câu #3 → cur=2 (slice hiển thị 'Câu 3/9'), nút ⏮/⏭ đổi cur", async () => {

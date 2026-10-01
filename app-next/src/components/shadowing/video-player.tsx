@@ -130,7 +130,8 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
       if (!st.current.ytReady && !st.current.tts) {
         st.current.tts = true;
         setTts(true);
-        speakCurrent();
+        // khớp clone shadowing-video.js:110-118 — chỉ tự phát khi đang playing
+        if (st.current.playing) speakCurrent();
       }
     }, 4000);
     return () => clearTimeout(id);
