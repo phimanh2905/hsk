@@ -193,16 +193,16 @@ function flatChars(state: CfState): { ch: string; py: string }[] {
   return out;
 }
 
-/* sheet A4 (thêm class print-area so với clone) */
+/* sheet A4 — NỘI DUNG trang (head + body + footer); wrapper print-page đặt ở <A4Preview>
+   (đổi từ clone: sheetHtml không bọc div sheet — Task 11) */
 function sheetHtml(state: CfState, content: string): string {
   let head = "";
   if (state.title) head += '<div class="text-center font-extrabold text-lg mb-2">' + esc(state.title) + "</div>";
   if (state.nameDate) head += '<div class="flex justify-between text-sm mb-4 pb-2 border-b-2 border-[#dccfb8]">' +
     "<span>Họ tên: ______________</span><span>Ngày: ____________</span></div>";
-  return '<div class="print-page sheet card shadow-neo mx-auto w-full max-w-[794px] p-10 mb-8 print-area">' + head +
+  return head +
     '<div class="sheet-body">' + content + "</div>" +
-    '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">nhaihsk.com · facebook.com/groups/nhaihsk</div>' +
-    "</div>";
+    '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">nhaihsk.com · facebook.com/groups/nhaihsk</div>';
 }
 
 function strokeBlock(state: CfState, c: CfState["chars"][number]): string {

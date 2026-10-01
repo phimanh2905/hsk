@@ -62,7 +62,8 @@ function fallbackChars(): CfChar[] {
 }
 
 function vocabChars(): CfChar[] {
-  const words: VocabWord[] = vocab.hsk1["lesson-1"].words;
+  /* 4 từ mẫu đầu Bài 1 HSK1 (Task 11: đếm "4 từ sẽ có trong bản in") */
+  const words: VocabWord[] = vocab.hsk1["lesson-1"].words.slice(0, 4);
   return words.map((w) => ({ hanzi: w.hanzi, pinyin: w.pinyin, hv: w.hanViet, meaning: w.meaning }));
 }
 
