@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useProgress } from "@/lib/store/progress-store";
 import { useLoginModal, useMockLogin } from "./login-modal";
 import { useToast } from "./toast-provider";
+import NotificationBell from "@/components/social/notification-bell";
 
 export default function Topbar() {
   const { xp } = useProgress();
@@ -33,8 +34,7 @@ export default function Topbar() {
         >
           ⚡ {xp} — mỗi câu trả lời đúng +1
         </span>
-        {/* slot cho NotificationBell (plan anh em) */}
-        <div data-bell-slot />
+        <NotificationBell />
         {loggedIn ? (
           <>
             <span
