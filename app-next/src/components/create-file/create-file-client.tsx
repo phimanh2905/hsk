@@ -14,6 +14,7 @@ import { loadCfState, persistCfState } from "@/lib/create-file/storage";
 import type { CfState } from "@/lib/create-file/types";
 import { estimatePages } from "@/lib/create-file/svg-render";
 import { fileTemplates } from "@/content/templates";
+import PrintButton from "./print-button";
 import A4Preview from "./a4-preview";
 import CreateFileForm from "./create-file-form";
 
@@ -43,7 +44,7 @@ export default function CreateFileClient({ tplId, name, desc, group }: {
         <span data-testid="pages-badge" className="pill text-sm font-semibold">
           {estimatePages(state)} trang
         </span>
-        {/* slot <PrintButton/> — Task 12 (gate mã + window.print) */}
+        <PrintButton />
       </div>
       <p className="text-[var(--nhai-muted)] mt-1">{desc}</p>
 
