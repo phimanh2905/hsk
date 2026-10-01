@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { leaderboardData, initials, formatXp } from "@/content/leaderboard";
 
 type Tab = "xp" | "battle";
@@ -23,11 +23,14 @@ function Row({ rank, name, rightText, rightSub }: { rank: number; name: string; 
 }
 
 export default function LeaderboardPage() {
-  const [tab, setTab] = useState<Tab>(() => {
-    if (typeof window === "undefined") return "xp";
+  // Mount-gate: SSR/pre-mount luôn render tab "xp" (khớp HTML prerender), sau mount
+  // mới đọc ?tab= từ URL — tránh hydration mismatch khi mở trực tiếp ?tab=battle.
+  const [tab, setTab] = useState<Tab>("xp");
+
+  useEffect(() => {
     const t = new URLSearchParams(window.location.search).get("tab");
-    return t === "battle" ? "battle" : "xp";
-  });
+    if (t === "battle") setTab("battle");
+  }, []);
 
   function selectTab(next: Tab) {
     setTab(next); // đổi tab không fetch, không reload (giữ clone/js/leaderboard.js)
