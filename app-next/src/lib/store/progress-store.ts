@@ -30,7 +30,7 @@ export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
 export type ProgressSnapshot = { xp: number };
 
-export interface ProgressStore {
+export interface ProgressStoreApi {
   getXp(): number;
   addXp(n: number): void;
   getFeedback(): FeedbackEntry[];
@@ -144,7 +144,7 @@ function toSrsStatus(v: unknown): SrsStatus | null {
   return VALID_STATUS.includes(v as SrsStatus) ? (v as SrsStatus) : null;
 }
 
-export class ProgressStore implements ProgressStore {
+export class ProgressStore implements ProgressStoreApi {
   /* ---------- XP / heat / streak / today ---------- */
 
   getXp(): number {
@@ -466,7 +466,7 @@ export class ProgressStore implements ProgressStore {
 
 /* ---------- singleton + React hook ---------- */
 
-export const progressStore: ProgressStore = new ProgressStore();
+export const progressStore: ProgressStoreApi = new ProgressStore();
 
 export function useProgress(): ProgressSnapshot {
   const [xp, setXp] = useState(progressStore.getXp());

@@ -47,7 +47,9 @@ export default function FlashcardMode() {
 
   // Tự động: interval theo autoplayCfg — speak (nếu bật) rồi next (port autoTimer + autoPlay)
   const autoRef = useRef({ autoplayCfg, item, index, total });
-  autoRef.current = { autoplayCfg, item, index, total };
+  useEffect(() => {
+    autoRef.current = { autoplayCfg, item, index, total };
+  }, [autoplayCfg, item, index, total]);
   useEffect(() => {
     if (!auto) return;
     const id = setInterval(() => {

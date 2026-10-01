@@ -4,6 +4,7 @@
    Mock: bấm Google/Apple/Email → nhai.mockLogin = "1", nhai.mockName từ input
    (mặc định "T"), đóng modal, dispatch "nhai:progress" để Topbar render lại. */
 
+import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type LoginCtx = { isOpen: boolean; openLogin: () => void; close: () => void };
@@ -133,6 +134,17 @@ export function LoginModal() {
           ✉️ Email
         </button>
         <p className="text-xs text-[var(--nhai-muted)] mt-3">
+          Bằng việc đăng nhập, bạn đồng ý với{" "}
+          <Link href="/terms" className="text-[var(--nhai-accent)]">
+            Điều khoản sử dụng
+          </Link>{" "}
+          và{" "}
+          <Link href="/privacy" className="text-[var(--nhai-accent)]">
+            Chính sách quyền riêng tư
+          </Link>
+          .
+        </p>
+        <p className="text-xs text-[var(--nhai-muted)] mt-2">
           Bản demo — mọi provider chỉ lưu mock trong localStorage.
         </p>
       </div>

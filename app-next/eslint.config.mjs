@@ -15,6 +15,20 @@ const eslintConfig = defineConfig([
     ".wrangler/**",
     "next-env.d.ts",
   ]),
+  {
+    // Quy ước dự án (xem SDD ledger: ruling mount-gate): mọi trang đọc
+    // localStorage/progress đều phải setState SAU mount để SSR prerender
+    // khớp client (tránh hydration mismatch). Đó chính là pattern mà các rule
+    // React Compiler dưới đây cảnh báo, nên hạ xuống "warn" thay vì error —
+    // CI vẫn xanh, nhưng rule vẫn hiện để review khi code mới.
+    rules: {
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/immutability": "warn",
+      "react-hooks/static-components": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

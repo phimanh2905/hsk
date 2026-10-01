@@ -4,6 +4,23 @@ import { resolve } from "node:path";
 import { roadmapSessions, roadmapStages, roadmapCopy } from "../roadmap";
 import { roadmapPinyinSteps } from "../roadmapPinyin";
 
+type SrcTestItem = { prompt?: string; answer: string; q?: string; options?: string[]; explain?: string };
+type SrcSession = {
+  n: number; title: string; minutes: number; desc: string;
+  learn: unknown; cards: unknown; quiz: unknown; test: SrcTestItem[];
+};
+type SrcStep = { key: string } & Record<string, unknown>;
+function loadSource<T>(file: string, pick: (root: { NHAI_DATA: NhaiSourceData }) => T): T {
+  const src = readFileSync(resolve(__dirname, "../../../../clone/js/data/" + file), "utf8");
+  const win: Record<string, unknown> = {};
+  new Function("window", src)(win);
+  return pick(win as unknown as { NHAI_DATA: NhaiSourceData });
+}
+type NhaiSourceData = {
+  roadmap: { pinyin: { sessions: SrcSession[] } };
+  roadmapPinyin: { steps: SrcStep[] };
+};
+
 describe("roadmapSessions (8 buổi)", () => {
   it("đủ 8 buổi đúng tên + thời lượng", () => {
     expect(roadmapSessions).toHaveLength(8);
@@ -28,16 +45,13 @@ describe("roadmapSessions (8 buổi)", () => {
     expect(roadmapSessions[0].learn.map((l) => l.ex!.hanzi)).toEqual(["妈", "麻", "马", "骂"]);
   });
   it("nội dung khớp nguồn clone/js/data/roadmap.js (normalize test items)", () => {
-    const src = readFileSync(resolve(__dirname, "../../../../clone/js/data/roadmap.js"), "utf8");
-    const win: Record<string, any> = {};
-    new Function("window", src)(win);
-    const sourceSessions = win.NHAI_DATA.roadmap.pinyin.sessions;
+    const sourceSessions = loadSource("roadmap.js", (r) => r.NHAI_DATA.roadmap.pinyin.sessions);
     expect(roadmapSessions.map((s) => JSON.stringify([s.n, s.title, s.minutes, s.desc, s.learn, s.cards, s.quiz]))).toEqual(
-      sourceSessions.map((s: any) => JSON.stringify([s.n, s.title, s.minutes, s.desc, s.learn, s.cards, s.quiz])),
+      sourceSessions.map((s) => JSON.stringify([s.n, s.title, s.minutes, s.desc, s.learn, s.cards, s.quiz])),
     );
     for (let i = 0; i < sourceSessions.length; i++) {
       expect(roadmapSessions[i].test).toEqual(
-        sourceSessions[i].test.map((t: any) =>
+        sourceSessions[i].test.map((t) =>
           t.prompt !== undefined
             ? { kind: "written", q: t.prompt, accept: [t.answer] }
             : { kind: "quiz", q: t.q, options: t.options, answer: t.answer, explain: t.explain },
@@ -61,11 +75,8 @@ describe("roadmapPinyinSteps (6 bước)", () => {
     ]);
   });
   it("nội dung khớp nguồn clone/js/data/roadmapPinyin.js (trừ links bổ sung)", () => {
-    const src = readFileSync(resolve(__dirname, "../../../../clone/js/data/roadmapPinyin.js"), "utf8");
-    const win: Record<string, any> = {};
-    new Function("window", src)(win);
-    const sourceSteps = win.NHAI_DATA.roadmapPinyin.steps;
-    expect(roadmapPinyinSteps).toEqual(sourceSteps.map((s: any) => (s.key === "recap" ? { ...s, links: [{ label: "Làm bài tập pinyin", href: "/pinyin/practice" }, { label: "Xem lại bảng", href: "/pinyin" }] } : s)));
+    const sourceSteps = loadSource("roadmapPinyin.js", (r) => r.NHAI_DATA.roadmapPinyin.steps);
+    expect(roadmapPinyinSteps).toEqual(sourceSteps.map((s) => (s.key === "recap" ? { ...s, links: [{ label: "Làm bài tập pinyin", href: "/pinyin/practice" }, { label: "Xem lại bảng", href: "/pinyin" }] } : s)));
   });
 });
 

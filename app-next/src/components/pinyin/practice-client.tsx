@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { pinyinValid } from "@/content/pinyin";
 import { toPinyin, shuffle } from "@/lib/pinyin-utils";
+import { mulberry32 } from "@/lib/stats/heatmap";
 import { useTts } from "@/lib/tts/use-tts";
 
 export type Question = {
@@ -15,8 +16,8 @@ export type Question = {
   answer: string;
 };
 
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+function pick<T>(arr: T[], rng: () => number = Math.random): T {
+  return arr[Math.floor(rng() * arr.length)];
 }
 
 export function poolFrom(valid: Record<string, Record<string, string>>): string[] {
@@ -35,19 +36,20 @@ export function poolFrom(valid: Record<string, Record<string, string>>): string[
    - tone: prompt = âm mang 1 thanh ngẫu nhiên, options = 4 dạng thanh của âm đó, answer = prompt. */
 export function buildQuestion(
   valid: Record<string, Record<string, string>>,
-  kind: "listen" | "tone"
+  kind: "listen" | "tone",
+  rng: () => number = Math.random
 ): Question {
   const pool = poolFrom(valid);
-  const syl = pick(pool);
+  const syl = pick(pool, rng);
   if (kind === "listen") {
-    const distractors = shuffle(pool.filter((s) => s !== syl)).slice(0, 3);
-    return { prompt: syl, options: shuffle([syl, ...distractors]), answer: syl };
+    const distractors = shuffle(pool.filter((s) => s !== syl), rng).slice(0, 3);
+    return { prompt: syl, options: shuffle([syl, ...distractors], rng), answer: syl };
   }
-  const tone = 1 + Math.floor(Math.random() * 4);
+  const tone = 1 + Math.floor(rng() * 4);
   // NFD để dấu thanh là combining mark (U+0300–U+036F) — contract của buildQuestion
   const nfd = (s: string) => s.normalize("NFD");
   const marked = nfd(toPinyin(syl + tone));
-  const options = shuffle([1, 2, 3, 4].map((t) => nfd(toPinyin(syl + t))));
+  const options = shuffle([1, 2, 3, 4].map((t) => nfd(toPinyin(syl + t))), rng);
   return { prompt: marked, options, answer: marked };
 }
 
@@ -55,15 +57,32 @@ const TOTAL = 10;
 
 type Round = { kind: "listen" | "tone"; q: Question }[];
 
-function buildRound(): Round {
-  return Array.from({ length: TOTAL }, (_, i) => ({
-    kind: i % 2 === 0 ? ("listen" as const) : ("tone" as const),
-    q: buildQuestion(pinyinValid, i % 2 === 0 ? "listen" : "tone"),
-  }));
+// Round mặc định phải TẤT ĐỊNH (module-level) để server và client render cùng
+// markup — Math.random() trong useState initializer làm React báo hydration
+// mismatch ("server rendered text didn't match the client"). Ngay sau mount ta
+// thay bằng một round thật sự ngẫu nhiên.
+function buildRound(rng: () => number = Math.random): Round {
+  return Array.from({ length: TOTAL }, (_, i) => {
+    const kind = i % 2 === 0 ? ("listen" as const) : ("tone" as const);
+    return { kind, q: buildQuestion(pinyinValid, kind, rng) };
+  });
 }
 
+// Hằng module-level: cùng giá trị trên server và client (seed 0 cố định).
+const INITIAL_ROUND: Round = buildRound(mulberry32(0));
+
+// Mount-gate: server và client phải render CÙNG markup, nên round đầu chỉ sinh
+// SAU mount (trước đó hiện skeleton). Trước fix này buildRound() chạy trong
+// useState initializer với Math.random() → mỗi bên render 10 câu khác nhau và
+// React báo "server rendered text didn't match the client".
+
 export default function PracticeClient() {
-  const [round, setRound] = useState<Round>(() => buildRound());
+  const [round, setRound] = useState<Round>(INITIAL_ROUND);
+  // Sau mount mới sinh round thật sự ngẫu nhiên (an toàn hydration: lần render
+  // đầu của server và client đều dùng INITIAL_ROUND tất định).
+  useEffect(() => {
+    setRound(buildRound());
+  }, []);
   const [qi, setQi] = useState(0);
   const [score, setScore] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);

@@ -13,8 +13,10 @@ if (!window.speechSynthesis) {
     addEventListener() {}, removeEventListener() {}, onvoiceschanged: null, pause() {}, resume() {},
   } as unknown as SpeechSynthesis;
 }
-if (typeof (window as any).SpeechSynthesisUtterance === "undefined") {
-  (window as any).SpeechSynthesisUtterance = class { text = ""; lang = ""; voice: unknown = null; rate = 1; pitch = 1; volume = 1; onend: (() => void) | null = null; onstart: (() => void) | null = null; onerror: (() => void) | null = null; };
+type UtteranceCtor = new () => { text: string; lang: string; voice: unknown; rate: number; pitch: number; volume: number; onend: (() => void) | null; onstart: (() => void) | null; onerror: (() => void) | null };
+const utteranceHost = window as unknown as { SpeechSynthesisUtterance?: UtteranceCtor };
+if (typeof utteranceHost.SpeechSynthesisUtterance === "undefined") {
+  utteranceHost.SpeechSynthesisUtterance = class { text = ""; lang = ""; voice: unknown = null; rate = 1; pitch = 1; volume = 1; onend: (() => void) | null = null; onstart: (() => void) | null = null; onerror: (() => void) | null = null; };
 }
 
 // @testing-library/react phát hiện fake timers qua global `jest`
