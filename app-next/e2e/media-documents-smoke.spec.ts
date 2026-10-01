@@ -57,3 +57,30 @@ test.describe("G5 shadowing video player (YouTube stubbed)", () => {
     await expect(page.getByText(/Dùng TTS đọc câu/)).toBeVisible();
   });
 });
+
+test.describe("G6–G9 create-file + certificate smoke", () => {
+  test("catalog 9 mẫu → form stroke-order → gate chặn → FREEHSK mở khoá → window.print (stub)", async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as unknown as { __printed: boolean }).__printed = false;
+      window.print = () => { (window as unknown as { __printed: boolean }).__printed = true; };
+    });
+    await page.goto("/create-file");
+    await expect(page.getByRole("heading", { level: 3 })).toHaveCount(9);
+    await expect(page.getByText(/Cần mã tải file để in/)).toBeVisible();
+    await page.click('a[href="/create-file/stroke-order"]');
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Luyện viết theo thứ tự nét");
+    await page.click("text=🔒 Đăng nhập để in");
+    await page.getByTestId("code-input").fill("FREEHSK");
+    await page.getByTestId("code-submit").click();
+    await expect(page.getByText("🖨 In / Lưu PDF")).toBeVisible();
+    await page.getByText("🖨 In / Lưu PDF").click();
+    const printed = await page.evaluate(() => (window as unknown as { __printed: boolean }).__printed);
+    expect(printed).toBe(true);
+    const code = await page.evaluate(() => localStorage.getItem("nhai.fileCode"));
+    expect(code).toBe("1");
+  });
+  test("certificate-test prerender 10 card", async ({ page }) => {
+    await page.goto("/certificate-test");
+    await expect(page.getByText("Sắp ra mắt")).toHaveCount(10);
+  });
+});
