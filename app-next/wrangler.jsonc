@@ -5,6 +5,11 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   "d1_databases": [
-    { "binding": "DB", "database_name": "hsk", "database_id": "6acefec1-4507-4940-a3bb-230853fc07db" }
+    {
+      "binding": "DB",
+      "database_name": "hsk",
+      "database_id": "6acefec1-4507-4940-a3bb-230853fc07db",
+      "migrations_dir": "drizzle"
+    }
   ]
 }

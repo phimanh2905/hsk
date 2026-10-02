@@ -15,7 +15,8 @@
       "binding": "DB",
       "database_name": "hsk-dev",
       "database_id": "51aed180-9bd9-4933-b9ef-119036063f7c",
-      "remote": true
+      "remote": true,
+      "migrations_dir": "drizzle"
     }
   ]
 }
