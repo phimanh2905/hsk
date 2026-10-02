@@ -14,8 +14,8 @@ export default function CertificateTestPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-6">
       <section>
-        <h2 className="text-xl font-bold text-gray-900">HSK 1–9 — Chuẩn HSK 3.0</h2>
-        <p className="mt-1 text-sm text-gray-600">
+        <h2 className="text-xl font-bold">HSK 1–9 — Chuẩn HSK 3.0</h2>
+        <p className="mt-1 text-sm text-text-secondary">
           Chuẩn năng lực Hán ngữ quốc tế 2021 “ba bậc chín cấp”: sơ đẳng 1–3, trung đẳng 4–6, cao đẳng 7–9
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -25,8 +25,8 @@ export default function CertificateTestPage() {
         </div>
       </section>
       <section>
-        <h2 className="text-xl font-bold text-gray-900">HSKK — Kỳ thi nói</h2>
-        <p className="mt-1 text-sm text-gray-600">
+        <h2 className="text-xl font-bold">HSKK — Kỳ thi nói</h2>
+        <p className="mt-1 text-sm text-text-secondary">
           Kỳ thi nói riêng 3 cấp (sơ – trung – cao) — thường đăng ký kèm HSK để chứng minh kỹ năng nói
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

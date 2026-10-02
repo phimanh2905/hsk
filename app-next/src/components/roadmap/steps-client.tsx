@@ -2,24 +2,36 @@
 
 /* Stepper 6 bước + nội dung từng bước — port 1:1 từ clone/js/roadmap-pinyin.js
    (renderStepper + renderStep) sang React. `?step=n` qua useSearchParams
-   (page bọc Suspense). 🔊 dùng useTts (Task 5) thay NHAI.speak. */
+   (page bọc Suspense). Nút loa = IconButton + Volume2 (qua useTts thay NHAI.speak). */
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { roadmapPinyinSteps } from "@/content/roadmapPinyin";
 import { useTts } from "@/lib/tts/use-tts";
+import { Volume2, ICON_STROKE } from "@/components/ui/icon";
+import { IconButton } from "@/components/ui/icon-button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/cn";
+
+const LINK_BTN =
+  "inline-flex items-center justify-center rounded-control border font-semibold min-h-11 px-4 text-sm " +
+  "bg-action-primary text-white border-transparent hover:bg-action-primary-hover active:bg-action-primary-active " +
+  "focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
+const LINK_BTN_SECONDARY =
+  "inline-flex items-center justify-center rounded-control border font-semibold min-h-11 px-4 text-sm " +
+  "bg-surface-elevated text-text-primary border-border-default hover:border-action-primary hover:text-action-primary " +
+  "focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
 
 function SpeakBtn({ text }: { text: string }) {
   const { speak } = useTts();
   return (
-    <button
-      type="button"
+    <IconButton
+      label="Nghe phát âm"
       onClick={() => speak(text, { lang: "zh-CN", rate: 0.8 })}
-      title="Nghe phát âm"
-      className="btn-ghost w-9 h-9 text-sm shrink-0"
+      className="text-sm shrink-0"
     >
-      🔊
-    </button>
+      <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
+    </IconButton>
   );
 }
 
@@ -31,14 +43,14 @@ function StepBody({ index }: { index: number }) {
       <>
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mb-4">
           {s.initials.map((x) => (
-            <div key={x} className="card p-3 flex flex-col items-center gap-1">
+            <Card key={x} className="p-3 flex flex-col items-center gap-1">
               <span className="text-2xl font-extrabold tracking-wide">{x}</span>
-              <span className="text-[10px] text-nhai-muted">thanh mẫu</span>
+              <span className="text-[10px] text-text-secondary">thanh mẫu</span>
               <SpeakBtn text={x} />
-            </div>
+            </Card>
           ))}
         </div>
-        {s.theory ? <p className="text-sm text-nhai-muted card p-4">{s.theory}</p> : null}
+        {s.theory ? <Card className="p-4 mb-0"><p className="text-sm text-text-secondary">{s.theory}</p></Card> : null}
       </>
     );
   }
@@ -47,18 +59,18 @@ function StepBody({ index }: { index: number }) {
     return (
       <div className="grid sm:grid-cols-2 gap-3">
         {s.vowels.map((v) => (
-          <div key={v.s} className="card p-4 flex items-center gap-3">
-            <span className="w-12 h-12 rounded-full bg-nhai-main text-white font-extrabold text-xl flex items-center justify-center shrink-0">
+          <Card key={v.s} className="p-4 flex items-center gap-3">
+            <span className="w-12 h-12 rounded-full bg-action-primary text-white font-extrabold text-xl flex items-center justify-center shrink-0">
               {v.s}
             </span>
             <div className="min-w-0">
               <div className="font-bold mb-0.5">
                 <span className="zh">{v.zh}</span> · {v.s}
               </div>
-              <p className="text-sm text-nhai-muted">{v.vi}</p>
+              <p className="text-sm text-text-secondary">{v.vi}</p>
             </div>
             <SpeakBtn text={v.s} />
-          </div>
+          </Card>
         ))}
       </div>
     );
@@ -72,14 +84,14 @@ function StepBody({ index }: { index: number }) {
             <h3 className="font-extrabold mb-2">{g.name}</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
               {g.items.map((it) => (
-                <div key={it.s} className="card p-3 flex items-center gap-2">
+                <Card key={it.s} className="p-3 flex items-center gap-2">
                   <span className="text-xl font-extrabold">{it.s}</span>
                   <div className="min-w-0 text-sm">
                     <span className="zh font-bold">{it.zh}</span>{" "}
-                    <span className="text-nhai-muted">{it.vi}</span>
+                    <span className="text-text-secondary">{it.vi}</span>
                   </div>
                   <SpeakBtn text={it.s} />
-                </div>
+                </Card>
               ))}
             </div>
           </div>
@@ -92,24 +104,24 @@ function StepBody({ index }: { index: number }) {
     return (
       <div className="grid sm:grid-cols-2 gap-3">
         {s.tones.map((t) => (
-          <div key={t.name} className="card p-4">
+          <Card key={t.name} className="p-4">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-4xl font-extrabold text-nhai-main w-12 text-center">{t.mark}</span>
-              <span className="text-2xl text-nhai-muted" aria-hidden="true">
+              <span className="text-4xl font-extrabold text-action-primary w-12 text-center">{t.mark}</span>
+              <span className="text-2xl text-text-secondary" aria-hidden="true">
                 {t.arrow}
               </span>
               <span className="font-extrabold">{t.name}</span>
             </div>
-            <p className="text-sm text-nhai-muted mb-2">{t.desc}</p>
+            <p className="text-sm text-text-secondary mb-2">{t.desc}</p>
             <div className="flex items-center gap-2">
               <span className="text-xl font-extrabold">{t.py}</span>
               <span className="zh text-xl font-bold">{t.zh}</span>
-              <span className="text-sm text-nhai-muted">{t.vi}</span>
+              <span className="text-sm text-text-secondary">{t.vi}</span>
             </div>
             <div className="mt-2">
               <SpeakBtn text={t.py} />
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     );
@@ -119,29 +131,28 @@ function StepBody({ index }: { index: number }) {
     return (
       <div className="space-y-3">
         {s.rules.map((r) => (
-          <div key={r.rule} className="card p-4">
-            <div className="font-extrabold mb-1">📌 {r.rule}</div>
-            <p className="text-sm text-nhai-muted mb-1">{r.desc}</p>
+          <Card key={r.rule} className="p-4">
+            <div className="font-extrabold mb-1">{r.rule}</div>
+            <p className="text-sm text-text-secondary mb-1">{r.desc}</p>
             <p className="text-sm font-semibold zh">{r.ex}</p>
-          </div>
+          </Card>
         ))}
       </div>
     );
   }
 
-  /* recap */
+  /* recap — restrained, không celebration */
   return (
-    <div className="card shadow-neo p-6 text-center mb-4">
-      <div className="text-4xl mb-2">🎉</div>
-      <p className="text-sm text-nhai-muted mb-5">{s.note}</p>
+    <Card className="p-6 text-center mb-4">
+      <p className="text-sm text-text-secondary mb-5">{s.note}</p>
       <div className="flex flex-wrap justify-center gap-3">
         {s.links?.map((l) => (
-          <Link key={l.href} href={l.href} className="btn-main px-5 py-2.5">
+          <Link key={l.href} href={l.href} className={LINK_BTN}>
             {l.label}
           </Link>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -161,10 +172,13 @@ export default function StepsClient(): React.JSX.Element {
             <Link
               key={st.key}
               href={`/roadmap/pinyin?step=${n}`}
-              className={
-                "px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border-2 " +
-                (n === step ? "btn-main" : "btn-ghost")
-              }
+              aria-current={n === step ? "step" : undefined}
+              className={cn(
+                "inline-flex items-center rounded-control border font-semibold px-3 py-2 text-xs sm:text-sm",
+                n === step
+                  ? "bg-action-primary text-white border-transparent hover:bg-action-primary-hover"
+                  : "bg-surface-elevated text-text-primary border-border-default hover:border-action-primary hover:text-action-primary",
+              )}
             >
               {n} · {st.label}
             </Link>
@@ -175,7 +189,7 @@ export default function StepsClient(): React.JSX.Element {
       {/* Nội dung bước */}
       <section className="mb-4">
         <h2 className="text-2xl font-extrabold mb-1">{s.title}</h2>
-        <p className="text-sm text-nhai-muted">{s.intro}</p>
+        <p className="text-sm text-text-secondary">{s.intro}</p>
       </section>
       <section className="mb-6">
         <StepBody index={step - 1} />
@@ -184,20 +198,20 @@ export default function StepsClient(): React.JSX.Element {
       {/* Prev / next */}
       <nav className="flex justify-between gap-3">
         {step > 1 ? (
-          <Link href={`/roadmap/pinyin?step=${step - 1}`} className="btn-ghost px-4 py-2 text-sm">
+          <Link href={`/roadmap/pinyin?step=${step - 1}`} className={LINK_BTN_SECONDARY}>
             ← Bước trước
           </Link>
         ) : (
-          <Link href="/roadmap" className="btn-ghost px-4 py-2 text-sm">
+          <Link href="/roadmap" className={LINK_BTN_SECONDARY}>
             ← Về lộ trình
           </Link>
         )}
         {step < roadmapPinyinSteps.length ? (
-          <Link href={`/roadmap/pinyin?step=${step + 1}`} className="btn-main px-4 py-2 text-sm">
+          <Link href={`/roadmap/pinyin?step=${step + 1}`} className={LINK_BTN}>
             Bước sau →
           </Link>
         ) : (
-          <Link href="/course/hsk1" className="btn-main px-4 py-2 text-sm">
+          <Link href="/course/hsk1" className={LINK_BTN}>
             Vào HSK 1 →
           </Link>
         )}

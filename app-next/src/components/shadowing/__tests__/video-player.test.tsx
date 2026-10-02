@@ -54,10 +54,10 @@ describe("VideoPlayer — render + transcript + fallback TTS 4s", () => {
     render(<VideoPlayer video={video} subtitles={subs} />);
     await user.click(screen.getAllByText(/^#3$/)[0]);
     await waitFor(() => expect(screen.getByTestId("pos")).toHaveTextContent("Câu 3/9"));
-    await user.click(screen.getByText("⏭ Câu sau"));
+    await user.click(screen.getByText("Câu sau"));
     expect(screen.getByTestId("pos")).toHaveTextContent("Câu 4/9");
-    await user.click(screen.getByText("⏮ Câu trước"));
-    await user.click(screen.getByText("⏮ Câu trước"));
+    await user.click(screen.getByText("Câu trước"));
+    await user.click(screen.getByText("Câu trước"));
     expect(screen.getByTestId("pos")).toHaveTextContent("Câu 2/9");
   });
   it("postMessage gửi command seekTo đúng start câu khi bấm câu", async () => {

@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Bot, Heart, MessageCircle, SendHorizontal, X, ICON_STROKE } from "@/components/ui/icon";
+import { IconButton } from "@/components/ui/icon-button";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/shell/toast-provider";
 import { useSession } from "@/lib/use-session";
 
-const REPLY_TEXT = "Mình là bản demo — thử bấm ⭐ trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!";
+const REPLY_TEXT =
+  "Mình là bản demo — thử bấm biểu tượng ngôi sao trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!";
 
 export default function AiWidget() {
   const toast = useToast();
@@ -33,49 +39,67 @@ export default function AiWidget() {
   }
 
   return (
-    <div className="fixed right-4 bottom-6 z-[600] flex flex-col items-end gap-2">
+    <div className="fixed right-4 bottom-20 lg:bottom-6 z-[600] flex flex-col items-end gap-2">
       {chatOpen ? (
-        <div className="card shadow-neo w-80 p-3 mb-1">
+        <Card shadow="md" className="w-80 p-3 mb-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-bold text-sm">🤖 Tiểu Ngữ — trợ lý AI của Nhai HSK</span>
-            <button type="button" className="btn-ghost w-7 h-7 text-xs" aria-label="Đóng chat" onClick={() => setChatOpen(false)}>✕</button>
+            <span className="flex items-center gap-1.5 font-bold text-sm">
+              <Bot size={16} strokeWidth={ICON_STROKE} className="text-feature-ai" aria-hidden="true" />
+              Tiểu Ngữ — trợ lý AI của Nhai HSK
+            </span>
+            <IconButton label="Đóng chat" onClick={() => setChatOpen(false)}>
+              <X size={14} strokeWidth={ICON_STROKE} />
+            </IconButton>
           </div>
           <div className="space-y-2 max-h-64 overflow-y-auto text-sm">
-            {messages.map((m, i) =>
-              m.role === "user" ? (
-                <div key={i} className="ml-8 bg-[var(--nhai-soft)] rounded-lg p-2">{m.text}</div>
-              ) : (
-                <div key={i} className="bg-[var(--nhai-soft)] rounded-lg p-2">{m.text}</div>
-              )
-            )}
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                className={
+                  "rounded-control p-2 bg-surface-paper " + (m.role === "user" ? "ml-8" : "")
+                }
+              >
+                {m.text}
+              </div>
+            ))}
           </div>
           <div className="flex gap-2 mt-2">
-            <input
-              className="flex-1 border-2 border-[var(--nhai-border)] rounded-lg px-2 py-1.5 bg-[var(--nhai-bg)]"
+            <Input
+              className="flex-1"
               placeholder="Nhập câu hỏi…"
+              aria-label="Nhập câu hỏi cho trợ lý AI"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") send(); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") send();
+              }}
             />
-            <button type="button" className="btn-main px-3" onClick={send}>➤</button>
+            <IconButton label="Gửi" variant="solid" onClick={send}>
+              <SendHorizontal size={16} strokeWidth={ICON_STROKE} />
+            </IconButton>
           </div>
-        </div>
+        </Card>
       ) : null}
 
       {!bubbleHidden ? (
-        <button type="button" className="card shadow-neo relative w-[90px] h-[58px] hover:-translate-y-0.5 transition-transform" aria-label="🤖 Hỏi AI" onClick={() => setChatOpen((v) => !v)}>
-          <span className="absolute inset-0 flex items-center justify-center text-3xl" aria-hidden="true">🤖</span>
-          <span className="absolute bottom-0.5 right-1 text-lg -rotate-12" aria-hidden="true">🍅</span>
+        <button
+          type="button"
+          className="relative w-[90px] h-[58px] rounded-card border border-border-default bg-surface-elevated shadow-md hover:-translate-y-0.5 transition-transform"
+          aria-label="Hỏi AI"
+          onClick={() => setChatOpen((v) => !v)}
+        >
+          <span className="absolute inset-0 flex items-center justify-center text-feature-ai" aria-hidden="true">
+            <Bot size={30} strokeWidth={ICON_STROKE} />
+          </span>
         </button>
       ) : null}
 
-      <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => toast(loggedIn ? "Hộp tin nhắn đang được mở (demo)…" : "Tin nhắn chỉ khả dụng khi đăng nhập")}>
-        💬 Nhắn tin
-      </button>
-      <button type="button" className="btn-main px-3 py-2 text-sm" onClick={() => toast("Cảm ơn bạn đã ủng hộ Nhai HSK! ❤️")}>
-        ❤️ Ủng hộ Nhai HSK
-      </button>
+      <Button variant="ghost" size="sm" onClick={() => toast(loggedIn ? "Hộp tin nhắn đang được mở (demo)…" : "Tin nhắn chỉ khả dụng khi đăng nhập")}>
+        <MessageCircle size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Nhắn tin
+      </Button>
+      <Button size="sm" onClick={() => toast("Cảm ơn bạn đã ủng hộ Nhai HSK!")}>
+        <Heart size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Ủng hộ Nhai HSK
+      </Button>
     </div>
   );
 }
-

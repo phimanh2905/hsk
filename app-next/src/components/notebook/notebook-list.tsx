@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 import { progressStore, type DeckItem } from "@/lib/store/progress-store";
 import { notebooks, type NotebookSample } from "@/content/notebooks";
 import { ToastProvider, useToast } from "@/components/shell/toast-provider";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Input } from "@/components/ui/input";
+import { Dialog } from "@/components/ui/dialog";
+import { Notebook, MoreHorizontal, ICON_STROKE } from "@/components/ui/icon";
 
 /* Port fmtDate clone/js/notebook.js:34-47 */
 export function fmtRelativeDate(iso: string): string {
@@ -76,32 +82,26 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
 
   return (
     <div>
-      {/* header: mascot 🍅 + H1 + sub + CTA phải */}
+      {/* header: H1 + sub + CTA phải */}
       <section className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight mb-2">🍅 {config.h1}</h1>
-          <p className="text-[var(--nhai-muted)]">{config.sub}</p>
+          <h1 className="text-3xl font-extrabold tracking-tight mb-2">{config.h1}</h1>
+          <p className="text-text-secondary">{config.sub}</p>
         </div>
-        <button
-          type="button"
-          onClick={() => setModal({ mode: "create" })}
-          className="btn-main rounded-full px-5 py-2.5 text-sm shrink-0"
-        >
+        <Button onClick={() => setModal({ mode: "create" })} className="rounded-full px-5 py-2.5 text-sm shrink-0">
           {config.cta}
-        </button>
+        </Button>
       </section>
 
       {mounted && items.length === 0 && (
-        <div className="card shadow-neo p-10 text-center mb-6">
-          <div className="text-6xl mb-4" aria-hidden="true">
-            📕
-          </div>
+        <Card className="p-10 text-center mb-6">
+          <Notebook size={48} strokeWidth={ICON_STROKE} className="mx-auto mb-4 text-text-secondary" aria-hidden="true" />
           <h2 className="text-2xl font-extrabold mb-2">{config.empty}</h2>
-          <p className="text-sm text-[var(--nhai-muted)] mb-5">{config.emptySub}</p>
-          <button type="button" onClick={() => setModal({ mode: "create" })} className="btn-main px-5 py-2.5">
+          <p className="text-sm text-text-secondary mb-5">{config.emptySub}</p>
+          <Button onClick={() => setModal({ mode: "create" })} className="px-5 py-2.5">
             {config.cta}
-          </button>
-        </div>
+          </Button>
+        </Card>
       )}
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -111,40 +111,40 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
           const count = isSample ? sampleItem.count : item.rows.length;
           const unit = isSample ? sampleItem.unit : config.countUnit;
           return (
-            <div key={item.id} className="card shadow-neo p-4 relative">
+            <Card key={item.id} className="p-4 relative">
               <div className="flex items-start justify-between gap-2 mb-1">
                 <h3>
-                  <a href={`/notebook/${kind}/${item.id}`} className="font-extrabold hover:text-[var(--nhai-main)]">
+                  <a href={`/notebook/${kind}/${item.id}`} className="font-extrabold hover:text-action-primary">
                     {item.name}
                   </a>
                 </h3>
                 {isSample ? (
-                  <span className="text-xs text-[var(--nhai-muted)] shrink-0 mt-1">Sổ mẫu</span>
+                  <span className="text-xs text-text-secondary shrink-0 mt-1">Sổ mẫu</span>
                 ) : (
-                  <button
-                    type="button"
-                    aria-label="Tuỳ chọn"
-                    className="shrink-0 h-7 w-7 rounded-full text-lg leading-none text-[var(--nhai-muted)] hover:bg-[var(--nhai-soft)]"
+                  <IconButton
+                    label="Tuỳ chọn"
+                    variant="ghost"
+                    className="shrink-0 h-7 w-7 min-h-7 min-w-7"
                     onClick={(e) => {
                       e.stopPropagation();
                       setMenuFor(menuFor?.id === item.id ? null : item);
                     }}
                   >
-                    ⋯
-                  </button>
+                    <MoreHorizontal size={18} strokeWidth={ICON_STROKE} />
+                  </IconButton>
                 )}
               </div>
-              <p className="text-sm text-[var(--nhai-muted)]">
+              <p className="text-sm text-text-secondary">
                 {count} {unit}
               </p>
-              <p className="text-xs text-[var(--nhai-muted)] mt-2">Sửa {fmtRelativeDate(item.updatedAt)}</p>
+              <p className="text-xs text-text-secondary mt-2">Sửa {fmtRelativeDate(item.updatedAt)}</p>
 
               {/* menu ⋯ — card dưới nút (port openCardMenu) */}
               {!isSample && menuFor?.id === item.id && (
-                <div className="card shadow-neo absolute z-[550] w-40 p-1 text-sm right-2 top-9">
+                <Card className="absolute z-[550] w-40 p-1 text-sm right-2 top-9">
                   <button
                     type="button"
-                    className="block w-full rounded px-3 py-1.5 text-left hover:bg-[var(--nhai-soft)]"
+                    className="block w-full rounded px-3 py-1.5 text-left hover:bg-surface-paper"
                     onClick={() => {
                       setMenuFor(null);
                       router.push(`/notebook/${kind}/${item.id}`);
@@ -154,7 +154,7 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
                   </button>
                   <button
                     type="button"
-                    className="block w-full rounded px-3 py-1.5 text-left hover:bg-[var(--nhai-soft)]"
+                    className="block w-full rounded px-3 py-1.5 text-left hover:bg-surface-paper"
                     onClick={() => {
                       setMenuFor(null);
                       setModal({ mode: "rename", item });
@@ -164,14 +164,14 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
                   </button>
                   <button
                     type="button"
-                    className="block w-full rounded px-3 py-1.5 text-left text-red-600 hover:bg-[var(--nhai-soft)]"
+                    className="block w-full rounded px-3 py-1.5 text-left text-feedback-error hover:bg-surface-paper"
                     onClick={() => deleteItem(item)}
                   >
                     Xoá
                   </button>
-                </div>
+                </Card>
               )}
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -202,44 +202,30 @@ function NameModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[600] flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="card shadow-neo relative w-full max-w-md p-5">
-        <button
-          type="button"
-          aria-label="Đóng"
-          onClick={onClose}
-          className="absolute right-3 top-3 h-8 w-8 rounded-full text-xl leading-none text-[var(--nhai-muted)] hover:bg-[var(--nhai-soft)]"
-        >
-          ✕
-        </button>
-        <h3 className="text-xl font-extrabold mb-3 pr-8">{editing ? "Sửa tên" : config.modalTitle}</h3>
-        <input
-          type="text"
-          autoFocus
-          placeholder="Nhập tên sổ tay / bộ từ vựng…"
-          className="w-full rounded-lg border-2 border-[var(--nhai-border)] bg-white p-2.5 mb-4"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
-          }}
-        />
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn-ghost px-4 py-2 text-sm">
-            Huỷ
-          </button>
-          <button
-            type="button"
-            disabled={!name.trim()}
-            onClick={submit}
-            className="btn-main px-5 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {editing ? "Lưu" : "Tạo"}
-          </button>
-        </div>
+    <Dialog open onClose={onClose} labelledBy="notebook-modal-title" className="p-5">
+      <h3 id="notebook-modal-title" className="text-xl font-extrabold mb-3 pr-8">
+        {editing ? "Sửa tên" : config.modalTitle}
+      </h3>
+      <Input
+        type="text"
+        autoFocus
+        placeholder="Nhập tên sổ tay / bộ từ vựng…"
+        className="w-full mb-4"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") submit();
+        }}
+      />
+      <div className="flex justify-end gap-2">
+        <Button variant="ghost" onClick={onClose} className="px-4 py-2 text-sm">
+          Huỷ
+        </Button>
+        <Button disabled={!name.trim()} onClick={submit} className="px-5 py-2 text-sm">
+          {editing ? "Lưu" : "Tạo"}
+        </Button>
       </div>
-    </div>
+    </Dialog>
   );
 }
 

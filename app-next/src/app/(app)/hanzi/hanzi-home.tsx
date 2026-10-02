@@ -8,6 +8,9 @@ import { hanziChars, hanziLevels } from "@/content/hanzi";
 import { DrawPad } from "@/components/hanzi/draw-pad";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import { SearchCard } from "./search-card";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { Search, Pencil } from "@/components/ui/icon";
 
 export default function HanziHome() {
   const router = useRouter();
@@ -28,18 +31,22 @@ export default function HanziHome() {
     <div>
       <header className="mb-6">
         <h1 className="text-3xl font-extrabold tracking-tight">Phân tích Hán tự</h1>
-        <p className="text-sm text-[var(--nhai-muted)] font-semibold mt-1">
+        <p className="text-sm text-text-secondary font-semibold mt-1">
           Gõ hoặc vẽ một chữ Hán để xem nghĩa, pinyin, âm Hán Việt, thứ tự nét, bộ thủ và cấu tạo chữ.
         </p>
       </header>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="card shadow-neo p-4 sm:p-5">
-          <h2 className="font-extrabold text-lg mb-3">🔍 Tìm chữ Hán</h2>
+        <div className="rounded-card border border-border-default bg-surface-elevated shadow-xs p-4 sm:p-5">
+          <h2 className="font-extrabold text-lg mb-3 inline-flex items-center gap-2">
+            <Search size={18} strokeWidth={1.5} aria-hidden="true" /> Tìm chữ Hán
+          </h2>
           <SearchCard go={go} />
         </div>
-        <div className="card shadow-neo p-4 sm:p-5">
-          <h2 className="font-extrabold text-lg mb-3">✍️ Hoặc vẽ chữ Hán</h2>
+        <div className="rounded-card border border-border-default bg-surface-elevated shadow-xs p-4 sm:p-5">
+          <h2 className="font-extrabold text-lg mb-3 inline-flex items-center gap-2">
+            <Pencil size={18} strokeWidth={1.5} aria-hidden="true" /> Hoặc vẽ chữ Hán
+          </h2>
           <DrawPad size={240} onPick={go} />
         </div>
       </div>
@@ -48,37 +55,40 @@ export default function HanziHome() {
         <h2 className="font-extrabold text-xl mb-3">Khám phá chữ Hán theo cấp độ</h2>
         <div className="flex flex-wrap gap-2 mb-4">
           {books.map((l, i) => (
-            <button
+            <Chip
               key={l.id}
-              type="button"
-              className={"pill" + (i === levelIdx ? " pill-active" : "")}
+              selected={i === levelIdx}
               onClick={() => setLevelIdx(i)}
             >
               {l.label}
-            </button>
+            </Chip>
           ))}
           {radicalsLevel && (
-            <Link href={radicalsLevel.href!} className="pill">
+            <Link
+              href={radicalsLevel.href!}
+              className="inline-flex items-center gap-1.5 min-h-11 rounded-control border px-3 text-sm font-medium border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary"
+            >
               {radicalsLevel.label}
             </Link>
           )}
         </div>
-        <div className="text-sm font-bold text-[var(--nhai-muted)] mb-3">{lv.count}</div>
+        <div className="text-sm font-bold text-text-secondary mb-3">{lv.count}</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {["Flashcard", "Luyện viết", "Tạo file"].map((label) => (
-            <button
+            <Button
               key={label}
               type="button"
-              className="btn-ghost px-4 py-2 text-sm"
+              variant="secondary"
+              size="sm"
               onClick={() => toast(label + " — tính năng demo, sắp ra mắt!")}
             >
               {label}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
           {keys.length === 0 ? (
-            <p className="col-span-full text-sm text-[var(--nhai-muted)] font-semibold py-6 text-center">
+            <p className="col-span-full text-sm text-text-secondary font-semibold py-6 text-center">
               Dữ liệu chữ Hán của cấp độ này sẽ được cập nhật sớm.
             </p>
           ) : (
@@ -89,7 +99,7 @@ export default function HanziHome() {
                   key={k}
                   href={href}
                   title={k}
-                  className="grid-cell shadow-neo text-3xl sm:text-4xl zh font-bold hover:border-[var(--nhai-main)]"
+                  className="inline-flex items-center justify-center text-3xl sm:text-4xl zh font-bold rounded-control border border-border-default bg-surface-elevated shadow-xs hover:border-action-primary"
                   onClick={(e) => {
                     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                     e.preventDefault();

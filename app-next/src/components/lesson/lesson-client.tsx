@@ -12,6 +12,17 @@ import { useTts } from "@/lib/tts/use-tts";
 import { progressStore } from "@/lib/store/progress-store";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import WordList from "./word-list";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { IconButton } from "@/components/ui/icon-button";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Printer,
+  Volume2,
+  Star,
+} from "@/components/ui/icon";
 
 /* Item có câu ví dụ RIÊNG không? Custom deck (C10) fallback example.zh = hanzi
    khi row không có exampleZh — coi như không có ví dụ (khớp clone example:null). */
@@ -27,23 +38,22 @@ function ExampleTab() {
       {items
         .filter(hasOwnExample)
         .map((w) => (
-          <div key={w.itemKey} className="card p-3 flex items-start justify-between gap-3">
+          <Card key={w.itemKey} className="p-3 flex items-start justify-between gap-3">
             <div>
               <div className="zh text-lg font-bold">{w.example.zh}</div>
-              <div className="text-xs text-[var(--nhai-muted)] mt-0.5">
+              <div className="text-xs text-text-secondary mt-0.5">
                 {pinyinLine(w.example.pinyinPerChar)}
               </div>
               <div className="text-sm mt-1">→ {w.example.vi}</div>
             </div>
-            <button
-              type="button"
-              className="btn-ghost w-10 h-10 shrink-0"
-              title="Phát âm câu ví dụ"
+            <IconButton
+              label="Phát âm câu ví dụ"
+              className="shrink-0"
               onClick={() => speak(w.example.zh)}
             >
-              🔊
-            </button>
-          </div>
+              <Volume2 size={20} strokeWidth={1.5} />
+            </IconButton>
+          </Card>
         ))}
     </div>
   );
@@ -55,10 +65,11 @@ function AddAllButton() {
   const { items } = useLesson();
   const toast = useToastSafe();
   return (
-    <button
+    <Button
       type="button"
       id="btn-add-all"
-      className="btn-ghost w-full px-3 py-2 text-sm"
+      variant="secondary"
+      className="w-full"
       onClick={() => {
         const added = progressStore.addSrsBatch(items.map((it) => it.itemKey));
         toast(added > 0 ? `Đã thêm ${added} từ vào ôn tập` : "Tất cả từ đã có trong bộ ôn tập");
@@ -66,8 +77,9 @@ function AddAllButton() {
         window.dispatchEvent(new CustomEvent("nhai:progress"));
       }}
     >
-      ⭐ Thêm cả bài vào ôn tập
-    </button>
+      <Star size={16} strokeWidth={1.5} aria-hidden="true" />
+      Thêm cả bài vào ôn tập
+    </Button>
   );
 }
 
@@ -94,26 +106,24 @@ function LessonBody() {
         {/* tabs — counter (giữa) — controls của mode (port lesson.js:196-226, SPEC-14 §3) */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3 no-print">
           <div className="flex gap-1">
-            <button
-              type="button"
+            <Chip
               data-tab="vocab"
-              className={`pill ${tab === "vocab" ? "pill-active" : ""}`}
+              selected={tab === "vocab"}
               onClick={() => setTab("vocab")}
             >
               Từ vựng
-            </button>
-            <button
-              type="button"
+            </Chip>
+            <Chip
               data-tab="examples"
-              className={`pill ${tab === "examples" ? "pill-active" : ""}`}
+              selected={tab === "examples"}
               onClick={() => setTab("examples")}
             >
               Ví dụ
-            </button>
+            </Chip>
           </div>
-          <span className="pill text-xs" data-testid="mode-counter">
+          <Chip className="text-xs" data-testid="mode-counter">
             {Math.min(index + 1, items.length)} / {items.length}
-          </span>
+          </Chip>
           <div id="mode-tools" className="flex flex-wrap items-center gap-2">
             {/* controls của chế độ Flashcard được portal vào đây (port lesson.html #mode-tools) */}
           </div>
@@ -130,25 +140,29 @@ function LessonBody() {
 
             {/* điều hướng từ */}
             <div className="flex items-center justify-between gap-2 mt-3 no-print">
-              <button
+              <Button
                 type="button"
-                className="btn-ghost px-3 py-2"
+                variant="ghost"
+                size="sm"
                 disabled={index === 0}
                 onClick={() => setIndex(Math.max(0, index - 1))}
               >
-                ← Trước
-              </button>
-              <span className="zh text-2xl font-extrabold" data-testid="current-word">
+                <ChevronLeft size={16} strokeWidth={1.5} aria-hidden="true" />
+                Trước
+              </Button>
+              <span className="zh text-[32px] font-extrabold" data-testid="current-word">
                 {items[index]?.hanzi}
               </span>
-              <button
+              <Button
                 type="button"
-                className="btn-ghost px-3 py-2"
+                variant="ghost"
+                size="sm"
                 disabled={index >= items.length - 1}
                 onClick={() => setIndex(Math.min(items.length - 1, index + 1))}
               >
-                Sau →
-              </button>
+                Sau
+                <ChevronRight size={16} strokeWidth={1.5} aria-hidden="true" />
+              </Button>
             </div>
           </div>
         )}
@@ -161,7 +175,7 @@ function LessonBody() {
 
       {/* sidebar chế độ học (port lesson.js:110-141) */}
       <aside className="no-print">
-        <div className="card p-3">
+        <Card className="p-3">
           <div className="text-sm font-extrabold mb-2">Chọn chế độ học</div>
           <div id="sidebar-modes">
             {modeOrder.map((id: LessonMode) => {
@@ -170,29 +184,43 @@ function LessonBody() {
               const meta = modeLabels[id];
               const active = mode === id;
               return (
-                <button
+                <Button
                   key={id}
                   type="button"
                   data-mode={id}
+                  variant={active ? "primary" : "ghost"}
                   className={
-                    "w-full flex items-center justify-between gap-2 px-3 py-2 mb-2 text-sm text-left rounded-lg border-2 " +
-                    (active ? "btn-main" : "btn-ghost")
+                    "w-full justify-between mb-2 " +
+                    (active ? "" : "border border-border-default")
                   }
                   onClick={() => setMode(id)}
                 >
                   <span>{meta.name}</span>
-                  <span className={"text-xs font-bold whitespace-nowrap " + (active ? "" : "text-[var(--nhai-muted)]")}>
+                  <span
+                    className={
+                      "text-xs font-bold whitespace-nowrap " +
+                      (active ? "text-white/80" : "text-text-secondary")
+                    }
+                  >
                     {meta.badge}
                   </span>
-                </button>
+                </Button>
               );
             })}
           </div>
-          <button type="button" id="btn-print" className="btn-ghost w-full px-3 py-2 mb-2 text-sm" onClick={() => window.print()}>
-            🖨️ In file
-          </button>
+          <Button
+            type="button"
+            id="btn-print"
+            variant="ghost"
+            size="sm"
+            className="w-full mb-2 border border-border-default"
+            onClick={() => window.print()}
+          >
+            <Printer size={16} strokeWidth={1.5} aria-hidden="true" />
+            In file
+          </Button>
           <AddAllButton />
-        </div>
+        </Card>
       </aside>
     </div>
   );
@@ -215,37 +243,39 @@ export default function LessonClient({
   const heading = title ?? deckName ?? "Bài học";
   return (
     <LessonProvider items={items ?? []} book={book} page={page} deckName={deckName}>
-      {/* header bài học (SPEC-14 §2, §6 — port clone/lesson.html:64-75) */}
-      <div className="relative mb-4">
-        {book && (
-          <a
-            href={`/course/${book}?skill=vocab`}
-            className="text-sm font-bold text-[var(--nhai-muted)] hover:underline"
-          >
-            ← Danh sách bài
-          </a>
-        )}
-        <div className="flex items-center gap-2 mt-2">
-          {num && (
-            <span
-              data-badge="page"
-              className="bg-black text-white px-2 py-0.5 rounded text-sm font-bold"
+      <div className="max-w-[760px] mx-auto">
+        {/* header bài học (SPEC-14 §2, §6 — port clone/lesson.html:64-75) */}
+        <div className="relative mb-4">
+          {book && (
+            <a
+              href={`/course/${book}?skill=vocab`}
+              className="text-sm font-bold text-text-secondary hover:underline"
             >
-              Bài {num}
-            </span>
+              ← Danh sách bài
+            </a>
           )}
-          <span className="pill text-xs">{items?.length ?? 0} từ vựng</span>
+          <div className="flex items-center gap-2 mt-2">
+            {num && (
+              <span
+                data-badge="page"
+                className="bg-text-primary text-surface-paper px-2 py-0.5 rounded-control text-sm font-bold"
+              >
+                Bài {num}
+              </span>
+            )}
+            <Chip className="text-xs">{items?.length ?? 0} từ vựng</Chip>
+          </div>
+          <div className="flex items-center gap-3 mt-2">
+            <span data-mascot className="text-[44px] leading-none select-none" aria-hidden="true">
+              🍅
+            </span>
+            <h1 className="text-3xl font-extrabold">
+              <span className="bg-feedback-warning/30 rounded px-2">{heading}</span>
+            </h1>
+          </div>
         </div>
-        <div className="flex items-center gap-3 mt-2">
-          <span data-mascot className="text-[44px] leading-none select-none" aria-hidden="true">
-            🍅
-          </span>
-          <h1 className="text-3xl font-extrabold">
-            <span className="bg-[#f5d76e]/50 rounded px-2">{heading}</span>
-          </h1>
-        </div>
+        <LessonBody />
       </div>
-      <LessonBody />
     </LessonProvider>
   );
 }

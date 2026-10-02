@@ -54,11 +54,13 @@ describe("heatmap + streak (giờ VN +07)", () => {
     const map = heatData({ "2026-09-30": 42 }, new Date(2026, 8, 30));
     expect(map["2026-09-30"]).toBe(42);
   });
-  it("heatClass đúng 4 mức threshold clone", () => {
-    expect(heatClass(0)).toContain("border");
-    expect(heatClass(2)).toBe("bg-[#f5b7ae]");
-    expect(heatClass(5)).toBe("bg-[#d9534f]");
-    expect(heatClass(6)).toBe("bg-[#a83232]");
+  it("heatClass: alpha jade 20/40/60/80/100 theo mức xp", () => {
+    expect(heatClass(0)).toBe("bg-border-subtle");
+    expect(heatClass(2)).toBe("bg-action-primary/20");
+    expect(heatClass(5)).toBe("bg-action-primary/40");
+    expect(heatClass(6)).toBe("bg-action-primary/60");
+    expect(heatClass(12)).toBe("bg-action-primary/80");
+    expect(heatClass(20)).toBe("bg-action-primary");
   });
   it("computeStreak: 2 ngày liên tiếp = 2", () => {
     const days = { "2026-09-29": 3, "2026-09-30": 1 };

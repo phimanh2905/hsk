@@ -24,22 +24,22 @@ beforeEach(() => {
 });
 
 describe("PrintButton gate (G8)", () => {
-  it("chưa login + chưa mã → '🔒 Đăng nhập để in'; sau khi unlock (nhai.fileCode=1) → '🖨 In / Lưu PDF' gọi window.print", async () => {
+  it("chưa login + chưa mã → 'Đăng nhập để in'; sau khi unlock (nhai.fileCode=1) → 'In / Lưu PDF' gọi window.print", async () => {
     const user = userEvent.setup();
     const printSpy = vi.spyOn(window, "print").mockImplementation(() => {});
     const { rerender } = render(<PrintButton />);
-    expect(screen.getByText("🔒 Đăng nhập để in")).toBeTruthy();
+    expect(screen.getByText("Đăng nhập để in")).toBeTruthy();
     localStorage.setItem("nhai.fileCode", "1");
     rerender(<PrintButton key="unlocked2" />);
-    await user.click(await screen.findByText("🖨 In / Lưu PDF"));
+    await user.click(await screen.findByRole("button", { name: "In / Lưu PDF" }));
     expect(printSpy).toHaveBeenCalled();
   });
 
   it("đã có session → hiện thẳng nút in, không mở gate", async () => {
     session.loggedIn = true;
     render(<PrintButton />);
-    expect(await screen.findByText("🖨 In / Lưu PDF")).toBeTruthy();
-    expect(screen.queryByText("🔒 Đăng nhập để in")).toBeNull();
+    expect(await screen.findByRole("button", { name: "In / Lưu PDF" })).toBeTruthy();
+    expect(screen.queryByText("Đăng nhập để in")).toBeNull();
   });
 });
 

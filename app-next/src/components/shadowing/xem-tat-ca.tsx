@@ -7,7 +7,7 @@ export default function XemTatCa() {
     <a
       href="#"
       onClick={(e) => { e.preventDefault(); toast("Sẽ có sớm"); }}
-      className="inline-block mt-1 text-xs font-extrabold tracking-wide text-nhai-main hover:underline"
+      className="inline-block mt-1 text-xs font-extrabold tracking-wide text-action-primary hover:underline"
     >XEM TẤT CẢ →</a>
   );
 }

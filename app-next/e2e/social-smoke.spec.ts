@@ -53,7 +53,8 @@ test("AI widget: mascot kép render ở mọi route và reply sau 400ms", async 
   const mascot = page.getByRole("button", { name: "Hỏi AI" });
   await expect(mascot).toBeVisible();
   await mascot.click();
-  await page.locator('[placeholder="Nhập câu hỏi…"]').fill("xin chào");
-  await page.getByRole("button", { name: "➤" }).click();
-  await expect(page.getByText("Mình là bản demo — thử bấm ⭐ trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!")).toBeVisible({ timeout: 2000 });
+  await page.getByLabel("Nhập câu hỏi cho trợ lý AI").fill("xin chào");
+  // restyle: nút gửi giờ là IconButton "Gửi" (không còn ➤)
+  await page.getByRole("button", { name: "Gửi" }).click();
+  await expect(page.getByText("Mình là bản demo — thử bấm biểu tượng ngôi sao trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!")).toBeVisible({ timeout: 2000 });
 });

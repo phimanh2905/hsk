@@ -1,9 +1,9 @@
 export type Dist = { forgot: number; hard: number; good: number; easy: number };
 export const DIST_META: { key: keyof Dist; label: string; color: string }[] = [
-  { key: "forgot", label: "Quên rồi", color: "#c03922" },
-  { key: "hard", label: "Khó", color: "#f39c12" },
-  { key: "good", label: "Tốt", color: "#43a047" },
-  { key: "easy", label: "Dễ", color: "var(--nhai-accent)" },
+  { key: "forgot", label: "Quên rồi", color: "var(--learning-due)" },
+  { key: "hard", label: "Khó", color: "var(--learning-streak)" },
+  { key: "good", label: "Tốt", color: "var(--feedback-success)" },
+  { key: "easy", label: "Dễ", color: "var(--action-primary)" },
 ];
 export const R = 15.9155;
 export const C = 2 * Math.PI * R;

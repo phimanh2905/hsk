@@ -11,7 +11,7 @@ describe("Heatmap (F2)", () => {
     expect(cells.length).toBeGreaterThan(300); // 12 tháng × 28–31 ngày
     const hot = Array.from(cells).find((c) => c.getAttribute("title") === "Tháng 9 ngày 30: Xp 6");
     expect(hot).toBeDefined();
-    expect(hot!.className).toContain("bg-[#a83232]");
+    expect(hot!.className).toContain("bg-action-primary/60"); // xp 6 → mức alpha 60%
   });
   it("không có real → seeded, ô vẫn có title Xp", () => {
     const { container } = render(<Heatmap real={null} now={new Date(2026, 8, 30)} />);

@@ -15,7 +15,7 @@ export default function ShadowingPage() {
   return (
     <main>
       <h1 className="text-3xl font-extrabold">Shadowing &amp; Chép chính tả</h1>
-      <p className="text-nhai-muted mt-1">Chọn video để luyện nghe, bắt chước phát âm hoặc viết chính tả.</p>
+      <p className="text-text-secondary mt-1">Chọn video để luyện nghe, bắt chước phát âm hoặc viết chính tả.</p>
       <Suspense fallback={null}>
         <CatFilter playlists={shadowingPlaylists} />
       </Suspense>
@@ -24,9 +24,9 @@ export default function ShadowingPage() {
         return (
           <section className="mb-10" key={pl.slug} data-cat={pl.slug}>
             <h2 className="text-xl md:text-2xl font-extrabold">
-              {pl.name} <span className="text-nhai-muted font-bold text-base">({pl.total} bài học)</span>
+              {pl.name} <span className="text-text-secondary font-bold text-base">({pl.total} bài học)</span>
             </h2>
-            <p className="text-sm text-nhai-muted mt-0.5">{pl.desc}</p>
+            <p className="text-sm text-text-secondary mt-0.5">{pl.desc}</p>
             <XemTatCa />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
               {vids.map((v, i) => (

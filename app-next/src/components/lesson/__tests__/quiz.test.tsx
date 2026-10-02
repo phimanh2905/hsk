@@ -59,7 +59,7 @@ describe("QuizMode", () => {
     render(<Harness />);
     const wrong = screen.getAllByRole("button").find((b) => b.textContent === "cí1")!;
     act(() => wrong.click());
-    expect(wrong.className).toContain("border-red");
+    expect(wrong.className).toContain("border-feedback-error");
     act(() => vi.advanceTimersByTime(800));
     expect(screen.getByText(/2 \/ 4/)).toBeInTheDocument();
     vi.useRealTimers();

@@ -1,18 +1,20 @@
 "use client";
 import { DIST_META, donutSlices, distPercents, R, C, type Dist } from "@/lib/stats/donut";
+import { Card } from "@/components/ui/card";
 
-/* Port từ clone/js/review-stats.js renderDonut — donut largest-remainder r=15.9155 (C ≈ 100). */
+/* Port từ clone/js/review-stats.js renderDonut — donut largest-remainder r=15.9155 (C ≈ 100).
+   Chart thật (inline SVG có chủ đích) — màu qua token: track = --border-subtle, slices theo các token learning / feedback. */
 export function Donut({ dist, footer }: { dist: Dist; footer?: string }) {
   const total = dist.forgot + dist.hard + dist.good + dist.easy;
   const title = "Phân bổ đánh giá" + (total > 0 ? ` (${total} lượt)` : "");
   const pcts = distPercents(dist);
   return (
-    <div className="card shadow-neo p-5">
+    <Card>
       <h3 className="font-extrabold tracking-tight mb-4">{title}</h3>
       <div className="flex flex-col sm:flex-row items-center gap-6">
         <div className="shrink-0 w-40 h-40">
           <svg viewBox="0 0 42 42" className="w-full h-full -rotate-90" role="img" aria-label={title}>
-            <circle cx="21" cy="21" r={R} fill="none" stroke="var(--nhai-soft)" strokeWidth="6" />
+            <circle cx="21" cy="21" r={R} fill="none" stroke="var(--border-subtle)" strokeWidth="6" />
             {donutSlices(dist).map((s, i) => (
               <circle
                 key={i}
@@ -39,7 +41,7 @@ export function Donut({ dist, footer }: { dist: Dist; footer?: string }) {
           ))}
         </div>
       </div>
-      {footer ? <p className="text-xs text-[var(--nhai-muted)] mt-4">{footer}</p> : null}
-    </div>
+      {footer ? <p className="text-xs text-text-secondary mt-4">{footer}</p> : null}
+    </Card>
   );
 }

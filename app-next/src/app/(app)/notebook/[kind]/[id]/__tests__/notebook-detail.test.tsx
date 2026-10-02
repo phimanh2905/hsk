@@ -34,7 +34,7 @@ describe("NotebookDetail (F5)", () => {
       { id: "nb-1", name: "Bộ thử", rows: [], updatedAt: new Date().toISOString() },
     ]));
     render(<NotebookDetail kind="vocab" id="nb-1" />);
-    act(() => screen.getByText("＋ Thêm từ").click());
+    act(() => screen.getByText("Thêm từ").click());
     expect(screen.getByText("Thêm từ vào sổ tay — sắp có (demo)")).toBeInTheDocument();
   });
   it("sample id (không ở store) → title + rows từ sample", () => {

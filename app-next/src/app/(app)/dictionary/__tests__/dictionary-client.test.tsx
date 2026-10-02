@@ -43,7 +43,7 @@ describe("DictionaryClient (G1)", () => {
     const addBtn = screen.getAllByText(/Thêm vào sổ tay/)[0];
     await user.click(addBtn);
     expect(progressStore.getVocabBook()[0].hanzi).toBe("学习");
-    expect(screen.getByText("Đã thêm vào Sổ tay từ vựng ⭐")).toBeInTheDocument();
+    expect(screen.getByText("Đã thêm vào Sổ tay từ vựng")).toBeInTheDocument();
     await user.click(screen.getAllByText(/Thêm vào sổ tay/)[0]);
     expect(screen.getByText("Từ này đã có trong Sổ tay từ vựng")).toBeInTheDocument();
   });

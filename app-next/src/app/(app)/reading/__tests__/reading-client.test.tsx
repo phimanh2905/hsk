@@ -38,9 +38,9 @@ describe("ReadingClient (G3)", () => {
     expect(screen.getByText(/13 câu/)).toBeInTheDocument();
     expect(screen.getByText("Câu hỏi & Từ vựng")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "A. 先喝一杯温水" }));
-    expect(screen.getByText("Chính xác! 🎉")).toBeInTheDocument();
+    expect(screen.getByText("Chính xác!")).toBeInTheDocument();
   });
-  it("Phát câu 1: utterance lang zh-CN + rate; Phát cả bài đổi nút ⏹ Dừng; Dừng huỷ sạch", async () => {
+  it("Phát câu 1: utterance lang zh-CN + rate; Phát cả bài đổi sang Dừng; Dừng huỷ sạch", async () => {
     const user = userEvent.setup();
     render(<ReadingClient />);
     await user.click(screen.getByText("一个人的生活"));
@@ -49,10 +49,10 @@ describe("ReadingClient (G3)", () => {
     const u = speakMock.mock.calls[0][0] as SpeechSynthesisUtterance;
     expect(u.lang).toBe("zh-CN");
     expect(u.rate).toBe(1);
-    await user.click(screen.getByText("🔊 Phát cả bài"));
-    expect(screen.getByText("⏹ Dừng")).toBeInTheDocument();
-    await user.click(screen.getByText("⏹ Dừng"));
-    expect(screen.getByText("🔊 Phát cả bài")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Phát cả bài" }));
+    expect(screen.getByRole("button", { name: "Dừng" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Dừng" }));
+    expect(screen.getByRole("button", { name: "Phát cả bài" })).toBeInTheDocument();
     expect(window.speechSynthesis.cancel).toHaveBeenCalled();
   });
   it("account-box: chưa login → nút Đăng nhập; có session → text demo", async () => {

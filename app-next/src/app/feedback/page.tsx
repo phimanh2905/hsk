@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { progressStore } from "@/lib/store/progress-store";
 import { useToast } from "@/components/shell/toast-provider";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function FeedbackPage() {
   const [text, setText] = useState("");
@@ -23,22 +26,24 @@ export default function FeedbackPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Góp ý</h1>
-      <p className="text-[var(--nhai-muted)] mb-5">Cảm nhận của bạn giúp Nhai HSK tốt hơn…</p>
+      <p className="text-text-secondary mb-5">Cảm nhận của bạn giúp Nhai HSK tốt hơn…</p>
 
-      <form onSubmit={handleSubmit} className="card shadow-neo p-5">
-        <label htmlFor="feedback-text" className="block text-sm font-bold mb-2">Nội dung góp ý</label>
-        <textarea
-          id="feedback-text"
-          rows={6}
-          required
-          placeholder="Cảm nhận của bạn giúp Nhai HSK tốt hơn…"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 mb-4 bg-[var(--nhai-bg)] focus:outline-none focus:border-[var(--nhai-main)]"
-        />
-        <button type="submit" className="btn-main px-6 py-2.5">Gửi góp ý</button>
+      <form onSubmit={handleSubmit}>
+        <Card className="p-5">
+          <label htmlFor="feedback-text" className="block text-sm font-bold mb-2">Nội dung góp ý</label>
+          <Textarea
+            id="feedback-text"
+            rows={6}
+            required
+            placeholder="Cảm nhận của bạn giúp Nhai HSK tốt hơn…"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="w-full mb-4"
+          />
+          <Button type="submit">Gửi góp ý</Button>
+        </Card>
       </form>
     </main>
   );

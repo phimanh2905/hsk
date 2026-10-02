@@ -6,6 +6,10 @@
 
 import Link from "next/link";
 import { createContext, useContext, useState } from "react";
+import { X } from "@/components/ui/icon";
+import { IconButton } from "@/components/ui/icon-button";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { authClient } from "@/lib/auth-client";
 
 type LoginCtx = { isOpen: boolean; openLogin: () => void; close: () => void };
@@ -34,8 +38,6 @@ export function LoginModal() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (!isOpen) return null;
-
   async function signInWithGoogle() {
     setError(null);
     setBusy(true);
@@ -50,47 +52,41 @@ export function LoginModal() {
   }
 
   return (
-    <div
-      className="modal-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-    >
-      <div className="card shadow-neo w-full max-w-md p-6" role="dialog" aria-label="Đăng nhập">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-2xl font-extrabold">Đăng nhập</h2>
-          <button type="button" onClick={close} className="btn-ghost w-9 h-9" aria-label="Đóng">
-            ✕
-          </button>
-        </div>
-        <p className="text-sm text-[var(--nhai-muted)] mb-4">
-          Đồng bộ tiến trình học của bạn
-        </p>
-        <button
-          type="button"
-          className="btn-ghost w-full py-2.5 mb-3 disabled:opacity-60"
-          disabled={busy}
-          onClick={signInWithGoogle}
-        >
-          {busy ? "Đang chuyển tới Google…" : "🔵 Đăng nhập bằng Google"}
-        </button>
-        {error ? (
-          <p role="alert" className="text-sm text-red-600 mb-3">
-            {error}
-          </p>
-        ) : null}
-        <p className="text-xs text-[var(--nhai-muted)] mt-3">
-          Bằng việc đăng nhập, bạn đồng ý với{" "}
-          <Link href="/terms" className="text-[var(--nhai-accent)]">
-            Điều khoản sử dụng
-          </Link>{" "}
-          và{" "}
-          <Link href="/privacy" className="text-[var(--nhai-accent)]">
-            Chính sách quyền riêng tư
-          </Link>
-          .
-        </p>
+    <Dialog open={isOpen} onClose={close} labelledBy="login-modal-title">
+      <div className="flex items-start justify-between mb-2">
+        <h2 id="login-modal-title" className="text-2xl font-extrabold">
+          Đăng nhập
+        </h2>
+        <IconButton label="Đóng" onClick={close}>
+          <X size={18} strokeWidth={1.5} />
+        </IconButton>
       </div>
-    </div>
+      <p className="text-sm text-text-secondary mb-4">Đồng bộ tiến trình học của bạn</p>
+      <Button
+        type="button"
+        variant="secondary"
+        className="w-full mb-3"
+        loading={busy}
+        onClick={signInWithGoogle}
+      >
+        {busy ? "Đang chuyển tới Google…" : "Đăng nhập bằng Google"}
+      </Button>
+      {error ? (
+        <p role="alert" className="text-sm text-feedback-error-text mb-3">
+          {error}
+        </p>
+      ) : null}
+      <p className="text-xs text-text-secondary mt-3">
+        Bằng việc đăng nhập, bạn đồng ý với{" "}
+        <Link href="/terms" className="text-action-primary">
+          Điều khoản sử dụng
+        </Link>{" "}
+        và{" "}
+        <Link href="/privacy" className="text-action-primary">
+          Chính sách quyền riêng tư
+        </Link>
+        .
+      </p>
+    </Dialog>
   );
 }

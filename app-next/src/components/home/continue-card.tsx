@@ -10,6 +10,8 @@ import Link from "next/link";
 import { courses } from "@/content/courses";
 import { vocab } from "@/content/vocab";
 import { progressStore } from "@/lib/store/progress-store";
+import { Card } from "@/components/ui/card";
+import { ChevronRight } from "@/components/ui/icon";
 
 export default function ContinueCard(): React.JSX.Element | null {
   const [mounted, setMounted] = useState(false);
@@ -46,10 +48,15 @@ export default function ContinueCard(): React.JSX.Element | null {
   if (!mounted || !next) return null;
 
   return (
-    <section className="card shadow-neo p-4">
-      <Link href={`/lesson/${next.book}/${next.pageId}`} className="font-semibold text-nhai-main">
+    <Card className="p-4 sm:p-6">
+      {/* CTA chính duy nhất của trang chủ — Link primary (cùng style Button primary) */}
+      <Link
+        href={`/lesson/${next.book}/${next.pageId}`}
+        className="inline-flex items-center justify-center gap-2 rounded-control border border-transparent bg-action-primary px-5 font-semibold min-h-11 text-white hover:bg-action-primary-hover active:bg-action-primary-active focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+      >
         Học tiếp: {next.title} · Bài {parseInt(next.pageId.replace("lesson-", ""), 10)}
+        <ChevronRight size={18} strokeWidth={1.5} aria-hidden="true" />
       </Link>
-    </section>
+    </Card>
   );
 }

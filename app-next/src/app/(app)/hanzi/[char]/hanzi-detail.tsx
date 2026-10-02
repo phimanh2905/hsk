@@ -9,6 +9,11 @@ import { useStrokePlayer } from "@/components/hanzi/stroke-player";
 import { DrawPad } from "@/components/hanzi/draw-pad";
 import { useTts } from "@/lib/tts/use-tts";
 import { SearchCard } from "../search-card";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { Volume2, Search, Pencil } from "@/components/ui/icon";
 
 /* fallback cho chữ chưa có dữ liệu — verbatim theo clone */
 const FALLBACK: HanziInfo = {
@@ -41,14 +46,15 @@ function ToggleBtn({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant={on ? "primary" : "secondary"}
+      size="sm"
       aria-pressed={on ? "true" : "false"}
-      className={(on ? "btn-main" : "btn-ghost") + " px-3 py-2 text-sm"}
       onClick={onClick}
     >
       {label}
-    </button>
+    </Button>
   );
 }
 
@@ -83,7 +89,7 @@ export default function HanziDetail({ char }: { char: string }) {
       <header className="mb-4">
         <Link
           href="/hanzi"
-          className="text-sm font-semibold text-[var(--nhai-muted)] hover:text-[var(--nhai-main)]"
+          className="text-sm font-semibold text-text-secondary hover:text-action-primary"
         >
           ← Phân tích Hán tự
         </Link>
@@ -92,30 +98,32 @@ export default function HanziDetail({ char }: { char: string }) {
       <div className="grid lg:grid-cols-10 gap-6">
         {/* Sidebar trái: tìm + vẽ */}
         <aside className="lg:col-span-3 space-y-4 order-2 lg:order-1">
-          <div className="card shadow-neo p-4">
-            <h2 className="font-extrabold mb-2">🔍 Tìm chữ Hán</h2>
+          <Card className="p-4">
+            <h2 className="font-extrabold mb-2 inline-flex items-center gap-2">
+              <Search size={18} strokeWidth={1.5} aria-hidden="true" /> Tìm chữ Hán
+            </h2>
             <SearchCard go={go} />
-          </div>
-          <div className="card shadow-neo p-4">
-            <h2 className="font-extrabold mb-2">✍️ Vẽ chữ Hán</h2>
+          </Card>
+          <Card className="p-4">
+            <h2 className="font-extrabold mb-2 inline-flex items-center gap-2">
+              <Pencil size={18} strokeWidth={1.5} aria-hidden="true" /> Vẽ chữ Hán
+            </h2>
             <DrawPad size={240} onPick={go} />
-          </div>
+          </Card>
         </aside>
 
         {/* Trung tâm */}
         <div className="lg:col-span-4 order-1 lg:order-2">
           <div className="relative mx-auto w-[260px] h-[260px]">
-            <div className="absolute inset-0 card flex items-center justify-center" style={{ borderWidth: 2 }}>
-              <span className="zh font-black" style={{ fontSize: 150, lineHeight: 1 }}>
-                {char}
-              </span>
-            </div>
+            <Card className="absolute inset-0 flex items-center justify-center">
+              <span className="zh font-black text-[64px] leading-none">{char}</span>
+            </Card>
             <div ref={writerRef} className="absolute inset-0"></div>
           </div>
           <div className="flex flex-wrap justify-center gap-2 mt-3">
-            <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => player.play()}>
+            <Button type="button" variant="secondary" size="sm" onClick={() => player.play()}>
               Xem lại thứ tự nét
-            </button>
+            </Button>
             <ToggleBtn
               label="Hiển thị hạt mũi tên"
               on={arrows}
@@ -141,51 +149,50 @@ export default function HanziDetail({ char }: { char: string }) {
             />
           </div>
           {contains && (
-            <div className="card p-3 mt-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-[var(--nhai-muted)] mb-2">
+            <Card className="p-3 mt-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-text-secondary mb-2">
                 Chữ chứa chữ này
               </p>
               <div className="flex flex-wrap gap-2">
                 {related.length === 0 ? (
-                  <span className="text-sm text-[var(--nhai-muted)] font-semibold">Không có chữ nào.</span>
+                  <span className="text-sm text-text-secondary font-semibold">Không có chữ nào.</span>
                 ) : (
                   related.map((k) => (
                     <Link
                       key={k}
                       href={"/hanzi/" + encodeURIComponent(k)}
-                      className="grid-cell w-14 h-14 text-2xl zh font-bold hover:border-[var(--nhai-main)]"
+                      className="inline-flex items-center justify-center w-14 h-14 text-2xl zh font-bold rounded-control border border-border-default bg-surface-elevated hover:border-action-primary"
                     >
                       {k}
                     </Link>
                   ))
                 )}
               </div>
-            </div>
+            </Card>
           )}
 
           <div className="flex items-center gap-3 flex-wrap mt-5">
             <h1 className="text-4xl font-extrabold">
               {char} - {c.hanViet}
             </h1>
-            <button
-              type="button"
-              className="btn-ghost w-11 h-11 text-xl"
-              title={"Phát âm " + char}
+            <IconButton
+              label={"Phát âm " + char}
+              variant="ghost"
               onClick={() => speak(char, { lang: "zh-CN" })}
             >
-              🔊
-            </button>
+              <Volume2 size={20} strokeWidth={1.5} aria-hidden="true" />
+            </IconButton>
           </div>
           <Link
             href="/sound-rules"
-            className="inline-block mt-2 text-sm font-semibold text-[var(--nhai-accent)] hover:underline"
+            className="inline-block mt-2 text-sm font-semibold text-action-primary hover:underline"
           >
             → Quy tắc chuyển âm
           </Link>
           <div className="mt-4 space-y-2 text-sm">
             <Row label="Âm Hán Việt">
               <span className="font-bold">{c.hanViet}</span>
-              {c.hanVietAlt && <span className="text-[var(--nhai-muted)]"> (còn đọc: {c.hanVietAlt})</span>}
+              {c.hanVietAlt && <span className="text-text-secondary"> (còn đọc: {c.hanVietAlt})</span>}
             </Row>
             <Row label="Ý nghĩa">{c.meaning}</Row>
             <Row label="Pinyin">
@@ -193,7 +200,7 @@ export default function HanziDetail({ char }: { char: string }) {
             </Row>
             <Row label="Cấp độ">
               {c.level && c.level !== "?" ? (
-                <span className="pill pill-active text-xs">{c.level}</span>
+                <Chip selected className="text-xs">{c.level}</Chip>
               ) : (
                 c.level
               )}
@@ -203,7 +210,7 @@ export default function HanziDetail({ char }: { char: string }) {
               {radicalLinked ? (
                 <Link
                   href={"/hanzi/" + encodeURIComponent(radical)}
-                  className="zh text-[var(--nhai-accent)] hover:underline"
+                  className="zh text-action-primary hover:underline"
                 >
                   {radical}
                 </Link>
@@ -220,7 +227,7 @@ export default function HanziDetail({ char }: { char: string }) {
                       {hanziChars[part] ? (
                         <Link
                           href={"/hanzi/" + encodeURIComponent(part)}
-                          className="zh text-[var(--nhai-accent)] hover:underline"
+                          className="zh text-action-primary hover:underline"
                         >
                           {part}
                         </Link>
@@ -231,45 +238,45 @@ export default function HanziDetail({ char }: { char: string }) {
                   ))}
             </Row>
             <Row label="Loại chữ">
-              {c.type && c.type !== "—" ? <span className="pill text-xs">{c.type}</span> : c.type}
+              {c.type && c.type !== "—" ? <Chip className="text-xs">{c.type}</Chip> : c.type}
             </Row>
           </div>
         </div>
 
         {/* Sidebar phải: từ vựng */}
         <aside className="lg:col-span-3 order-3 space-y-4">
-          <div className="card shadow-neo p-4">
+          <Card className="p-4">
             <h2 className="font-extrabold text-lg mb-3">Từ vựng trong sách</h2>
             <div className="space-y-3">
               {(c.vocabInBook || []).length === 0 ? (
-                <p className="text-sm text-[var(--nhai-muted)] font-semibold">
+                <p className="text-sm text-text-secondary font-semibold">
                   Chưa có từ vựng trong sách cho chữ này.
                 </p>
               ) : (
                 c.vocabInBook!.map((v, i) => (
                   <div key={i} className="flex items-start gap-2">
                     <div className="min-w-0 flex-1">
-                      <Link href={v.link || "#"} className="zh text-lg font-bold hover:text-[var(--nhai-main)]">
+                      <Link href={v.link || "#"} className="zh text-lg font-bold hover:text-action-primary">
                         {v.word}
                       </Link>{" "}
-                      <span className="zh text-sm text-[var(--nhai-muted)]">({v.py})</span>
-                      <div className="text-xs font-bold text-[var(--nhai-muted)] mt-0.5">- {v.hv}</div>
+                      <span className="zh text-sm text-text-secondary">({v.py})</span>
+                      <div className="text-xs font-bold text-text-secondary mt-0.5">- {v.hv}</div>
                       <div className="text-sm">- {v.vi}</div>
                     </div>
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <span className="pill text-xs">HSK 1</span>
-                      <button
-                        type="button"
-                        className="btn-ghost w-8 h-8 text-sm"
-                        title="Phát âm"
+                      <Chip className="text-xs">HSK 1</Chip>
+                      <IconButton
+                        label="Phát âm"
+                        variant="ghost"
+                       
                         onClick={() => speak(v.word, { lang: "zh-CN" })}
                       >
-                        🔊
-                      </button>
+                        <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />
+                      </IconButton>
                       {v.link && (
                         <Link
                           href={v.link}
-                          className="text-xs font-semibold text-[var(--nhai-accent)] hover:underline"
+                          className="text-xs font-semibold text-action-primary hover:underline"
                         >
                           → Bài học
                         </Link>
@@ -279,12 +286,12 @@ export default function HanziDetail({ char }: { char: string }) {
                 ))
               )}
             </div>
-          </div>
-          <div className="card shadow-neo p-4">
+          </Card>
+          <Card className="p-4">
             <h2 className="font-extrabold text-lg mb-3">Từ vựng thực chiến</h2>
             <div className="space-y-2">
               {(c.practical || []).length === 0 ? (
-                <p className="text-sm text-[var(--nhai-muted)] font-semibold">
+                <p className="text-sm text-text-secondary font-semibold">
                   Chưa có từ vựng thực chiến cho chữ này.
                 </p>
               ) : (
@@ -292,22 +299,22 @@ export default function HanziDetail({ char }: { char: string }) {
                   <div key={i} className="flex items-baseline gap-2 text-sm">
                     <Link
                       href={"/dictionary?q=" + encodeURIComponent(p.word)}
-                      className="zh font-bold text-base hover:text-[var(--nhai-main)] shrink-0"
+                      className="zh font-bold text-base hover:text-action-primary shrink-0"
                     >
                       {p.word}
                     </Link>
-                    <span className="zh text-xs text-[var(--nhai-muted)] shrink-0">{p.py}</span>
-                    <span className="text-[var(--nhai-border)]">—</span>
-                    <span className="text-[var(--nhai-muted)]">{p.vi}</span>
+                    <span className="zh text-xs text-text-secondary shrink-0">{p.py}</span>
+                    <span className="text-border-strong">—</span>
+                    <span className="text-text-secondary">{p.vi}</span>
                   </div>
                 ))
               )}
             </div>
-          </div>
+          </Card>
           <div className="text-right">
             <Link
               href={"/hanzi/" + encodeURIComponent(next)}
-              className="font-bold text-[var(--nhai-main)] hover:underline"
+              className="font-bold text-action-primary hover:underline"
             >
               Chữ sau {next} →
             </Link>

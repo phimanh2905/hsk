@@ -5,7 +5,7 @@
    (bấm lại trên vùng câu → trả về pool); "Ghép câu" so built.join("") với câu gốc —
    đúng → xanh + +1 XP + tự sang câu sau 1s, sai → feedback đỏ + giữ built để sửa;
    "Gõ lại" reset built + shuffle lại pool; "Nghe câu"/"Nghe lại" speak(example.zh, { rate });
-   5 pill tốc độ 0.5x–2x (active pill-active). Timer + TTS tự dọn khi unmount. */
+   5 Chip tốc độ 0.5x–2x (selected). Timer + TTS tự dọn khi unmount. */
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLesson } from "../lesson-provider";
@@ -13,6 +13,10 @@ import { useTts } from "@/lib/tts/use-tts";
 import { shuffle } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
 import { useToastSafe } from "@/components/shell/toast-provider";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { CircleCheck, CircleX, PartyPopper, Play, RotateCcw } from "@/components/ui/icon";
 
 export const listenRates: number[] = [0.5, 0.8, 1, 1.5, 2];
 
@@ -97,7 +101,7 @@ export default function ListenMode() {
       setSolved(true);
       setResult("correct");
       progressStore.addXp(1);
-      toast("⚡ +1 XP");
+      toast("+1 XP");
       nextTimerRef.current = setTimeout(advance, NEXT_DELAY_MS);
     } else {
       setResult("wrong"); // giữ built để sửa
@@ -124,12 +128,16 @@ export default function ListenMode() {
 
   if (finished) {
     return (
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <p className="text-2xl font-extrabold">🎉 Bạn đã ghép xong {total} câu!</p>
-        <button type="button" className="btn-main px-4 py-2.5 mt-4" onClick={restart}>
-          🔄 Luyện lại
-        </button>
-      </div>
+      <Card className="p-6 text-center bg-surface-paper">
+        <p className="text-2xl font-extrabold flex items-center justify-center gap-2">
+          <PartyPopper size={28} strokeWidth={1.5} aria-hidden="true" />
+          Bạn đã ghép xong {total} câu!
+        </p>
+        <Button type="button" className="mt-4" onClick={restart}>
+          <RotateCcw size={18} strokeWidth={1.5} aria-hidden="true" />
+          Luyện lại
+        </Button>
+      </Card>
     );
   }
 
@@ -137,60 +145,62 @@ export default function ListenMode() {
     <div>
       {/* Nghe + tốc độ (port header của clone/js/lesson-listen.js) */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <button type="button" data-play className="btn-main px-4 py-2 text-sm" onClick={speakCurrent}>
-          ▶ Nghe câu
-        </button>
-        <button type="button" data-replay className="btn-ghost px-3 py-2 text-sm" onClick={speakCurrent}>
-          ↻ Nghe lại
-        </button>
-        <span className="text-xs font-bold text-[var(--nhai-muted)] ml-2">Tốc độ:</span>
+        <Button type="button" data-play size="sm" onClick={speakCurrent}>
+          <Play size={16} strokeWidth={1.5} aria-hidden="true" />
+          Nghe câu
+        </Button>
+        <Button type="button" data-replay variant="ghost" size="sm" onClick={speakCurrent}>
+          <RotateCcw size={16} strokeWidth={1.5} aria-hidden="true" />
+          Nghe lại
+        </Button>
+        <span className="text-xs font-bold text-text-secondary ml-2">Tốc độ:</span>
         {listenRates.map((r) => (
-          <button
+          <Chip
             key={r}
-            type="button"
             data-rate={r}
-            className={`pill text-xs py-1 ${rate === r ? "pill-active" : ""}`}
+            className="text-xs"
+            selected={rate === r}
             onClick={() => setRate(r)}
           >
             {r}x
-          </button>
+          </Chip>
         ))}
-        <span className="pill text-xs ml-auto">{index + 1} / {total}</span>
+        <Chip className="text-xs ml-auto">{index + 1} / {total}</Chip>
       </div>
 
       {/* câu của bạn (port data-answer-row) */}
-      <div
+      <Card
         className={
-          "card p-4 bg-[var(--nhai-bg)] min-h-[92px] mb-3 " +
+          "p-4 bg-surface-paper min-h-[92px] mb-3 " +
           (result === "correct"
-            ? "border-green-600"
+            ? "border-feedback-success"
             : result === "wrong"
-              ? "border-red-600 shake"
+              ? "border-feedback-error shake"
               : "")
         }
         data-answer-row
       >
-        <p className="text-xs font-bold text-[var(--nhai-muted)] uppercase mb-2">Câu của bạn</p>
+        <p className="text-xs font-bold text-text-secondary uppercase mb-2">Câu của bạn</p>
         <div className="flex flex-wrap gap-1.5 min-h-[44px]" data-answer>
           {built.length === 0 && (
-            <span className="text-xs text-[var(--nhai-muted)] italic">Bấm thẻ chữ bên dưới để ghép câu…</span>
+            <span className="text-xs text-text-secondary italic">Bấm thẻ chữ bên dưới để ghép câu…</span>
           )}
           {built.map((t, i) => (
             <button
               key={t.id}
               type="button"
-              className="btn-ghost w-11 h-11 zh text-xl font-extrabold"
+              className="inline-flex items-center justify-center h-11 w-11 zh text-xl font-extrabold rounded-control border border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary"
               onClick={() => returnToPool(i)}
             >
               {t.ch}
             </button>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* pool thẻ chữ Hán (port data-pool-row) */}
-      <div className="card p-4" data-pool-row>
-        <p className="text-xs font-bold text-[var(--nhai-muted)] uppercase mb-2">
+      <Card className="p-4" data-pool-row>
+        <p className="text-xs font-bold text-text-secondary uppercase mb-2">
           Thẻ chữ Hán — bấm để ghép
         </p>
         <div className="flex flex-wrap gap-1.5" data-pool>
@@ -198,24 +208,32 @@ export default function ListenMode() {
             <button
               key={t.id}
               type="button"
-              className="btn-ghost w-11 h-11 zh text-xl font-extrabold"
+              className="inline-flex items-center justify-center h-11 w-11 zh text-xl font-extrabold rounded-control border border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary"
               onClick={() => pickFromPool(i)}
             >
               {t.ch}
             </button>
           ))}
         </div>
-      </div>
+      </Card>
 
       <div className="flex flex-wrap items-center gap-2 mt-4">
-        <button type="button" data-submit className="btn-main px-4 py-2" disabled={solved} onClick={submit}>
+        <Button type="button" data-submit disabled={solved} onClick={submit}>
           Ghép câu
-        </button>
-        <button type="button" data-reset className="btn-ghost px-3 py-2 text-sm" onClick={reset}>
+        </Button>
+        <Button type="button" data-reset variant="ghost" size="sm" onClick={reset}>
           Gõ lại
-        </button>
-        <span data-feedback className={"text-sm font-bold " + (result === "correct" ? "text-green-700" : result === "wrong" ? "text-red-600" : "")}>
-          {result === "correct" ? "✅ Chính xác!" : result === "wrong" ? "❌ Chưa đúng thứ tự — nghe lại nhé!" : ""}
+        </Button>
+        <span
+          data-feedback
+          className={
+            "inline-flex items-center gap-1 text-sm font-bold " +
+            (result === "correct" ? "text-feedback-success" : result === "wrong" ? "text-feedback-error" : "")
+          }
+        >
+          {result === "correct" && <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" />}
+          {result === "wrong" && <CircleX size={16} strokeWidth={1.5} aria-hidden="true" />}
+          {result === "correct" ? "Chính xác!" : result === "wrong" ? "Chưa đúng thứ tự — nghe lại nhé!" : ""}
         </span>
       </div>
     </div>

@@ -8,6 +8,12 @@ import React from "react";
 import Link from "next/link";
 import { fileTemplates, templateGroups } from "@/content/templates";
 import { useToast } from "@/components/shell/toast-provider";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+
+const chipLinkBase =
+  "inline-flex items-center gap-1.5 min-h-11 rounded-control border px-3 text-sm font-medium no-underline " +
+  "focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
 
 export default function CatalogGrid(): React.JSX.Element {
   const toast = useToast();
@@ -16,11 +22,11 @@ export default function CatalogGrid(): React.JSX.Element {
     <div>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-3xl font-extrabold">Tạo file</h1>
-        <span className="pill zh pill-active text-sm">生成练习本</span>
+        <Chip selected className="zh">生成练习本</Chip>
       </div>
-      <p className="text-[var(--nhai-muted)] mt-1">— Tạo bản in luyện viết chữ Hán theo thứ tự nét</p>
+      <p className="text-text-secondary mt-1">— Tạo bản in luyện viết chữ Hán theo thứ tự nét</p>
 
-      <div className="no-print card shadow-neo p-4 mt-5 flex flex-col md:flex-row md:items-center gap-3" style={{ background: "#fdf6d8" }}>
+      <Card className="no-print mt-5 flex flex-col md:flex-row md:items-center gap-3">
         <div className="flex-1">
           <p className="font-bold">Cần mã tải file để in. Tham gia nhóm Facebook Nhai HSK, mã n…</p>
         </div>
@@ -28,13 +34,12 @@ export default function CatalogGrid(): React.JSX.Element {
           href="https://www.facebook.com/groups/nhaihsk"
           target="_blank"
           rel="noreferrer"
-          className="font-bold whitespace-nowrap hover:underline"
-          style={{ color: "#c23b22" }}
+          className={chipLinkBase + " font-bold whitespace-nowrap text-action-primary hover:underline"}
           onClick={() => toast("Mã tải file nằm ở phần mô tả của nhóm Facebook Nhai HSK.")}
         >
           Tham gia nhóm để lấy mã
         </a>
-      </div>
+      </Card>
 
       {templateGroups.map((g) => (
         <section key={g.id}>
@@ -46,15 +51,15 @@ export default function CatalogGrid(): React.JSX.Element {
                 <Link
                   key={t.id}
                   href={`/create-file/${t.id}`}
-                  className="card shadow-neo p-4 block hover:-translate-y-0.5 transition-transform"
+                  className="rounded-card border border-border-default bg-surface-elevated shadow-xs p-4 block hover:-translate-y-0.5 transition-transform focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
                 >
                   <div
-                    className="rounded-md border-2 border-[#cfc4ae] bg-white mb-3 overflow-hidden aspect-[3/4]"
+                    className="rounded-control border border-border-default bg-surface-elevated mb-3 overflow-hidden aspect-[3/4]"
                   >
                     <div className="w-full h-full [&>svg]:w-full [&>svg]:h-full" dangerouslySetInnerHTML={{ __html: t.thumb }} />
                   </div>
                   <h3 className="font-bold">{t.name}</h3>
-                  <p className="text-sm text-[var(--nhai-muted)] mt-0.5">{t.desc}</p>
+                  <p className="text-sm text-text-secondary mt-0.5">{t.desc}</p>
                 </Link>
               ))}
           </div>

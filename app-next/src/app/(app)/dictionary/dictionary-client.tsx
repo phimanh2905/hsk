@@ -11,6 +11,12 @@ import { progressStore } from "@/lib/store/progress-store";
 import { useTts } from "@/lib/tts/use-tts";
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
 import { DrawModal } from "@/components/hanzi/draw-modal";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { IconButton } from "@/components/ui/icon-button";
+import { Input } from "@/components/ui/input";
+import { Search, Volume2, BookmarkPlus, PenLine, X, ICON_STROKE } from "@/components/ui/icon";
 
 const QUICK = ["学习", "你好", "时间", "老师", "学生"];
 
@@ -23,7 +29,7 @@ function ZhWithPy({ zh, pinyinPerChar }: { zh: string; pinyinPerChar: string[] }
         if (py) {
           return (
             <span key={i} className="inline-block text-center mx-0.5 align-top">
-              <span className="block text-[10px] leading-tight text-[var(--nhai-muted)]">{py}</span>
+              <span className="block text-[10px] leading-tight text-text-secondary">{py}</span>
               <span className="zh">{ch}</span>
             </span>
           );
@@ -37,41 +43,40 @@ function ZhWithPy({ zh, pinyinPerChar }: { zh: string; pinyinPerChar: string[] }
 function EntryCard({ e, saved, onAdd }: { e: DictEntry; saved: boolean; onAdd: (e: DictEntry) => void }) {
   const { speak } = useTts();
   return (
-    <div className="card shadow-neo p-5 mb-4">
+    <Card className="p-5 mb-4">
       <div className="flex items-start gap-4 flex-wrap">
         <div className="zh text-5xl font-bold leading-none">{e.hanzi}</div>
         <div className="min-w-0">
           <div className="text-lg font-semibold">{pyJoin(e)}</div>
           {e.traditional && (
             <div>
-              <span className="text-sm text-[var(--nhai-muted)]">
+              <span className="text-sm text-text-secondary">
                 (Phồn thể: <span className="zh">{e.traditional}</span><span>)</span>
               </span>
             </div>
           )}
         </div>
-        <button type="button" className="btn-ghost w-9 h-9 ml-auto sm:ml-0" title={"Phát âm " + e.hanzi} onClick={() => speak(e.hanzi, { lang: "zh-CN" })}>🔊</button>
+        <IconButton label={"Phát âm " + e.hanzi} className="ml-auto sm:ml-0" onClick={() => speak(e.hanzi, { lang: "zh-CN" })}>
+          <Volume2 size={20} strokeWidth={ICON_STROKE} />
+        </IconButton>
       </div>
       <div className="mt-3 flex items-center gap-2 flex-wrap">
         <span className="text-base font-bold">{e.meanings[0] || ""}</span>
-        {e.pos && (
-          <span className="text-xs font-semibold border-2 border-[var(--nhai-border)] rounded-full px-2.5 py-0.5 text-[var(--nhai-muted)]">{e.pos}</span>
-        )}
-        {e.level && (
-          <span className="text-xs font-bold border-2 border-[var(--nhai-main)] text-[var(--nhai-main)] rounded-full px-2.5 py-0.5">{e.level}</span>
-        )}
-        <button type="button" className="btn-ghost px-3 py-1.5 text-sm ml-auto" onClick={() => onAdd(e)}>
-          <span style={saved ? { color: "var(--nhai-gold)" } : undefined}>⭐</span> Thêm vào sổ tay
-        </button>
+        {e.pos && <Chip className="min-h-7 px-2.5 text-xs font-semibold text-text-secondary">{e.pos}</Chip>}
+        {e.level && <Chip selected className="min-h-7 px-2.5 text-xs font-bold">{e.level}</Chip>}
+        <Button variant="secondary" size="sm" className="ml-auto" onClick={() => onAdd(e)}>
+          <BookmarkPlus size={16} strokeWidth={ICON_STROKE} className={saved ? "text-learning-streak" : undefined} />
+          Thêm vào sổ tay
+        </Button>
       </div>
-      <div className="mt-3 text-sm text-[var(--nhai-muted)]">
+      <div className="mt-3 text-sm text-text-secondary">
         Xem từng chữ:{" "}
         <span className="inline-flex gap-1 align-middle">
           {e.hanzi.split("").map((ch, i) => (
             <Link
               key={i}
               href={"/hanzi/" + encodeURIComponent(ch)}
-              className="zh inline-flex w-9 h-9 items-center justify-center border-2 border-[var(--nhai-border)] rounded-md text-lg font-bold hover:border-[var(--nhai-main)] hover:text-[var(--nhai-main)]"
+              className="zh inline-flex w-9 h-9 items-center justify-center border border-border-default rounded-control text-lg font-bold hover:border-action-primary hover:text-action-primary"
             >{ch}</Link>
           ))}
         </span>
@@ -86,19 +91,21 @@ function EntryCard({ e, saved, onAdd }: { e: DictEntry; saved: boolean; onAdd: (
         <div className="text-sm font-bold mb-2">Ví dụ</div>
         <div className="space-y-2">
           {e.examples.map((ex, i) => (
-            <div key={i} className="bg-[var(--nhai-soft)] rounded-lg p-3">
+            <div key={i} className="bg-surface-paper border border-border-subtle rounded-control p-3">
               <div className="flex items-start gap-2">
                 <div className="text-lg leading-snug flex-1">
                   <ZhWithPy zh={ex.zh} pinyinPerChar={ex.pinyinPerChar} />
                 </div>
-                <button type="button" className="btn-ghost w-8 h-8 shrink-0" title={"Phát âm " + ex.zh} onClick={() => speak(ex.zh, { lang: "zh-CN" })}>🔊</button>
+                <IconButton label={"Phát âm " + ex.zh} className="shrink-0" onClick={() => speak(ex.zh, { lang: "zh-CN" })}>
+                  <Volume2 size={18} strokeWidth={ICON_STROKE} />
+                </IconButton>
               </div>
-              <div className="text-sm text-[var(--nhai-muted)] mt-1">{ex.vi}</div>
+              <div className="text-sm text-text-secondary mt-1">{ex.vi}</div>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -134,7 +141,7 @@ function DictionaryClientInner() {
     const ok = progressStore.addToVocabBook({ hanzi: entry.hanzi, pinyin: pyJoin(entry), vi: entry.meanings[0] || "" });
     if (!ok) { toast("Từ này đã có trong Sổ tay từ vựng"); return; }
     setSavedHanzi(new Set(progressStore.getVocabBook().map((v) => v.hanzi)));
-    toast("Đã thêm vào Sổ tay từ vựng ⭐");
+    toast("Đã thêm vào Sổ tay từ vựng");
   }
 
   const has = q.trim().length > 0;
@@ -143,47 +150,47 @@ function DictionaryClientInner() {
     <div>
       {/* search bar */}
       <div className="flex gap-2 items-center flex-wrap mb-5">
-        <input
+        <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") doSearch(); }}
           placeholder="Chữ Hán, pinyin hoặc nghĩa tiếng Việt… (vd: 学习, xuexi, học)"
-          className="input flex-1 min-w-[220px]"
+          className="flex-1 min-w-[220px]"
           aria-label="Từ khoá tra từ điển"
         />
-        <button type="button" className="btn-main px-4 py-2 text-sm font-bold" disabled={!has} onClick={() => doSearch()}>Tra từ</button>
+        <Button size="sm" disabled={!has} onClick={() => doSearch()}>Tra từ</Button>
         {has && (
-          <button
-            type="button"
-            className="btn-ghost w-9 h-9"
-            title="Xoá từ khoá"
-            onClick={() => { setQ(""); setUrl(""); setSubmitted(null); }}
-          >✕</button>
+          <IconButton label="Xoá từ khoá" onClick={() => { setQ(""); setUrl(""); setSubmitted(null); }}>
+            <X size={18} strokeWidth={ICON_STROKE} />
+          </IconButton>
         )}
-        <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => setDrawOpen(true)}>✍️ Vẽ chữ để tra</button>
+        <Button variant="secondary" size="sm" onClick={() => setDrawOpen(true)}>
+          <PenLine size={16} strokeWidth={ICON_STROKE} />
+          Vẽ chữ để tra
+        </Button>
       </div>
 
       {results === null ? (
-        <div className="card shadow-neo p-5">
+        <Card className="p-5">
           <h2 className="text-lg font-extrabold mb-3">Gợi ý tra nhanh</h2>
           <div className="flex flex-wrap gap-2">
             {QUICK.map((w) => (
-              <button key={w} type="button" className="pill zh text-lg" onClick={() => doSearch(w)}>{w}</button>
+              <Chip key={w} onClick={() => doSearch(w)} className="zh text-lg">{w}</Chip>
             ))}
           </div>
-          <p className="text-sm text-[var(--nhai-muted)] mt-4">
+          <p className="text-sm text-text-secondary mt-4">
             Nhập chữ Hán (学习), pinyin không dấu (xuexi) hoặc nghĩa tiếng Việt (học) rồi bấm “Tra từ”.
           </p>
-        </div>
+        </Card>
       ) : results.length === 0 ? (
-        <div className="card p-8 text-center">
-          <div className="text-4xl mb-2">🔍</div>
-          <p className="text-[var(--nhai-muted)]">Không tìm thấy “{submitted}”. Thử chữ Hán, pinyin không dấu hoặc nghĩa tiếng Việt.</p>
-        </div>
+        <Card className="p-8 text-center">
+          <Search size={36} strokeWidth={ICON_STROKE} className="mx-auto mb-2 text-text-secondary" aria-hidden="true" />
+          <p className="text-text-secondary">Không tìm thấy “{submitted}”. Thử chữ Hán, pinyin không dấu hoặc nghĩa tiếng Việt.</p>
+        </Card>
       ) : (
         <>
           <div className="mb-4">
-            <div className="text-sm font-semibold text-[var(--nhai-muted)]">Trung → Việt</div>
+            <div className="text-sm font-semibold text-text-secondary">Trung → Việt</div>
             <h2 className="text-xl font-extrabold">{results.length} kết quả cho “<span className="zh">{submitted}</span>”</h2>
           </div>
           {results.map((e) => (

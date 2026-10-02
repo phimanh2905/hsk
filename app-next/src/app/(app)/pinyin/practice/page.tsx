@@ -12,7 +12,7 @@ export default function PinyinPracticePage() {
   return (
     <div className="mb-8">
       <h1 className="text-3xl font-extrabold tracking-tight">Bài tập Pinyin</h1>
-      <p className="text-sm font-semibold text-nhai-muted mt-1">
+      <p className="text-sm font-semibold text-text-secondary mt-1">
         Luyện nghe và gõ pinyin — nhận biết thanh điệu
       </p>
       <div className="mt-6">

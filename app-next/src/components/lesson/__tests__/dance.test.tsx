@@ -19,7 +19,8 @@ describe("DanceMode", () => {
     expect(screen.getByText("你好")).toBeInTheDocument();
     await user.type(screen.getByPlaceholderText(/Gõ pinyin/), "ni3 hao3");
     await user.keyboard("{Enter}");
-    expect(screen.getByText(/🕺|💃/)).toBeInTheDocument();
+    // nhân vật nhảy = icon Music2 trong vùng data-dancers (restyle: emoji → Lucide)
+    expect(document.querySelector("[data-dancers] svg")).not.toBeNull();
     expect(screen.getByText(/Hết lượt|1 \/ 1/)).toBeInTheDocument();
   });
   it("3 pill chọn nhạc hiển thị", () => {

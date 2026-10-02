@@ -25,7 +25,7 @@ describe("RadicalsClient (D3)", () => {
   it("7 quy tắc nét + card 3 nét cuối", () => {
     render(<StrokeRules />);
     expect(screen.getByText("Trước – sau")).toBeInTheDocument();
-    expect(screen.getByText("⏳ Ba nét cuối luôn viết sau cùng")).toBeInTheDocument();
+    expect(screen.getByText("Ba nét cuối luôn viết sau cùng")).toBeInTheDocument();
     expect(screen.getByText("辶")).toBeInTheDocument();
   });
 });

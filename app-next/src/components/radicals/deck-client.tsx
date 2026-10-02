@@ -11,6 +11,19 @@ import { shuffle } from "@/lib/pinyin-utils";
 import { useTts } from "@/lib/tts/use-tts";
 import { useKeyboard } from "@/lib/use-keyboard";
 import AutoplayModal, { type AutoplayCfg } from "./autoplay-modal";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import {
+  CircleCheck,
+  CircleX,
+  Grid2x2,
+  Pause,
+  Settings,
+  Shuffle,
+  Volume2,
+} from "@/components/ui/icon";
 
 /* Nghĩa chứa chữ Hán → link sang /hanzi/<char> (route chưa có — link only) */
 export function MeaningText({ text }: { text: string }) {
@@ -19,7 +32,7 @@ export function MeaningText({ text }: { text: string }) {
     <>
       {parts.map((p, i) =>
         /[\u4e00-\u9fff]/.test(p) ? (
-          <Link key={i} href={`/hanzi/${p}`} className="text-nhai-accent hover:underline">
+          <Link key={i} href={`/hanzi/${p}`} className="text-action-primary hover:underline">
             {p}
           </Link>
         ) : (
@@ -163,30 +176,38 @@ export default function RadicalsClient() {
     <div>
       {/* hàng control */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className="pill text-xs py-0.5 font-bold" data-counter>
+        <Chip className="text-xs py-0.5 font-bold" data-counter>
           {index + 1} / {total}
-        </span>
-        <button
+        </Chip>
+        <Button
           type="button"
           data-auto
-          className={cfg ? "pill pill-active px-3 py-2 text-sm" : "btn-ghost px-3 py-2 text-sm"}
+          variant={cfg ? "primary" : "secondary"}
+          size="sm"
           title={cfg ? "Dừng tự động phát thẻ" : "Cài đặt tự động phát thẻ"}
           onClick={() => (cfg ? stopAutoplay() : openAutoplay())}
         >
-          {cfg ? "⏸ Dừng" : "⚙ Tự động"}
-        </button>
-        <button type="button" data-shuffle className="btn-ghost px-3 py-2 text-sm" onClick={doShuffle}>
-          🔀 Xáo trộn
-        </button>
-        <button
-          type="button"
-          data-speak
-          className="btn-ghost w-10 h-10 ml-auto"
-          title="Phát âm chữ Hán"
+          {cfg ? (
+            <>
+              <Pause size={16} strokeWidth={1.5} aria-hidden="true" /> Dừng
+            </>
+          ) : (
+            <>
+              <Settings size={16} strokeWidth={1.5} aria-hidden="true" /> Tự động
+            </>
+          )}
+        </Button>
+        <Button type="button" data-shuffle variant="secondary" size="sm" onClick={doShuffle}>
+          <Shuffle size={16} strokeWidth={1.5} aria-hidden="true" /> Xáo trộn
+        </Button>
+        <IconButton
+          label="Phát âm chữ Hán"
+          variant="ghost"
+          className="ml-auto"
           onClick={speakCur}
         >
-          🔊
-        </button>
+          <Volume2 size={20} strokeWidth={1.5} aria-hidden="true" />
+        </IconButton>
       </div>
 
       {/* thẻ 3D flip */}
@@ -204,62 +225,59 @@ export default function RadicalsClient() {
             transform: flipped ? "rotateY(180deg)" : "none",
           }}
         >
-          <div
-            className="flip-face card shadow-neo absolute inset-0 flex flex-col items-center justify-center p-4"
+          <Card
+            className="flip-face absolute inset-0 flex flex-col items-center justify-center p-4"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <span className="pill text-xs py-0.5 mb-3">
+            <Chip className="text-xs py-0.5 mb-3">
               Bộ thủ #{r.i} · {r.strokes} nét
-            </span>
+            </Chip>
             <h2 className="zh text-6xl sm:text-7xl font-extrabold">{r.char}</h2>
-            <span className="text-xs text-nhai-muted mt-4">Click để lật</span>
-          </div>
+            <span className="text-xs text-text-secondary mt-4">Click để lật</span>
+          </Card>
           {flipped && (
-            <div
-              className="flip-face flip-back card shadow-neo bg-[#f7e9c8] absolute inset-0 flex flex-col items-center justify-center p-4"
+            <Card
+              className="flip-face flip-back bg-surface-paper absolute inset-0 flex flex-col items-center justify-center p-4"
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             >
-              <span className="pill text-xs py-0.5">{r.hanViet}</span>
+              <Chip className="text-xs py-0.5">{r.hanViet}</Chip>
               <h2 className="zh text-5xl mt-3 font-extrabold">
-                {r.char} <span className="text-base font-bold text-nhai-muted">· {r.strokes} nét</span>
+                {r.char} <span className="text-base font-bold text-text-secondary">· {r.strokes} nét</span>
               </h2>
               <p className="text-lg mt-2 text-center">
                 <MeaningText text={r.meaning} />
               </p>
-            </div>
+            </Card>
           )}
         </div>
       </div>
 
       {/* 4 nút nav */}
       <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-        <button type="button" className="btn-ghost px-8 py-2.5 text-sm font-extrabold" onClick={prev}>
+        <Button type="button" variant="secondary" className="px-8 font-extrabold" onClick={prev}>
           ‹ Trước
-        </button>
-        <button
+        </Button>
+        <Button type="button" variant="danger" className="px-8 font-extrabold" onClick={mark}>
+          <CircleX size={16} strokeWidth={1.5} aria-hidden="true" /> Chưa thuộc
+        </Button>
+        <Button
           type="button"
-          className="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#c03922] hover:opacity-90 transition-opacity"
+          className="px-8 font-extrabold bg-feedback-success hover:bg-feedback-success border-transparent text-white hover:opacity-90"
           onClick={mark}
         >
-          ✕ Chưa thuộc
-        </button>
-        <button
-          type="button"
-          className="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#2e7d32] hover:opacity-90 transition-opacity"
-          onClick={mark}
-        >
-          ✓ Đã thuộc
-        </button>
-        <button type="button" className="btn-ghost px-8 py-2.5 text-sm font-extrabold" onClick={next}>
+          <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" /> Đã thuộc
+        </Button>
+        <Button type="button" variant="secondary" className="px-8 font-extrabold" onClick={next}>
           Sau ›
-        </button>
+        </Button>
       </div>
 
       {/* grid theo số nét */}
       <div className="mt-10 space-y-6" id="radical-groups">
         {groups.map(([st, list]) => (
           <div key={st}>
-            <h3 className="font-extrabold mb-2">
+            <h3 className="font-extrabold mb-2 inline-flex items-center gap-2">
+              <Grid2x2 size={18} strokeWidth={1.5} aria-hidden="true" />
               {st} nét ({list.length} bộ)
             </h3>
             <div className="grid grid-cols-4 gap-2">
@@ -267,14 +285,14 @@ export default function RadicalsClient() {
                 <button
                   key={rad.i}
                   type="button"
-                  className="card p-2 text-center hover:-translate-y-0.5 transition-transform"
+                  className="rounded-card border border-border-default bg-surface-elevated p-2 text-center hover:-translate-y-0.5 transition-transform"
                   title={rad.meaning}
                   onClick={() => jumpToRadical(radicals.indexOf(rad))}
                 >
                   <span className="zh block text-3xl font-extrabold leading-tight">{rad.char}</span>
                   <span className="block text-xs font-bold mt-1">{rad.hanViet}</span>
-                  <span className="block text-[10px] text-nhai-muted font-semibold">Bộ #{rad.i}</span>
-                  <span className="hidden sm:block text-[10px] text-nhai-muted mt-0.5 line-clamp-2">
+                  <span className="block text-[10px] text-text-secondary font-semibold">Bộ #{rad.i}</span>
+                  <span className="hidden sm:block text-[10px] text-text-secondary mt-0.5 line-clamp-2">
                     {rad.meaning.slice(0, 24)}
                     {rad.meaning.length > 24 ? "…" : ""}
                   </span>

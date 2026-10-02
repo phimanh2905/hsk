@@ -20,12 +20,12 @@ describe("DrawPad (canvas imperative)", () => {
     const onPick = vi.fn();
     const { container } = render(<DrawPad onPick={onPick} />);
     const canvas = container.querySelector("canvas")!;
-    expect(screen.getByText("↩ Xoá nét cuối")).toBeDisabled();
-    expect(screen.getByText("✕ Xoá hết")).toBeDisabled();
+    expect(screen.getByText("Xoá nét cuối")).toBeDisabled();
+    expect(screen.getByText("Xoá hết")).toBeDisabled();
     pointer(canvas, "pointerdown", 20, 20);
     pointer(canvas, "pointermove", 60, 60);
     pointer(canvas, "pointerup", 60, 60);
-    expect(screen.getByText("↩ Xoá nét cuối")).toBeEnabled();
+    expect(screen.getByText("Xoá nét cuối")).toBeEnabled();
     expect(screen.getByText(/Có thể là:/)).toBeInTheDocument();
   });
   it("bấm gợi ý 你 → onPick('你'); Xoá hết → disabled trở lại", () => {
@@ -35,7 +35,7 @@ describe("DrawPad (canvas imperative)", () => {
     pointer(canvas, "pointerdown"); pointer(canvas, "pointerup");
     screen.getByText("你").click();
     expect(onPick).toHaveBeenCalledWith("你");
-    screen.getByText("✕ Xoá hết").click();
-    expect(screen.getByText("✕ Xoá hết")).toBeDisabled();
+    screen.getByText("Xoá hết").click();
+    expect(screen.getByText("Xoá hết")).toBeDisabled();
   });
 });

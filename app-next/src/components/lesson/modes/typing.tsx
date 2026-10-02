@@ -10,6 +10,10 @@ import { useEffect, useRef, useState } from "react";
 import { useLesson } from "../lesson-provider";
 import { toPinyin, stripTones, splitPinyin } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { PartyPopper, RotateCcw } from "@/components/ui/icon";
 
 const NEXT_DELAY_MS = 800;
 
@@ -99,15 +103,19 @@ export default function TypingMode() {
 
   if (finished) {
     return (
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <p className="text-2xl font-extrabold">🎉 Hoàn thành!</p>
-        <p className="mt-2 text-lg">
-          Bạn gõ đúng <span className="font-extrabold text-[var(--nhai-main)]">{score} / {total}</span> từ.
+      <Card className="p-6 text-center bg-surface-paper">
+        <p className="text-2xl font-extrabold flex items-center justify-center gap-2">
+          <PartyPopper size={28} strokeWidth={1.5} aria-hidden="true" />
+          Hoàn thành!
         </p>
-        <button type="button" className="btn-main px-4 py-2.5 mt-4" onClick={restart}>
-          🔄 Luyện lại từ đầu
-        </button>
-      </div>
+        <p className="mt-2 text-lg">
+          Bạn gõ đúng <span className="font-extrabold text-action-primary">{score} / {total}</span> từ.
+        </p>
+        <Button type="button" className="mt-4" onClick={restart}>
+          <RotateCcw size={18} strokeWidth={1.5} aria-hidden="true" />
+          Luyện lại từ đầu
+        </Button>
+      </Card>
     );
   }
 
@@ -115,55 +123,57 @@ export default function TypingMode() {
   const typedWords = typed.trim().split(/\s+/).filter(Boolean);
   const hintShown = item.pinyin.slice(0, hints);
 
+  const stateBorder =
+    state === "correct"
+      ? "border-feedback-success"
+      : state === "wrong"
+        ? "border-feedback-error"
+        : "border-border-default";
+
   return (
     <div>
       {/* toggle hiển thị đề bài + điểm (port header của clone/js/lesson-typing.js) */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className="text-xs font-bold text-[var(--nhai-muted)]">Đề bài:</span>
+        <span className="text-xs font-bold text-text-secondary">Đề bài:</span>
         {TMODES.map((m) => (
-          <button
+          <Chip
             key={m.id}
-            type="button"
             data-tmode={m.id}
-            className={`pill text-xs py-1 ${tMode === m.id ? "pill-active" : ""}`}
+            className="text-xs"
+            selected={tMode === m.id}
             onClick={() => setTMode(m.id)}
           >
             {m.label}
-          </button>
+          </Chip>
         ))}
-        <span className="ml-auto text-sm font-extrabold text-green-700">Đúng: {score}</span>
-        <span className="pill text-xs">{index + 1} / {total}</span>
+        <span className="ml-auto text-sm font-extrabold text-feedback-success">Đúng: {score}</span>
+        <Chip className="text-xs">{index + 1} / {total}</Chip>
       </div>
 
       {/* đề + hàng ô trống (port card của clone/js/lesson-typing.js) */}
-      <div
-        className={
-          "card p-6 text-center bg-[var(--nhai-bg)] " +
-          (state === "correct" ? "border-green-600" : state === "wrong" ? "border-red-600 shake" : "")
-        }
-      >
-        <span className="pill text-xs py-0.5">{item.pos}</span>
+      <Card className={"p-6 text-center bg-surface-paper " + stateBorder + (state === "wrong" ? " shake" : "")}>
+        <Chip className="text-xs">{item.pos}</Chip>
         <div className="mt-3">
-          {tMode === "reading" && <p className="zh text-5xl font-extrabold">{item.hanzi}</p>}
+          {tMode === "reading" && <p className="zh text-[48px] font-extrabold leading-tight">{item.hanzi}</p>}
           {tMode === "hanviet" && (
-            <p className="text-3xl font-extrabold text-[var(--nhai-main)]">{item.hanViet}</p>
+            <p className="text-3xl font-extrabold text-action-primary">{item.hanViet}</p>
           )}
           {tMode === "hanzi" && (
             <p className="text-2xl font-extrabold font-mono">{stripTones(item.pinyin)}</p>
           )}
         </div>
-        <p className="text-lg font-semibold mt-2">{item.meaning}</p>
+        <p className="text-base font-semibold mt-2">{item.meaning}</p>
         <div className="flex flex-wrap justify-center gap-1.5 mt-4">
           {syls.map((_, i) => (
             <span
               key={i}
-              className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center border-2 border-[var(--nhai-border)] rounded-lg text-lg font-bold bg-[var(--nhai-card)]"
+              className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center border-2 border-border-default rounded-control text-lg font-bold bg-surface-elevated"
             >
               {typedWords[i] ?? "_"}
             </span>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* input + Kiểm tra + Gợi ý (port hàng action của clone/js/lesson-typing.js) */}
       <div className="flex flex-wrap items-center gap-2 mt-4">
@@ -171,12 +181,8 @@ export default function TypingMode() {
           type="text"
           data-input
           className={
-            "flex-1 min-w-[220px] border-2 rounded-lg px-3 py-2.5 bg-[var(--nhai-bg)] font-mono " +
-            (state === "correct"
-              ? "border-green-600"
-              : state === "wrong"
-                ? "border-red-600"
-                : "border-[var(--nhai-border)]")
+            "flex-1 min-w-[220px] min-h-11 rounded-control border px-3 py-2 bg-surface-elevated text-text-primary font-mono focus:outline-none focus:ring-3 ring-action-focus ring-offset-2 " +
+            stateBorder
           }
           placeholder="Gõ pinyin, số là thanh điệu (ni3 → nǐ)"
           value={typed}
@@ -189,26 +195,27 @@ export default function TypingMode() {
             }
           }}
         />
-        <button type="button" className="btn-main px-4 py-2.5" disabled={state === "correct"} onClick={check}>
+        <Button type="button" disabled={state === "correct"} onClick={check}>
           Kiểm tra
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="btn-ghost px-3 py-2.5 text-sm"
+          variant="ghost"
+          size="sm"
           disabled={hints >= 5 || state === "correct"}
           onClick={addHint}
         >
           Gợi ý ({hints}/5)
-        </button>
+        </Button>
       </div>
       {hints > 0 && (
-        <p className="text-lg font-bold text-[var(--nhai-main)] mt-2">
+        <p className="text-[18px] font-bold text-action-primary mt-2">
           {hintShown.split("").map((ch, i) => (
             <span key={i}>{ch}</span>
           ))}
         </p>
       )}
-      <p className="text-xs text-[var(--nhai-muted)] mt-2">
+      <p className="text-xs text-text-secondary mt-2">
         Mẹo: gõ “ni3 hao3” → nǐ hǎo, “lv4” → lǜ. Nhấn Enter để kiểm tra.
       </p>
     </div>

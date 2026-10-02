@@ -11,6 +11,15 @@ import DictationPanel from "@/components/shadowing/dictation-panel";
 import RecorderPanel from "@/components/shadowing/recorder-panel";
 import { getShadowFont, setShadowFont, getAutoscroll, setAutoscroll, getVoicePref, type ShadowFont } from "@/lib/shadowing/prefs";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { Card } from "@/components/ui/card";
+import { Dialog } from "@/components/ui/dialog";
+import { IconButton } from "@/components/ui/icon-button";
+import {
+  Eye, EyeOff, Keyboard, Settings, SkipBack, SkipForward, Repeat, Play, Pause,
+  TriangleAlert, X, ICON_STROKE,
+} from "@/components/ui/icon";
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
@@ -113,7 +122,13 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
   /* ---------- polling 500ms — port shadowing-video.js:87-107 ---------- */
   useEffect(() => {
     const id = setInterval(() => {
-      if (st.current.tts || !st.current.ytReady) return;
+      if (st.current.tts) return;
+      // iframe có thể onLoad TRƯỚC khi hydration gắn handler → handshake "listening" mất,
+      // widget không bao giờ nhận onReady và overlay kẹt. Gửi lại handshake mỗi nhịp cho tới khi sẵn sàng.
+      if (!st.current.ytReady) {
+        ytSend({ event: "listening", id: "nhai-yt", channel: "widget" });
+        return;
+      }
       ytCmd("getCurrentTime");
       tick(st.current.lastTime);
     }, 500);
@@ -228,30 +243,42 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
     <div>
       {/* ---------- toolbar ---------- */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
-        <button type="button" data-mode="shadow" onClick={() => { st.current.mode = "shadow"; setMode("shadow"); }}
-          className={"py-2 text-sm " + (mode === "shadow" ? "btn-main" : "btn-ghost")}>
+        <Button variant={mode === "shadow" ? "primary" : "ghost"} size="sm" data-mode="shadow" onClick={() => { st.current.mode = "shadow"; setMode("shadow"); }}>
           Bắt chước phát âm
-        </button>
-        <button type="button" data-mode="dictation" onClick={() => { st.current.mode = "dictation"; setMode("dictation"); }}
-          className={"py-2 text-sm " + (mode === "dictation" ? "btn-main" : "btn-ghost")}>
+        </Button>
+        <Button variant={mode === "dictation" ? "primary" : "ghost"} size="sm" data-mode="dictation" onClick={() => { st.current.mode = "dictation"; setMode("dictation"); }}>
           Nghe - Viết chính tả
-        </button>
-        <button type="button" className="btn-ghost py-2 text-sm" onClick={() => setVideoHidden(!videoHidden)}>
-          {videoHidden ? "👁 Hiện video" : "👁 Ẩn video"}
-        </button>
-        <button type="button" className="btn-ghost py-2 text-sm" onClick={() => setShortcutsOpen(true)}>⌨️ Phím tắt</button>
-        <button type="button" className="btn-ghost py-2 text-sm" onClick={() => setSettingsOpen(true)}>⚙️ Cài đặt</button>
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => setVideoHidden(!videoHidden)}>
+          {videoHidden
+            ? <><Eye size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Hiện video</>
+            : <><EyeOff size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Ẩn video</>}
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => setShortcutsOpen(true)}>
+          <Keyboard size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Phím tắt
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => setSettingsOpen(true)}>
+          <Settings size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Cài đặt
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-3">
-        <button type="button" className="btn-ghost w-10 h-10" onClick={prev} aria-label="Câu trước">⏮</button>
-        <button type="button" className="btn-ghost w-10 h-10" onClick={repeat} aria-label="Lặp lại câu">🔁</button>
-        <button type="button" className="btn-main w-12 h-12 text-lg" onClick={togglePlay} aria-label="Phát / tạm dừng" data-play>
-          {playing ? "⏸" : "▶"}
-        </button>
-        <button type="button" className="btn-ghost h-10 px-3 text-sm" onClick={next}>⏭ Câu sau</button>
-        <button type="button" className="btn-ghost h-10 px-3 text-sm" onClick={prev}>⏮ Câu trước</button>
-        <p data-testid="pos" className="pill text-xs font-bold">Câu {cur + 1}/{subs.length}</p>
+        <IconButton label="Câu trước" onClick={prev} className="w-10 h-10 min-h-10 min-w-10">
+          <SkipBack size={18} strokeWidth={ICON_STROKE} />
+        </IconButton>
+        <IconButton label="Lặp lại câu" onClick={repeat} className="w-10 h-10 min-h-10 min-w-10">
+          <Repeat size={18} strokeWidth={ICON_STROKE} />
+        </IconButton>
+        <Button onClick={togglePlay} aria-label="Phát / tạm dừng" data-play className="w-12 h-12 min-h-12 px-0 text-lg">
+          {playing ? <Pause size={22} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Play size={22} strokeWidth={ICON_STROKE} aria-hidden="true" />}
+        </Button>
+        <Button variant="ghost" size="sm" onClick={next}>
+          <SkipForward size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Câu sau
+        </Button>
+        <Button variant="ghost" size="sm" onClick={prev}>
+          <SkipBack size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Câu trước
+        </Button>
+        <Chip className="min-h-6 px-2 text-xs font-bold" data-testid="pos">Câu {cur + 1}/{subs.length}</Chip>
       </div>
 
       {/* ---------- player ---------- */}
@@ -262,22 +289,23 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
           title={"YouTube video player — " + video.title}
           src={YT_ORIGIN + "/embed/" + video.id + "?enablejsapi=1&rel=0&playsinline=1"}
           onLoad={onIframeLoad}
-          className="w-full aspect-video rounded-xl border-2 border-nhai-border bg-black"
+          className="w-full aspect-video rounded-control border border-border-default bg-black"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
         <div
           data-testid="video-overlay"
-          className={"absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl bg-black/80 text-white text-center p-4" + (ytReady ? " hidden" : "")}
+          className={"absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-control bg-black/80 text-white text-center p-4" + (ytReady ? " hidden" : "")}
         >
           <p className="font-bold">Video YouTube — cần kết nối mạng</p>
-          {tts && <p className="text-sm text-nhai-accent">Dùng TTS đọc câu — không cần mạng cũng học được.</p>}
+          {tts && <p className="text-sm text-feedback-warning">Dùng TTS đọc câu — không cần mạng cũng học được.</p>}
         </div>
       </div>
       {tts && (
-        <p data-tts-banner className="card p-3 mb-4 text-sm text-nhai-accent font-semibold">
-          ⚠️ Không tải được video YouTube — dùng TTS đọc câu. Bấm ▶ để phát, bấm từng câu để nghe.
-        </p>
+        <Card className="p-3 mb-4 text-sm text-feedback-warning font-semibold" data-tts-banner>
+          <TriangleAlert size={16} strokeWidth={ICON_STROKE} className="inline align-middle mr-1" aria-hidden="true" />
+          Không tải được video YouTube — dùng TTS đọc câu. Bấm ▶ để phát, bấm từng câu để nghe.
+        </Card>
       )}
 
       {/* ---------- khu dictation / record — panel Task 6 cắm vào slot ---------- */}
@@ -310,7 +338,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
           Tốc độ
           <select
             data-rate
-            className="card py-1 px-2 text-sm"
+            className="rounded-control border border-border-default bg-surface-elevated text-text-primary py-1 px-2 text-sm"
             value={rate}
             onChange={(e) => {
               const r = parseFloat(e.target.value) || 1;
@@ -329,25 +357,25 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
             key={i}
             data-sent={i}
             onClick={() => gotoSentence(i, true)}
-            className={"card p-3 cursor-pointer border-2 border-transparent hover:border-nhai-border" + (i === cur ? " sent-active" : "")}
+            className={"border border-transparent hover:border-border-default p-3 cursor-pointer" + (i === cur ? " sent-active" : "")}
           >
             <div className="flex items-start gap-2">
-              <span className="text-xs font-bold text-nhai-muted mt-1 shrink-0">#{s.n}</span>
+              <span className="text-xs font-bold text-text-secondary mt-1 shrink-0">#{s.n}</span>
               <div className="flex-1 min-w-0">
                 <div className="zh font-semibold" data-zh>
                   {s.parts.map((p, pi) => (
-                    <span key={pi} data-part={pi} className="cursor-pointer hover:text-nhai-main">{p.zh}</span>
+                    <span key={pi} data-part={pi} className="cursor-pointer hover:text-action-primary">{p.zh}</span>
                   ))}
                 </div>
-                {s.pinyin && <p data-py className={(showPy ? "" : "hidden ") + "text-sm italic text-nhai-accent mt-1"}>{s.pinyin}</p>}
-                {s.vi && <p data-vi className={(showVi ? "" : "hidden ") + "text-sm text-nhai-muted mt-1"}>{s.vi}</p>}
+                {s.pinyin && <p data-py className={(showPy ? "" : "hidden ") + "text-sm italic text-action-primary mt-1"}>{s.pinyin}</p>}
+                {s.vi && <p data-vi className={(showVi ? "" : "hidden ") + "text-sm text-text-secondary mt-1"}>{s.vi}</p>}
                 <button
                   type="button"
                   data-report
-                  className="mt-1 text-[11px] text-nhai-muted underline hover:text-nhai-main"
+                  className="mt-1 text-[11px] text-text-secondary underline hover:text-action-primary"
                   onClick={(e) => { e.stopPropagation(); toast("Đã gửi báo lỗi — cảm ơn bạn!"); }}
                 >
-                  ⚠ Báo lỗi
+                  Báo lỗi
                 </button>
               </div>
             </div>
@@ -356,57 +384,53 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
       </div>
 
       {/* ---------- dialog Phím tắt ---------- */}
-      {shortcutsOpen && (
-        <div className="modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget) setShortcutsOpen(false); }}>
-          <div className="card shadow-neo w-full max-w-sm p-6" role="dialog" aria-label="Phím tắt">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-extrabold">⌨️ Phím tắt</h2>
-              <button type="button" className="btn-ghost w-9 h-9" onClick={() => setShortcutsOpen(false)}>✕</button>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between"><span>Phát / tạm dừng</span><span className="pill text-xs font-bold">Space</span></div>
-              <div className="flex items-center justify-between"><span>Câu trước</span><span className="pill text-xs font-bold">←</span></div>
-              <div className="flex items-center justify-between"><span>Câu sau</span><span className="pill text-xs font-bold">→</span></div>
-              <div className="flex items-center justify-between"><span>Lặp lại câu</span><span className="pill text-xs font-bold">R</span></div>
-            </div>
-          </div>
+      <Dialog open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} labelledBy="dlg-shortcuts-title" className="max-w-sm p-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 id="dlg-shortcuts-title" className="text-xl font-extrabold">Phím tắt</h2>
+          <IconButton label="Đóng" onClick={() => setShortcutsOpen(false)}>
+            <X size={18} strokeWidth={ICON_STROKE} />
+          </IconButton>
         </div>
-      )}
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between"><span>Phát / tạm dừng</span><Chip className="min-h-6 px-2 text-xs font-bold">Space</Chip></div>
+          <div className="flex items-center justify-between"><span>Câu trước</span><Chip className="min-h-6 px-2 text-xs font-bold">←</Chip></div>
+          <div className="flex items-center justify-between"><span>Câu sau</span><Chip className="min-h-6 px-2 text-xs font-bold">→</Chip></div>
+          <div className="flex items-center justify-between"><span>Lặp lại câu</span><Chip className="min-h-6 px-2 text-xs font-bold">R</Chip></div>
+        </div>
+      </Dialog>
 
       {/* ---------- dialog Cài đặt — port shadowing-video.js:334-375 ---------- */}
-      {settingsOpen && (
-        <div className="modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget) setSettingsOpen(false); }}>
-          <div className="card shadow-neo w-full max-w-sm p-6" role="dialog" aria-label="Cài đặt bản chép">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-extrabold">⚙️ Cài đặt</h2>
-              <button type="button" className="btn-ghost w-9 h-9" onClick={() => setSettingsOpen(false)}>✕</button>
-            </div>
-            <p className="text-sm font-bold mb-2">Cỡ chữ bản chép</p>
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {(["sm", "base", "lg"] as ShadowFont[]).map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  data-font={f}
-                  className={(font === f ? "btn-main" : "btn-ghost") + " py-2 text-sm"}
-                  onClick={() => { setShadowFont(f); setFont(f); }}
-                >
-                  {f === "sm" ? "Nhỏ" : f === "base" ? "Vừa" : "Lớn"}
-                </button>
-              ))}
-            </div>
-            <label className="flex items-center justify-between card p-3 cursor-pointer">
-              <span className="text-sm font-semibold">Tự cuộn đến câu đang phát</span>
-              <input
-                type="checkbox"
-                data-autoscroll
-                defaultChecked={st.current.autoScroll}
-                onChange={(e) => { st.current.autoScroll = e.target.checked; setAutoscroll(e.target.checked); }}
-              />
-            </label>
-          </div>
+      <Dialog open={settingsOpen} onClose={() => setSettingsOpen(false)} labelledBy="dlg-settings-title" className="max-w-sm p-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 id="dlg-settings-title" className="text-xl font-extrabold">Cài đặt</h2>
+          <IconButton label="Đóng" onClick={() => setSettingsOpen(false)}>
+            <X size={18} strokeWidth={ICON_STROKE} />
+          </IconButton>
         </div>
-      )}
+        <p className="text-sm font-bold mb-2">Cỡ chữ bản chép</p>
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          {(["sm", "base", "lg"] as ShadowFont[]).map((f) => (
+            <Button
+              key={f}
+              variant={font === f ? "primary" : "ghost"}
+              size="sm"
+              data-font={f}
+              onClick={() => { setShadowFont(f); setFont(f); }}
+            >
+              {f === "sm" ? "Nhỏ" : f === "base" ? "Vừa" : "Lớn"}
+            </Button>
+          ))}
+        </div>
+        <label className="flex items-center justify-between border border-border-default rounded-control bg-surface-elevated p-3 cursor-pointer">
+          <span className="text-sm font-semibold">Tự cuộn đến câu đang phát</span>
+          <input
+            type="checkbox"
+            data-autoscroll
+            defaultChecked={st.current.autoScroll}
+            onChange={(e) => { st.current.autoScroll = e.target.checked; setAutoscroll(e.target.checked); }}
+          />
+        </label>
+      </Dialog>
     </div>
   );
 }

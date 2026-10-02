@@ -13,7 +13,7 @@ export default function DictionaryPage() {
   return (
     <div className="mb-8">
       <h1 className="text-3xl font-extrabold tracking-tight">Tra từ điển</h1>
-      <p className="text-sm font-semibold text-nhai-muted mt-1">词典 — Trung → Việt</p>
+      <p className="text-sm font-semibold text-text-secondary mt-1">词典 — Trung → Việt</p>
       <div className="mt-5">
         <Suspense>
           <DictionaryClient />

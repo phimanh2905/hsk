@@ -22,9 +22,12 @@ describe("SevenDayBars", () => {
     const { container } = render(<SevenDayBars last7={[3, 5, 0, 8, 12, 4, 0]} />);
     const bars = container.querySelectorAll("[data-bar]");
     expect(bars).toHaveLength(7);
-    expect(bars[6].getAttribute("style")).toContain("var(--nhai-main)");
-    expect(bars[0].getAttribute("style")).toContain("var(--nhai-soft)");
+    expect(bars[6].getAttribute("style")).toContain("var(--action-primary)");
+    expect(bars[6].getAttribute("style")).toContain("opacity: 1"); // hôm nay full opacity
+    expect(bars[0].getAttribute("style")).toContain("opacity: 0.4");
     expect(container.textContent).toContain("T3");
     expect(container.textContent).toContain("T2");
+    // số lượt nằm trên mỗi cột (visual kèm số)
+    expect(container.querySelectorAll("[data-bar-count]")).toHaveLength(7);
   });
 });
