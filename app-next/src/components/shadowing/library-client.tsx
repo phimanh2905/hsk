@@ -13,7 +13,7 @@ export default function LibraryClient({ playlists, videos }: { playlists: Shadow
     <div>
       {cat && (
         <div className="mb-4">
-          <Link href="/shadowing" className="text-sm font-semibold text-nhai-muted hover:text-nhai-main">← Tất cả nhóm</Link>
+          <Link href="/shadowing" className="text-sm font-semibold text-text-secondary hover:text-action-primary">← Tất cả nhóm</Link>
         </div>
       )}
       {shown.map((pl) => {
@@ -21,13 +21,13 @@ export default function LibraryClient({ playlists, videos }: { playlists: Shadow
         return (
           <section className="mb-10" key={pl.slug}>
             <h2 className="text-xl md:text-2xl font-extrabold">
-              {pl.name} <span className="text-nhai-muted font-bold text-base">({pl.total} bài học)</span>
+              {pl.name} <span className="text-text-secondary font-bold text-base">({pl.total} bài học)</span>
             </h2>
-            <p className="text-sm text-nhai-muted mt-0.5">{pl.desc}</p>
+            <p className="text-sm text-text-secondary mt-0.5">{pl.desc}</p>
             <a
               href="#"
               onClick={(e) => { e.preventDefault(); toast("Sẽ có sớm"); }}
-              className="inline-block mt-1 text-xs font-extrabold tracking-wide text-nhai-main hover:underline"
+              className="inline-block mt-1 text-xs font-extrabold tracking-wide text-action-primary hover:underline"
             >XEM TẤT CẢ →</a>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
               {vids.map((v, i) => <VideoCard key={v.id} video={v} gradIndex={pl.slug === "daihuaxiyou" ? i : i + 2} playlistName={pl.name} />)}

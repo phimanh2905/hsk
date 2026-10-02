@@ -8,6 +8,8 @@ import { notFound } from "next/navigation";
 import { books } from "@/content/courses";
 import CourseClient from "@/components/course/course-client";
 import CourseProgress from "@/components/course/course-progress";
+import { Chip } from "@/components/ui/chip";
+import { Button } from "@/components/ui/button";
 
 export function generateStaticParams() {
   return books.map((b) => ({ book: b.slug }));
@@ -31,23 +33,25 @@ export default async function CourseBookPage({ params }: { params: Promise<{ boo
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <Link href="/" className="text-sm font-semibold text-nhai-muted hover:text-nhai-main">Trang chủ</Link>
-        <span className="text-sm text-nhai-muted">/</span>
-        <span className="pill pill-active text-xs">Nhai</span>
+        <Link href="/" className="text-sm font-semibold text-text-secondary hover:text-action-primary">Trang chủ</Link>
+        <span className="text-sm text-text-secondary">/</span>
+        <Chip selected className="min-h-7 px-2.5 text-xs">Nhai</Chip>
         <span className="font-bold">{book.name}</span>
-        <span className="text-sm text-nhai-muted">· {book.lessons} bài</span>
+        <span className="text-sm text-text-secondary">· {book.lessons} bài</span>
       </div>
 
       <div className="mb-1">
         <h1 className="text-3xl font-extrabold tracking-tight">{book.name} 3.0</h1>
-        <p className="zh text-nhai-muted">标准教程 {book.name} · 3.0</p>
+        <p className="zh text-text-secondary">标准教程 {book.name} · 3.0</p>
       </div>
 
       <CourseProgress book={slug} />
 
       <CourseClient slug={slug} />
 
-      <Link href="/review" className="btn-main inline-block px-6 py-3">Tổng ôn</Link>
+      <Link href="/review" className="inline-block">
+        <Button className="px-6 py-3">Tổng ôn</Button>
+      </Link>
     </div>
   );
 }

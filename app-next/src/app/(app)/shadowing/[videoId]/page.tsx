@@ -5,6 +5,8 @@ import VideoPlayer from "@/components/shadowing/video-player";
 import VideoCard from "@/components/shadowing/video-card";
 import Link from "next/link";
 import type { SubtitleSentence } from "@/content/shadowing";
+import { Chip } from "@/components/ui/chip";
+import { Play, ICON_STROKE } from "@/components/ui/icon";
 
 export function generateStaticParams() {
   return shadowingVideos.map((v) => ({ videoId: v.id }));
@@ -27,13 +29,16 @@ export default async function ShadowingVideoPage({ params }: { params: Promise<{
   return (
     <main>
       <div className="mb-2">
-        <Link href="/shadowing" className="text-sm font-semibold text-nhai-muted hover:text-nhai-main">‹ Shadowing</Link>
+        <Link href="/shadowing" className="text-sm font-semibold text-text-secondary hover:text-action-primary">‹ Shadowing</Link>
       </div>
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <h1 className="text-2xl md:text-3xl font-extrabold">{video.title}</h1>
-        <span className="pill pill-active text-xs font-bold">{video.hsk}</span>
-        <span className="pill text-xs font-bold">{video.duration}</span>
-        <span className="pill text-xs font-bold">▶ {video.views + (video.viewsSuffix || "")} lượt xem</span>
+        <Chip selected className="min-h-6 px-2 text-xs font-bold">{video.hsk}</Chip>
+        <Chip className="min-h-6 px-2 text-xs font-bold">{video.duration}</Chip>
+        <Chip className="min-h-6 px-2 text-xs font-bold">
+          <Play size={12} strokeWidth={ICON_STROKE} aria-hidden="true" />
+          {video.views + (video.viewsSuffix || "")} lượt xem
+        </Chip>
       </div>
       <VideoPlayer video={video} subtitles={subs} />
       {rel.length > 0 && (

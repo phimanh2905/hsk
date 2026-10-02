@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import { courses } from "@/content/courses";
 import { progressStore } from "@/lib/store/progress-store";
+import { Card } from "@/components/ui/card";
 
 const PROGRESS_EVENT = "nhai:progress";
 
@@ -28,14 +29,14 @@ export default function CourseProgress({ book }: { book: string }) {
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
   return (
-    <div className="card p-4 mb-4">
+    <Card className="p-4 mb-4">
       <div className="flex items-center justify-between mb-2">
         <span className="font-bold text-sm">Tiến độ học</span>
-        <span className="text-sm font-semibold text-nhai-muted">{done}/{total} bài</span>
+        <span className="text-sm font-semibold text-text-secondary">{done}/{total} bài</span>
       </div>
-      <div className="h-2 bg-nhai-soft rounded">
-        <div className="h-2 bg-nhai-main rounded" style={{ width: `${mounted ? pct : 0}%` }} />
+      <div className="h-2 bg-border-subtle rounded">
+        <div className="h-2 rounded" style={{ width: `${mounted ? pct : 0}%`, background: "var(--action-primary)" }} />
       </div>
-    </div>
+    </Card>
   );
 }

@@ -1,5 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
 
 type Rec = { stop: () => void; onstop: (() => void) | null; ondataavailable: ((e: { data: Blob }) => void) | null; start: () => void; mimeType: string };
 
@@ -44,23 +47,27 @@ export default function RecorderPanel() {
     }
   }
   return (
-    <div className="card shadow-neo p-4 space-y-3" data-testid="recorder">
-      <button type="button" data-testid="rec-btn" onClick={toggle}
-        className="px-4 py-2 text-sm font-bold rounded-lg text-white transition-colors"
-        style={{ background: recording ? "#1f1e1d" : "#dc2626" }}>
+    <Card className="p-4 space-y-3" data-testid="recorder">
+      <Button
+        variant="danger"
+        size="sm"
+        data-testid="rec-btn"
+        onClick={toggle}
+        className={recording ? "bg-text-primary hover:bg-text-primary" : undefined}
+      >
         {recording ? "■ Dừng ghi âm" : "● Bắt đầu ghi âm"}
-      </button>
-      <p className="text-sm text-nhai-muted" data-testid="rec-hint">
+      </Button>
+      <p className="text-sm text-text-secondary" data-testid="rec-hint">
         {recording ? "Đang ghi âm… bấm để dừng." : "Ghi âm để so sánh phát âm của bạn với video."}
       </p>
       <div data-testid="rec-list" className="space-y-2">
         {items.map((url, i) => (
           <div key={i} className="flex items-center gap-2 text-sm">
-            <span className="pill text-xs font-bold">Bản ghi</span>
+            <Chip className="min-h-6 px-2 text-xs font-bold">Bản ghi</Chip>
             <audio controls src={url} className="h-9 flex-1 max-w-xs" />
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

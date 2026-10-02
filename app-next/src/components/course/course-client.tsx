@@ -2,9 +2,9 @@
 
 /* CourseClient (B2) — danh sách bài của một khóa học theo skill.
    Port từ clone/js/course.js:1-190 (lessonRowVocab/lessonRowLocked/renderBook)
-   + SPEC-01 §2: 3 pill kỹ năng (active đỏ) đổi ?skill= bằng router.replace;
+   + SPEC-01 §2: 3 pill kỹ năng (active) đổi ?skill= bằng router.replace;
    hàng vocab = Link /lesson/[book]/[pageId] + "N từ vựng"; hàng grammar/hanzi
-   = button + 🔒 mở Login modal; hàng đã hoàn thành có dấu ✓ (đọc listPageDone). */
+   = button + mở Login modal; hàng đã hoàn thành có dấu ✓ (đọc listPageDone). */
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
@@ -14,6 +14,10 @@ import { progressStore } from "@/lib/store/progress-store";
 import { useLoginModal } from "@/components/shell/login-modal";
 import { useSession } from "@/lib/use-session";
 import { useTts } from "@/lib/tts/use-tts";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { IconButton } from "@/components/ui/icon-button";
+import { Lock, Volume2, CircleCheck, ICON_STROKE } from "@/components/ui/icon";
 
 const SKILLS: { key: Skill; label: string }[] = [
   { key: "vocab", label: "Từ vựng · 词汇" },
@@ -47,34 +51,36 @@ function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
         : genHanzi(4);
 
   if (skill === "grammar") {
-    /* SPEC-15 §3 + clone course.js grammarCard: card 2 cột — title (+🔒 khi chưa login)
-       + 2 dòng placeholder + nút TTS vuông phải; click 🔊: chưa login → Login modal, đã login → speak. */
+    /* SPEC-15 §3 + clone course.js grammarCard: card 2 cột — title (+ khóa khi chưa login)
+       + 2 dòng placeholder + nút TTS vuông phải; click TTS: chưa login → Login modal, đã login → speak. */
     return (
       <div className="grid sm:grid-cols-2 gap-3 mb-6">
         {items.map((item) => (
-          <div key={item.pageId} className="card shadow-neo p-4 flex items-start gap-3">
+          <Card key={item.pageId} className="p-4 flex items-start gap-3">
             <div className="min-w-0 flex-1">
               <h3 className="font-extrabold text-sm mb-1.5 truncate">
                 {item.title}
-                {!loggedIn && <span aria-label="Cần đăng nhập"> 🔒</span>}
+                {!loggedIn && (
+                  <span aria-label="Cần đăng nhập" className="inline-flex align-middle ml-1">
+                    <Lock size={14} strokeWidth={ICON_STROKE} className="text-text-secondary" aria-hidden="true" />
+                  </span>
+                )}
               </h3>
-              <div className="h-3 rounded bg-nhai-soft mb-1.5 w-full" />
-              <div className="h-3 rounded bg-nhai-soft w-2/3" />
+              <div className="h-3 rounded bg-surface-paper border border-border-subtle mb-1.5 w-full" />
+              <div className="h-3 rounded bg-surface-paper border border-border-subtle w-2/3" />
             </div>
-            <button
-              type="button"
-              data-tts
-              className="grid-cell rounded-md w-9 h-9 shrink-0 text-base"
-              aria-label="Đọc mẫu"
-              title="Đọc mẫu"
+            <IconButton
+              label="Đọc mẫu"
+              variant="solid"
+              className="w-9 h-9 min-h-9 min-w-9 shrink-0"
               onClick={() => {
                 if (!loggedIn) { openLogin(); return; }
                 speak(item.title, { lang: "zh-CN" });
               }}
             >
-              🔊
-            </button>
-          </div>
+              <Volume2 size={18} strokeWidth={ICON_STROKE} />
+            </IconButton>
+          </Card>
         ))}
       </div>
     );
@@ -88,13 +94,20 @@ function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
             key={item.pageId}
             type="button"
             onClick={openLogin}
-            className="card shadow-neo px-4 py-3 w-full flex items-center gap-3 text-left hover:-translate-y-0.5 transition-transform"
+            className="block w-full text-left hover:-translate-y-0.5 transition-transform"
           >
-            <span className="grid-cell rounded-md w-9 h-9 shrink-0 font-extrabold text-sm">{item.order}</span>
-            <span className="font-semibold min-w-0 truncate">
-              {item.title} <span aria-label="Cần đăng nhập">🔒</span>
-            </span>
-            <span className="ml-auto shrink-0 text-xs text-nhai-muted">{item.meta}</span>
+            <Card className="px-4 py-3 flex items-center gap-3">
+              <span className="inline-flex items-center justify-center rounded-control border border-border-default bg-surface-paper w-9 h-9 shrink-0 font-extrabold text-sm">
+                {item.order}
+              </span>
+              <span className="font-semibold min-w-0 truncate">
+                {item.title}
+                <span aria-label="Cần đăng nhập" className="inline-flex align-middle ml-1">
+                  <Lock size={14} strokeWidth={ICON_STROKE} className="text-text-secondary" aria-hidden="true" />
+                </span>
+              </span>
+              <span className="ml-auto shrink-0 text-xs text-text-secondary">{item.meta}</span>
+            </Card>
           </button>
         ))}
       </div>
@@ -107,14 +120,20 @@ function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
         <Link
           key={item.pageId}
           href={`/lesson/${slug}/${item.pageId}`}
-          className="card shadow-neo px-4 py-3 flex items-center gap-3 hover:-translate-y-0.5 transition-transform"
+          className="block hover:-translate-y-0.5 transition-transform"
         >
-          <span className="grid-cell rounded-md w-9 h-9 shrink-0 font-extrabold text-sm">{item.order}</span>
-          <span className="font-semibold min-w-0 truncate">
-            {item.title}
-            {mounted && doneSet.has(item.pageId) ? " ✓" : ""}
-          </span>
-          <span className="ml-auto shrink-0 text-xs text-nhai-muted">{item.words} từ vựng</span>
+          <Card className="px-4 py-3 flex items-center gap-3">
+            <span className="inline-flex items-center justify-center rounded-control border border-border-default bg-surface-paper w-9 h-9 shrink-0 font-extrabold text-sm">
+              {item.order}
+            </span>
+            <span className="font-semibold min-w-0 truncate inline-flex items-center gap-1">
+              {item.title}
+              {mounted && doneSet.has(item.pageId) && (
+                <CircleCheck size={16} strokeWidth={ICON_STROKE} className="text-feedback-success shrink-0" aria-label="Đã hoàn thành" />
+              )}
+            </span>
+            <span className="ml-auto shrink-0 text-xs text-text-secondary">{item.words} từ vựng</span>
+          </Card>
         </Link>
       ))}
     </div>
@@ -131,16 +150,15 @@ function CourseClientInner({ slug }: { slug: string }) {
     <>
       <div className="flex flex-wrap gap-2 my-4" role="tablist" aria-label="Kỹ năng">
         {SKILLS.map((s) => (
-          <button
+          <Chip
             key={s.key}
-            type="button"
             role="tab"
             aria-selected={s.key === skill}
+            selected={s.key === skill}
             onClick={() => router.replace(`/course/${slug}?skill=${s.key}`, { scroll: false })}
-            className={"pill" + (s.key === skill ? " pill-active" : "")}
           >
             {s.label}
-          </button>
+          </Chip>
         ))}
       </div>
       <LessonList slug={slug} skill={skill} />

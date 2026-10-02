@@ -10,7 +10,7 @@ export default function CatFilter({ playlists }: { playlists: { slug: string }[]
   return (
     <>
       <div className="mb-4">
-        <Link href="/shadowing" className="text-sm font-semibold text-nhai-muted hover:text-nhai-main">← Tất cả nhóm</Link>
+        <Link href="/shadowing" className="text-sm font-semibold text-text-secondary hover:text-action-primary">← Tất cả nhóm</Link>
       </div>
       <style>{`section[data-cat]:not([data-cat="${playlists.some((p) => p.slug === cat) ? cat : "__none__"}"]){display:none}`}</style>
     </>
