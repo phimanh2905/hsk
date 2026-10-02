@@ -14,7 +14,11 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3100](http://localhost:3100) with your browser to see the result.
+
+> Port 3100 (không phải 3000) là cố ý: nó khớp `BETTER_AUTH_URL` trong `.env.local`
+> và Authorized redirect URI đã đăng ký trong Google Cloud Console. Đổi port thì
+> phải sửa cả ba cùng lúc, nếu không Google sẽ báo `redirect_uri_mismatch`.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

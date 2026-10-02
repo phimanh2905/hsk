@@ -1,11 +1,12 @@
 import { defineConfig } from "@playwright/test";
 
-// Port 3000 bị process khác chiếm trên máy dev này — dùng 3100.
+// `pnpm dev` đã mặc định chạy port 3100 (khớp BETTER_AUTH_URL và Authorized
+// redirect URI trong Google Cloud Console), nên webServer chỉ cần gọi `pnpm dev`.
 export default defineConfig({
   testDir: "./e2e",
   use: { baseURL: "http://localhost:3100" },
   webServer: {
-    command: "pnpm dev --port 3100",
+    command: "pnpm dev",
     url: "http://localhost:3100",
     reuseExistingServer: true,
     timeout: 120_000,
