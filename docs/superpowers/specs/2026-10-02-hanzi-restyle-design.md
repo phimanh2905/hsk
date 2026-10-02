@@ -23,7 +23,9 @@ neo-brutalist "Nhai" sai design system ở mọi trụ:
   của Hanzi (`system/tokens.dark.json`, `variables.dark.css`).
 
 Non-goals: không đổi hành vi/route/business logic, không đổi copy tiếng Việt, không đụng print/A4
-flow của create-file (chỉ đổi da), không đổi key localStorage hiện có.
+flow của create-file (chỉ đổi da), không đổi key localStorage hiện có. **Exam-mode posture của
+DESIGN.md (timer + counter + ẩn feedback tới hết giờ) là feature mới — nằm ngoài scope restyle,
+ghi trong follow-up sau cụm 5.**
 
 ## 2. Kiến trúc token (3 lớp, trong `src/app/globals.css`)
 
@@ -66,6 +68,8 @@ Class Tailwind semantic: `bg-surface-paper`, `bg-surface-elevated`, `text-text-p
 
 - `next/font/google`: **Be Vietnam Pro** (Latin UI, weights 400/500/600/700, biến `--font-be-vietnam-pro`)
   + **Noto Sans SC** (hanzi, biến `--font-noto-sans-sc`), fallback PingFang SC.
+  Lưu ý: DESIGN.md ghi Inter — Be Vietnam Pro là **override của owner (2026-10-02)**; người thực
+  thi không được đổi ngược về Inter. DESIGN.md sẽ được owner cập nhật sau.
 - `.zh` / `[lang="zh"]` dùng Noto Sans SC — không bao giờ render hanzi bằng Be Vietnam Pro.
 - Thang chữ learning: hanzi hero 32–64px, pinyin 14–18px, translation 14–16px.
 
@@ -74,6 +78,13 @@ Class Tailwind semantic: `bg-surface-paper`, `bg-surface-elevated`, `text-text-p
 - Radius: card 14px, controls/input/button 10px (token `--radius-card` / `--radius-control`).
 - Border 1px; shadow chỉ `xs`/`md` cho dialog + floating card; focus ring jade 3px, offset 2px.
 - Touch target ≥44px, answer choice ≥52px; loading button giữ nguyên width.
+- Spacing: lưới 4px (Tailwind default `p-*`/`gap-*` thỏa sẵn — cấm giá trị lẻ kiểu `p-[7px]`).
+- **State matrix đầy đủ** cho Button/Input/Chip/answer choice: default / hover / focus (jade ring) /
+  selected / correct (feedback-success) / error (feedback-error) / disabled — mỗi state có màu
+  nền + border + text xác định, không mã hóa nghĩa bằng màu một mình.
+- **Nav posture (DESIGN.md):** desktop giữ persistent sidebar; mobile thêm **bottom nav 5 mục**
+  (Trang chủ / Học / Ôn tập / Đọc / Hồ sơ). Các destination còn lại (Shadowing, Bài khoá,
+  Luyện thi, bộ thủ, pinyin…) vẫn truy cập được qua drawer mở từ ☰ ở topbar — không bỏ tính năng.
 
 ## 3. Bộ primitives — `src/components/ui/`
 
@@ -110,7 +121,9 @@ Sau mỗi cụm: `pnpm typecheck && pnpm lint && pnpm test`.
 2. **Shell + khung app** — `sidebar-nav`, `topbar`, `login-modal`, `settings-modal`,
    `toast-provider`, `notification-bell`, `ai-widget`, `personal/login-gate`, root `layout.tsx`,
    `(app)/layout.tsx`, `not-found`. Nhiều emoji nhất → `IconButton` + Lucide, sửa test liên quan
-   cùng commit.
+   cùng commit. Thêm `bottom-nav.tsx` (mobile, 5 mục theo DESIGN.md: Trang chủ/Học/Ôn tập/Đọc/
+   Hồ sơ, ≥44px/mục, active = jade); drawer đầy đủ giữ nguyên, nút mở chuyển từ nút floating
+   (`sidebar-nav.tsx:146`) vào ☰ của topbar.
 3. **Learning core** — `home/continue-card`, `(app)/page.tsx` (trang chủ),
    `lesson-client` + `lesson-provider` + `word-list` + 7 modes (battle/dance/flashcard/listen/
    quiz/reading/typing), `review` (+`review-dashboard`), `reading` (kèm `karaoke.tsx`),
