@@ -11,7 +11,15 @@ import { AUTH_BASE_PATH } from "@/lib/auth-base-path";
 
 function createAuth() {
   const { env } = getCloudflareContext();
-  const { BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = env;
+  /* Lúc dev, initOpenNextCloudflareForDev() gọi getPlatformProxy với envFiles: []
+     nên .env.local của Next KHÔNG nằm trong `env` — chỉ binding wrangler mới có.
+     Thêm fallback process.env để lấy secret từ .env.local; production thì
+     `env` (wrangler secret) có sẵn nên nhánh này không kích hoạt. */
+  const { BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = {
+    BETTER_AUTH_SECRET: env.BETTER_AUTH_SECRET ?? process.env.BETTER_AUTH_SECRET,
+    GOOGLE_CLIENT_ID: env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
+  };
   if (!BETTER_AUTH_SECRET || !GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
     throw new Error(
       "Thiếu BETTER_AUTH_SECRET / GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET. " +

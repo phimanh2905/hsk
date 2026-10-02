@@ -17,7 +17,7 @@ test("sitemap chứa đúng các route public", async ({ request }) => {
   const res = await request.get("/sitemap.xml");
   const xml = await res.text();
   for (const path of ["/", "/course", "/course/hsk1", "/pinyin", "/pinyin/practice", "/radicals", "/sound-rules", "/roadmap", "/roadmap/pinyin"]) {
-    expect(xml).toContain(`<loc>http://localhost:3000${path}</loc>`);
+    expect(xml).toContain(`<loc>http://localhost:3100${path}</loc>`);
   }
   expect(xml).not.toContain("/lesson/custom");
   expect(xml).not.toContain("/review");
