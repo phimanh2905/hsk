@@ -76,9 +76,9 @@ function Callout() {
           <ol className="list-decimal ml-5 space-y-1 text-sm text-text-secondary">
             <li>Đọc lướt cả bài một lần để nắm đại ý, không cần hiểu từng chữ.</li>
             <li>Bật audio đọc cả bài, vừa nghe vừa nhìn chữ — đừng dừng lại.</li>
-            <li>Đọc từng câu: bấm ▶, theo dõi chữ sáng, bắt chước ngữ điệu (shadowing).</li>
+            <li>Đọc từng câu: bấm nút phát, theo dõi chữ sáng, bắt chước ngữ điệu (shadowing).</li>
             <li>Mở bản dịch và pinyin, đối chiếu với những chỗ mình hiểu sai.</li>
-            <li>Tìm từ vựng mới, bấm ⭐ thêm vào sổ tay để ôn lại sau.</li>
+            <li>Tìm từ vựng mới, bấm nút ngôi sao để thêm vào sổ tay và ôn lại sau.</li>
             <li>Ngày hôm sau nghe lại bài đó một lần — bạn sẽ hiểu sâu hơn hẳn.</li>
           </ol>
         </div>
