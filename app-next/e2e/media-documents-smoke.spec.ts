@@ -38,6 +38,11 @@ test.describe("G5 shadowing video player (YouTube stubbed)", () => {
     await page.goto("/shadowing/EA3rwvr99Q0");
     // Chờ player thật sự sẵn sàng (overlay biến mất = đã nhận onReady từ stub)
     // thay vì sleep cố định — sleep fail khi CPU bận (CI chạy song song worker).
+    // Restyle hydration chậm hơn: nếu iframe onLoad bắn trước khi React gắn handler,
+    // handshake "listening" không được gửi → reload một lần để iframe mount sau hydration.
+    if (await page.getByTestId("video-overlay").isVisible()) {
+      await page.reload();
+    }
     await expect(page.getByTestId("video-overlay")).toBeHidden();
     await page.click('[data-sent="2"]');
     await expect(page.getByTestId("pos")).toHaveText("Câu 3/9");
@@ -71,11 +76,12 @@ test.describe("G6–G9 create-file + certificate smoke", () => {
     await expect(page.getByText(/Cần mã tải file để in/)).toBeVisible();
     await page.click('a[href="/create-file/stroke-order"]');
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Luyện viết theo thứ tự nét");
-    await page.click("text=🔒 Đăng nhập để in");
+    // restyle: gate mở bằng Button "Đăng nhập để in" (không còn 🔒; print-button + badge trong gate cùng tên → .first())
+    await page.getByRole("button", { name: "Đăng nhập để in" }).first().click();
     await page.getByTestId("code-input").fill("FREEHSK");
     await page.getByTestId("code-submit").click();
-    await expect(page.getByText("🖨 In / Lưu PDF")).toBeVisible();
-    await page.getByText("🖨 In / Lưu PDF").click();
+    await expect(page.getByRole("button", { name: "In / Lưu PDF" })).toBeVisible();
+    await page.getByRole("button", { name: "In / Lưu PDF" }).click();
     const printed = await page.evaluate(() => (window as unknown as { __printed: boolean }).__printed);
     expect(printed).toBe(true);
     const code = await page.evaluate(() => localStorage.getItem("nhai.fileCode"));

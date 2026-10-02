@@ -122,7 +122,13 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
   /* ---------- polling 500ms — port shadowing-video.js:87-107 ---------- */
   useEffect(() => {
     const id = setInterval(() => {
-      if (st.current.tts || !st.current.ytReady) return;
+      if (st.current.tts) return;
+      // iframe có thể onLoad TRƯỚC khi hydration gắn handler → handshake "listening" mất,
+      // widget không bao giờ nhận onReady và overlay kẹt. Gửi lại handshake mỗi nhịp cho tới khi sẵn sàng.
+      if (!st.current.ytReady) {
+        ytSend({ event: "listening", id: "nhai-yt", channel: "widget" });
+        return;
+      }
       ytCmd("getCurrentTime");
       tick(st.current.lastTime);
     }, 500);
