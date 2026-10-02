@@ -7,6 +7,8 @@
 import React, { useEffect, useState } from "react";
 import { hasFileCode } from "@/lib/create-file/storage";
 import { useSession } from "@/lib/use-session";
+import { Button } from "@/components/ui/button";
+import { Printer, Lock } from "@/components/ui/icon";
 import FreehskGate from "./freehsk-gate";
 
 export default function PrintButton(): React.JSX.Element {
@@ -22,16 +24,18 @@ export default function PrintButton(): React.JSX.Element {
 
   if (unlocked) {
     return (
-      <button type="button" className="btn-main no-print" onClick={() => window.print()}>
-        🖨 In / Lưu PDF
-      </button>
+      <Button type="button" className="no-print" onClick={() => window.print()}>
+        <Printer size={18} strokeWidth={1.5} aria-hidden="true" />
+        In / Lưu PDF
+      </Button>
     );
   }
   return (
     <>
-      <button type="button" className="btn-main no-print" onClick={() => setGateOpen((v) => !v)}>
-        🔒 Đăng nhập để in
-      </button>
+      <Button type="button" className="no-print" onClick={() => setGateOpen((v) => !v)}>
+        <Lock size={18} strokeWidth={1.5} aria-hidden="true" />
+        Đăng nhập để in
+      </Button>
       {gateOpen && (
         <FreehskGate
           onUnlocked={() => {

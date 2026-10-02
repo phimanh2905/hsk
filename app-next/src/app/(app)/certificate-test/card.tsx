@@ -11,20 +11,20 @@ export default function CertificateCardItem({ logo, name, zh, desc }: Certificat
   return (
     <button
       type="button"
-      className="card cursor-default text-left"
+      className="rounded-card border border-border-default bg-surface-elevated shadow-xs p-6 text-left cursor-default text-text-primary focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
       onClick={() => toast("Chứng chỉ này sắp ra mắt — hãy quay lại sau nhé!")}
     >
       <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-red-100 text-sm font-bold text-red-600">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control border border-border-default bg-surface-paper text-sm font-bold">
           {logo}
         </div>
         <div className="min-w-0">
-          <h3 className="text-base font-bold text-gray-900">{name}</h3>
-          <p className="text-sm text-gray-500">{zh}</p>
+          <h3 className="text-base font-bold">{name}</h3>
+          <p className="text-sm text-text-secondary">{zh}</p>
         </div>
       </div>
-      <p className="mt-2 text-sm text-gray-600">{desc}</p>
-      <span className="mt-3 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">
+      <p className="mt-2 text-sm text-text-secondary">{desc}</p>
+      <span className="mt-3 inline-block rounded-control border border-border-default bg-surface-paper px-2 py-0.5 text-xs font-semibold text-text-secondary">
         Sắp ra mắt
       </span>
     </button>

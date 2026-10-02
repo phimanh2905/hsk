@@ -10,6 +10,9 @@ import { setFileCode } from "@/lib/create-file/storage";
 import { useToast } from "@/components/shell/toast-provider";
 import { useLoginModal } from "@/components/shell/login-modal";
 import { useSession } from "@/lib/use-session";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export default function FreehskGate({ onUnlocked }: { onUnlocked: () => void }): React.JSX.Element {
   const [code, setCode] = useState("");
@@ -28,29 +31,28 @@ export default function FreehskGate({ onUnlocked }: { onUnlocked: () => void }):
   };
 
   return (
-    <div className="card p-3 mt-2 no-print" style={{ background: "#fdf6d8" }}>
+    <Card className="p-4 mt-2 no-print">
       <p className="text-sm font-bold mb-1">Mở khóa in / Lưu PDF</p>
-      <p className="text-xs text-[var(--nhai-muted)] mb-2">
+      <p className="text-xs text-text-secondary mb-2">
         Nhập mã FREEHSK (xem mô tả nhóm Facebook) để in không giới hạn.
       </p>
       <div className="flex flex-wrap gap-1.5 items-center">
-        <input
+        <Input
           data-testid="code-input"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Nhập mã"
-          className="rounded-md border-2 border-[var(--nhai-border)] px-2 py-1 text-sm"
-          style={{ maxWidth: 160 }}
+          className="max-w-[160px]"
         />
-        <button type="button" data-testid="code-submit" className="btn-main text-sm" onClick={submit}>
+        <Button type="button" data-testid="code-submit" size="sm" onClick={submit}>
           Mở khóa in
-        </button>
+        </Button>
         {!loggedIn && (
-          <button type="button" className="pill text-sm no-print" onClick={openLogin}>
+          <Button type="button" variant="secondary" size="sm" className="no-print" onClick={openLogin}>
             Đăng nhập để in
-          </button>
+          </Button>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
