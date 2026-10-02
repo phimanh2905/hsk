@@ -6,16 +6,17 @@ import Link from "next/link";
 import LessonClient from "@/components/lesson/lesson-client";
 import type { LessonItem } from "@/components/lesson/lesson-provider";
 import { getDeck } from "@/lib/store/decks";
+import { Card } from "@/components/ui/card";
 
 export default function CustomLessonPage({ params }: { params: Promise<{ deckId: string }> }) {
   const { deckId } = use(params);
   const deck = getDeck(deckId);
   if (!deck || deck.rows.length === 0) {
     return (
-      <div className="card p-8 text-center">
+      <Card className="max-w-[760px] mx-auto mt-8 p-8 text-center">
         <p>Bộ thẻ này không tồn tại hoặc đang trống.</p>
-        <Link href="/my-vocab" className="btn-main inline-block mt-4 px-6 py-2">Về bộ từ vựng của tôi</Link>
-      </div>
+        <Link href="/my-vocab" className="inline-flex min-h-11 items-center justify-center rounded-control border border-transparent bg-action-primary px-5 font-semibold text-white hover:bg-action-primary-hover mt-4">Về bộ từ vựng của tôi</Link>
+      </Card>
     );
   }
   const items: LessonItem[] = deck.rows.map((r, i) => ({

@@ -5,7 +5,7 @@
    (bấm lại trên vùng câu → trả về pool); "Ghép câu" so built.join("") với câu gốc —
    đúng → xanh + +1 XP + tự sang câu sau 1s, sai → feedback đỏ + giữ built để sửa;
    "Gõ lại" reset built + shuffle lại pool; "Nghe câu"/"Nghe lại" speak(example.zh, { rate });
-   5 pill tốc độ 0.5x–2x (active pill-active). Timer + TTS tự dọn khi unmount. */
+   5 Chip tốc độ 0.5x–2x (selected). Timer + TTS tự dọn khi unmount. */
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLesson } from "../lesson-provider";
