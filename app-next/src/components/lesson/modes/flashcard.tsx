@@ -11,6 +11,18 @@ import { useLesson } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { shuffle } from "@/lib/pinyin-utils";
 import { useKeyboard } from "@/lib/use-keyboard";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { IconButton } from "@/components/ui/icon-button";
+import {
+  CircleCheck,
+  FastForward,
+  Settings,
+  Shuffle,
+  Volume2,
+  X,
+} from "@/components/ui/icon";
 
 type Dir = "zh-vi" | "vi-zh";
 type IntervalSec = 2 | 3 | 5;
@@ -104,83 +116,70 @@ export default function FlashcardMode() {
 
   const controls = (
     <div className="flex flex-wrap items-center gap-2 no-print">
-        <button
-          type="button"
-          data-dir
-          className="btn-ghost px-3 py-2 text-sm font-extrabold"
-          onClick={() => setDir(dir === "zh-vi" ? "vi-zh" : "zh-vi")}
+      <Button type="button" data-dir variant="ghost" size="sm" onClick={() => setDir(dir === "zh-vi" ? "vi-zh" : "zh-vi")}>
+        {dir === "zh-vi" ? "ZH → VI" : "VI → ZH"}
+      </Button>
+      <Chip data-auto selected={auto} onClick={() => setAuto(!auto)}>
+        <FastForward size={16} strokeWidth={1.5} aria-hidden="true" />
+        Tự động
+      </Chip>
+      <Chip data-shuffle selected={shuffled} onClick={doShuffle}>
+        <Shuffle size={16} strokeWidth={1.5} aria-hidden="true" />
+        Xáo trộn
+      </Chip>
+      <div className="relative">
+        <IconButton
+          label="Cài đặt tự động phát"
+          data-autoplay-cfg
+          onClick={() => setCfgOpen(!cfgOpen)}
         >
-          {dir === "zh-vi" ? "ZH → VI" : "VI → ZH"}
-        </button>
-        <button
-          type="button"
-          data-auto
-          className={auto ? "pill pill-active px-3 py-2 text-sm" : "btn-ghost px-3 py-2 text-sm"}
-          onClick={() => setAuto(!auto)}
-        >
-          ⏩ Tự động
-        </button>
-        <button
-          type="button"
-          data-shuffle
-          className={shuffled ? "pill pill-active px-3 py-2 text-sm" : "btn-ghost px-3 py-2 text-sm"}
-          onClick={doShuffle}
-        >
-          🔀 Xáo trộn
-        </button>
-        <div className="relative">
-          <button
-            type="button"
-            data-autoplay-cfg
-            className="btn-ghost px-3 py-2 text-sm"
-            title="Cài đặt tự động phát"
-            onClick={() => setCfgOpen(!cfgOpen)}
-          >
-            ⚙
-          </button>
-          {cfgOpen && (
-            <div className="absolute z-10 mt-1 card p-3 text-sm space-y-2 w-44">
-              <div className="font-extrabold">Tự động phát</div>
-              <div className="flex gap-1">
-                {([2, 3, 5] as IntervalSec[]).map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    className={autoplayCfg.intervalSec === s ? "pill pill-active" : "pill"}
-                    onClick={() => setAutoplayCfg((c) => ({ ...c, intervalSec: s }))}
-                  >
-                    {s}s
-                  </button>
-                ))}
-              </div>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={autoplayCfg.speakOn}
-                  onChange={(e) => setAutoplayCfg((c) => ({ ...c, speakOn: e.target.checked }))}
-                />
-                Phát âm khi tự chạy
-              </label>
+          <Settings size={20} strokeWidth={1.5} />
+        </IconButton>
+        {cfgOpen && (
+          <Card className="absolute z-10 mt-1 p-3 text-sm space-y-2 w-44">
+            <div className="font-extrabold">Tự động phát</div>
+            <div className="flex gap-1">
+              {([2, 3, 5] as IntervalSec[]).map((s) => (
+                <Chip
+                  key={s}
+                  selected={autoplayCfg.intervalSec === s}
+                  onClick={() => setAutoplayCfg((c) => ({ ...c, intervalSec: s }))}
+                >
+                  {s}s
+                </Chip>
+              ))}
             </div>
-          )}
-        </div>
-        <span className="ml-auto flex items-center gap-2">
-          {status && (
-            <span data-status className="pill text-xs py-0.5">
-              {status === "known" ? "Đã thuộc ✓" : "Chưa thuộc"}
-            </span>
-          )}
-          <button
-            type="button"
-            data-speak
-            className="btn-ghost w-10 h-10"
-            title="Phát âm chữ Hán"
-            onClick={() => speak(item.hanzi, { lang: "zh-CN" })}
-          >
-            🔊
-          </button>
-        </span>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={autoplayCfg.speakOn}
+                onChange={(e) => setAutoplayCfg((c) => ({ ...c, speakOn: e.target.checked }))}
+              />
+              Phát âm khi tự chạy
+            </label>
+          </Card>
+        )}
       </div>
+      <span className="ml-auto flex items-center gap-2">
+        {status && (
+          <Chip
+            data-status
+            className="text-xs"
+            tone={status === "known" ? "correct" : "neutral"}
+            icon={status === "known" ? <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" /> : undefined}
+          >
+            {status === "known" ? "Đã thuộc" : "Chưa thuộc"}
+          </Chip>
+        )}
+        <IconButton
+          label="Phát âm chữ Hán"
+          data-speak
+          onClick={() => speak(item.hanzi, { lang: "zh-CN" })}
+        >
+          <Volume2 size={20} strokeWidth={1.5} />
+        </IconButton>
+      </span>
+    </div>
   );
 
   return (
@@ -204,37 +203,39 @@ export default function FlashcardMode() {
         >
           {/* mặt trước */}
           <div
-            className="flip-face card shadow-neo absolute inset-0 flex flex-col items-center justify-center p-4"
+            data-face="front"
+            className="flip-face absolute inset-0 flex flex-col items-center justify-center p-4 bg-surface-elevated border border-border-default rounded-card shadow-xs"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <span className="pill text-xs py-0.5 mb-3">{item.pos}</span>
+            <Chip className="text-xs mb-3">{item.pos}</Chip>
             {dir === "zh-vi" ? (
-              <h2 className="zh text-5xl sm:text-6xl font-extrabold">{item.hanzi}</h2>
+              <h2 className="zh text-[48px] sm:text-[64px] font-extrabold leading-tight">{item.hanzi}</h2>
             ) : (
               <h2 className="text-4xl sm:text-5xl font-extrabold text-center">{item.meaning}</h2>
             )}
-            <span className="text-sm font-semibold text-[var(--nhai-muted)] mt-2">
+            <span className="text-[18px] text-text-secondary mt-2">
               {dir === "vi-zh" ? item.pinyin : ""}
             </span>
-            <span className="text-xs text-[var(--nhai-muted)] mt-4">Click để lật</span>
+            <span className="text-xs text-text-secondary mt-4">Click để lật</span>
           </div>
-          {/* mặt sau — nền vàng nhạt #f7e9c8 (SPEC-14 §5); render khi flipped */}
+          {/* mặt sau — nền vàng nhạt (SPEC-14 §5); render khi flipped */}
           {flipped && (
             <div
-              className="flip-face flip-back card shadow-neo bg-[#f7e9c8] absolute inset-0 flex flex-col items-center justify-center p-4"
+              data-face="back"
+              className="flip-face flip-back absolute inset-0 flex flex-col items-center justify-center p-4 bg-feedback-warning/20 border border-border-default rounded-card shadow-xs"
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
             >
-              <h2 className="zh text-6xl sm:text-7xl font-extrabold">{item.hanzi}</h2>
-              <span className="pill text-xs py-0.5 mt-3">Cụm từ</span>
+              <h2 className="zh text-[64px] font-extrabold leading-tight">{item.hanzi}</h2>
+              <Chip className="text-xs mt-3">Cụm từ</Chip>
               {dir === "zh-vi" ? (
                 <>
-                  <p className="text-xl font-bold mt-2">{item.pinyin}</p>
-                  <p className="text-lg font-extrabold text-[var(--nhai-main)]">{item.hanViet}</p>
+                  <p className="text-[18px] font-bold mt-2">{item.pinyin}</p>
+                  <p className="text-base font-extrabold text-action-primary mt-1">{item.hanViet}</p>
                 </>
               ) : (
                 <>
-                  <p className="text-xl font-bold mt-2">{item.hanViet}</p>
-                  <p className="text-lg font-extrabold text-[var(--nhai-main)]">{item.pinyin}</p>
+                  <p className="text-[18px] font-bold mt-2">{item.hanViet}</p>
+                  <p className="text-base font-extrabold text-action-primary mt-1">{item.pinyin}</p>
                 </>
               )}
               <p className="text-base mt-1 text-center">{item.meaning}</p>
@@ -245,26 +246,20 @@ export default function FlashcardMode() {
 
       {/* 4 nút nav NGOÀI card, hàng riêng dưới card (SPEC-14 §4) */}
       <div className="flex flex-wrap items-center justify-center gap-3 mt-6 no-print">
-        <button type="button" className="btn-ghost px-8 py-2.5 text-sm font-extrabold" onClick={prev}>
+        <Button type="button" variant="ghost" onClick={prev}>
           ‹ Trước
-        </button>
-        <button
-          type="button"
-          className="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#c03922] hover:opacity-90 transition-opacity"
-          onClick={markUnknownCur}
-        >
-          ✕ Chưa thuộc
-        </button>
-        <button
-          type="button"
-          className="px-8 py-2.5 text-sm font-extrabold rounded-lg text-white bg-[#2e7d32] hover:opacity-90 transition-opacity"
-          onClick={markKnownCur}
-        >
-          ✓ Đã thuộc
-        </button>
-        <button type="button" className="btn-ghost px-8 py-2.5 text-sm font-extrabold" onClick={next}>
+        </Button>
+        <Button type="button" variant="danger" onClick={markUnknownCur}>
+          <X size={16} strokeWidth={1.5} aria-hidden="true" />
+          Chưa thuộc
+        </Button>
+        <Button type="button" variant="primary" onClick={markKnownCur}>
+          <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" />
+          Đã thuộc
+        </Button>
+        <Button type="button" variant="ghost" onClick={next}>
           Sau ›
-        </button>
+        </Button>
       </div>
     </div>
   );

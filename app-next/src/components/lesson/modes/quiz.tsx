@@ -6,11 +6,16 @@
    sai → viền đỏ + rung, "Không biết" → sang câu sau không cộng XP, gợi ý phát âm. */
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { useLesson, type LessonItem } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { shuffle } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
 import { useToast } from "@/components/shell/toast-provider";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { CircleCheck, CircleX, PartyPopper, RotateCcw, Volume2 } from "@/components/ui/icon";
 
 const QMODES = [
   { id: "reading", label: "Cách đọc" },
@@ -28,6 +33,27 @@ const NEXT_DELAY_MS = 800;
 export function pickDistractors(all: LessonItem[], correct: LessonItem, n: number = 3): LessonItem[] {
   const seen = new Set<string>([correct.pinyin]);
   return shuffle(all).filter((w) => !seen.has(w.pinyin) && seen.add(w.pinyin)).slice(0, n);
+}
+
+/* Answer choice ≥52px (min-h-13) — state correct/error phân biệt bằng icon + label,
+   không chỉ màu (Hanzi design system, mã hóa kép). */
+function answerState(showCorrect: boolean, showWrong: boolean): { cls: string; icon: ReactNode | null } {
+  if (showCorrect) {
+    return {
+      cls: "border-feedback-success bg-surface-elevated text-feedback-success",
+      icon: <CircleCheck size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  if (showWrong) {
+    return {
+      cls: "border-feedback-error bg-surface-elevated text-feedback-error animate-[shake_0.4s]",
+      icon: <CircleX size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  return {
+    cls: "border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary",
+    icon: null,
+  };
 }
 
 export default function QuizMode() {
@@ -75,7 +101,7 @@ export default function QuizMode() {
     if (p === item.pinyin) {
       setScore((s) => s + 1);
       progressStore.addXp(1);
-      toast("⚡ +1 XP");
+      toast("+1 XP");
     }
     timerRef.current = setTimeout(advance, NEXT_DELAY_MS);
   };
@@ -100,15 +126,19 @@ export default function QuizMode() {
 
   if (finished) {
     return (
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <p className="text-2xl font-extrabold">🎉 Hoàn thành!</p>
-        <p className="mt-2 text-lg">
-          Bạn trả lời đúng <span className="font-extrabold text-[var(--nhai-main)]">{score} / {total}</span> câu.
+      <Card className="p-6 text-center bg-surface-paper">
+        <p className="text-2xl font-extrabold flex items-center justify-center gap-2">
+          <PartyPopper size={28} strokeWidth={1.5} aria-hidden="true" />
+          Hoàn thành!
         </p>
-        <button type="button" className="btn-main py-3 px-4 mt-4 text-base" onClick={restart}>
-          🔄 Học lại từ đầu
-        </button>
-      </div>
+        <p className="mt-2 text-lg">
+          Bạn trả lời đúng <span className="font-extrabold text-action-primary">{score} / {total}</span> câu.
+        </p>
+        <Button type="button" className="mt-4" onClick={restart}>
+          <RotateCcw size={18} strokeWidth={1.5} aria-hidden="true" />
+          Học lại từ đầu
+        </Button>
+      </Card>
     );
   }
 
@@ -118,43 +148,44 @@ export default function QuizMode() {
     <div>
       {/* toggle hiển thị đề bài + điểm (port header của clone/js/lesson-quiz.js) */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className="text-xs font-bold text-[var(--nhai-muted)]">Cài đặt hiển thị đề bài:</span>
+        <span className="text-xs font-bold text-text-secondary">Cài đặt hiển thị đề bài:</span>
         {QMODES.map((m) => (
-          <button
+          <Chip
             key={m.id}
-            type="button"
             data-qmode={m.id}
-            className={`pill text-xs py-1 ${qMode === m.id ? "pill-active" : ""}`}
+            className="text-xs"
+            selected={qMode === m.id}
             onClick={() => setQMode(m.id)}
           >
             {m.label}
-          </button>
+          </Chip>
         ))}
-        <span className="ml-auto text-sm font-extrabold text-green-700">Đúng: {score}</span>
-        <span className="pill text-xs">{index + 1} / {total}</span>
+        <span className="ml-auto text-sm font-extrabold text-feedback-success">Đúng: {score}</span>
+        <Chip className="text-xs">{index + 1} / {total}</Chip>
       </div>
 
       {/* câu hỏi — ẩn phần không được chọn theo qMode (giữ hành vi clone) */}
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <span className="pill text-xs py-0.5">Chọn cách đọc đúng</span>
+      <Card className="p-6 text-center bg-surface-paper">
+        <Chip className="text-xs">Chọn cách đọc đúng</Chip>
         <div className="mt-3">
           {qMode !== "meaning" && (
             <>
-              <p className="zh text-5xl font-extrabold">{item.hanzi}</p>
+              <p className="zh text-[48px] font-extrabold leading-tight">{item.hanzi}</p>
               {qMode === "vocab" && (
-                <p className="text-lg font-extrabold text-[var(--nhai-main)] mt-1">{item.hanViet}</p>
+                <p className="text-[18px] font-extrabold text-action-primary mt-1">{item.hanViet}</p>
               )}
             </>
           )}
           {qMode === "meaning" && <p className="text-2xl font-extrabold mt-2">{item.meaning}</p>}
         </div>
-      </div>
+      </Card>
 
       {/* 4 đáp án pinyin */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4" data-answers>
         {opts.map((o) => {
           const showCorrect = locked && o.pinyin === item.pinyin;
           const showWrong = locked && picked === o.pinyin && !isCorrectPicked;
+          const st = answerState(showCorrect, showWrong);
           return (
             <button
               key={o.index}
@@ -163,14 +194,11 @@ export default function QuizMode() {
               disabled={locked}
               onClick={() => answer(o.pinyin)}
               className={
-                "py-3 px-2 text-lg font-bold border-2 rounded-lg transition-colors " +
-                (showCorrect
-                  ? "border-green-600 bg-green-50 text-green-700"
-                  : showWrong
-                    ? "border-red-600 bg-red-50 text-red-600 animate-[shake_0.4s]"
-                    : "btn-ghost")
+                "inline-flex items-center justify-center gap-2 min-h-13 px-2 text-lg font-bold border rounded-control transition-colors " +
+                st.cls
               }
             >
+              {st.icon}
               {o.pinyin}
             </button>
           );
@@ -178,13 +206,14 @@ export default function QuizMode() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mt-4">
-        <button type="button" className="btn-ghost px-3 py-2 text-sm" disabled={locked} onClick={skip}>
+        <Button type="button" variant="ghost" size="sm" disabled={locked} onClick={skip}>
           Không biết
-        </button>
-        <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => speak(item.hanzi)}>
-          🔊 Nghe phát âm gợi ý
-        </button>
-        <span className="text-xs text-[var(--nhai-muted)]">Bí quá thì nghe</span>
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => speak(item.hanzi)}>
+          <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />
+          Nghe phát âm gợi ý
+        </Button>
+        <span className="text-xs text-text-secondary">Bí quá thì nghe</span>
       </div>
     </div>
   );

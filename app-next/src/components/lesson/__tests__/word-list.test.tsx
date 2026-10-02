@@ -14,24 +14,24 @@ beforeEach(() => localStorage.clear());
 afterEach(cleanup); // vitest không bật globals -> RTL auto-cleanup không chạy
 
 describe("WordList + SRS (C9)", () => {
-  it("⭐ thêm vào SRS với item_key chuẩn, vàng persist, bấm lại bỏ", () => {
+  it("star thêm vào SRS với item_key chuẩn, amber persist, bấm lại bỏ", () => {
     render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
-    const star = screen.getByTitle("Thêm vào bộ thẻ ôn tập");
+    const star = screen.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" });
     act(() => star.click());
     expect(progressStore.getSrs("hsk1.lesson-1.0")?.status).toBe("new"); // item_key <book>.<page>.<index>
-    expect(star.className).toContain("text-yellow");
+    expect(star.querySelector(".text-learning-streak")).not.toBeNull(); // tone streak qua icon Flame/Star
     act(() => star.click());
     expect(progressStore.getSrs("hsk1.lesson-1.0")).toBeNull();
   });
-  it("toast 'Đã thêm vào ôn tập' khi bấm ⭐", () => {
+  it("toast 'Đã thêm vào ôn tập' khi bấm star", () => {
     render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
-    act(() => screen.getByTitle("Thêm vào bộ thẻ ôn tập").click());
+    act(() => screen.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" }).click());
     expect(screen.getByText("Đã thêm vào ôn tập")).toBeInTheDocument();
   });
-  it("🔊 phát âm từ", () => {
+  it("phát âm từ (nút loa)", () => {
     vi.stubGlobal("speechSynthesis", { speak: vi.fn(), cancel: vi.fn(), getVoices: vi.fn(() => []) });
     render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
-    act(() => screen.getByTitle("Phát âm từ").click());
+    act(() => screen.getByRole("button", { name: "Phát âm từ" }).click());
     expect(window.speechSynthesis.speak).toHaveBeenCalled();
   });
 });

@@ -4,7 +4,7 @@
    3 pill chọn nhạc; bấm "Bắt đầu" (user gesture) mới tạo AudioContext +
    oscillator loop (gain 0.03, đổi tần số theo beat bằng setInterval 220ms).
    Cleanup: useEffect return clearInterval + ctx.close() (như addCleanup của clone).
-   Gõ đúng pinyin qua checkTyped (Task 14) → 🕺💃 nhảy (animate-bounce 600ms)
+   Gõ đúng pinyin qua checkTyped (Task 14) → nhân vật nhảy (animate-bounce 600ms)
    + addXp(1) + sang từ kế; sai → đứng im viền đỏ. */
 
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +12,9 @@ import { useLesson } from "../lesson-provider";
 import { shuffle } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
 import { checkTyped } from "./typing";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { CircleCheck, CircleX, Music, Music2, PartyPopper } from "@/components/ui/icon";
 
 const MUSIC = [
   { id: "langla", label: "Làng Lá", notes: [523.25, 587.33, 659.25, 587.33, 523.25, 440, 493.88, 523.25] },
@@ -141,7 +144,7 @@ export default function DanceMode() {
   const check = () => {
     if (!playing || !item) return;
     if (checkTyped(typed, item.pinyin)) {
-      setFeedback({ ok: true, text: "✅ Đúng! Nhảy lên nào!" });
+      setFeedback({ ok: true, text: "Đúng! Nhảy lên nào!" });
       setJumping(true);
       const ctx = ensureAudio();
       if (ctx) beep(ctx, 659.25, ctx.currentTime, 0.12);
@@ -165,48 +168,60 @@ export default function DanceMode() {
     <div className="max-w-md mx-auto text-center">
       {!playing && !finished && (
         <div data-intro>
-          <h2 className="text-3xl font-extrabold">🕺 Hanzi Dance</h2>
+          <h2 className="text-3xl font-extrabold flex items-center justify-center gap-2">
+            <Music size={24} strokeWidth={1.5} aria-hidden="true" className="text-action-primary" />
+            Hanzi Dance
+          </h2>
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {MUSIC.map((m) => (
-              <button
+              <Chip
                 key={m.id}
-                type="button"
                 data-music={m.id}
-                className={`pill text-sm ${music === m.id ? "pill-active" : ""}`}
+                selected={music === m.id}
                 onClick={() => pickMusic(m.id)}
               >
-                <span aria-hidden="true">🎵 </span>
+                <Music2 size={16} strokeWidth={1.5} aria-hidden="true" />
                 {m.label}
-              </button>
+              </Chip>
             ))}
           </div>
-          <p className="text-sm text-[var(--nhai-muted)] mt-4">
+          <p className="text-sm text-text-secondary mt-4">
             Gõ đúng cách đọc của từ → nhân vật của bạn nhảy; sai thì đứng im. Lượt này có {total} từ trong bài.
           </p>
-          <p className="text-5xl mt-4">
-            <span className="bob">🕺</span> <span className="bob">💃</span>
+          <p className="text-5xl mt-4" aria-hidden="true">
+            <span className={jumping ? "animate-bounce inline-block" : "inline-block"}>
+              <Music2 size={48} strokeWidth={1.5} className="text-action-primary" />
+            </span>{" "}
+            <span className="inline-block">
+              <Music2 size={48} strokeWidth={1.5} className="text-feature-ai" />
+            </span>
           </p>
-          <button type="button" data-start className="btn-main px-8 py-3 mt-5 text-lg" onClick={start}>
+          <Button type="button" data-start className="mt-5 text-lg" onClick={start}>
             Bắt đầu
-          </button>
+          </Button>
         </div>
       )}
 
       {playing && (
         <div data-play>
-          <p className="pill text-xs py-0.5 inline-block">{pos + 1} / {order.length}</p>
-          <p data-hanzi className="zh text-6xl font-extrabold mt-2">{item.hanzi}</p>
-          <p className="text-sm text-[var(--nhai-muted)] mt-1">{item.meaning} — {item.pos}</p>
-          <div className="text-6xl mt-4" data-dancers>
-            <span className={jumping ? "animate-bounce inline-block" : "inline-block"}>🕺 💃</span>
+          <Chip className="text-xs">{pos + 1} / {order.length}</Chip>
+          <p data-hanzi className="zh text-[64px] font-extrabold leading-tight mt-2">{item.hanzi}</p>
+          <p className="text-sm text-text-secondary mt-1">{item.meaning} — {item.pos}</p>
+          <div className="text-6xl mt-4" data-dancers aria-hidden="true">
+            <span className={jumping ? "animate-bounce inline-block" : "inline-block"}>
+              <Music2 size={48} strokeWidth={1.5} className="text-action-primary" />
+            </span>{" "}
+            <span className="inline-block">
+              <Music2 size={48} strokeWidth={1.5} className="text-feature-ai" />
+            </span>
           </div>
           <div className="flex gap-2 mt-5">
             <input
               type="text"
               data-input
               className={
-                "flex-1 border-2 rounded-lg px-3 py-2.5 bg-[var(--nhai-bg)] font-mono " +
-                (wrong ? "border-red-600 shake" : "border-[var(--nhai-border)]")
+                "flex-1 min-h-11 rounded-control border px-3 py-2 bg-surface-elevated text-text-primary font-mono focus:outline-none focus:ring-3 ring-action-focus ring-offset-2 " +
+                (wrong ? "border-feedback-error shake" : "border-border-default")
               }
               placeholder="Gõ pinyin (ni3 → nǐ)"
               value={typed}
@@ -218,11 +233,19 @@ export default function DanceMode() {
                 }
               }}
             />
-            <button type="button" data-skip className="btn-ghost px-3 py-2.5 text-sm" onClick={skip}>
+            <Button type="button" data-skip variant="ghost" size="sm" onClick={skip}>
               Bỏ qua
-            </button>
+            </Button>
           </div>
-          <p data-fb className={"text-sm font-bold mt-2 h-5 " + (feedback?.ok ? "text-green-700" : feedback ? "text-red-600" : "")}>
+          <p
+            data-fb
+            className={
+              "inline-flex items-center gap-1 text-sm font-bold mt-2 h-5 " +
+              (feedback?.ok ? "text-feedback-success" : feedback ? "text-feedback-error" : "")
+            }
+          >
+            {feedback?.ok && <CircleCheck size={16} strokeWidth={1.5} aria-hidden="true" />}
+            {feedback && !feedback.ok && <CircleX size={16} strokeWidth={1.5} aria-hidden="true" />}
             {feedback?.text ?? ""}
           </p>
         </div>
@@ -230,14 +253,16 @@ export default function DanceMode() {
 
       {finished && (
         <div data-done>
-          <p className="text-5xl mb-3">🕺💃🎉</p>
+          <p className="mb-3" aria-hidden="true">
+            <PartyPopper size={40} strokeWidth={1.5} className="text-action-primary" />
+          </p>
           <p className="text-xl font-extrabold">Hết lượt — Xuất sắc!</p>
-          <p className="text-sm text-[var(--nhai-muted)] mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             Bạn đã nhảy qua hết {total} từ của bài.
           </p>
-          <button type="button" data-again className="btn-main px-6 py-2.5 mt-4" onClick={start}>
+          <Button type="button" data-again className="mt-4" onClick={start}>
             Nhảy tiếp
-          </button>
+          </Button>
         </div>
       )}
     </div>

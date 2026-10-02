@@ -7,6 +7,7 @@
    "Đăng nhập" mở LoginModal (không điều hướng); Top-10 là dữ liệu cứng theo SPEC-02 §7 (SP1). */
 
 import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { useLesson, type LessonItem } from "../lesson-provider";
 import { shuffle } from "@/lib/pinyin-utils";
@@ -14,6 +15,9 @@ import { progressStore } from "@/lib/store/progress-store";
 import { useLoginModal } from "@/components/shell/login-modal";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import { checkTyped } from "./typing";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { CircleCheck, CircleX, Medal, PartyPopper, Swords, Timer, Trophy, Zap } from "@/components/ui/icon";
 
 export type BattleKind = "han2vi" | "vi2han" | "han2py" | "cloze" | "typing";
 
@@ -29,9 +33,9 @@ const NEXT_DELAY_MS = 300;
 
 /* Top-10 cứng theo SPEC-02 §7 (dữ liệu SP1 — không tỉnh đầy đủ tên thật) */
 const TOP10 = [
-  { rank: "🥇", name: "Thùy Trâm", score: "13/13", time: "0:25.9" },
-  { rank: "🥈", name: "Vân Anh Ngô", score: "13/13", time: "0:26.1" },
-  { rank: "🥉", name: "vân anh ngô", score: "13/13", time: "0:27.3" },
+  { rank: "#1", name: "Thùy Trâm", score: "13/13", time: "0:25.9" },
+  { rank: "#2", name: "Vân Anh Ngô", score: "13/13", time: "0:26.1" },
+  { rank: "#3", name: "vân anh ngô", score: "13/13", time: "0:27.3" },
   { rank: "#4", name: "Nha", score: "13/13", time: "0:27.6" },
   { rank: "#5", name: "Linh Trần", score: "13/13", time: "0:28.1" },
   { rank: "#6", name: "Diễm Kiều", score: "13/13", time: "0:29.3" },
@@ -40,6 +44,12 @@ const TOP10 = [
   { rank: "#9", name: "Thang Nguyen", score: "13/13", time: "0:34.3" },
   { rank: "#10", name: "Ngọc Lê", score: "13/13", time: "0:34.4" },
 ];
+
+function rankIcon(rank: string): ReactNode {
+  if (rank === "#1") return <Trophy size={16} strokeWidth={1.5} aria-label="Hạng nhất" className="text-learning-streak" />;
+  if (rank === "#2" || rank === "#3") return <Medal size={16} strokeWidth={1.5} aria-hidden="true" className="text-text-secondary" />;
+  return null;
+}
 
 function blanked(w: LessonItem): string {
   const zh = w.example.zh;
@@ -106,6 +116,26 @@ const KIND_LABEL: Record<BattleKind, string> = {
   typing: "Gõ pinyin",
 };
 
+/* Answer choice ≥52px (min-h-13) — state correct/error phân biệt bằng icon + label. */
+function answerState(showCorrect: boolean, showWrong: boolean): { cls: string; icon: ReactNode | null } {
+  if (showCorrect) {
+    return {
+      cls: "border-feedback-success bg-surface-elevated text-feedback-success",
+      icon: <CircleCheck size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  if (showWrong) {
+    return {
+      cls: "border-feedback-error bg-surface-elevated text-feedback-error animate-[shake_0.4s]",
+      icon: <CircleX size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  return {
+    cls: "border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary",
+    icon: null,
+  };
+}
+
 export default function BattleMode() {
   const { items, book, page } = useLesson();
   const toast = useToastSafe();
@@ -162,7 +192,7 @@ export default function BattleMode() {
     clearTimers();
     const timeMs = Date.now() - startRef.current;
     const isRecord = progressStore.saveBattleBest(ctx, finalCorrect, timeMs);
-    if (isRecord) toast("Kỷ lục mới của bài này! 🏆");
+    if (isRecord) toast("Kỷ lục mới của bài này!");
     setResult({ correct: finalCorrect, timeMs, isRecord });
     setPhase("done");
   };
@@ -203,49 +233,59 @@ export default function BattleMode() {
     const best = progressStore.getBattleBest(ctx);
     return (
       <div className="max-w-xl mx-auto">
-        <h2 className="text-2xl font-extrabold">⚔️ Đấu trí</h2>
-        <p className="text-sm text-[var(--nhai-muted)] mt-2">
+        <h2 className="text-2xl font-extrabold flex items-center gap-2">
+          <Swords size={24} strokeWidth={1.5} aria-hidden="true" />
+          Đấu trí
+        </h2>
+        <p className="text-sm text-text-secondary mt-2">
           Trả lời 13 câu — trộn ngẫu nhiên 5 dạng: chữ Hán → nghĩa, nghĩa → chữ Hán, chữ Hán → pinyin,
           điền từ vào câu và gõ pinyin. Ai đúng nhiều và nhanh nhất sẽ đứng đầu bảng xếp hạng của bài này.
           Thi lại bao nhiêu lần cũng được — bảng chỉ tính lượt tốt nhất của bạn.
         </p>
         <div className="flex flex-wrap items-center gap-2 mt-3">
-          <span className="text-sm font-semibold text-[var(--nhai-muted)]">
+          <span className="text-sm font-semibold text-text-secondary">
             Đăng nhập để lưu kết quả lên bảng xếp hạng.
           </span>
-          <button type="button" data-login className="btn-main px-3 py-1.5 text-sm" onClick={openLogin}>
+          <Button type="button" data-login size="sm" onClick={openLogin}>
             Đăng nhập
-          </button>
+          </Button>
         </div>
         {best && (
-          <p className="text-sm font-bold mt-3">
-            🏆 Kỷ lục của bạn: <span className="text-[var(--nhai-main)]">{best.correct}/{TOTAL_QUESTIONS}</span> —{" "}
+          <p className="text-sm font-bold mt-3 flex items-center gap-1.5">
+            <Trophy size={16} strokeWidth={1.5} aria-hidden="true" className="text-learning-streak" />
+            Kỷ lục của bạn: <span className="text-action-primary">{best.correct}/{TOTAL_QUESTIONS}</span> —{" "}
             {fmtTime(best.timeMs)}
           </p>
         )}
-        <button type="button" data-start className="btn-main px-6 py-3 mt-4 text-base" onClick={beginBattle}>
+        <Button type="button" data-start className="mt-4" onClick={beginBattle}>
           Bắt đầu thi
-        </button>
+        </Button>
 
-        <div className="card p-4 mt-6">
-          <h3 className="font-extrabold mb-2">🏆 Top 10 bài này</h3>
+        <Card className="p-4 mt-6">
+          <h3 className="font-extrabold mb-2 flex items-center gap-1.5">
+            <Trophy size={16} strokeWidth={1.5} aria-hidden="true" className="text-learning-streak" />
+            Top 10 bài này
+          </h3>
           <ol className="text-sm">
             {TOP10.map((r) => (
-              <li key={r.rank} className="flex items-center gap-2 py-1 border-b border-[var(--nhai-border)] last:border-0">
-                <span className="w-8 font-bold">{r.rank}</span>
+              <li key={r.rank} className="flex items-center gap-2 py-1 border-b border-border-default last:border-0">
+                <span className="w-8 font-bold flex items-center gap-1">
+                  {rankIcon(r.rank)}
+                  {r.rank}
+                </span>
                 <span className="flex-1 font-semibold">{r.name}</span>
-                <span className="text-[var(--nhai-muted)]">{r.score}</span>
-                <span className="text-[var(--nhai-muted)] w-16 text-right">{r.time}</span>
+                <span className="text-text-secondary">{r.score}</span>
+                <span className="text-text-secondary w-16 text-right">{r.time}</span>
               </li>
             ))}
           </ol>
           <Link
             href="/leaderboard?tab=battle"
-            className="inline-block text-sm font-bold text-[var(--nhai-accent)] mt-3"
+            className="inline-block text-sm font-bold text-action-primary mt-3"
           >
             Xem BXH Đấu trí tháng này →
           </Link>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -253,41 +293,49 @@ export default function BattleMode() {
   /* ---------- màn kết quả ---------- */
   if (phase === "done" && result) {
     return (
-      <div className="max-w-md mx-auto text-center card shadow-neo p-8">
-        <p className="text-5xl">{result.correct >= 10 ? "🏆" : result.correct >= 7 ? "🎉" : "💪"}</p>
-        <h2 className="text-2xl font-extrabold mt-2">Kết quả Đấu trí</h2>
-        <p className="text-lg mt-3">
-          Đúng <span className="font-extrabold text-[var(--nhai-main)] text-2xl">{result.correct} / {questions.length}</span> câu
-        </p>
-        <p className="text-lg mt-1">Thời gian: <span className="font-extrabold">{fmtTime(result.timeMs)}</span></p>
-        <p className="text-sm font-bold text-[var(--nhai-muted)] mt-3">
-          Kỷ lục của bạn: {result.correct}/{questions.length} — {fmtTime(result.timeMs)}
-          {result.isRecord ? " (mới!)" : ""}
-        </p>
-        <div className="flex flex-wrap justify-center items-center gap-2 mt-5">
-          <button type="button" data-again className="btn-main px-5 py-2.5" onClick={beginBattle}>
-            Thi lại
-          </button>
-          <button
-            type="button"
-            data-back
-            className="btn-ghost px-4 py-2.5"
-            onClick={() => {
-              clearTimers();
-              setPhase("intro");
-            }}
-          >
-            Về màn chính
-          </button>
-        </div>
-        <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
-          <span className="text-sm font-semibold text-[var(--nhai-muted)]">
-            Đăng nhập để lưu kết quả lên bảng xếp hạng.
-          </span>
-          <button type="button" data-login-done className="btn-main px-3 py-1.5 text-sm" onClick={openLogin}>
-            Đăng nhập
-          </button>
-        </div>
+      <div className="max-w-md mx-auto text-center">
+        <Card className="p-8" shadow="xs">
+          {result.correct >= 10 ? (
+            <Trophy size={40} strokeWidth={1.5} aria-hidden="true" className="text-learning-streak mx-auto" />
+          ) : result.correct >= 7 ? (
+            <PartyPopper size={40} strokeWidth={1.5} aria-hidden="true" className="text-action-primary mx-auto" />
+          ) : (
+            <Zap size={40} strokeWidth={1.5} aria-hidden="true" className="text-action-primary mx-auto" />
+          )}
+          <h2 className="text-2xl font-extrabold mt-2">Kết quả Đấu trí</h2>
+          <p className="text-lg mt-3">
+            Đúng <span className="font-extrabold text-action-primary text-2xl">{result.correct} / {questions.length}</span> câu
+          </p>
+          <p className="text-lg mt-1">Thời gian: <span className="font-extrabold">{fmtTime(result.timeMs)}</span></p>
+          <p className="text-sm font-bold text-text-secondary mt-3">
+            Kỷ lục của bạn: {result.correct}/{questions.length} — {fmtTime(result.timeMs)}
+            {result.isRecord ? " (mới!)" : ""}
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-5">
+            <Button type="button" data-again onClick={beginBattle}>
+              Thi lại
+            </Button>
+            <Button
+              type="button"
+              data-back
+              variant="ghost"
+              onClick={() => {
+                clearTimers();
+                setPhase("intro");
+              }}
+            >
+              Về màn chính
+            </Button>
+          </div>
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
+            <span className="text-sm font-semibold text-text-secondary">
+              Đăng nhập để lưu kết quả lên bảng xếp hạng.
+            </span>
+            <Button type="button" data-login-done size="sm" onClick={openLogin}>
+              Đăng nhập
+            </Button>
+          </div>
+        </Card>
       </div>
     );
   }
@@ -298,30 +346,33 @@ export default function BattleMode() {
   return (
     <div className="max-w-xl mx-auto">
       <div className="flex items-center justify-between mb-3">
-        <span data-qnum className="text-sm font-extrabold text-[var(--nhai-muted)]">
+        <span data-qnum className="text-sm font-extrabold text-text-secondary">
           Câu {pos + 1} / {questions.length}
         </span>
-        <span data-timer className="text-lg font-extrabold">⏱ {fmtTime(elapsedSec * 1000)}</span>
+        <span data-timer className="text-lg font-extrabold inline-flex items-center gap-1.5">
+          <Timer size={18} strokeWidth={1.5} aria-hidden="true" />
+          {fmtTime(elapsedSec * 1000)}
+        </span>
       </div>
 
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <p className="text-xs font-bold text-[var(--nhai-muted)] uppercase mb-2">{KIND_LABEL[q.kind]}</p>
-        {q.kind === "han2vi" && <p className="zh text-5xl font-extrabold">{item.hanzi}</p>}
+      <Card className="p-6 text-center bg-surface-paper">
+        <p className="text-xs font-bold text-text-secondary uppercase mb-2">{KIND_LABEL[q.kind]}</p>
+        {q.kind === "han2vi" && <p className="zh text-[48px] font-extrabold leading-tight">{item.hanzi}</p>}
         {q.kind === "vi2han" && <p className="text-2xl font-extrabold mt-2">{item.meaning}</p>}
-        {q.kind === "han2py" && <p className="zh text-5xl font-extrabold">{item.hanzi}</p>}
+        {q.kind === "han2py" && <p className="zh text-[48px] font-extrabold leading-tight">{item.hanzi}</p>}
         {q.kind === "cloze" && (
           <>
             <p className="zh text-2xl font-extrabold leading-relaxed">{blanked(item)}</p>
-            <p className="text-sm text-[var(--nhai-muted)] mt-2 italic">→ {item.example.vi}</p>
+            <p className="text-sm text-text-secondary mt-2 italic">→ {item.example.vi}</p>
           </>
         )}
         {q.kind === "typing" && (
           <>
-            <p className="zh text-5xl font-extrabold">{item.hanzi}</p>
+            <p className="zh text-[48px] font-extrabold leading-tight">{item.hanzi}</p>
             <p className="text-base font-semibold mt-2">{item.meaning}</p>
           </>
         )}
-      </div>
+      </Card>
 
       {q.kind === "typing" ? (
         <div className="mt-4">
@@ -330,8 +381,8 @@ export default function BattleMode() {
               type="text"
               data-binput
               className={
-                "flex-1 border-2 rounded-lg px-3 py-2.5 bg-[var(--nhai-bg)] font-mono " +
-                (locked && picked !== q.answer ? "border-red-600 shake" : "border-[var(--nhai-border)]")
+                "flex-1 min-h-11 rounded-control border px-3 py-2 bg-surface-elevated text-text-primary font-mono focus:outline-none focus:ring-3 ring-action-focus ring-offset-2 " +
+                (locked && picked !== q.answer ? "border-feedback-error shake" : "border-border-default")
               }
               placeholder="ni3 → nǐ"
               value={typed}
@@ -344,13 +395,14 @@ export default function BattleMode() {
                 }
               }}
             />
-            <button type="button" data-bcheck className="btn-main px-4 py-2.5" disabled={locked} onClick={submitTyped}>
+            <Button type="button" data-bcheck disabled={locked} onClick={submitTyped}>
               Kiểm tra
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               data-bskip
-              className="btn-ghost px-3 py-2.5 text-sm"
+              variant="ghost"
+              size="sm"
               disabled={locked}
               onClick={() => {
                 setLocked(true);
@@ -359,7 +411,7 @@ export default function BattleMode() {
               }}
             >
               Không biết
-            </button>
+            </Button>
           </div>
           {locked && <p className="text-sm font-bold mt-2">Đáp án: {item.pinyin}</p>}
         </div>
@@ -368,22 +420,20 @@ export default function BattleMode() {
           {q.options.map((opt) => {
             const isCorrect = opt === q.answer;
             const chosen = picked === opt;
+            const st = answerState(locked && isCorrect, locked && chosen && !isCorrect);
             return (
               <button
                 key={opt}
                 type="button"
                 data-answer={isCorrect ? "true" : undefined}
                 className={
-                  "py-3 px-2 font-bold rounded-lg border-2 transition-colors " +
-                  (locked && isCorrect
-                    ? "border-green-600 bg-green-50 text-green-700"
-                    : chosen
-                      ? "border-red-600 bg-red-50 text-red-600 shake"
-                      : "btn-ghost")
+                  "inline-flex items-center justify-center gap-2 min-h-13 px-2 font-bold border rounded-control transition-colors " +
+                  st.cls
                 }
                 disabled={locked}
                 onClick={() => pickOption(opt)}
               >
+                {st.icon}
                 <span className="zh text-2xl">{opt}</span>
               </button>
             );

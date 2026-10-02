@@ -4,15 +4,20 @@
    Đề = clozeZh(example.zh, item.hanzi): chỗ trống render ô gạch dưới thay blank,
    bản dịch example.vi hiện sẵn, toggle "Nghĩa" ẩn/hiện meaning,
    4 đáp án chữ Hán = từ đúng + 3 hanzi khác trong cùng bài (shuffle),
-   "Câu này bó tay" → setIndex(index+1) không XP, "🔊 Nghe câu ví dụ gợi ý" → speak(example.zh) (câu GỐC),
+   "Câu này bó tay" → setIndex(index+1) không XP, "Nghe câu ví dụ gợi ý" → speak(example.zh) (câu GỐC),
    chấm như C3 (xanh/đỏ/rung, tự sang câu sau 800ms, đúng +1 XP). */
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { useLesson } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { shuffle, pinyinLine } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
 import { useToastSafe } from "@/components/shell/toast-provider";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Chip } from "@/components/ui/chip";
+import { CircleCheck, CircleX, PartyPopper, RotateCcw, Volume2 } from "@/components/ui/icon";
 
 const NEXT_DELAY_MS = 800;
 
@@ -25,6 +30,26 @@ export function clozeZh(zh: string, hanzi: string): { before: string; blank: str
   }
   const chars = Array.from(zh);
   return { before: "", blank: chars.slice(0, 2).join(""), after: chars.slice(2).join("") };
+}
+
+/* Answer choice ≥52px (min-h-13) — state correct/error phân biệt bằng icon + label. */
+function answerState(showCorrect: boolean, showWrong: boolean): { cls: string; icon: ReactNode | null } {
+  if (showCorrect) {
+    return {
+      cls: "border-feedback-success bg-surface-elevated text-feedback-success",
+      icon: <CircleCheck size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  if (showWrong) {
+    return {
+      cls: "border-feedback-error bg-surface-elevated text-feedback-error animate-[shake_0.4s]",
+      icon: <CircleX size={20} strokeWidth={1.5} aria-hidden="true" />,
+    };
+  }
+  return {
+    cls: "border-border-default bg-surface-elevated text-text-primary hover:border-action-primary hover:text-action-primary",
+    icon: null,
+  };
 }
 
 export default function ReadingMode() {
@@ -78,7 +103,7 @@ export default function ReadingMode() {
     if (h === item.hanzi) {
       setScore((s) => s + 1);
       progressStore.addXp(1);
-      toast("⚡ +1 XP");
+      toast("+1 XP");
     }
     timerRef.current = setTimeout(advance, NEXT_DELAY_MS);
   };
@@ -105,15 +130,19 @@ export default function ReadingMode() {
 
   if (finished) {
     return (
-      <div className="card p-6 text-center bg-[var(--nhai-bg)]">
-        <p className="text-2xl font-extrabold">🎉 Hoàn thành!</p>
-        <p className="mt-2 text-lg">
-          Bạn điền đúng <span className="font-extrabold text-[var(--nhai-main)]">{score} / {total}</span> câu.
+      <Card className="p-6 text-center bg-surface-paper">
+        <p className="text-2xl font-extrabold flex items-center justify-center gap-2">
+          <PartyPopper size={28} strokeWidth={1.5} aria-hidden="true" />
+          Hoàn thành!
         </p>
-        <button type="button" className="btn-main px-4 py-2.5 mt-4" onClick={restart}>
-          🔄 Luyện lại
-        </button>
-      </div>
+        <p className="mt-2 text-lg">
+          Bạn điền đúng <span className="font-extrabold text-action-primary">{score} / {total}</span> câu.
+        </p>
+        <Button type="button" className="mt-4" onClick={restart}>
+          <RotateCcw size={18} strokeWidth={1.5} aria-hidden="true" />
+          Luyện lại
+        </Button>
+      </Card>
     );
   }
 
@@ -124,22 +153,22 @@ export default function ReadingMode() {
     <div>
       {/* toggle Nghĩa + điểm (port header của clone/js/lesson-reading.js) */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <button
-          type="button"
+        <Chip
           data-meaning-toggle
-          className={`pill text-xs py-1 ${showMeaning ? "pill-active" : ""}`}
+          className="text-xs"
+          selected={showMeaning}
           onClick={() => setShowMeaning((v) => !v)}
         >
           Nghĩa
-        </button>
-        <span className="text-xs text-[var(--nhai-muted)]">Bật để xem gợi ý nghĩa của từ</span>
-        <span className="ml-auto text-sm font-extrabold text-green-700">Đúng: {score}</span>
-        <span className="pill text-xs">{index + 1} / {total}</span>
+        </Chip>
+        <span className="text-xs text-text-secondary">Bật để xem gợi ý nghĩa của từ</span>
+        <span className="ml-auto text-sm font-extrabold text-feedback-success">Đúng: {score}</span>
+        <Chip className="text-xs">{index + 1} / {total}</Chip>
       </div>
 
       {/* câu khuyết + bản dịch (port card của clone/js/lesson-reading.js) */}
-      <div className="card p-6 bg-[var(--nhai-bg)]">
-        <p className="text-xs font-bold text-[var(--nhai-muted)] uppercase mb-2">Điền từ vào chỗ trống</p>
+      <Card className="p-6 bg-surface-paper">
+        <p className="text-xs font-bold text-text-secondary uppercase mb-2">Điền từ vào chỗ trống</p>
         <p className="zh text-2xl sm:text-3xl font-extrabold leading-relaxed" data-sentence>
           {before}
           <span
@@ -147,27 +176,28 @@ export default function ReadingMode() {
               "inline-block min-w-16 border-b-4 text-center mx-1 " +
               (locked
                 ? isCorrectPicked
-                  ? "border-green-600 text-green-700"
-                  : "border-red-600 text-red-600"
-                : "border-[var(--nhai-main)]")
+                  ? "border-feedback-success text-feedback-success"
+                  : "border-feedback-error text-feedback-error"
+                : "border-action-primary")
             }
           >
             {locked ? blank : "____"}
           </span>
           {after}
         </p>
-        <p className="text-xs text-[var(--nhai-muted)] mt-1">{pinyinLine(item.example.pinyinPerChar)}</p>
-        <p className="text-sm text-[var(--nhai-muted)] mt-2 italic">→ {item.example.vi}</p>
-        <p className={"text-sm font-bold text-[var(--nhai-main)] mt-1 " + (showMeaning ? "" : "hidden")}>
+        <p className="text-xs text-text-secondary mt-1">{pinyinLine(item.example.pinyinPerChar)}</p>
+        <p className="text-sm text-text-secondary mt-2 italic">→ {item.example.vi}</p>
+        <p className={"text-sm font-bold text-action-primary mt-1 " + (showMeaning ? "" : "hidden")}>
           Từ cần điền: {item.meaning}
         </p>
-      </div>
+      </Card>
 
       {/* 4 đáp án chữ Hán */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4" data-answers>
         {opts.map((h) => {
           const showCorrect = locked && h === item.hanzi;
           const showWrong = locked && picked === h && !isCorrectPicked;
+          const st = answerState(showCorrect, showWrong);
           return (
             <button
               key={h}
@@ -176,14 +206,11 @@ export default function ReadingMode() {
               disabled={locked}
               onClick={() => answer(h)}
               className={
-                "py-3 text-2xl zh font-extrabold border-2 rounded-lg transition-colors " +
-                (showCorrect
-                  ? "border-green-600 bg-green-50 text-green-700"
-                  : showWrong
-                    ? "border-red-600 bg-red-50 text-red-600 shake"
-                    : "btn-ghost")
+                "inline-flex flex-col items-center justify-center gap-1 min-h-13 py-2 text-2xl zh font-extrabold border rounded-control transition-colors " +
+                st.cls
               }
             >
+              {st.icon}
               {h}
             </button>
           );
@@ -191,16 +218,18 @@ export default function ReadingMode() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mt-4">
-        <button type="button" className="btn-ghost px-3 py-2 text-sm" disabled={locked} onClick={giveup}>
+        <Button type="button" variant="ghost" size="sm" disabled={locked} onClick={giveup}>
           Câu này bó tay
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="btn-ghost px-3 py-2 text-sm"
+          variant="ghost"
+          size="sm"
           onClick={() => speak(item.example.zh)}
         >
-          🔊 Nghe câu ví dụ gợi ý
-        </button>
+          <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />
+          Nghe câu ví dụ gợi ý
+        </Button>
       </div>
     </div>
   );

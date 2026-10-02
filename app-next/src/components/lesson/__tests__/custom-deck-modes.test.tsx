@@ -35,9 +35,9 @@ describe("LessonClient hasExample guard (custom deck)", () => {
     // các mode còn lại vẫn hiện
     expect(screen.getByRole("button", { name: /Flashcard/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Trắc nghiệm/ })).toBeInTheDocument();
-    // tab Ví dụ không render item không có example riêng (không có card + nút 🔊 câu ví dụ)
+    // tab Ví dụ không render item không có example riêng (không có card + nút loa câu ví dụ)
     screen.getByRole("button", { name: "Ví dụ" }).click();
-    expect(screen.queryByTitle("Phát âm câu ví dụ")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Phát âm câu ví dụ" })).toBeNull();
   });
   it("deck có example → Reading/Listen vẫn hiện trong sidebar", () => {
     render(<LessonClient items={[withExample]} deckName="Bộ của tôi" />);
