@@ -95,8 +95,10 @@ Mỗi primitive có test riêng trong `src/components/ui/__tests__/`.
 `🏠→Home, 📚→GraduationCap, 📖→BookOpen, 🎧→Headphones, 📝→FileText, ☰→Menu, ⚙️→Settings,
 🔥→Flame (amber token), 🔊→Volume2, ⭐→Star, ✅→CheckCircle2, ❌→XCircle, 🤖→Bot (purple token),
 🔔→Bell`. Map đầy đủ sẽ chốt trong implementation plan khi rà từng file. Emoji trang trí trong
-chuỗi copy → bỏ, không thay bằng icon. `stats/donut.tsx` giữ inline SVG (là chart, không phải icon)
-nhưng đổi sang semantic tokens.
+chuỗi copy → bỏ, không thay bằng icon. Inline SVG: `stats/donut.tsx` giữ nguyên (là chart,
+không phải icon) nhưng đổi sang semantic tokens; mọi inline SVG khác tìm thấy trong quá trình
+migrate phải được phân loại *chart* (giữ, đổi token) hoặc *icon* (thay bằng Lucide) — không được
+bỏ qua.
 
 ## 5. Thứ tự migrate — 5 cụm, mỗi cụm 1 commit trên nhánh `hanzi-design-system`
 
@@ -106,20 +108,28 @@ Sau mỗi cụm: `pnpm typecheck && pnpm lint && pnpm test`.
    Noto Sans SC), cài `lucide-react`, dựng đủ `src/components/ui/` + test. Cũ/mới song song,
    chưa xóa gì.
 2. **Shell + khung app** — `sidebar-nav`, `topbar`, `login-modal`, `settings-modal`,
-   `toast-provider`, `notification-bell`, `ai-widget`, `layout.tsx`, `not-found`. Nhiều emoji nhất
-   → `IconButton` + Lucide, sửa test liên quan cùng commit.
+   `toast-provider`, `notification-bell`, `ai-widget`, `personal/login-gate`, root `layout.tsx`,
+   `(app)/layout.tsx`, `not-found`. Nhiều emoji nhất → `IconButton` + Lucide, sửa test liên quan
+   cùng commit.
 3. **Learning core** — `home/continue-card`, `lesson-client` + `lesson-provider` + `word-list` +
-   7 modes (battle/dance/flashcard/listen/quiz/reading/typing), `review`, `reading`,
-   `roadmap` ×5, `progress`, `stats` ×3. Áp posture: max-width lesson 760 / reading 820 /
-   dashboard 1200; một primary action mỗi màn học; SRS dùng `Chip` Again/Hard/Good/Easy
-   (phím 1–4); streak màu amber riêng, không vermilion.
-4. **Tools & reference** — hanzi (draw-modal/draw-pad/stroke-player/hanzi-detail/search-card),
-   pinyin ×3, radicals ×3, sound-rules ×2, dictionary, notebook, my-vocab/my-grammar, course ×2,
-   shadowing ×8, create-file ×6 (giữ print), certificate-test ×2, static-legal, leaderboard,
-   feedback, delete-account.
-5. **Cleanup** — grep về 0: hex hard-code, class palette thô, `shadow-neo`/`btn-main`/`btn-ghost`/
-   `pill`/`.card`/`grid-cell`/`modal-backdrop` cũ → xóa khỏi `globals.css`. Full
-   `vitest + e2e Playwright`; đối chiếu thị giác với `system/kit.html`.
+   7 modes (battle/dance/flashcard/listen/quiz/reading/typing), `review` (+`review-dashboard`),
+   `reading` (kèm `karaoke.tsx`), `roadmap` ×5, `progress` (+`progress-client`), `stats` ×3.
+   Áp posture: max-width lesson 760 / reading 820 / dashboard 1200; một primary action mỗi màn
+   học; SRS dùng `Chip` Again/Hard/Good/Easy (phím 1–4); streak màu amber riêng, không vermilion.
+4. **Tools & reference** — hanzi (draw-modal/draw-pad/stroke-player/hanzi-detail/hanzi-home/
+   search-card + các `page.tsx` của area này), pinyin (matrix/practice/tone-dialog + pages),
+   radicals ×3, sound-rules (quiz-client/speak-text + page), dictionary, notebook (list + detail),
+   my-vocab/my-grammar, course ×2, shadowing ×8, create-file ×6 (giữ print), certificate-test ×2,
+   static-legal, leaderboard, feedback, delete-account. Mọi `page.tsx` của các area nêu trên
+   thuộc cụm của area đó.
+5. **Cleanup + completeness gate** — (a) grep về 0 trên **toàn bộ** `src/`: hex hard-code,
+   class palette thô (`text-red-500`…), emoji-icon (dải Unicode emoji trong `className`/JSX icon
+   position), `shadow-neo`/`btn-main`/`btn-ghost`/`pill`/`.card`/`grid-cell`/`modal-backdrop` cũ
+   → xóa khỏi `globals.css` khi về 0 tham chiếu. (b) **Đối chiếu danh sách file**: sinh danh sách đầy
+   đủ mọi file `.tsx` (app + components) bằng `find`, mỗi file phải nằm trong một trong ba trạng
+   thái: *đã migrate* / *không có UI* (api, sitemap, robots, types, test helper) / *có chủ đích*
+   (inline SVG chart như `donut.tsx`) — file nào không xếp được vào 3 trạng thái là cụm chưa xong.
+   (c) Full `vitest + e2e Playwright`; đối chiếu thị giác với `system/kit.html`.
 
 ## 6. Chiến lược test
 
