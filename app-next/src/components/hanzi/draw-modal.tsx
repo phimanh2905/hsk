@@ -3,6 +3,10 @@
    Canvas vẽ bằng pointer events (chuột + touch), grid 4×4 mờ, nút Xoá nét cuối / Xoá hết
    (disabled khi chưa vẽ nét nào). "Tra chữ này" nhận diện giả lập → onResult("你") theo SPEC-09. */
 import { useEffect, useRef } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { IconButton } from "@/components/ui/icon-button";
+import { Pencil, X, RotateCcw } from "@/components/ui/icon";
 
 export function DrawModal({
   open,
@@ -35,17 +39,16 @@ export function DrawModal({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    function cssVar(name: string, fallback: string): string {
-      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      return v || fallback;
+    function cssVar(name: string): string {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
 
     function redraw() {
       const w = size;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx!.clearRect(0, 0, w, w);
-      const border = cssVar("--nhai-border", "#e7e0d4");
-      const ink = cssVar("--nhai-ink", "#1f1e1d");
+      const border = cssVar("--border-subtle") || "gray";
+      const ink = cssVar("--text-primary") || "black";
 
       /* grid 4×4 nét mờ */
       ctx!.strokeStyle = border;
@@ -141,46 +144,45 @@ export function DrawModal({
     };
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <div
-      className="modal-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="card shadow-neo w-full max-w-sm p-5" role="dialog" aria-label="Vẽ chữ để tra">
-        <div className="flex items-center justify-between mb-1">
-          <h2 className="text-2xl font-extrabold">✍️ Vẽ chữ để tra</h2>
-          <button type="button" className="btn-ghost w-9 h-9" onClick={onClose}>✕</button>
-        </div>
-        <p className="text-sm text-[var(--nhai-muted)] mb-3">
-          Vẽ chữ Hán vào ô bên dưới rồi bấm “Tra chữ này” (bản demo nhận diện giả lập).
-        </p>
-        <canvas
-          ref={canvasRef}
-          className="w-full max-w-[280px] mx-auto block rounded-lg border-2 border-[var(--nhai-border)] bg-[var(--nhai-bg)]"
-          style={{ touchAction: "none", aspectRatio: "1/1", cursor: "crosshair" }}
-          aria-label="Vẽ chữ Hán vào đây"
-        />
-        <div className="flex gap-2 mt-3">
-          <button ref={undoRef} type="button" className="btn-ghost flex-1 py-1.5 text-sm" disabled>↩ Xoá nét cuối</button>
-          <button ref={clearRef} type="button" className="btn-ghost flex-1 py-1.5 text-sm" disabled>✕ Xoá hết</button>
-        </div>
-        <div ref={suggestRef} className="hidden mt-3 text-sm font-semibold text-[var(--nhai-muted)]">
-          Có thể là: <button type="button" className="pill ml-1 zh text-base">你</button>
-        </div>
-        <button
-          type="button"
-          className="btn-main w-full py-2.5 mt-4"
-          onClick={() => {
-            const ch = "你"; // nhận diện giả lập theo SPEC-09
-            onResult(ch);
-            onClose();
-          }}
-        >Tra chữ này</button>
+    <Dialog open={open} onClose={onClose} labelledBy="draw-modal-title" className="max-w-sm p-5">
+      <div className="flex items-center justify-between mb-1">
+        <h2 id="draw-modal-title" className="text-2xl font-extrabold inline-flex items-center gap-2">
+          <Pencil size={20} strokeWidth={1.5} aria-hidden="true" /> Vẽ chữ để tra
+        </h2>
+        <IconButton label="Đóng" variant="ghost" className="min-h-9 min-w-9" onClick={onClose}>
+          <X size={18} strokeWidth={1.5} aria-hidden="true" />
+        </IconButton>
       </div>
-    </div>
+      <p className="text-sm text-text-secondary mb-3">
+        Vẽ chữ Hán vào ô bên dưới rồi bấm “Tra chữ này” (bản demo nhận diện giả lập).
+      </p>
+      <canvas
+        ref={canvasRef}
+        className="w-full max-w-[280px] mx-auto block rounded-control border border-border-default bg-surface-paper"
+        style={{ touchAction: "none", aspectRatio: "1/1", cursor: "crosshair" }}
+        aria-label="Vẽ chữ Hán vào đây"
+      />
+      <div className="flex gap-2 mt-3">
+        <Button ref={undoRef} type="button" variant="secondary" size="sm" className="flex-1" disabled>
+          <RotateCcw size={16} strokeWidth={1.5} aria-hidden="true" /> Xoá nét cuối
+        </Button>
+        <Button ref={clearRef} type="button" variant="secondary" size="sm" className="flex-1" disabled>
+          <X size={16} strokeWidth={1.5} aria-hidden="true" /> Xoá hết
+        </Button>
+      </div>
+      <div ref={suggestRef} className="hidden mt-3 text-sm font-semibold text-text-secondary">
+        Có thể là: <span className="ml-1 zh text-base rounded-control border border-border-default bg-surface-elevated px-2 py-0.5 inline-flex items-center">你</span>
+      </div>
+      <Button
+        type="button"
+        className="w-full mt-4"
+        onClick={() => {
+          const ch = "你"; // nhận diện giả lập theo SPEC-09
+          onResult(ch);
+          onClose();
+        }}
+      >Tra chữ này</Button>
+    </Dialog>
   );
 }

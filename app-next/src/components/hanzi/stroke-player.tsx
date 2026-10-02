@@ -48,7 +48,7 @@ export function useStrokePlayer(
     defs.innerHTML =
       '<marker id="' + id + '-arrow" viewBox="0 0 10 10" refX="8" refY="5" ' +
         'markerWidth="5" markerHeight="5" orient="auto-start-reverse">' +
-        '<path d="M 0 1 L 9 5 L 0 9 z" style="fill:var(--nhai-main,#c23b22)"></path>' +
+        '<path d="M 0 1 L 9 5 L 0 9 z" style="fill:var(--action-primary)"></path>' +
       "</marker>";
     svg.appendChild(defs);
 
@@ -57,7 +57,7 @@ export function useStrokePlayer(
       const pl = document.createElementNS(NS, "polyline") as SVGElement;
       pl.setAttribute("points", pts.map((p) => p.join(",")).join(" "));
       pl.setAttribute("fill", "none");
-      pl.setAttribute("stroke", "var(--nhai-main, #c23b22)");
+      pl.setAttribute("stroke", "var(--action-primary)");
       pl.setAttribute("stroke-width", "4.5");
       pl.setAttribute("stroke-linecap", "round");
       pl.setAttribute("stroke-linejoin", "round");

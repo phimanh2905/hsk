@@ -3,6 +3,8 @@
    Imperative canvas: useRef + useEffect (chạy 1 lần; [size] dependency) — grid 4×4 mờ,
    nút Xoá nét cuối / Xoá hết (disabled khi chưa vẽ nét nào), gợi ý giả khi có nét. */
 import { useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { RotateCcw, X } from "@/components/ui/icon";
 
 const DEFAULT_SUGGESTIONS = ["你", "好", "学"]; // gợi ý giả theo SPEC-03 (không nhận diện thật)
 
@@ -35,17 +37,16 @@ export function DrawPad({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    function cssVar(name: string, fallback: string): string {
-      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      return v || fallback;
+    function cssVar(name: string): string {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
 
     function redraw() {
       const w = size;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx!.clearRect(0, 0, w, w);
-      const border = cssVar("--nhai-border", "#e7e0d4");
-      const ink = cssVar("--nhai-ink", "#1f1e1d");
+      const border = cssVar("--border-subtle") || "gray";
+      const ink = cssVar("--text-primary") || "black";
 
       /* grid 4×4 nét mờ */
       ctx!.strokeStyle = border;
@@ -147,18 +148,22 @@ export function DrawPad({
     <div className="flex flex-col items-center">
       <canvas
         ref={canvasRef}
-        className="w-full max-w-[280px] rounded-lg border-2 border-[var(--nhai-border)] bg-[var(--nhai-card)]"
+        className="w-full max-w-[280px] rounded-control border border-border-default bg-surface-elevated"
         style={{ touchAction: "none", aspectRatio: "1/1", cursor: "crosshair" }}
         aria-label="Vẽ chữ Hán vào đây"
       />
       <div className="flex gap-2 mt-3">
-        <button ref={undoRef} type="button" className="btn-ghost px-3 py-1.5 text-sm" disabled>↩ Xoá nét cuối</button>
-        <button ref={clearRef} type="button" className="btn-ghost px-3 py-1.5 text-sm" disabled>✕ Xoá hết</button>
+        <Button ref={undoRef} type="button" variant="secondary" size="sm" disabled>
+          <RotateCcw size={16} strokeWidth={1.5} aria-hidden="true" /> Xoá nét cuối
+        </Button>
+        <Button ref={clearRef} type="button" variant="secondary" size="sm" disabled>
+          <X size={16} strokeWidth={1.5} aria-hidden="true" /> Xoá hết
+        </Button>
       </div>
-      <div ref={suggestRef} className="hidden mt-3 text-sm font-semibold text-[var(--nhai-muted)]">
+      <div ref={suggestRef} className="hidden mt-3 text-sm font-semibold text-text-secondary">
         Có thể là:{" "}
         {suggestions.map((ch) => (
-          <button key={ch} type="button" className="pill ml-1 zh text-base" onClick={() => onPick?.(ch)}>{ch}</button>
+          <button key={ch} type="button" className="ml-1 zh text-base rounded-control border border-border-default bg-surface-elevated px-2 py-0.5 inline-flex items-center" onClick={() => onPick?.(ch)}>{ch}</button>
         ))}
       </div>
     </div>

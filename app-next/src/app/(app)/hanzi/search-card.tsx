@@ -5,6 +5,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { hanziChars } from "@/content/hanzi";
 import { stripTones } from "@/lib/pinyin-utils";
+import { Input } from "@/components/ui/input";
+import { Chip } from "@/components/ui/chip";
 
 function isCJK(s: string): boolean {
   return /[\u3400-\u9fff]/.test(s);
@@ -42,7 +44,7 @@ export function SearchCard({ go }: { go: (ch: string) => void }) {
 
   return (
     <div ref={hostRef}>
-      <input
+      <Input
         data-q
         type="text"
         value={q}
@@ -54,11 +56,11 @@ export function SearchCard({ go }: { go: (ch: string) => void }) {
           if (e.key === "Enter" && hits[0]) go(hits[0]);
         }}
         placeholder="Nhập chữ Hán hoặc từ…"
-        className="w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 bg-[var(--nhai-bg)] zh"
+        className="w-full zh"
         autoComplete="off"
       />
       {open && hits.length > 0 && (
-        <div className="mt-2 card divide-y divide-[var(--nhai-border)] max-h-64 overflow-y-auto">
+        <div className="mt-2 rounded-card border border-border-default bg-surface-elevated divide-y divide-border-default max-h-64 overflow-y-auto">
           {hits.map((k) => {
             const c = hanziChars[k];
             return (
@@ -66,16 +68,16 @@ export function SearchCard({ go }: { go: (ch: string) => void }) {
                 key={k}
                 type="button"
                 onClick={() => go(k)}
-                className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[var(--nhai-soft)]"
+                className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-surface-paper"
               >
                 <span className="zh text-2xl font-bold w-9 text-center">{k}</span>
                 <span className="min-w-0">
                   <span className="font-semibold text-sm">
                     {c.pinyin || ""} · {c.hanViet || ""}
                   </span>
-                  <span className="block text-xs text-[var(--nhai-muted)] truncate">{c.meaning || ""}</span>
+                  <span className="block text-xs text-text-secondary truncate">{c.meaning || ""}</span>
                 </span>
-                <span className="ml-auto pill text-xs shrink-0">{c.level || ""}</span>
+                <Chip className="ml-auto text-xs shrink-0">{c.level || ""}</Chip>
               </button>
             );
           })}
