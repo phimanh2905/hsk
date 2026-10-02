@@ -1,55 +1,95 @@
-# HSK — Clone app Nhai HSK (nhaihsk.com)
+# HSK — Nhai HSK (app học tiếng Trung HSK 3.0 cho người Việt)
 
-Clone **chỉ về UI** của [nhaihsk.com](https://nhaihsk.com) — app học tiếng Trung HSK 3.0 cho người Việt.
-Không có backend, không framework JS, dữ liệu hardcode.
+Repo gồm hai phần:
 
-## Cấu trúc repo
+| Thư mục | Vai trò |
+|---|---|
+| **`app-next/`** | **Ứng dụng thật** — Next.js App Router + TypeScript + Tailwind v4, deploy Cloudflare Workers (OpenNext). Đây là code đang chạy production. |
+| `clone/` | Bản HTML/JS tĩnh tham chiếu (UI gốc, không build step) — dùng để đối chiếu khi port, không deploy. |
 
-```
-.
-├── nhaihsk-clone-proposal.md   # Báo cáo khảo sát app gốc (route, tech stack, API)
-├── specs/                      # (trong clone/) Đặc tả tính năng
-├── plans/                      # (trong clone/) Kế hoạch implement
-└── clone/                      # Toàn bộ mã nguồn clone
-    ├── index.html …            # 25+ trang tĩnh
-    ├── js/                     # vanilla JS (không module, dùng defer)
-    ├── assets/theme.css        # design tokens
-    └── specs/ plans/           # SPEC-00..15, 10..21 · PLAN-00..15, 10..21
-```
+🌐 **Bản chạy thật:** https://byehsk.softtip88.workers.dev
 
-## Stack
+## Stack của `app-next/`
 
-- **HTML tĩnh** + **Tailwind v4** qua CDN (`@tailwindcss/browser@4`)
-- **JavaScript thuần**, không framework, script load bằng `defer` (không `type=module` để chạy được cả `file://`)
-- Dữ liệu hardcode trong `window.NHAI_DATA.*`
+- Next.js 16 (App Router, SSG/ISR) · TypeScript strict · Tailwind v4 **compiled** (không còn CDN)
+- Cloudflare Workers qua `@opennextjs/cloudflare` + Wrangler
+- Tiến độ học lưu `localStorage` (prefix `nhai.*`) qua interface duy nhất `ProgressStore`
+  (`src/lib/store/progress-store.ts`) — SP2 mới thay bằng D1 + `HybridStore`
+- Test: Vitest + Testing Library (271 test) · Playwright (25 e2e)
 
-## Chạy thử
+## Lệnh thường dùng
 
 ```bash
-cd clone
-python3 -m http.server 8080
-# mở http://127.0.0.1:8080/index.html
+cd app-next
+pnpm dev          # dev server (dùng port trống, ví dụ -p 3100)
+pnpm typecheck    # tsc --noEmit
+pnpm lint         # eslint
+pnpm test         # vitest run
+pnpm test:e2e     # playwright test (tự bật dev server)
+pnpm preview      # build rồi chạy worker bằng workerd ở :8787
+pnpm run deploy   # build rồi deploy lên Cloudflare Workers
 ```
 
-## Quy ước
+## Deploy
 
-- Mọi script dùng boot pattern:
-  ```js
-  if (document.readyState === "complete") init();
-  else document.addEventListener("DOMContentLoaded", init);
-  ```
-  (`defer` chạy ở `readyState === "interactive"`, nên init trước khi script sau đăng ký mode sẽ render sai.)
-- Helper dùng chung qua `NHAI.*` (`js/shell.js`): `NHAI.q()`, `NHAI.toast()`, `NHAI.speak()`, `NHAI.el()`, `NHAI.openLogin()`.
-- localStorage: `nhai.mockLogin`, `nhai.srs`, `nhai.decks`, `nhai.theme`, `nhai.voice`, `nhai.fileCode`.
+**Qua CI (đang dùng):** push lên `main` → GitHub Actions chạy
+`typecheck → lint → test → build → deploy`. Cần 2 secret trong repo:
+
+| Secret | Giá trị |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | API token tạo ở Cloudflare → My Profile → API Tokens, quyền **Workers Scripts: Edit** (không phải token OAuth dùng trên máy) |
+| `CLOUDFLARE_ACCOUNT_ID` | `0f0cdb9ddcb4ce7cfd8d9fee973f6ef3` |
+
+```bash
+gh secret set CLOUDFLARE_API_TOKEN  --repo phimanh2905/hsk
+gh secret set CLOUDFLARE_ACCOUNT_ID --repo phimanh2905/hsk
+```
+
+**Từ máy (không cần token):** `wrangler login` một lần, rồi `pnpm run deploy`.
+
+### Ba cái bẫy đã gặp, đừng lặp lại
+
+1. **`NEXT_PUBLIC_SITE_URL`** nằm trong `app-next/.env.production` (đã commit, là URL công khai
+   chứ không phải secret) — dùng cho `metadataBase`, `sitemap.xml`, `robots.txt`.
+   Đổi URL thì sửa file này. **Không** truyền env rỗng trong CI: chuỗi rỗng sẽ đè file
+   `.env` và làm `new URL("")` nổ lúc build.
+2. **Next cache SSG**: đổi `NEXT_PUBLIC_SITE_URL` mà không xoá `.next` thì `sitemap.xml`
+   vẫn giữ URL cũ. Script `deploy`/`preview` đã có `rm -rf .next` — đừng bỏ.
+3. **`opennextjs-cloudflare deploy` không tự build**, nó chỉ đẩy thư mục `.open-next`
+   có sẵn. Luôn `build && deploy` (đã nằm trong script `deploy`).
+
+Ngoài ra, `pnpm/action-setup` trong CI phải trỏ `package_json_file: app-next/package.json`
+vì repo root không có `package.json` nên không có trường `packageManager`.
 
 ## Tài liệu
 
-- `nhaihsk-clone-proposal.md` — khảo sát ban đầu
-- `clone/specs/GAP-ANALYSIS.md` — gap vòng 1 (so sánh clone với site gốc)
-- `clone/specs/GAP-ANALYSIS-ROUND2.md` — gap vòng 2 (duyệt top→bottom toàn bộ 15 route)
-- `clone/HANDOFF-computer-use-test.md` — checklist test UI
+- `docs/superpowers/specs/fullstack/` — **spec kỹ thuật đầy đủ**: `00-platform-data.md`
+  (hợp đồng chung: auth, schema D1, storage, sync, cache, API) + `10`–`13` theo domain.
+  Đọc `README.md` trong thư mục đó để biết đọc gì khi làm từng sub-project.
+- `docs/superpowers/plans/` — implementation plan của SP1 (4 plan, 64 task, đã thực hiện xong).
+- `docs/superpowers/specs/2026-09-30-hsk-feature-inventory.md` — kê khai tính năng + trạng thái port.
+- `clone/specs/GAP-ANALYSIS*.md`, `nhaihsk-clone-proposal.md` — khảo sát site gốc.
 
-## Lưu ý
+## Lộ trình
 
-Clone mang **nội dung thương hiệu và bố cục** từ site gốc vì mục đích học tập/reverse-engineering UI.
-Khi phát hành hoặc dùng thương mại, cần thay nội dung, tên và hình ảnh của Nhai HSK.
+- **SP1 (xong, đang chạy):** port toàn bộ UI sang Next.js — 28 route, 7 chế độ bài học,
+  thư viện shadowing, công cụ tạo file luyện viết, trang thống kê/sổ tay, trang social.
+- **SP2 (chưa làm):** đăng nhập thật (better-auth) + DB D1 + đồng bộ tiến độ đa thiết bị.
+  Hiện mọi thứ vẫn nằm trong `localStorage` của từng máy.
+- **SP3–SP5:** nội dung HSK thật (đang là dữ liệu demo), leaderboard thật, thanh toán
+  MoMo/Stripe, AI chat + TTS server.
+
+### Việc còn treo
+
+- **Gắn domain riêng (chưa làm):** Cloudflare Dashboard → Workers & Pages → `byehsk` →
+  Settings → Domains & Routes → thêm custom domain (vd `app.nhaihsk.com`). Xong nhớ sửa
+  `NEXT_PUBLIC_SITE_URL` trong `app-next/.env.production` rồi deploy lại để sitemap/canonical
+  trỏ domain mới.
+- **Xem bản in A4:** `/create-file` → kiểm tra bằng mắt một lần (selector `@media print`
+  đã có test tự động, nhưng layout thật nên in thử).
+
+## Lưu ý pháp lý
+
+Nội dung thương hiệu và bố cục trong `clone/` (và phần UI tương ứng ở `app-next/`) được
+mang từ nhaihsk.com cho mục đích học tập/reverse-engineering. Khi phát hành hoặc dùng
+thương mại, cần thay nội dung, tên và hình ảnh của Nhai HSK.
