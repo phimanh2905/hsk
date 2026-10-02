@@ -111,17 +111,22 @@ Sau mỗi cụm: `pnpm typecheck && pnpm lint && pnpm test`.
    `toast-provider`, `notification-bell`, `ai-widget`, `personal/login-gate`, root `layout.tsx`,
    `(app)/layout.tsx`, `not-found`. Nhiều emoji nhất → `IconButton` + Lucide, sửa test liên quan
    cùng commit.
-3. **Learning core** — `home/continue-card`, `lesson-client` + `lesson-provider` + `word-list` +
-   7 modes (battle/dance/flashcard/listen/quiz/reading/typing), `review` (+`review-dashboard`),
-   `reading` (kèm `karaoke.tsx`), `roadmap` ×5, `progress` (+`progress-client`), `stats` ×3.
+3. **Learning core** — `home/continue-card`, `(app)/page.tsx` (trang chủ),
+   `lesson-client` + `lesson-provider` + `word-list` + 7 modes (battle/dance/flashcard/listen/
+   quiz/reading/typing), `review` (+`review-dashboard`), `reading` (kèm `karaoke.tsx`),
+   `roadmap` (4 components + 3 pages), `progress` (+`progress-client`), `stats` ×3.
    Áp posture: max-width lesson 760 / reading 820 / dashboard 1200; một primary action mỗi màn
    học; SRS dùng `Chip` Again/Hard/Good/Easy (phím 1–4); streak màu amber riêng, không vermilion.
+   Watermark `vietnam-map.svg` trong lesson: giữ nguyên (brand imagery, opacity 0.08, không phải
+   icon) — quyết định sản phẩm riêng, không thuộc scope restyle.
 4. **Tools & reference** — hanzi (draw-modal/draw-pad/stroke-player/hanzi-detail/hanzi-home/
    search-card + các `page.tsx` của area này), pinyin (matrix/practice/tone-dialog + pages),
    radicals ×3, sound-rules (quiz-client/speak-text + page), dictionary, notebook (list + detail),
-   my-vocab/my-grammar, course ×2, shadowing ×8, create-file ×6 (giữ print), certificate-test ×2,
+   my-vocab/my-grammar, course ×2, shadowing ×7, create-file ×6 (giữ print), certificate-test ×2,
    static-legal, leaderboard, feedback, delete-account. Mọi `page.tsx` của các area nêu trên
-   thuộc cụm của area đó.
+   thuộc cụm của area đó. Ngoại lệ có chủ đích trong area create-file:
+   `src/lib/create-file/svg-render.ts` (renderer chuỗi HTML cho giấy A4 in — print artifact,
+   không phải in-app UI, giữ nguyên theo non-goals) và `favicon.ico`.
 5. **Cleanup + completeness gate** — (a) grep về 0 trên **toàn bộ** `src/`: hex hard-code,
    class palette thô (`text-red-500`…), emoji-icon (dải Unicode emoji trong `className`/JSX icon
    position), `shadow-neo`/`btn-main`/`btn-ghost`/`pill`/`.card`/`grid-cell`/`modal-backdrop` cũ
