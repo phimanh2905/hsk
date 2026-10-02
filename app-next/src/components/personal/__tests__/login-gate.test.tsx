@@ -17,10 +17,10 @@ vi.mock("@/lib/use-session", () => ({
 afterEach(cleanup);
 
 describe("LoginGate (F6)", () => {
-  it("chưa login → 🔒 + đúng sub text + nút Đăng nhập", () => {
+  it("chưa login → icon khóa + đúng sub text + nút Đăng nhập", () => {
     session.loggedIn = false;
     render(<LoginGate pageSub="Sổ tay từ vựng của bạn sẽ xuất hiện ở đây sau khi đăng nhập."><div>nội dung</div></LoginGate>);
-    expect(screen.getByText("🔒")).toBeInTheDocument();
+    expect(document.querySelector(".lucide-lock")).toBeInTheDocument();
     expect(screen.getByText("Đăng nhập để xem")).toBeInTheDocument();
     expect(screen.getByText("Sổ tay từ vựng của bạn sẽ xuất hiện ở đây sau khi đăng nhập.")).toBeInTheDocument();
     expect(screen.queryByText("nội dung")).not.toBeInTheDocument();

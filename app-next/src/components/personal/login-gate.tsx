@@ -1,5 +1,8 @@
 "use client";
 import type { ReactNode } from "react";
+import { Lock, ICON_STROKE } from "@/components/ui/icon";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useSession } from "@/lib/use-session";
 import { useLoginModal } from "@/components/shell/login-modal";
 
@@ -13,11 +16,13 @@ export function LoginGate({ pageSub, children }: { pageSub: string; children: Re
   const { openLogin } = useLoginModal();
   if (loggedIn) return <>{children}</>;
   return (
-    <div className="card shadow-neo p-10 text-center">
-      <div className="text-6xl mb-4" aria-hidden="true">🔒</div>
+    <Card className="p-10 text-center">
+      <div className="flex justify-center mb-4 text-text-secondary" aria-hidden="true">
+        <Lock size={48} strokeWidth={ICON_STROKE} />
+      </div>
       <h2 className="text-2xl font-extrabold mb-2">Đăng nhập để xem</h2>
-      <p className="text-sm text-[var(--nhai-muted)] mb-6">{pageSub}</p>
-      <button type="button" onClick={openLogin} className="btn-main px-6 py-2.5">Đăng nhập</button>
-    </div>
+      <p className="text-sm text-text-secondary mb-6">{pageSub}</p>
+      <Button onClick={openLogin}>Đăng nhập</Button>
+    </Card>
   );
 }

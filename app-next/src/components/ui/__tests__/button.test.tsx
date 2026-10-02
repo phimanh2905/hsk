@@ -25,9 +25,12 @@ describe("Button", () => {
     expect(screen.getByRole("button").className).toContain("text-text-secondary");
   });
 
-  it("size sm: min-h-9 (36px)", () => {
+  it("size sm: giữ px-3 text-sm nhưng vẫn min-h-11 (44px touch target)", () => {
     render(<Button size="sm">Nhỏ</Button>);
-    expect(screen.getByRole("button").className).toContain("min-h-9");
+    const b = screen.getByRole("button");
+    expect(b.className).toContain("min-h-11");
+    expect(b.className).toContain("px-3");
+    expect(b.className).not.toContain("min-h-9");
   });
 
   it("focus-visible ring jade + disabled opacity", () => {

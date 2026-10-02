@@ -34,7 +34,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={toast}>
       {children}
-      {msg !== null && <div className="toast">{msg}</div>}
+      {msg !== null && (
+        <div
+          role="status"
+          className="fixed left-1/2 bottom-7 -translate-x-1/2 z-[2147483000] bg-surface-elevated text-text-primary border border-border-default shadow-md rounded-control px-4 py-2.5 text-sm font-semibold"
+        >
+          {msg}
+        </div>
+      )}
     </ToastContext.Provider>
   );
 }

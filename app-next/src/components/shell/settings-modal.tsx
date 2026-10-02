@@ -4,6 +4,10 @@
    2 pill theme, 2 pill voice, 2 checkbox flags; ghi localStorage + áp theme ngay. */
 
 import { useEffect, useState } from "react";
+import { Moon, Settings as SettingsIcon, Sun, User, X, ICON_STROKE } from "@/components/ui/icon";
+import { IconButton } from "@/components/ui/icon-button";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import { useTheme } from "./theme-provider";
 
 type Voice = "female" | "male";
@@ -32,9 +36,7 @@ export default function SettingsModal() {
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
-  const on = (v: boolean) => (v ? "btn-main" : "btn-ghost");
+  const on = (v: boolean) => (v ? "primary" : "secondary");
 
   const pickTheme = (t: "light" | "dark") => {
     setTheme(t); // ghi localStorage + toggle html.dark ngay
@@ -58,68 +60,81 @@ export default function SettingsModal() {
   };
 
   return (
-    <div
-      className="modal-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) setIsOpen(false);
-      }}
+    <Dialog
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      labelledBy="settings-modal-title"
+      className="max-h-[85vh] overflow-y-auto"
     >
-      <div className="card shadow-neo w-full max-w-md p-6 max-h-[85vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-1">
-          <h2 className="text-2xl font-extrabold">⚙️ Cài đặt</h2>
-          <button
+      <div className="flex items-start justify-between mb-1">
+        <h2 id="settings-modal-title" className="flex items-center gap-2 text-2xl font-extrabold">
+          <SettingsIcon size={20} strokeWidth={ICON_STROKE} aria-hidden="true" /> Cài đặt
+        </h2>
+        <IconButton label="Đóng" onClick={() => setIsOpen(false)}>
+          <X size={18} strokeWidth={ICON_STROKE} />
+        </IconButton>
+      </div>
+      <p className="text-sm text-text-secondary mb-4">Tùy chỉnh trải nghiệm học của bạn.</p>
+      <div className="mb-5">
+        <p className="text-sm font-bold mb-2">Giao diện</p>
+        <div className="grid grid-cols-2 gap-2">
+          <Button
             type="button"
-            onClick={() => setIsOpen(false)}
-            className="btn-ghost w-9 h-9"
-            aria-label="Đóng"
+            data-theme="light"
+            variant={on(theme === "light")}
+            onClick={() => pickTheme("light")}
           >
-            ✕
-          </button>
-        </div>
-        <p className="text-sm text-[var(--nhai-muted)] mb-4">
-          Tùy chỉnh trải nghiệm học của bạn.
-        </p>
-        <div className="mb-5">
-          <p className="text-sm font-bold mb-2">Giao diện</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" data-theme="light" className={`${on(theme === "light")} py-2`} onClick={() => pickTheme("light")}>
-              ☀️ Sáng
-            </button>
-            <button type="button" data-theme="dark" className={`${on(theme === "dark")} py-2`} onClick={() => pickTheme("dark")}>
-              🌙 Tối
-            </button>
-          </div>
-        </div>
-        <div className="mb-5">
-          <p className="text-sm font-bold mb-2">Giọng đọc tiếng Trung</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" data-voice="female" className={`${on(voice === "female")} py-2`} onClick={() => pickVoice("female")}>
-              👩 Nữ
-            </button>
-            <button type="button" data-voice="male" className={`${on(voice === "male")} py-2`} onClick={() => pickVoice("male")}>
-              👨 Nam
-            </button>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <label className="flex items-center justify-between card p-3 cursor-pointer">
-            <span className="text-sm font-semibold">Bong bóng chat AI</span>
-            <input
-              type="checkbox"
-              checked={chatBubble}
-              onChange={(e) => toggleFlag("nhai.chatBubble", e.target.checked)}
-            />
-          </label>
-          <label className="flex items-center justify-between card p-3 cursor-pointer">
-            <span className="text-sm font-semibold">Tra từ khi bôi đen</span>
-            <input
-              type="checkbox"
-              checked={selectionLookup}
-              onChange={(e) => toggleFlag("nhai.selectionLookup", e.target.checked)}
-            />
-          </label>
+            <Sun size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Sáng
+          </Button>
+          <Button
+            type="button"
+            data-theme="dark"
+            variant={on(theme === "dark")}
+            onClick={() => pickTheme("dark")}
+          >
+            <Moon size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Tối
+          </Button>
         </div>
       </div>
-    </div>
+      <div className="mb-5">
+        <p className="text-sm font-bold mb-2">Giọng đọc tiếng Trung</p>
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            type="button"
+            data-voice="female"
+            variant={on(voice === "female")}
+            onClick={() => pickVoice("female")}
+          >
+            <User size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Nữ
+          </Button>
+          <Button
+            type="button"
+            data-voice="male"
+            variant={on(voice === "male")}
+            onClick={() => pickVoice("male")}
+          >
+            <User size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Nam
+          </Button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="flex items-center justify-between rounded-card border border-border-default bg-surface-paper p-3 cursor-pointer">
+          <span className="text-sm font-semibold">Bong bóng chat AI</span>
+          <input
+            type="checkbox"
+            checked={chatBubble}
+            onChange={(e) => toggleFlag("nhai.chatBubble", e.target.checked)}
+          />
+        </label>
+        <label className="flex items-center justify-between rounded-card border border-border-default bg-surface-paper p-3 cursor-pointer">
+          <span className="text-sm font-semibold">Tra từ khi bôi đen</span>
+          <input
+            type="checkbox"
+            checked={selectionLookup}
+            onChange={(e) => toggleFlag("nhai.selectionLookup", e.target.checked)}
+          />
+        </label>
+      </div>
+    </Dialog>
   );
 }

@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
       aria-busy={loading || undefined}
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-control border font-semibold min-h-11",
-        size === "sm" ? "px-3 text-sm min-h-9" : "px-5",
+        size === "sm" ? "px-3 text-sm" : "px-5",
         loading && "min-w-28",
         "focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2",
         "disabled:opacity-50 disabled:pointer-events-none",
