@@ -14,8 +14,10 @@ beforeEach(() => {
       text: string;
       lang = "";
       rate = 1;
+      volume = 1;
       voice: SpeechSynthesisVoice | null = null;
       onend: (() => void) | null = null;
+      onerror: ((e: unknown) => void) | null = null;
       constructor(text: string) {
         this.text = text;
       }
@@ -28,8 +30,18 @@ beforeEach(() => {
       { name: "Tingting", lang: "zh-CN" },
       { name: "Male-ZH", lang: "zh-CN" },
     ]),
+    speaking: false,
+    pending: false,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
   });
 });
+
+const synth = () => window.speechSynthesis as unknown as Record<string, ReturnType<typeof vi.fn>>;
+const setSpeaking = (v: { speaking?: boolean; pending?: boolean }) => {
+  (window.speechSynthesis as unknown as { speaking: boolean; pending: boolean }).speaking = !!v.speaking;
+  (window.speechSynthesis as unknown as { speaking: boolean; pending: boolean }).pending = !!v.pending;
+};
 
 describe("useTts", () => {
   it("phát 1 utterance cho câu ngắn, lang zh-CN", () => {
@@ -92,36 +104,162 @@ describe("useTts", () => {
     });
   });
 
-  describe("Safari retry", () => {
+  // iOS Safari nuốt utterance khi cancel() gọi liền speak() trong cùng một tick,
+  // và setTimeout không còn user gesture nên retry kiểu cũ vô dụng. Xem use-tts.ts.
+  describe("cancel có điều kiện (tránh nuốt utterance trên iOS)", () => {
+    it("không gọi cancel() khi không có gì đang phát", () => {
+      setSpeaking({ speaking: false, pending: false });
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(window.speechSynthesis.cancel).not.toHaveBeenCalled();
+      expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
+    });
+
+    it("gọi cancel() khi đang có câu đang phát", () => {
+      setSpeaking({ speaking: true, pending: false });
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(window.speechSynthesis.cancel).toHaveBeenCalled();
+    });
+
+    it("gọi cancel() khi có câu đang xếp hàng (pending)", () => {
+      setSpeaking({ speaking: false, pending: true });
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(window.speechSynthesis.cancel).toHaveBeenCalled();
+    });
+  });
+
+  describe("không retry bằng setTimeout (mất user gesture trên iOS)", () => {
     afterEach(() => {
       vi.useRealTimers();
     });
 
-    it("sau 15s vẫn speaking mà synthesis không speaking -> re-speak", () => {
+    it("sau 15s không tự phát lại — user bấm lại mới phát", () => {
       vi.useFakeTimers();
       const { result } = renderHook(() => useTts());
       act(() => result.current.speak("你好"));
-      const callsAfterSpeak = (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock
-        .calls.length;
-      expect(callsAfterSpeak).toBe(1);
       act(() => {
-        vi.advanceTimersByTime(15_000);
+        vi.advanceTimersByTime(60_000);
       });
-      // speakingRef=true (chưa onend) và speechSynthesis.speaking=false -> retry fire
-      expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(2);
+      expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
     });
 
-    it("không re-speak sau khi utterance kết thúc (onend)", () => {
-      vi.useFakeTimers();
+    it("bấm 🔊 lần hai vẫn phát lại được (trong gesture của lần bấm)", () => {
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      act(() => result.current.speak("你好"));
+      expect(chunkTexts()).toEqual(["你好", "你好"]);
+    });
+  });
+
+  describe("onerror", () => {
+    it("utterance lỗi thì thoát trạng thái speaking", () => {
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(result.current.speaking).toBe(true);
+      const u = (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[0][0];
+      act(() => {
+        u.onerror?.(new Event("error"));
+      });
+      expect(result.current.speaking).toBe(false);
+    });
+
+    it("onend sau onend không nổ", () => {
       const { result } = renderHook(() => useTts());
       act(() => result.current.speak("你好"));
       const u = (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[0][0];
       act(() => {
+        u.onerror?.(new Event("error"));
         u.onend?.();
       });
+      expect(result.current.speaking).toBe(false);
+    });
+  });
+
+  describe("nạp voice lười (voiceschanged)", () => {
+    it("đăng ký listener voiceschanged khi mount", () => {
+      renderHook(() => useTts());
+      expect(synth().addEventListener).toHaveBeenCalledWith(
+        "voiceschanged",
+        expect.any(Function)
+      );
+    });
+
+    it("bỏ listener khi unmount", () => {
+      const { unmount } = renderHook(() => useTts());
+      unmount();
+      expect(synth().removeEventListener).toHaveBeenCalledWith(
+        "voiceschanged",
+        expect.any(Function)
+      );
+    });
+
+    it("sau voiceschanged thì chọn voice mới (trước đó getVoices trả về rỗng)", () => {
+      // mockImplementation để đọc biến `voices` tại thời điểm gọi
+      let voices: object[] = [];
+      (window.speechSynthesis.getVoices as ReturnType<typeof vi.fn>).mockImplementation(
+        () => voices
+      );
+      const { result } = renderHook(() => useTts());
+
+      // chưa có voice zh nào -> không set voice, vẫn phát được
+      act(() => result.current.speak("你好"));
+      expect(
+        (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[0][0].voice
+      ).toBeNull();
+
+      // Safari báo danh sách voice đã sẵn sàng
+      voices = [{ name: "Tingting", lang: "zh-CN" }];
+      const handler = synth().addEventListener.mock.calls.find(
+        (c) => c[0] === "voiceschanged"
+      )?.[1] as () => void;
       act(() => {
-        vi.advanceTimersByTime(15_000);
+        handler?.();
       });
+
+      act(() => result.current.speak("你好"));
+      expect(
+        (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[1][0].voice?.name
+      ).toBe("Tingting");
+    });
+
+    it("getVoices() rỗng lúc bấm nhưng cache đã có voice -> vẫn chọn được voice", () => {
+      let voices: object[] = [{ name: "Tingting", lang: "zh-CN" }];
+      (window.speechSynthesis.getVoices as ReturnType<typeof vi.fn>).mockImplementation(
+        () => voices
+      );
+      const { result } = renderHook(() => useTts());
+      const handler = synth().addEventListener.mock.calls.find(
+        (c) => c[0] === "voiceschanged"
+      )?.[1] as () => void;
+      act(() => {
+        handler?.();
+      });
+
+      // Safari trả về rỗng (đã biết: có lúc getVoices() không đồng bộ với voiceschanged)
+      voices = [];
+      act(() => result.current.speak("你好"));
+      expect(
+        (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[0][0].voice?.name
+      ).toBe("Tingting");
+    });
+
+    // jsdom và một số môi trường test stub speechSynthesis thiếu addEventListener
+    it("không vỡ khi speechSynthesis thiếu addEventListener", () => {
+      delete synth().addEventListener;
+      delete synth().removeEventListener;
+      const { result } = renderHook(() => useTts());
+      expect(() => act(() => result.current.speak("你好"))).not.toThrow();
+      expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
+    });
+
+    it("không vỡ khi speechSynthesis thiếu speaking/pending", () => {
+      const s = window.speechSynthesis as unknown as Record<string, unknown>;
+      delete s.speaking;
+      delete s.pending;
+      const { result } = renderHook(() => useTts());
+      expect(() => act(() => result.current.speak("你好"))).not.toThrow();
       expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
     });
   });
