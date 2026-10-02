@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
-    "preview": "rm -rf .next && opennextjs-cloudflare preview",
-    "deploy": "rm -rf .next && opennextjs-cloudflare deploy"
+    "preview": "rm -rf .next && opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "rm -rf .next && opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "next": "16.3.7",
