@@ -5,6 +5,8 @@
   /* lớp 1 — primitives */
   --hz-paper: #fafbfa;   --hz-elevated: #ffffff;
   --hz-ink: #1f2a27;     --hz-slate: #66756f;
+  /* primitive không flip theo dark mode (state color cố định, vd nút dừng ghi âm) */
+  --ink-static: #1f2a27;
   --hz-line: #e8ecea;    --hz-jade: #0f766e;
   --hz-vermilion: #d24b3f; --hz-vermilion-700: #a9342b;
   --hz-amber: #faad14;   --hz-purple: #722ed1;

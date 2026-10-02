@@ -53,7 +53,7 @@ export default function RecorderPanel() {
         size="sm"
         data-testid="rec-btn"
         onClick={toggle}
-        style={recording ? { background: "var(--hz-ink)" } : undefined}
+        style={recording ? { background: "var(--ink-static)" } : undefined}
       >
         {recording ? "■ Dừng ghi âm" : "● Bắt đầu ghi âm"}
       </Button>
