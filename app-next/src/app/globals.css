@@ -105,6 +105,21 @@ body {
 }
 .zh, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
 .zh-faded { opacity: .25; }
+
+/* Ô tập tô + khung trang A4 preview — dùng bởi svg-render.ts (chuỗi HTML inject vào DOM)
+   và a4-preview.tsx; tokenized theo Hanzi (ink không flip dark để in ấn nhất quán). */
+.grid-cell {
+  border: 1px solid var(--ink-static);
+  display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 1 / 1; position: relative;
+}
+.print-page,
+.sheet {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-xs);
+  border-radius: var(--radius-card);
+}
 @media print {
   [data-shell], .no-print { display: none !important; }
   body { background: #fff; color: #000; }

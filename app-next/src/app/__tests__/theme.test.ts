@@ -11,9 +11,14 @@ describe("globals.css Hanzi design system tokens", () => {
     }
   });
   it("đã xóa hoàn toàn legacy theme Nhai", () => {
-    for (const legacy of ["--nhai-", "--color-nhai-", ".card {", ".btn-main", ".btn-ghost", ".pill", ".grid-cell", ".shadow-neo", ".toast", ".modal-backdrop", ".paper-grid"]) {
+    for (const legacy of ["--nhai-", "--color-nhai-", ".card {", ".btn-main", ".btn-ghost", ".pill", ".shadow-neo", ".toast", ".modal-backdrop", ".paper-grid"]) {
       expect(css).not.toContain(legacy);
     }
+  });
+  it("giữ rule tokenized cho grid-cell (svg-render) + print-page/sheet (a4-preview)", () => {
+    expect(css).toContain(".grid-cell");
+    expect(css).toContain(".print-page,");
+    expect(css).toContain(".sheet {");
   });
   it("có đủ token Hanzi light + dark và màu chủ đạo jade", () => {
     expect(css).toContain("--hz-jade: #0f766e");
