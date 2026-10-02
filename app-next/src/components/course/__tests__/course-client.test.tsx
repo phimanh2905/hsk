@@ -14,7 +14,12 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/components/shell/login-modal", () => ({
   useLoginModal: () => ({ openLogin }),
-  useMockLogin: () => ({ loggedIn: localStorage.getItem("nhai.mockLogin") === "1" })
+}));
+
+// UPG-2: session thật qua useSession, không đọc localStorage mock.
+const { session } = vi.hoisted(() => ({ session: { loggedIn: false } }));
+vi.mock("@/lib/use-session", () => ({
+  useSession: () => ({ ...session, name: "T", image: null, isPending: false, logout: vi.fn() }),
 }));
 
 vi.mock("@/lib/tts/use-tts", () => ({
@@ -23,6 +28,7 @@ vi.mock("@/lib/tts/use-tts", () => ({
 
 beforeEach(() => {
   localStorage.clear();
+  session.loggedIn = false;
   openLogin.mockClear();
   speak.mockClear();
 });
@@ -38,7 +44,7 @@ describe("CourseClient grammar card (SPEC-15 §3, fix round 1)", () => {
   });
 
   it("đã login: click 🔊 gọi speak(title, zh-CN)", async () => {
-    localStorage.setItem("nhai.mockLogin", "1");
+    session.loggedIn = true;
     render(<CourseClient slug="hsk1" />);
     await userEvent.click(screen.getAllByRole("button", { name: "Đọc mẫu" })[0]);
     expect(speak).toHaveBeenCalledWith("Bài 1 — Ngữ pháp", { lang: "zh-CN" });

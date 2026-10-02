@@ -5,14 +5,15 @@
 
 import Link from "next/link";
 import { useProgress } from "@/lib/store/progress-store";
-import { useLoginModal, useMockLogin } from "./login-modal";
+import { useSession } from "@/lib/use-session";
+import { useLoginModal } from "./login-modal";
 import { useToast } from "./toast-provider";
 import NotificationBell from "@/components/social/notification-bell";
 
 export default function Topbar() {
   const { xp } = useProgress();
   const { openLogin } = useLoginModal();
-  const { loggedIn, name, logout } = useMockLogin();
+  const { loggedIn, name, logout } = useSession();
   const toast = useToast();
 
   const initials = (name.trim() || "T").slice(0, 2).toUpperCase();

@@ -4,8 +4,16 @@ import userEvent from "@testing-library/user-event";
 import ReadingClient from "../reading-client";
 
 const speakMock = vi.fn();
+
+// UPG-2: account-box đọc session thật qua useSession, không đọc localStorage mock.
+const { session } = vi.hoisted(() => ({ session: { loggedIn: false } }));
+vi.mock("@/lib/use-session", () => ({
+  useSession: () => ({ ...session, name: "T", image: null, isPending: false, logout: vi.fn() }),
+}));
+
 beforeEach(() => {
   localStorage.clear();
+  session.loggedIn = false;
   vi.stubGlobal("speechSynthesis", {
     speak: speakMock, cancel: vi.fn(), speaking: false,
     getVoices: vi.fn(() => [{ name: "Tingting", lang: "zh-CN" }]),
@@ -47,14 +55,13 @@ describe("ReadingClient (G3)", () => {
     expect(screen.getByText("🔊 Phát cả bài")).toBeInTheDocument();
     expect(window.speechSynthesis.cancel).toHaveBeenCalled();
   });
-  it("account-box: chưa login → nút Đăng nhập; login mock → text demo", async () => {
+  it("account-box: chưa login → nút Đăng nhập; có session → text demo", async () => {
     const user = userEvent.setup();
-    render(<ReadingClient />);
+    session.loggedIn = false;
+    const { rerender } = render(<ReadingClient />);
     expect(screen.getByText("Đăng nhập để lưu bài đã tạo và mở lại mọi lúc.")).toBeInTheDocument();
-    act(() => {
-      localStorage.setItem("nhai.mockLogin", "1");
-      window.dispatchEvent(new CustomEvent("nhai:progress"));
-    });
+    session.loggedIn = true;
+    rerender(<ReadingClient key="logged-in" />);
     expect(screen.getByText(/Chưa có bài nào được lưu/)).toBeInTheDocument();
   });
   it("textarea cắt tại 3000 ký tự", { timeout: 30000 }, async () => {

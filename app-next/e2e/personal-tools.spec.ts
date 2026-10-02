@@ -1,9 +1,40 @@
 import { test, expect } from "@playwright/test";
 
-const MOCK_LOGIN = { "nhai.mockLogin": "1" };
+/* UPG-2: gate không còn đọc localStorage mock mà gọi better-auth `GET
+   /api/v1/auth/get-session`. E2E chỉ test UI, không test better-auth, nên
+   chặn network để trả session giả — đây là black-box, không cần D1/Google. */
+const FAKE_SESSION = {
+  session: {
+    id: "e2e-session",
+    token: "e2e-token",
+    userId: "e2e-user",
+    expiresAt: new Date(Date.now() + 86_400_000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  user: {
+    id: "e2e-user",
+    name: "Người E2E",
+    email: "e2e@example.com",
+    emailVerified: true,
+    image: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+};
 
-async function mockLogin(page: import("@playwright/test").Page) {
-  await page.addInitScript(() => localStorage.setItem("nhai.mockLogin", "1"));
+async function fakeLogin(page: import("@playwright/test").Page) {
+  await page.route("**/api/v1/auth/get-session", async (route) => {
+    if (route.request().method() === "GET") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(FAKE_SESSION),
+      });
+      return;
+    }
+    await route.continue();
+  });
 }
 
 test.describe("public routes (không cần login)", () => {
@@ -35,7 +66,7 @@ test.describe("public routes (không cần login)", () => {
   });
 });
 
-test.describe("gated routes (mock login)", () => {
+test.describe("gated routes (session thật qua better-auth)", () => {
   test.use({ storageState: undefined }); // đảm bảo sạch cookie
 
   test("chưa login → 🔒 đúng sub từng trang", async ({ page }) => {
@@ -45,8 +76,8 @@ test.describe("gated routes (mock login)", () => {
     await expect(page.getByText("Sổ tay từ vựng của bạn sẽ xuất hiện ở đây sau khi đăng nhập.")).toBeVisible();
   });
 
-  test("progress + my-vocab render khi mockLogin", async ({ page }) => {
-    await mockLogin(page);
+  test("progress + my-vocab render khi có session", async ({ page }) => {
+    await fakeLogin(page);
     await page.goto("/progress");
     await expect(page.getByText("Điểm của bạn")).toBeVisible();
     await expect(page.getByText("12 tháng gần đây")).toBeVisible();
@@ -58,7 +89,7 @@ test.describe("gated routes (mock login)", () => {
   });
 
   test("luồng tạo deck → học deck qua lesson custom", async ({ page }) => {
-    await mockLogin(page);
+    await fakeLogin(page);
     await page.addInitScript(() => {
       localStorage.setItem("nhai.decks", JSON.stringify([
         { id: "nb-e2e", name: "Bộ e2e", rows: [

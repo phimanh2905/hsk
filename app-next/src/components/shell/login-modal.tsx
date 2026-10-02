@@ -1,11 +1,12 @@
 "use client";
 
-/* LoginModal (mock) — port clone/js/shell.js:300-355 (openLogin + renderLoggedIn).
-   Mock: bấm Google/Apple/Email → nhai.mockLogin = "1", nhai.mockName từ input
-   (mặc định "T"), đóng modal, dispatch "nhai:progress" để Topbar render lại. */
+/* LoginModal — port clone/js/shell.js:300-355 (openLogin + renderLoggedIn).
+   SP1 từng mock: bấm Google/Apple/Email → set `nhai.mockLogin`. UPG-2 thay bằng
+   better-auth: chỉ còn Google (spec 00 §1 — Apple ở site gốc là bịa, đã bỏ). */
 
 import Link from "next/link";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 type LoginCtx = { isOpen: boolean; openLogin: () => void; close: () => void };
 
@@ -28,52 +29,26 @@ export function LoginProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* Hook: đăng nhập mock đã bật chưa (nhai.mockLogin === "1"), sync qua "nhai:progress". */
-export function useMockLogin(): { loggedIn: boolean; name: string; logout: () => void } {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [name, setName] = useState("T");
-
-  useEffect(() => {
-    const sync = () => {
-      try {
-        setLoggedIn(localStorage.getItem("nhai.mockLogin") === "1");
-        setName(localStorage.getItem("nhai.mockName") || "T");
-      } catch {
-        /* silent */
-      }
-    };
-    sync();
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
-  }, []);
-
-  const logout = () => {
-    try {
-      localStorage.removeItem("nhai.mockLogin");
-    } catch {
-      /* silent */
-    }
-    window.dispatchEvent(new CustomEvent("nhai:progress"));
-  };
-
-  return { loggedIn, name, logout };
-}
-
-function mockLogin(nameInput: string) {
-  const name = nameInput.trim() || "T";
-  try {
-    localStorage.setItem("nhai.mockLogin", "1");
-    localStorage.setItem("nhai.mockName", name);
-  } catch {
-    /* silent */
-  }
-  window.dispatchEvent(new CustomEvent("nhai:progress"));
-}
-
 export function LoginModal() {
   const { isOpen, close } = useLoginModal();
-  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
   if (!isOpen) return null;
+
+  async function signInWithGoogle() {
+    setError(null);
+    setBusy(true);
+    const { error: err } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+      errorCallbackURL: "/",
+    });
+    // Không có error ⇒ Google đã redirect, dòng dưới không chạy tới.
+    setBusy(false);
+    if (err) setError(err.message ?? "Đăng nhập Google thất bại. Thử lại hoặc kiểm tra kết nối.");
+  }
+
   return (
     <div
       className="modal-backdrop"
@@ -93,46 +68,17 @@ export function LoginModal() {
         </p>
         <button
           type="button"
-          className="btn-ghost w-full py-2.5 mb-2"
-          onClick={() => {
-            mockLogin(name);
-            close();
-          }}
+          className="btn-ghost w-full py-2.5 mb-3 disabled:opacity-60"
+          disabled={busy}
+          onClick={signInWithGoogle}
         >
-          🔵 Google
+          {busy ? "Đang chuyển tới Google…" : "🔵 Đăng nhập bằng Google"}
         </button>
-        <button
-          type="button"
-          className="btn-ghost w-full py-2.5 mb-3"
-          onClick={() => {
-            mockLogin(name);
-            close();
-          }}
-        >
-          Apple
-        </button>
-        <div className="flex items-center gap-3 my-3 text-xs text-[var(--nhai-muted)]">
-          <span className="flex-1 border-t border-[var(--nhai-border)]" />
-          HOẶC
-          <span className="flex-1 border-t border-[var(--nhai-border)]" />
-        </div>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Tên của bạn (mặc định T)"
-          className="w-full border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 mb-3 bg-[var(--nhai-bg)]"
-        />
-        <button
-          type="button"
-          className="btn-main w-full py-2.5"
-          onClick={() => {
-            mockLogin(name);
-            close();
-          }}
-        >
-          ✉️ Email
-        </button>
+        {error ? (
+          <p role="alert" className="text-sm text-red-600 mb-3">
+            {error}
+          </p>
+        ) : null}
         <p className="text-xs text-[var(--nhai-muted)] mt-3">
           Bằng việc đăng nhập, bạn đồng ý với{" "}
           <Link href="/terms" className="text-[var(--nhai-accent)]">
@@ -143,9 +89,6 @@ export function LoginModal() {
             Chính sách quyền riêng tư
           </Link>
           .
-        </p>
-        <p className="text-xs text-[var(--nhai-muted)] mt-2">
-          Bản demo — mọi provider chỉ lưu mock trong localStorage.
         </p>
       </div>
     </div>

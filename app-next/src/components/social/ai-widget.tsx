@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/shell/toast-provider";
+import { useSession } from "@/lib/use-session";
 
 const REPLY_TEXT = "Mình là bản demo — thử bấm ⭐ trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!";
 
 export default function AiWidget() {
   const toast = useToast();
+  const { loggedIn } = useSession();
   const [chatOpen, setChatOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Array<{ role: "user" | "ai"; text: string }>>([
@@ -67,7 +69,7 @@ export default function AiWidget() {
         </button>
       ) : null}
 
-      <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => toast(isLoggedIn() ? "Hộp tin nhắn đang được mở (demo)…" : "Tin nhắn chỉ khả dụng khi đăng nhập")}>
+      <button type="button" className="btn-ghost px-3 py-2 text-sm" onClick={() => toast(loggedIn ? "Hộp tin nhắn đang được mở (demo)…" : "Tin nhắn chỉ khả dụng khi đăng nhập")}>
         💬 Nhắn tin
       </button>
       <button type="button" className="btn-main px-3 py-2 text-sm" onClick={() => toast("Cảm ơn bạn đã ủng hộ Nhai HSK! ❤️")}>
@@ -77,10 +79,3 @@ export default function AiWidget() {
   );
 }
 
-function isLoggedIn(): boolean {
-  try {
-    return localStorage.getItem("nhai.mockLogin") === "1";
-  } catch {
-    return false;
-  }
-}

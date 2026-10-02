@@ -1,18 +1,21 @@
 "use client";
 
 /* Gate mã FREEHSK (G8, spec 12 — port clone/js/create-file.js badge gate).
-   Mock SP1: nhập đúng "FREEHSK" → setFileCode() (nhai.fileCode="1") + toast
-   "Đã mở khóa in."; sai → toast hướng dẫn. Shape UI giữ nguyên để UPG-4
-   chỉ thay logic check. Badge "Đăng nhập để in" — shell learning-core chưa
-   expose event "nhai:open-login" nên hiện toast fallback. */
+   SP1 mock: nhập đúng "FREEHSK" → setFileCode() (nhai.fileCode="1") + toast
+   "Đã mở khóa in"; sai → toast hướng dẫn. UPG-2: badge "Đăng nhập để in" mở
+   thẳng Login modal thật thay vì toast báo "chức năng đăng nhập mock". */
 
 import React, { useState } from "react";
-import { setFileCode, isLoggedInMock } from "@/lib/create-file/storage";
+import { setFileCode } from "@/lib/create-file/storage";
 import { useToast } from "@/components/shell/toast-provider";
+import { useLoginModal } from "@/components/shell/login-modal";
+import { useSession } from "@/lib/use-session";
 
 export default function FreehskGate({ onUnlocked }: { onUnlocked: () => void }): React.JSX.Element {
   const [code, setCode] = useState("");
   const toast = useToast();
+  const { openLogin } = useLoginModal();
+  const { loggedIn } = useSession();
 
   const submit = () => {
     if (code.trim() === "FREEHSK") {
@@ -42,12 +45,8 @@ export default function FreehskGate({ onUnlocked }: { onUnlocked: () => void }):
         <button type="button" data-testid="code-submit" className="btn-main text-sm" onClick={submit}>
           Mở khóa in
         </button>
-        {!isLoggedInMock() && (
-          <button
-            type="button"
-            className="pill text-sm no-print"
-            onClick={() => toast("Chức năng đăng nhập mock nằm ở menu trên.")}
-          >
+        {!loggedIn && (
+          <button type="button" className="pill text-sm no-print" onClick={openLogin}>
             Đăng nhập để in
           </button>
         )}

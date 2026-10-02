@@ -11,6 +11,9 @@
 # Node (chưa dùng nhưng để sẵn)
 node_modules/
 
+# Cloudflare wrangler cache (tạo ra khi chạy lệnh wrangler ở repo root)
+.cloudflare/
+
 # Tài liệu sinh tự động / file tạm
 *.log
 *.tmp
