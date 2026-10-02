@@ -20,7 +20,7 @@ export default function DeleteAccountPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[760px] px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Xoá tài khoản</h1>
       <p className="text-text-secondary mb-6">Nhập email của tài khoản để yêu cầu xoá vĩnh viễn. Toàn bộ tiến trình học, từ vựng đã lưu và dữ liệu liên quan sẽ bị xoá và không thể khôi phục.</p>
 

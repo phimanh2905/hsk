@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 export default function TermsPage() {
   return (
-    <main className="mx-auto max-w-[760px] px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Điều khoản sử dụng</h1>
       <p className="text-text-secondary mb-6">Vui lòng đọc kỹ các điều khoản dưới đây trước khi sử dụng Nhai HSK.</p>
 

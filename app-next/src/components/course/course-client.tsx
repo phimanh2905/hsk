@@ -72,7 +72,7 @@ function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
             <IconButton
               label="Đọc mẫu"
               variant="solid"
-              className="w-9 h-9 min-h-9 min-w-9 shrink-0"
+              className="shrink-0"
               onClick={() => {
                 if (!loggedIn) { openLogin(); return; }
                 speak(item.title, { lang: "zh-CN" });

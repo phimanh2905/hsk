@@ -40,7 +40,7 @@ function markLearnSeen(n: number): void {
 }
 
 /* Đáp án trắc nghiệm: state đúng/sai qua token feedback, không palette Tailwind thô. */
-function answerCls(state: "idle" | "correct" | "wrong" | "muted" | "picked"): string {
+function answerCls(state: "idle" | "correct" | "wrong" | "muted"): string {
   switch (state) {
     case "correct":
       return "border-feedback-success bg-feedback-success/10 font-bold text-feedback-success";
@@ -48,8 +48,6 @@ function answerCls(state: "idle" | "correct" | "wrong" | "muted" | "picked"): st
       return "border-action-danger bg-action-danger/10 text-text-primary";
     case "muted":
       return "border-border-default opacity-60";
-    case "picked":
-      return "border-action-primary bg-action-primary/10";
     default:
       return "border-border-default hover:border-action-primary";
   }
@@ -181,7 +179,7 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
                       <span className="text-xs text-text-secondary">{t.ex.meaning}</span>
                       <IconButton
                         label="Nghe phát âm"
-                        className="w-9 h-9 min-h-9 min-w-9 text-sm shrink-0"
+                        className="text-sm shrink-0"
                         onClick={() => speak(t.ex!.pinyin.replace(/\s/g, ""), { rate: 0.8 })}
                       >
                         <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
@@ -379,13 +377,11 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
               <p className="font-bold mb-3">1. {mcItem.q}</p>
               <div className="grid sm:grid-cols-2 gap-2">
                 {mcItem.options.map((opt, oi) => {
-                  let state: "idle" | "correct" | "wrong" | "muted" | "picked" = "idle";
+                  let state: "idle" | "correct" | "wrong" | "muted" = "idle";
                   if (testPick !== null) {
                     if (oi === mcItem.answer) state = "correct";
                     else if (oi === testPick) state = "wrong";
                     else state = "muted";
-                  } else if (testPick === oi) {
-                    state = "picked";
                   }
                   return (
                     <button

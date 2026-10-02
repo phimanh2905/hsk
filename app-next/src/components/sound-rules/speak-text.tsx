@@ -24,7 +24,7 @@ export default function SpeakText({
       <IconButton
         label={`Nghe: ${text}`}
         variant="ghost"
-        className="min-h-8 min-w-8 self-center"
+        className="self-center"
         onClick={() => speak(text)}
       >
         <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />

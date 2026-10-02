@@ -26,7 +26,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[760px] px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Góp ý</h1>
       <p className="text-text-secondary mb-5">Cảm nhận của bạn giúp Nhai HSK tốt hơn…</p>
 

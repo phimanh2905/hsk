@@ -115,7 +115,7 @@ export default function HanziDetail({ char }: { char: string }) {
         {/* Trung tâm */}
         <div className="lg:col-span-4 order-1 lg:order-2">
           <div className="relative mx-auto w-[260px] h-[260px]">
-            <Card className="absolute inset-0 flex items-center justify-center" style={{ borderWidth: 2 }}>
+            <Card className="absolute inset-0 flex items-center justify-center">
               <span className="zh font-black text-[64px] leading-none">{char}</span>
             </Card>
             <div ref={writerRef} className="absolute inset-0"></div>
@@ -268,7 +268,7 @@ export default function HanziDetail({ char }: { char: string }) {
                       <IconButton
                         label="Phát âm"
                         variant="ghost"
-                        className="min-h-8 min-w-8"
+                       
                         onClick={() => speak(v.word, { lang: "zh-CN" })}
                       >
                         <Volume2 size={16} strokeWidth={1.5} aria-hidden="true" />

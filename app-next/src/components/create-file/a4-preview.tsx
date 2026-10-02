@@ -14,7 +14,7 @@ export default function A4Preview({ state }: { state: CfState }): React.JSX.Elem
       {renderPages(state).map((page, i) => (
         <div
           key={i}
-          className="print-page sheet card shadow-neo mx-auto w-full max-w-[794px] p-10 mb-8 print-area"
+          className="print-page sheet mx-auto w-full max-w-[794px] p-10 mb-8 print-area"
           dangerouslySetInnerHTML={{ __html: page }}
         />
       ))}

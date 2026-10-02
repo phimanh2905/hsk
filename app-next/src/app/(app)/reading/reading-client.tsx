@@ -138,7 +138,7 @@ function Extras({ doc, toast }: { doc: NonNullable<Doc["extras"]>; toast: (m: st
             <IconButton
               label={`Thêm ${v.word} vào sổ từ vựng`}
               onClick={() => toast(`Đã thêm「${v.word}」vào sổ từ vựng (demo)`)}
-              className="w-9 h-9 min-h-9 min-w-9 shrink-0"
+              className="shrink-0"
             >
               <Star size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
             </IconButton>
@@ -309,7 +309,7 @@ function ReadingClientInner() {
                             k.stop();
                             k.playFrom(i, false);
                           }}
-                          className="w-9 h-9 min-h-9 min-w-9 shrink-0"
+                          className="shrink-0"
                         >
                           {isActive ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Play size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
                         </IconButton>

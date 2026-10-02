@@ -33,7 +33,7 @@ export default function ToneDialog({
         >
           {syllable}
         </span>
-        <IconButton label="Đóng" variant="ghost" className="min-h-9 min-w-9" onClick={onClose}>
+        <IconButton label="Đóng" variant="ghost"  onClick={onClose}>
           <X size={18} strokeWidth={1.5} aria-hidden="true" />
         </IconButton>
       </div>

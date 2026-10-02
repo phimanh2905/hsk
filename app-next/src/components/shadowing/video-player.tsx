@@ -387,7 +387,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
       <Dialog open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} labelledBy="dlg-shortcuts-title" className="max-w-sm p-6">
         <div className="flex items-center justify-between mb-3">
           <h2 id="dlg-shortcuts-title" className="text-xl font-extrabold">Phím tắt</h2>
-          <IconButton label="Đóng" onClick={() => setShortcutsOpen(false)} className="w-9 h-9 min-h-9 min-w-9">
+          <IconButton label="Đóng" onClick={() => setShortcutsOpen(false)}>
             <X size={18} strokeWidth={ICON_STROKE} />
           </IconButton>
         </div>
@@ -403,7 +403,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
       <Dialog open={settingsOpen} onClose={() => setSettingsOpen(false)} labelledBy="dlg-settings-title" className="max-w-sm p-6">
         <div className="flex items-center justify-between mb-3">
           <h2 id="dlg-settings-title" className="text-xl font-extrabold">Cài đặt</h2>
-          <IconButton label="Đóng" onClick={() => setSettingsOpen(false)} className="w-9 h-9 min-h-9 min-w-9">
+          <IconButton label="Đóng" onClick={() => setSettingsOpen(false)}>
             <X size={18} strokeWidth={ICON_STROKE} />
           </IconButton>
         </div>

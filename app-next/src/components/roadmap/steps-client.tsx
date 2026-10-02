@@ -28,7 +28,7 @@ function SpeakBtn({ text }: { text: string }) {
     <IconButton
       label="Nghe phát âm"
       onClick={() => speak(text, { lang: "zh-CN", rate: 0.8 })}
-      className="w-9 h-9 min-h-9 min-w-9 text-sm shrink-0"
+      className="text-sm shrink-0"
     >
       <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
     </IconButton>

@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto max-w-[760px] px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Chính sách quyền riêng tư</h1>
       <p className="text-text-secondary mb-6">Nhai HSK tôn trọng quyền riêng tư của bạn. Dưới đây là cách chúng tôi xử lý dữ liệu.</p>
 

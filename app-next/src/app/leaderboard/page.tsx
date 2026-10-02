@@ -41,7 +41,7 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <main className="mx-auto max-w-[760px] px-4 py-6">
+    <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-4">Bảng xếp hạng</h1>
 
       <div className="flex gap-2 mb-3" role="tablist" aria-label="Loại bảng xếp hạng">
