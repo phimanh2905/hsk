@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app-next
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app-next/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - name: Build worker (kiểm tra đóng gói được)
+        if: github.ref != 'refs/heads/main'
+        run: pnpm exec opennextjs-cloudflare build
+      # Deploy: script `deploy` tự xoá .next (bỏ SSG cache cũ) rồi build + deploy.
+      # NEXT_PUBLIC_SITE_URL lấy từ app-next/.env.production đã commit — KHÔNG
+      # truyền env ở đây: biến rỗng sẽ đè file .env và làm `new URL("")` nổ lúc build.
+      - name: Deploy to Cloudflare Workers
+        if: github.ref == 'refs/heads/main'
+        run: pnpm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
