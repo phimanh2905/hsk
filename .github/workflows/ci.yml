@@ -13,6 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          # Step `uses:` không chịu defaults.run.working-directory, nên action
+          # phải được chỉ định file package.json của app-next (chứa packageManager).
+          package_json_file: app-next/package.json
       - uses: actions/setup-node@v4
         with:
           node-version: 22
