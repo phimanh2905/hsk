@@ -8,7 +8,8 @@ import { useState } from "react";
 import { readingData, type ReadingSentence } from "@/content/reading";
 import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "@/components/reading/karaoke";
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
-import { LoginProvider, LoginModal, useLoginModal, useMockLogin } from "@/components/shell/login-modal";
+import { LoginProvider, LoginModal, useLoginModal } from "@/components/shell/login-modal";
+import { useSession } from "@/lib/use-session";
 
 const MAX = 3000;
 const HL_STYLE = { background: "var(--nhai-gold)", borderRadius: "3px" } as const;
@@ -29,7 +30,7 @@ type Doc = {
 
 /* ---------- account-box (sidebar) ---------- */
 function AccountBox() {
-  const { loggedIn } = useMockLogin();
+  const { loggedIn } = useSession();
   const { openLogin } = useLoginModal();
   if (loggedIn) {
     return (

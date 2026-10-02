@@ -11,7 +11,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { courses, genGrammar, genHanzi, type LessonMeta, type Skill } from "@/content/courses";
 import { progressStore } from "@/lib/store/progress-store";
-import { useLoginModal, useMockLogin } from "@/components/shell/login-modal";
+import { useLoginModal } from "@/components/shell/login-modal";
+import { useSession } from "@/lib/use-session";
 import { useTts } from "@/lib/tts/use-tts";
 
 const SKILLS: { key: Skill; label: string }[] = [
@@ -24,7 +25,7 @@ const PROGRESS_EVENT = "nhai:progress";
 
 function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
   const { openLogin } = useLoginModal();
-  const { loggedIn } = useMockLogin();
+  const { loggedIn } = useSession();
   const { speak } = useTts();
   const [mounted, setMounted] = useState(false);
   const [doneSet, setDoneSet] = useState<Set<string>>(new Set());

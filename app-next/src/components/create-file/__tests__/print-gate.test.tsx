@@ -7,19 +7,39 @@ import FreehskGate from "../freehsk-gate";
 vi.mock("@/components/shell/toast-provider", () => ({
   useToast: () => (msg: string) => { (window as unknown as { __lastToast?: string }).__lastToast = msg; },
 }));
-beforeEach(() => { localStorage.clear(); });
 
-describe("PrintButton gate (G8 — mock đúng clone)", () => {
+vi.mock("@/components/shell/login-modal", () => ({
+  useLoginModal: () => ({ isOpen: false, openLogin: vi.fn(), close: vi.fn() }),
+}));
+
+// UPG-2: gate in giờ dựa session thật + mã FREEHSK, không còn localStorage mock.
+const { session } = vi.hoisted(() => ({ session: { loggedIn: false } }));
+vi.mock("@/lib/use-session", () => ({
+  useSession: () => ({ ...session, name: "T", image: null, isPending: false, logout: vi.fn() }),
+}));
+
+beforeEach(() => {
+  localStorage.clear();
+  session.loggedIn = false;
+});
+
+describe("PrintButton gate (G8)", () => {
   it("chưa login + chưa mã → '🔒 Đăng nhập để in'; sau khi unlock (nhai.fileCode=1) → '🖨 In / Lưu PDF' gọi window.print", async () => {
     const user = userEvent.setup();
     const printSpy = vi.spyOn(window, "print").mockImplementation(() => {});
     const { rerender } = render(<PrintButton />);
     expect(screen.getByText("🔒 Đăng nhập để in")).toBeTruthy();
-    rerender(<PrintButton key="unlocked" />);
     localStorage.setItem("nhai.fileCode", "1");
     rerender(<PrintButton key="unlocked2" />);
-    await user.click(screen.getByText("🖨 In / Lưu PDF"));
+    await user.click(await screen.findByText("🖨 In / Lưu PDF"));
     expect(printSpy).toHaveBeenCalled();
+  });
+
+  it("đã có session → hiện thẳng nút in, không mở gate", async () => {
+    session.loggedIn = true;
+    render(<PrintButton />);
+    expect(await screen.findByText("🖨 In / Lưu PDF")).toBeTruthy();
+    expect(screen.queryByText("🔒 Đăng nhập để in")).toBeNull();
   });
 });
 

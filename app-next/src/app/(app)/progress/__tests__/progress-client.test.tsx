@@ -6,15 +6,24 @@ vi.mock("@/components/shell/login-modal", () => ({
   useLoginModal: () => ({ isOpen: false, openLogin: vi.fn(), close: vi.fn() }),
 }));
 
-beforeEach(() => localStorage.clear());
+// UPG-2: session thật qua useSession, không đọc localStorage mock.
+const { session } = vi.hoisted(() => ({ session: { loggedIn: false } }));
+vi.mock("@/lib/use-session", () => ({
+  useSession: () => ({ ...session, name: "T", image: null, isPending: false, logout: vi.fn() }),
+}));
+
+beforeEach(() => {
+  localStorage.clear();
+  session.loggedIn = false;
+});
 
 describe("ProgressClient (F2)", () => {
   it("chưa login → gate 🔒 với sub progress", () => {
     render(<ProgressClient />);
     expect(screen.getByText("Tiến độ học của bạn sẽ được đồng bộ sau khi đăng nhập.")).toBeInTheDocument();
   });
-  it("mockLogin → card Điểm của bạn + rank #14594 (xp=0) + 4 stat card", () => {
-    localStorage.setItem("nhai.mockLogin", "1");
+  it("có session → card Điểm của bạn + rank #14594 (xp=0) + 4 stat card", () => {
+    session.loggedIn = true;
     render(<ProgressClient />);
     expect(screen.getByText("Điểm của bạn")).toBeInTheDocument();
     expect(screen.getByText("#14594")).toBeInTheDocument();
@@ -25,7 +34,7 @@ describe("ProgressClient (F2)", () => {
     expect(screen.getByText(/153/)).toBeInTheDocument();
   });
   it("xp > 0 → rank = 14594 − xp", () => {
-    localStorage.setItem("nhai.mockLogin", "1");
+    session.loggedIn = true;
     localStorage.setItem("nhai.xp", "94");
     render(<ProgressClient />);
     expect(screen.getByText("#14500")).toBeInTheDocument();

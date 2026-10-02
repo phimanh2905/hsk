@@ -1,0 +1,21 @@
+{
+  // Config riêng cho `next dev` — KHÔNG dùng file này khi deploy.
+  // next.config.ts gọi initOpenNextCloudflareForDev({ configPath: "./wrangler.dev.jsonc" })
+  // nên binding dưới đây mới có hiệu lực lúc dev.
+  //
+  // Trỏ `DB` vào D1 `hsk-dev`, KHÔNG phải `hsk` của production. `remote: true` cho
+  // phép dev đọc/ghi D1 thật trên Cloudflare thay vì SQLite trong .wrangler/state.
+  // Nếu sau này không cần D1 thật lúc dev, bỏ `remote` đi — mọi thứ rơi về local.
+  "name": "byehsk-dev",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hsk-dev",
+      "database_id": "51aed180-9bd9-4933-b9ef-119036063f7c",
+      "remote": true
+    }
+  ]
+}

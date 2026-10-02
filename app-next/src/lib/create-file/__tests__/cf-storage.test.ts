@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { loadCfState, persistCfState, hasFileCode, setFileCode, isLoggedInMock, CF_SESSION_KEY } from "../storage";
+import { loadCfState, persistCfState, hasFileCode, setFileCode, CF_SESSION_KEY } from "../storage";
 import { cfDefaults } from "../types";
 
 beforeEach(() => {
@@ -7,7 +7,7 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-describe("cf storage (sessionStorage nhai.cf.state + gate mock)", () => {
+describe("cf storage (sessionStorage nhai.cf.state + mã FREEHSK)", () => {
   it("persist → load roundtrip qua sessionStorage nhai.cf.state", () => {
     const st = { ...cfDefaults(), perRow: 9, tpl: "cover" };
     persistCfState(st);
@@ -24,10 +24,5 @@ describe("cf storage (sessionStorage nhai.cf.state + gate mock)", () => {
     setFileCode();
     expect(hasFileCode()).toBe(true);
     expect(localStorage.getItem("nhai.fileCode")).toBe("1");
-  });
-  it("isLoggedInMock chỉ đọc localStorage nhai.mockLogin", () => {
-    expect(isLoggedInMock()).toBe(false);
-    localStorage.setItem("nhai.mockLogin", "1");
-    expect(isLoggedInMock()).toBe(true);
   });
 });

@@ -3,16 +3,7 @@ import { ProgressStore } from "../progress-store";
 
 beforeEach(() => localStorage.clear());
 
-describe("mock login + streak", () => {
-  it("isLoggedIn/setMockLogin theo key nhai.mockLogin", () => {
-    const s = new ProgressStore();
-    expect(s.isLoggedIn()).toBe(false);
-    s.setMockLogin(true);
-    expect(localStorage.getItem("nhai.mockLogin")).toBe("1");
-    expect(s.isLoggedIn()).toBe(true);
-    s.setMockLogin(false);
-    expect(s.isLoggedIn()).toBe(false);
-  });
+describe("streak", () => {
   it("getStreak đọc nhai.streak, hỏng → 0", () => {
     const s = new ProgressStore();
     expect(s.getStreak()).toBe(0);

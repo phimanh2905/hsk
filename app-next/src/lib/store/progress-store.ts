@@ -51,8 +51,6 @@ export interface ProgressStoreApi {
   getRoadmapLearnSeen(): number[];
   markRoadmapLearnSeen(n: number): void;
   migrateLegacySrs(): void;
-  isLoggedIn(): boolean;
-  setMockLogin(on: boolean): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
   listDecks(kind: NotebookKind): DeckItem[];
@@ -402,25 +400,7 @@ export class ProgressStore implements ProgressStoreApi {
     this.writeSrsItems(items);
   }
 
-  /* ---------- mock login + streak (sp1-personal-tools Task 1) ---------- */
-
-  isLoggedIn(): boolean {
-    try {
-      return localStorage.getItem("nhai.mockLogin") === "1";
-    } catch {
-      return false;
-    }
-  }
-
-  setMockLogin(on: boolean): void {
-    try {
-      if (on) localStorage.setItem("nhai.mockLogin", "1");
-      else localStorage.removeItem("nhai.mockLogin");
-    } catch {
-      /* silent */
-    }
-    dispatchProgress();
-  }
+  /* ---------- streak (sp1-personal-tools Task 1) ---------- */
 
   getStreak(): number {
     return readNum("nhai.streak");

@@ -41,12 +41,3 @@ export function setFileCode(): void {
     /* silent */
   }
 }
-
-/* chỉ đọc — bên ghi là Login modal của shell */
-export function isLoggedInMock(): boolean {
-  try {
-    return localStorage.getItem("nhai.mockLogin") === "1";
-  } catch {
-    return false;
-  }
-}
