@@ -22,15 +22,15 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
-      - run: pnpm exec opennextjs-cloudflare build
-        env:
-          # Trang public được prerender lúc build: thiếu biến này thì sitemap,
-          # robots và metadataBase sẽ bị bake cứng localhost/nhaihsk.example.
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-      - name: Deploy to Cloudflare Workers (main only)
+      - name: Build worker (kiểm tra đóng gói được)
+        if: github.ref != 'refs/heads/main'
+        run: pnpm exec opennextjs-cloudflare build
+      # Deploy: script `deploy` tự xoá .next (bỏ SSG cache cũ) rồi build + deploy.
+      # NEXT_PUBLIC_SITE_URL lấy từ app-next/.env.production đã commit — KHÔNG
+      # truyền env ở đây: biến rỗng sẽ đè file .env và làm `new URL("")` nổ lúc build.
+      - name: Deploy to Cloudflare Workers
         if: github.ref == 'refs/heads/main'
-        run: pnpm exec opennextjs-cloudflare deploy
+        run: pnpm run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
