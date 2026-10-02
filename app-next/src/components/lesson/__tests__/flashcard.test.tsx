@@ -54,13 +54,13 @@ describe("FlashcardMode", () => {
 });
 
 describe("Lesson polish (SPEC-14)", () => {
-  it("header: badge Bài N nền đen, mascot 🍅 trước h1, watermark có mặt (render qua LessonClient)", () => {
+  it("header: badge Bài N nền ink, mascot 🍅 trước h1, watermark có mặt (render qua LessonClient)", () => {
     const { container } = render(
       <LessonProvider items={words} book="hsk1" page="lesson-1">
         <LessonClient book="hsk1" page="lesson-1" />
       </LessonProvider>
     );
-    expect(container.querySelector("[data-badge='page']")?.className).toContain("bg-black");
+    expect(container.querySelector("[data-badge='page']")?.className).toContain("bg-text-primary");
     expect(container.querySelector("[data-mascot]")?.textContent).toBe("🍅");
     expect(container.querySelector("[data-watermark]")).not.toBeNull();
   });
