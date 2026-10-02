@@ -6,7 +6,21 @@ import SidebarNav from "@/components/shell/sidebar-nav";
 import SettingsModal from "@/components/shell/settings-modal";
 import AiWidget from "@/components/social/ai-widget";
 import type { Metadata } from "next";
+import { Be_Vietnam_Pro, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
+
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-be-vietnam-pro",
+  display: "swap",
+});
+const notoSansSC = Noto_Sans_SC({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-noto-sans-sc",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://nhaihsk.example"),
@@ -17,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" suppressHydrationWarning>
+    <html lang="vi" suppressHydrationWarning className={`${beVietnamPro.variable} ${notoSansSC.variable}`}>
       <body>
         <ThemeProvider>
           <ToastProvider>

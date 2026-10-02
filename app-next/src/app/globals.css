@@ -1,6 +1,102 @@
 @import "tailwindcss";
 
-/* Nhai HSK — shared theme tokens (light + dark) */
+/* Hanzi design system — 3 lớp token (spec 2026-10-02). Nguồn dark: system/variables.dark.css */
+:root {
+  /* lớp 1 — primitives */
+  --hz-paper: #fafbfa;   --hz-elevated: #ffffff;
+  --hz-ink: #1f2a27;     --hz-slate: #66756f;
+  --hz-line: #e8ecea;    --hz-jade: #0f766e;
+  --hz-vermilion: #d24b3f; --hz-vermilion-700: #a9342b;
+  --hz-amber: #faad14;   --hz-purple: #722ed1;
+  /* lớp 2 — semantic */
+  --surface-paper: var(--hz-paper);
+  --surface-elevated: var(--hz-elevated);
+  --text-primary: var(--hz-ink);
+  --text-secondary: var(--hz-slate);
+  --border-subtle: #edeeed;
+  --border-default: var(--hz-line);
+  --border-strong: #d9dcda;
+  --action-primary: var(--hz-jade);
+  --action-primary-hover: #0d635b;
+  --action-primary-active: #0a524b;
+  --action-focus: var(--hz-jade);
+  --action-danger: var(--hz-vermilion);
+  --action-danger-active: var(--hz-vermilion-700);
+  --feedback-success: #52c41a;
+  --feedback-warning: var(--hz-amber);
+  --feedback-error: var(--hz-vermilion);
+  --feedback-error-text: var(--hz-vermilion-700);
+  --learning-streak: var(--hz-amber);
+  --learning-new: var(--hz-slate);
+  --learning-progress: var(--hz-amber);
+  --learning-mastered: var(--hz-jade);
+  --learning-due: var(--hz-vermilion);
+  --feature-ai: var(--hz-purple);
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --shadow-xs: 0 1px 2px rgba(31, 42, 39, .06);
+  --shadow-md: 0 6px 24px rgba(31, 42, 39, .14);
+}
+html.dark {
+  --hz-paper: #1d1d1d;   --hz-elevated: #141414;
+  --hz-ink: #dcdcdc;     --hz-slate: #adadad;
+  --hz-line: #3e3e3e;
+  --surface-paper: var(--hz-paper);
+  --surface-elevated: var(--hz-elevated);
+  --text-primary: #dcdcdc;
+  --text-secondary: #adadad;
+  --border-subtle: #303030;
+  --border-default: #3e3e3e;
+  --border-strong: #4f4f4f;
+  --action-primary: #237269;
+  --action-primary-hover: #3c8378;
+  --action-primary-active: #205c55;
+  --action-focus: #237269;
+  --action-danger: #dc6966;
+  --action-danger-active: #ad5553;
+  --feedback-success: #64b537;
+  --feedback-warning: #dcaa37;
+  --feedback-error: #dc6966;
+  --feedback-error-text: #dc6966;
+  --learning-new: #adadad;
+  --learning-mastered: #237269;
+  --learning-due: #dc6966;
+  --feature-ai: #9254de;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-md: 0 6px 24px rgba(0, 0, 0, .5);
+}
+@theme inline {
+  --color-surface-paper: var(--surface-paper);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-action-primary: var(--action-primary);
+  --color-action-primary-hover: var(--action-primary-hover);
+  --color-action-primary-active: var(--action-primary-active);
+  --color-action-focus: var(--action-focus);
+  --color-action-danger: var(--action-danger);
+  --color-action-danger-active: var(--action-danger-active);
+  --color-feedback-success: var(--feedback-success);
+  --color-feedback-warning: var(--feedback-warning);
+  --color-feedback-error: var(--feedback-error);
+  --color-feedback-error-text: var(--feedback-error-text);
+  --color-learning-streak: var(--learning-streak);
+  --color-learning-new: var(--learning-new);
+  --color-learning-progress: var(--learning-progress);
+  --color-learning-mastered: var(--learning-mastered);
+  --color-learning-due: var(--learning-due);
+  --color-feature-ai: var(--feature-ai);
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-md: var(--shadow-md);
+  --font-sans: var(--font-be-vietnam-pro), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Legacy tokens — xóa ở Task 9 */
 :root {
   --nhai-bg: #fdf9f3;
   --nhai-card: #ffffff;
@@ -34,11 +130,11 @@ html.dark {
   --color-nhai-soft: var(--nhai-soft);
 }
 body {
-  background: var(--nhai-bg);
-  color: var(--nhai-ink);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--surface-paper);
+  color: var(--text-primary);
+  font-family: var(--font-be-vietnam-pro), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.zh, [lang="zh"] { font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif; }
+.zh, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
 .card {
   background: var(--nhai-card);
   border: 2px solid var(--nhai-border);
