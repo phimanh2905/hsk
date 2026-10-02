@@ -10,9 +10,16 @@ import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal, useLoginModal } from "@/components/shell/login-modal";
 import { useSession } from "@/lib/use-session";
+import { Volume2, Square, Play, Lightbulb, Star } from "@/components/ui/icon";
+import { ICON_STROKE } from "@/components/ui/icon";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { Select } from "@/components/ui/select";
+import { IconButton } from "@/components/ui/icon-button";
+import { cn } from "@/lib/cn";
 
 const MAX = 3000;
-const HL_STYLE = { background: "var(--nhai-gold)", borderRadius: "3px" } as const;
 
 function zhFull(doc: { sentences: { zh: string }[] }) {
   return doc.sentences.map((s) => s.zh).join("");
@@ -34,17 +41,17 @@ function AccountBox() {
   const { openLogin } = useLoginModal();
   if (loggedIn) {
     return (
-      <p className="text-sm text-[var(--nhai-muted)]">
+      <p className="text-sm text-text-secondary">
         Chưa có bài nào được lưu — bài bạn bấm “Tạo bài đọc” sẽ xuất hiện ở đây (demo).
       </p>
     );
   }
   return (
     <>
-      <p className="text-sm text-[var(--nhai-muted)] mb-3">Đăng nhập để lưu bài đã tạo và mở lại mọi lúc.</p>
-      <button type="button" onClick={openLogin} className="btn-ghost w-full px-4 py-2 rounded-lg text-sm font-bold">
+      <p className="text-sm text-text-secondary mb-3">Đăng nhập để lưu bài đã tạo và mở lại mọi lúc.</p>
+      <Button type="button" variant="secondary" onClick={openLogin} className="w-full">
         Đăng nhập
-      </button>
+      </Button>
     </>
   );
 }
@@ -53,20 +60,20 @@ function AccountBox() {
 function Callout() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-2 border-[var(--nhai-border)] rounded-xl mb-4 bg-white">
+    <Card className="mb-4 p-0 overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2 px-4 py-3 text-left font-bold hover:bg-[var(--nhai-soft)]"
+        className="w-full flex items-center gap-2 px-4 py-3 text-left font-bold hover:bg-surface-paper"
         aria-expanded={open}
       >
-        <span aria-hidden="true">💡</span>
+        <Lightbulb size={18} strokeWidth={ICON_STROKE} className="text-learning-streak shrink-0" aria-hidden="true" />
         <span className="flex-1">Phương pháp đọc hiểu hiệu quả nhất (6 bước với 1 bài)</span>
-        <span className="text-sm text-[var(--nhai-muted)]">{open ? "▴" : "▾"}</span>
+        <span className="text-sm text-text-secondary">{open ? "▴" : "▾"}</span>
       </button>
       {open && (
         <div className="px-5 pb-4">
-          <ol className="list-decimal ml-5 space-y-1 text-sm text-[var(--nhai-muted)]">
+          <ol className="list-decimal ml-5 space-y-1 text-sm text-text-secondary">
             <li>Đọc lướt cả bài một lần để nắm đại ý, không cần hiểu từng chữ.</li>
             <li>Bật audio đọc cả bài, vừa nghe vừa nhìn chữ — đừng dừng lại.</li>
             <li>Đọc từng câu: bấm ▶, theo dõi chữ sáng, bắt chước ngữ điệu (shadowing).</li>
@@ -76,7 +83,7 @@ function Callout() {
           </ol>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -88,9 +95,9 @@ function Extras({ doc, toast }: { doc: NonNullable<Doc["extras"]>; toast: (m: st
       <h3 className="text-xl font-extrabold mt-6 mb-3">Câu hỏi &amp; Từ vựng</h3>
       <div className="space-y-3">
         {doc.questions.map((q, qi) => (
-          <div key={qi} className="border-2 border-[var(--nhai-border)] rounded-lg p-3">
+          <div key={qi} className="border border-border-default rounded-card p-3">
             <p className="zh font-bold">{q.q}</p>
-            <p className="text-xs text-[var(--nhai-muted)] mb-2">{q.qVi}</p>
+            <p className="text-xs text-text-secondary mb-2">{q.qVi}</p>
             <div className="grid sm:grid-cols-2 gap-2">
               {q.options.map((opt, oi) => {
                 const isCorrect = solved[qi] === oi;
@@ -101,15 +108,17 @@ function Extras({ doc, toast }: { doc: NonNullable<Doc["extras"]>; toast: (m: st
                     onClick={() => {
                       if (oi === q.answer) {
                         setSolved((s) => ({ ...s, [qi]: oi }));
-                        toast("Chính xác! 🎉");
+                        toast("Chính xác!");
                       } else {
                         toast("Chưa đúng — thử lại nhé!");
                       }
                     }}
-                    className={
-                      "btn-ghost zh text-left px-3 py-2 rounded-lg text-sm" +
-                      (isCorrect ? " border-[var(--nhai-main)] text-[var(--nhai-main)]" : "")
-                    }
+                    className={cn(
+                      "zh text-left min-h-[52px] px-3 py-2 rounded-control border text-sm bg-surface-elevated text-text-primary transition-colors",
+                      isCorrect
+                        ? "border-feedback-success text-feedback-success font-bold"
+                        : "border-border-default hover:border-action-primary",
+                    )}
                   >
                     {String.fromCharCode(65 + oi)}. {opt}
                   </button>
@@ -122,18 +131,17 @@ function Extras({ doc, toast }: { doc: NonNullable<Doc["extras"]>; toast: (m: st
       <h3 className="text-lg font-extrabold mt-6 mb-2">Từ vựng trong bài</h3>
       <ul className="grid sm:grid-cols-2 gap-2 mb-2">
         {doc.vocab.map((v) => (
-          <li key={v.word} className="border-2 border-[var(--nhai-border)] rounded-lg px-3 py-2 flex items-center gap-3">
+          <li key={v.word} className="border border-border-default rounded-card px-3 py-2 flex items-center gap-3">
             <span className="zh font-bold text-lg">{v.word}</span>
-            <span className="zh text-xs text-[var(--nhai-accent)]">{v.py}</span>
-            <span className="text-sm text-[var(--nhai-muted)] flex-1">{v.vi}</span>
-            <button
-              type="button"
-              onClick={() => toast(`Đã thêm「${v.word}」vào sổ từ vựng (demo) ⭐`)}
-              className="btn-ghost w-8 h-8 rounded-full shrink-0"
-              aria-label={`Thêm ${v.word} vào sổ từ vựng`}
+            <span className="zh text-xs text-text-secondary">{v.py}</span>
+            <span className="text-sm text-text-secondary flex-1">{v.vi}</span>
+            <IconButton
+              label={`Thêm ${v.word} vào sổ từ vựng`}
+              onClick={() => toast(`Đã thêm「${v.word}」vào sổ từ vựng (demo)`)}
+              className="w-9 h-9 min-h-9 min-w-9 shrink-0"
             >
-              ⭐
-            </button>
+              <Star size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
+            </IconButton>
           </li>
         ))}
       </ul>
@@ -195,140 +203,150 @@ function ReadingClientInner() {
   };
 
   return (
-    <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
-      {/* ---------- sidebar ---------- */}
-      <aside className="space-y-4">
-        <div className="card shadow-neo p-4">
-          <h2 className="font-extrabold mb-2">Bài đọc mẫu</h2>
-          <button type="button" onClick={openDemo} className="btn-ghost w-full text-left px-3 py-2.5 rounded-lg">
-            <span className="zh font-bold text-base">一个人的生活</span>
-            <span className="block text-xs text-[var(--nhai-muted)] mt-0.5">
-              Cuộc sống một mình — 2:29 · 654 ký tự
-            </span>
-          </button>
-        </div>
-        <div className="card shadow-neo p-4">
-          <AccountBox />
-        </div>
-      </aside>
+    <div className="mx-auto w-full max-w-[820px]">
+      <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
+        {/* ---------- sidebar ---------- */}
+        <aside className="space-y-4">
+          <Card className="p-4">
+            <h2 className="font-extrabold mb-2">Bài đọc mẫu</h2>
+            <button type="button" onClick={openDemo} className="w-full text-left px-3 py-2.5 rounded-control hover:bg-surface-paper">
+              <span className="zh font-bold text-base">一个人的生活</span>
+              <span className="block text-xs text-text-secondary mt-0.5">
+                Cuộc sống một mình — 2:29 · 654 ký tự
+              </span>
+            </button>
+          </Card>
+          <Card className="p-4">
+            <AccountBox />
+          </Card>
+        </aside>
 
-      {/* ---------- main ---------- */}
-      <div>
-        <h1 className="text-3xl font-extrabold mb-4">Bài đọc</h1>
+        {/* ---------- main ---------- */}
+        <div>
+          <h1 className="text-3xl font-extrabold mb-4">Bài đọc</h1>
 
-        <Callout />
+          <Callout />
 
-        <div className="card shadow-neo p-4 mb-4">
-          <label htmlFor="reading-input" className="sr-only">
-            Nội dung bài đọc
-          </label>
-          <textarea
-            id="reading-input"
-            data-input
-            value={text}
-            onChange={(e) => setText(syncCounter(e.target.value))}
-            rows={7}
-            className="w-full border-2 border-[var(--nhai-border)] rounded-lg p-3 text-base zh"
-            placeholder="Dán văn bản tiếng Trung vào đây…"
-          />
-          <div className="flex items-center justify-between gap-2 flex-wrap mt-2">
-            <span className="text-xs text-[var(--nhai-muted)]" data-counter>
-              {text.length}/{MAX}
-            </span>
-            <div className="flex items-center gap-2">
-              <button type="button" onClick={fillSample} className="btn-ghost px-4 py-2 rounded-lg text-sm font-bold">
-                Điền văn bản mẫu
-              </button>
-              <button type="button" onClick={createDoc} className="btn-main px-4 py-2 rounded-lg text-sm font-extrabold">
-                Tạo bài đọc
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {doc && (
-          <div className="card shadow-neo p-4">
-            <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
-              <div>
-                <h2 className="zh text-2xl font-extrabold">{doc.title}</h2>
-                <p className="text-sm text-[var(--nhai-muted)] mt-0.5">{doc.meta}</p>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <button
-                  type="button"
-                  data-playing={k.playingAll ? "true" : "false"}
-                  onClick={() => (k.playingAll ? k.stop() : k.playFrom(0, true))}
-                  className="btn-main px-4 py-2 rounded-lg text-sm font-extrabold"
-                >
-                  {k.playingAll ? "⏹ Dừng" : "🔊 Phát cả bài"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowVi((v) => !v)}
-                  className={"pill px-3 py-1.5 rounded-full text-sm font-bold" + (showVi ? " pill-active" : "")}
-                >
-                  Dịch
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPy((v) => !v)}
-                  className={"pill px-3 py-1.5 rounded-full text-sm font-bold" + (showPy ? " pill-active" : "")}
-                >
-                  Pinyin
-                </button>
-                <select
-                  defaultValue="1"
-                  onChange={(e) => k.setRate(parseFloat(e.target.value) || 1)}
-                  className="pill px-2 py-1.5 rounded-full text-sm font-bold"
-                  aria-label="Tốc độ đọc"
-                >
-                  <option value="0.7">0.7×</option>
-                  <option value="1">1×</option>
-                  <option value="1.3">1.3×</option>
-                </select>
+          <Card className="p-4 mb-4">
+            <label htmlFor="reading-input" className="sr-only">
+              Nội dung bài đọc
+            </label>
+            <textarea
+              id="reading-input"
+              data-input
+              value={text}
+              onChange={(e) => setText(syncCounter(e.target.value))}
+              rows={7}
+              className="w-full rounded-control border border-border-default bg-surface-elevated p-3 text-base zh focus:outline-none focus:ring-3 ring-action-focus ring-offset-2"
+              placeholder="Dán văn bản tiếng Trung vào đây…"
+            />
+            <div className="flex items-center justify-between gap-2 flex-wrap mt-2">
+              <span className="text-xs text-text-secondary" data-counter>
+                {text.length}/{MAX}
+              </span>
+              <div className="flex items-center gap-2">
+                <Button type="button" variant="secondary" size="sm" onClick={fillSample}>
+                  Điền văn bản mẫu
+                </Button>
+                <Button type="button" size="sm" onClick={createDoc}>
+                  Tạo bài đọc
+                </Button>
               </div>
             </div>
+          </Card>
 
-            <div className="space-y-2">
-              {doc.sentences.map((s, i) => (
-                <div key={i} className="border-2 border-[var(--nhai-border)] rounded-lg p-3" data-row={i}>
-                  <div className="flex items-start gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        k.stop();
-                        k.playFrom(i, false);
-                      }}
-                      className="btn-ghost w-9 h-9 shrink-0 rounded-full"
-                      aria-label={`Đọc câu ${i + 1}`}
-                    >
-                      {k.activeIdx === i ? "⏹" : "▶"}
-                    </button>
-                    <div className="min-w-0">
-                      <p className="zh text-xl leading-loose">
-                        {Array.from(s.zh).map((c, ci) => (
-                          <span
-                            key={ci}
-                            className="zh-char inline-block"
-                            style={
-                              k.highlight && k.highlight.row === i && k.highlight.char === ci ? HL_STYLE : undefined
-                            }
-                          >
-                            {c === " " ? "\u00A0" : c}
-                          </span>
-                        ))}
-                      </p>
-                      {showPy && s.py && <p className="zh text-sm text-[var(--nhai-accent)] mt-1">{s.py}</p>}
-                      {showVi && <p className="text-sm text-[var(--nhai-muted)] mt-1">{s.vi}</p>}
-                    </div>
-                  </div>
+          {doc && (
+            <Card className="p-4">
+              <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
+                <div>
+                  <h2 className="zh text-2xl font-extrabold">{doc.title}</h2>
+                  <p className="text-sm text-text-secondary mt-0.5">{doc.meta}</p>
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button
+                    type="button"
+                    data-playing={k.playingAll ? "true" : "false"}
+                    onClick={() => (k.playingAll ? k.stop() : k.playFrom(0, true))}
+                  >
+                    {k.playingAll ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
+                    {k.playingAll ? "Dừng" : "Phát cả bài"}
+                  </Button>
+                  <Chip selected={showVi} onClick={() => setShowVi((v) => !v)}>
+                    Dịch
+                  </Chip>
+                  <Chip selected={showPy} onClick={() => setShowPy((v) => !v)}>
+                    Pinyin
+                  </Chip>
+                  <Select
+                    defaultValue="1"
+                    onChange={(e) => k.setRate(parseFloat(e.target.value) || 1)}
+                    aria-label="Tốc độ đọc"
+                    className="text-sm min-h-11 py-1.5"
+                  >
+                    <option value="0.7">0.7×</option>
+                    <option value="1">1×</option>
+                    <option value="1.3">1.3×</option>
+                  </Select>
+                </div>
+              </div>
 
-            {doc.extras && <Extras doc={doc.extras} toast={toast} />}
-          </div>
-        )}
+              <div className="space-y-2">
+                {doc.sentences.map((s, i) => {
+                  const isActive = k.activeIdx === i;
+                  return (
+                    <div
+                      key={i}
+                      data-row={i}
+                      className={cn(
+                        "rounded-control border p-3 transition-colors",
+                        isActive ? "border-action-primary bg-action-primary/10" : "border-border-default",
+                      )}
+                    >
+                      <div className="flex items-start gap-2">
+                        <IconButton
+                          label={`Đọc câu ${i + 1}`}
+                          onClick={() => {
+                            k.stop();
+                            k.playFrom(i, false);
+                          }}
+                          className="w-9 h-9 min-h-9 min-w-9 shrink-0"
+                        >
+                          {isActive ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Play size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
+                        </IconButton>
+                        <div className="min-w-0">
+                          {/* Highlight câu đang đọc: nền jade/10 + underline — không chỉ màu một mình */}
+                          <p
+                            className={cn(
+                              "zh text-xl leading-loose",
+                              isActive && "underline decoration-action-primary decoration-2 underline-offset-4",
+                            )}
+                          >
+                            {Array.from(s.zh).map((c, ci) => (
+                              <span
+                                key={ci}
+                                className={cn(
+                                  "zh-char inline-block",
+                                  k.highlight && k.highlight.row === i && k.highlight.char === ci &&
+                                    "bg-action-primary/10 underline decoration-action-primary decoration-2 underline-offset-4",
+                                )}
+                              >
+                                {c === " " ? "\u00A0" : c}
+                              </span>
+                            ))}
+                          </p>
+                          {showPy && s.py && <p className="zh text-sm text-text-secondary mt-1">{s.py}</p>}
+                          {showVi && <p className="text-sm text-text-secondary mt-1">{s.vi}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {doc.extras && <Extras doc={doc.extras} toast={toast} />}
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );

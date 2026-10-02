@@ -43,6 +43,6 @@ describe("SessionClient (E3)", () => {
   });
   it("buổi 2 khóa tab Bài kiểm tra khi buổi 1 chưa done", () => {
     render(<SessionClient n={2} />);
-    expect(screen.getByRole("button", { name: /Bài kiểm tra/ }).textContent).toContain("🔒");
+    expect(screen.getByRole("button", { name: /Bài kiểm tra/ }).dataset.locked).toBe("true");
   });
 });

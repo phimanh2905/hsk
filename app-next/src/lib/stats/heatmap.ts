@@ -27,11 +27,14 @@ export function heatData(real: Record<string, number> | null, now: Date): Record
   }
   return map;
 }
+/* Mức độ = alpha của jade (--action-primary) 20/40/60/80/100% — không màu một mình: tooltip `title` kèm số xp. */
 export function heatClass(v: number): string {
-  if (!v || v <= 0) return "bg-[var(--nhai-bg)] border border-[var(--nhai-border)]";
-  if (v <= 2) return "bg-[#f5b7ae]";
-  if (v <= 5) return "bg-[#d9534f]";
-  return "bg-[#a83232]";
+  if (!v || v <= 0) return "bg-border-subtle";
+  if (v <= 2) return "bg-action-primary/20";
+  if (v <= 5) return "bg-action-primary/40";
+  if (v <= 9) return "bg-action-primary/60";
+  if (v <= 14) return "bg-action-primary/80";
+  return "bg-action-primary";
 }
 export function computeStreak(days: Record<string, number>, today: string): number {
   const DAY = 86_400_000;

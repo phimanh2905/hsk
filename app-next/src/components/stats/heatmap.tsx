@@ -1,8 +1,9 @@
 "use client";
 import { heatClass, heatData } from "@/lib/stats/heatmap";
+import { Card } from "@/components/ui/card";
 
 // Port renderHeatmap từ clone/js/progress.js:125-153.
-// Tooltip hover của clone dùng div fixed theo mouse — SP1 dùng `title` attr native.
+// Tooltip hover của clone dùng div fixed theo mouse — SP1 dùng `title` attr native (kèm số xp).
 export function Heatmap({ real, now = new Date() }: { real: Record<string, number> | null; now?: Date }) {
   const map = heatData(real, now);
   const cols = [];
@@ -22,17 +23,17 @@ export function Heatmap({ real, now = new Date() }: { real: Record<string, numbe
     }
     cols.push(
       <div key={key(y, m)} className="flex flex-col items-center gap-[3px] min-w-0">
-        <span className="text-[10px] font-bold text-[var(--nhai-muted)] mb-1 whitespace-nowrap">Tháng {m + 1}</span>
+        <span className="text-[10px] font-bold text-text-secondary mb-1 whitespace-nowrap">Tháng {m + 1}</span>
         <div className="flex flex-col gap-[3px]">{cells}</div>
       </div>
     );
   }
   return (
-    <div className="card shadow-neo p-5">
+    <Card>
       <h3 className="font-extrabold mb-1">Lịch học</h3>
-      <p className="text-xs text-[var(--nhai-muted)] mb-4">12 tháng gần đây</p>
+      <p className="text-xs text-text-secondary mb-4">12 tháng gần đây</p>
       <div data-heat className="grid gap-2" style={{ gridTemplateColumns: "repeat(12,1fr)", overflowX: "auto" }}>{cols}</div>
-    </div>
+    </Card>
   );
 }
 function key(y: number, m: number) { return `${y}-${m}`; }

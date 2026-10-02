@@ -1,6 +1,6 @@
 "use client";
 
-/* JourneyCard (E1) — card "Hành trình của bạn 🚩" trên trang /roadmap.
+/* JourneyCard (E1) — card "Hành trình của bạn" trên trang /roadmap.
    Port từ clone/roadmap.html + SPEC-05 §1: "Bạn đang ở: 拼音 · Bảng chữ cái Pinyin"
    + nút "Tiếp tục học" → /roadmap/pinyin + progress bar % toàn lộ trình
    (% = getRoadmapDone().length / 8 — tiến độ chặng pinyin).
@@ -10,8 +10,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { roadmapCopy } from "@/content/roadmap";
 import { progressStore } from "@/lib/store/progress-store";
+import { Card } from "@/components/ui/card";
 
 const PINYIN_TOTAL_SESSIONS = 8;
+
+const LINK_BTN =
+  "inline-flex items-center justify-center rounded-control border font-semibold min-h-11 px-4 text-sm " +
+  "bg-action-primary text-white border-transparent hover:bg-action-primary-hover active:bg-action-primary-active " +
+  "focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
 
 export default function JourneyCard(): React.JSX.Element {
   const [mounted, setMounted] = useState(false);
@@ -26,25 +32,32 @@ export default function JourneyCard(): React.JSX.Element {
   const percent = mounted ? Math.floor((doneCount / PINYIN_TOTAL_SESSIONS) * 100) : 0;
 
   return (
-    <section className="card shadow-neo p-5 mb-8">
+    <Card className="p-5 mb-8">
       <h2 className="text-lg font-extrabold mb-3">{roadmapCopy.yourJourney}</h2>
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <p className="font-semibold">
-          Bạn đang ở: <span className="zh text-nhai-main font-extrabold">拼音</span> · Bảng chữ cái Pinyin
+          Bạn đang ở: <span className="zh text-action-primary font-extrabold">拼音</span> · Bảng chữ cái Pinyin
         </p>
-        <Link href="/roadmap/pinyin" className="btn-main px-4 py-2 text-sm ml-auto">
+        <Link href="/roadmap/pinyin" className={`${LINK_BTN} ml-auto`}>
           {roadmapCopy.continueCta}
         </Link>
       </div>
       <div>
         <div className="flex items-center justify-between text-xs font-bold mb-1">
-          <span className="text-nhai-muted">Tiến độ</span>
+          <span className="text-text-secondary">Tiến độ</span>
           <span>{percent}% toàn lộ trình</span>
         </div>
-        <div className="h-3 rounded-full bg-nhai-soft border-2 border-nhai-border overflow-hidden">
-          <div className="h-full bg-nhai-main" style={{ width: `${percent}%` }} />
+        <div
+          role="progressbar"
+          aria-label="Tiến độ toàn lộ trình"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={percent}
+          className="h-3 rounded-full bg-border-subtle overflow-hidden"
+        >
+          <div className="h-full bg-action-primary" style={{ width: `${percent}%` }} />
         </div>
       </div>
-    </section>
+    </Card>
   );
 }
