@@ -34,6 +34,6 @@ describe("Progress — bare + gradient (spec 2026-10-04)", () => {
   });
   it("gradient=true cho fill class gradient jade→vermilion", () => {
     render(<Progress value={55} ariaLabel="p" gradient />);
-    expect(screen.getByRole("progressbar").firstChild!.className).toContain("bg-gradient-to-r");
+    expect((screen.getByRole("progressbar").firstChild as HTMLElement).className).toContain("bg-gradient-to-r");
   });
 });
