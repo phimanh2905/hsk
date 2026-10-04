@@ -106,6 +106,8 @@ html.dark {
   --color-learning-progress: var(--learning-progress);
   --color-learning-mastered: var(--learning-mastered);
   --color-learning-due: var(--learning-due);
+  /* port roadmap.html: jade dùng cho progress fill + node done (spec 2026-10-04 §7) */
+  --color-jade: var(--hz-jade);
   --color-feature-ai: var(--feature-ai);
   --radius-card: var(--radius-card);
   --radius-control: var(--radius-control);
@@ -149,4 +151,14 @@ body {
   25% { transform: translateX(-6px); }
   50% { transform: translateX(6px); }
   75% { transform: translateX(-6px); }
+}
+
+/* Node trạm active — halo pulse (port roadmap.html @keyframes pulse) */
+@keyframes hz-node-pulse {
+  0%, 100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--action-primary) 16%, transparent); }
+  50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--action-primary) 7%, transparent); }
+}
+.hz-node-pulse { animation: hz-node-pulse 2.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .hz-node-pulse { animation: none; }
 }
