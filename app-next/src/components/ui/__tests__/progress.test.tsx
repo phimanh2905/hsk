@@ -25,3 +25,15 @@ describe("Progress", () => {
     expect(fill.className).toContain("bg-action-primary");
   });
 });
+
+describe("Progress — bare + gradient (spec 2026-10-04)", () => {
+  it("không hiện label khi chỉ truyền ariaLabel, vẫn có role progressbar", () => {
+    render(<Progress value={55} ariaLabel="Tiến độ bài học" />);
+    expect(screen.getByRole("progressbar", { name: "Tiến độ bài học" })).toBeInTheDocument();
+    expect(screen.queryByText("55%")).not.toBeInTheDocument();
+  });
+  it("gradient=true cho fill class gradient jade→vermilion", () => {
+    render(<Progress value={55} ariaLabel="p" gradient />);
+    expect(screen.getByRole("progressbar").firstChild!.className).toContain("bg-gradient-to-r");
+  });
+});
