@@ -48,4 +48,14 @@ describe("SrsBuckets", () => {
     fireEvent.click(container.querySelector('[data-testid="bucket"] button')!);
     expect(onChipClick).toHaveBeenCalledWith("字0");
   });
+  it("cap cấu trúc: bucket nhận >3 words vẫn render đúng 3 chip", () => {
+    const five: BucketData = {
+      count: 5,
+      words: Array.from({ length: 5 }, (_, i) => ({ zh: `字${i}`, key: `k${i}` })),
+    };
+    const { container } = render(
+      <SrsBuckets weak={five} cons={bucket(0)} mast={bucket(0)} onChipClick={() => {}} />
+    );
+    expect(container.querySelector('[data-testid="bucket"]')!.querySelectorAll("button")).toHaveLength(3);
+  });
 });

@@ -32,12 +32,12 @@ function Bucket({ tone, title, desc, data, onChipClick }: {
         {data.words.length === 0 ? (
           <span className="text-xs text-text-secondary">Trống</span>
         ) : (
-          data.words.map((w) => (
+          data.words.slice(0, 3).map((w) => (
             <button
               key={w.key}
               type="button"
               onClick={() => onChipClick(w.zh)}
-              className="zh min-h-10 rounded-[10px] border border-border-default bg-surface-elevated px-3 py-1.5 text-[15px] font-bold transition-colors hover:border-action-primary hover:text-action-primary"
+              className="zh min-h-11 rounded-[10px] border border-border-default bg-surface-elevated px-3 py-1.5 text-[15px] font-bold transition-colors hover:border-action-primary hover:text-action-primary"
             >
               {w.zh}
             </button>
