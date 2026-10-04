@@ -185,3 +185,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .speaker-ripple { animation: none; }
 }
+
+/* Stroke Studio — nét chữ & mực luyện viết (port .st/.ink-path của opendesign lesson.html) */
+.hz-st { fill: none; stroke: var(--text-primary); stroke-linecap: round; stroke-linejoin: round; stroke-width: 13; }
+.hz-st.todo { opacity: .14; }
+.hz-st.done { opacity: 1; }
+.hz-st.now { stroke: var(--action-primary); opacity: 1; }
+.hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
