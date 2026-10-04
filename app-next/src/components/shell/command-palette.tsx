@@ -21,14 +21,19 @@ function Palette({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const index = useMemo(() => buildCommandIndex(), []);
 
   useEffect(() => {
+    /* A1: lưu phần tử có focus trước khi palette cướp focus (thường là nút SearchTrigger
+       trong Topbar); khôi phục khi đóng (kể cả khi unmount — cleanup chạy trên unmount). */
+    const prevFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     inputRef.current?.focus();
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
+      if (prevFocused && document.contains(prevFocused)) prevFocused.focus();
     };
   }, []);
 
@@ -50,6 +55,26 @@ function Palette({ onClose }: { onClose: () => void }) {
     router.push(href);
   };
 
+  /* A2: aria-modal="true" chỉ đúng nếu focus không thoát ra ngoài panel → trap Tab/Shift+Tab
+     giữa các phần tử focusable bên trong (input + link kết quả). */
+  const onTrapTab = (e: React.KeyboardEvent) => {
+    if (e.key !== "Tab" || !panelRef.current) return;
+    const nodes = Array.from(
+      panelRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    );
+    if (nodes.length === 0) return;
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey && (active === first || !panelRef.current.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
   return (
     <div
       role="dialog"
@@ -57,8 +82,10 @@ function Palette({ onClose }: { onClose: () => void }) {
       aria-label="Tìm kiếm nhanh"
       className="fixed inset-0 z-[460] flex items-start justify-center bg-black/50 p-4 pt-[12vh]"
       onClick={onClose}
+      onKeyDown={onTrapTab}
     >
       <div
+        ref={panelRef}
         className="w-[min(560px,92vw)] overflow-hidden rounded-card border border-border-default bg-surface-elevated shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
@@ -87,8 +114,11 @@ function Palette({ onClose }: { onClose: () => void }) {
               <a
                 href={it.href}
                 onClick={(e) => {
-                  e.preventDefault();
-                  go(it.href);
+                /* B1: chỉ chặn mặc định với click chuột trái thuần; cmd/ctrl/shift-click,
+                   click giữa (button !== 0) → để trình duyệt mở tab mới/tab nền. */
+                if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                go(it.href);
                 }}
                 className="flex min-h-11 items-center gap-3 rounded-control px-3 text-[13.5px] text-text-primary hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-3 ring-action-focus"
               >

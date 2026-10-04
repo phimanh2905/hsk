@@ -62,4 +62,69 @@ describe("CommandPalette", () => {
     await userEvent.type(screen.getByLabelText("Tìm kiếm"), "zzzkhongco");
     expect(screen.getByText("Không tìm thấy kết quả.")).toBeInTheDocument();
   });
+
+  it("đóng palette → focus trả về phần tử đã mở (A1)", async () => {
+    const onClose = vi.fn();
+    const shell = (open: boolean) => (
+      <>
+        <button type="button">Tìm kiếm nhanh</button>
+        <CommandPalette open={open} onClose={onClose} />
+      </>
+    );
+    const { rerender } = render(shell(false));
+    const trigger = screen.getByRole("button", { name: "Tìm kiếm nhanh" });
+    await userEvent.click(trigger); // người dùng bấm SearchTrigger → trigger nhận focus thật
+    rerender(shell(true));
+    expect(screen.getByLabelText("Tìm kiếm")).toHaveFocus();
+    rerender(shell(false));
+    expect(trigger).toHaveFocus();
+  });
+
+  it("Tab từ kết quả cuối quay lại input — focus trap (A2)", async () => {
+    renderOpen();
+    const links = screen.getAllByRole("link");
+    links[links.length - 1].focus();
+    await userEvent.tab();
+    expect(screen.getByLabelText("Tìm kiếm")).toHaveFocus();
+  });
+
+  it("Shift+Tab từ input quay lại kết quả cuối — focus trap (A2)", async () => {
+    renderOpen();
+    expect(screen.getByLabelText("Tìm kiếm")).toHaveFocus();
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    const links = screen.getAllByRole("link");
+    expect(links[links.length - 1]).toHaveFocus();
+  });
+
+  it("ctrl/cmd-click không bị preventDefault (mở tab mới được), click thường thì có (B1)", () => {
+    renderOpen();
+    const link = screen.getByRole("link", { name: /Trang chủ/ });
+
+    const mod = new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true });
+    link.dispatchEvent(mod);
+    expect(mod.defaultPrevented).toBe(false);
+    expect(push).not.toHaveBeenCalled();
+
+    const plain = new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 });
+    link.dispatchEvent(plain);
+    expect(plain.defaultPrevented).toBe(true);
+    expect(push).toHaveBeenCalledWith("/");
+  });
+
+  it("lọc rộng vẫn chỉ hiện tối đa 8 kết quả (A3)", async () => {
+    renderOpen();
+    await userEvent.type(screen.getByLabelText("Tìm kiếm"), "a");
+    // Bỏ .slice(0, MAX_RESULTS) là fail ngay ở đây: query "a" khớp hơn 8 mục (route + tiêu đề bài).
+    expect(screen.getAllByRole("link")).toHaveLength(8);
+  });
+
+  it("kết quả gồm tiêu đề bài học thật từ content/vocab (A4 — nhánh vocab)", async () => {
+    renderOpen();
+    await userEvent.type(screen.getByLabelText("Tìm kiếm"), "gia đình");
+    const link = screen.getByRole("link", { name: /Gia đình/ });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/dictionary");
+    // Label = `${title} · ${hanzi từ đầu tiên}` — lấy thật từ content/vocab hsk1/lesson-2.
+    expect(link).toHaveTextContent("Gia đình · 爸爸");
+  });
 });
