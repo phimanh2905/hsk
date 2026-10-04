@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { progressStore } from "@/lib/store/progress-store";
 import { buildQueue, srsLevelFromKey, type ReviewableWord } from "@/lib/srs-session";
+import { memTone } from "@/lib/stats/review";
 import type { BucketData } from "@/components/review/srs-buckets";
 import { MemoryHero } from "@/components/review/memory-hero";
 import { SrsBuckets } from "@/components/review/srs-buckets";
@@ -25,7 +26,9 @@ function bucketize(words: ReviewableWord[]): { weak: BucketData; cons: BucketDat
   const cons: BucketData = { count: 0, words: [] };
   const mast: BucketData = { count: 0, words: [] };
   for (const w of words) {
-    const b = w.mem < 55 ? weak : w.mem <= 80 ? cons : mast;
+    /* Ngưỡng độ bền lấy từ memTone() để không trôi khỏi bảng tone ở lib/stats/review. */
+    const tone = memTone(w.mem);
+    const b = tone === "weak" ? weak : tone === "mid" ? cons : mast;
     b.count += 1;
     if (b.words.length < 3) b.words.push({ zh: w.zh, key: w.key });
   }

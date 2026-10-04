@@ -3,7 +3,8 @@ import ReviewDashboard from "./review-dashboard";
 
 export const metadata: Metadata = {
   title: "Ôn tập ngắt quãng",
-  description: "Thống kê học tập — theo dõi tiến độ và kế hoạch ôn tập ngắt quãng của bạn.",
+  description:
+    "Ôn tập SRS — xem độ bền trí nhớ theo nhóm Leitner, tra từ vựng và luyện viết chữ Hán trong một phiên ôn tập.",
 };
 
 export default function ReviewPage() {

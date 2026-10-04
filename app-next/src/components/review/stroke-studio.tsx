@@ -56,7 +56,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
       open
       onClose={onClose}
       labelledBy="stroke-studio-title"
-      className="w-[min(780px,calc(100%-32px))] max-w-none max-h-[min(620px,calc(100vh-48px))] overflow-y-auto rounded-[20px] p-5"
+      className="w-[min(780px,calc(100%-32px))] max-w-none max-h-[min(620px,calc(100vh-48px))] overflow-y-auto rounded-[20px] p-5 max-sm:absolute max-sm:inset-x-0 max-sm:bottom-0 max-sm:w-full max-sm:max-h-[92vh] max-sm:rounded-b-none"
     >
       <h2 id="stroke-studio-title" className="sr-only">Nét chữ và bút thuận</h2>
       <div className="flex flex-wrap items-center gap-2.5">
