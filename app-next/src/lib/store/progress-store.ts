@@ -7,6 +7,8 @@
 
 import { useEffect, useState } from "react";
 
+import { applyGrade, type Grade } from "@/lib/stats/review";
+
 export type SrsStatus = "new" | "learning" | "learned" | "known";
 
 export type SrsItem = {
@@ -45,6 +47,7 @@ export interface ProgressStoreApi {
   getAllSrs(): SrsItem[];
   toggleSrs(key: string): boolean;
   addSrsBatch(keys: string[]): number;
+  recordReview(key: string, grade: Grade, now?: number): SrsItem | null;
   countSrsNew(): number;
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null;
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
@@ -301,6 +304,17 @@ export class ProgressStore implements ProgressStoreApi {
     }
     if (added > 0) this.writeSrsItems(items);
     return added;
+  }
+
+  /* Review redesign spec §2.2 — ghi grade ôn tập; key lạ → null, không ghi. */
+  recordReview(key: string, grade: Grade, now: number = Date.now()): SrsItem | null {
+    const items = this.readSrsItems();
+    const cur = items[key];
+    if (!cur) return null;
+    items[key] = applyGrade(cur, grade, now);
+    this.writeSrsItems(items);
+    dispatchProgress();
+    return items[key];
   }
 
   countSrsNew(): number {
