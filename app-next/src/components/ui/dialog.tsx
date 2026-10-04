@@ -5,12 +5,14 @@ export function Dialog({
   open,
   onClose,
   labelledBy,
+  role = "dialog",
   className,
   children,
 }: {
   open: boolean;
   onClose: () => void;
   labelledBy: string;
+  role?: "dialog" | "alertdialog";
   className?: string;
   children: ReactNode;
 }) {
@@ -31,7 +33,7 @@ export function Dialog({
       onClick={onClose}
     >
       <div
-        role="dialog"
+        role={role}
         aria-modal="true"
         aria-labelledby={labelledBy}
         className={cn(

@@ -49,4 +49,22 @@ describe("Dialog", () => {
     await userEvent.click(screen.getByText("Nội dung"));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("role=alertdialog render alertdialog (port #exitModal lesson.html)", () => {
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t" role="alertdialog">
+        <h2 id="t">Rời khỏi Bài 4?</h2>
+      </Dialog>
+    );
+    expect(screen.getByRole("alertdialog", { name: "Rời khỏi Bài 4?" })).toBeInTheDocument();
+  });
+
+  it("mặc định role=dialog", () => {
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t2">
+        <h2 id="t2">X</h2>
+      </Dialog>
+    );
+    expect(screen.getByRole("dialog", { name: "X" })).toBeInTheDocument();
+  });
 });
