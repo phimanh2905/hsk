@@ -39,12 +39,17 @@ describe("StationCard", () => {
     expect(screen.queryByLabelText(/sao/)).toBeNull();
   });
 
-  it("milestone: MILESTONE + diamond gem, click mở drawer", async () => {
+  it("milestone: MILESTONE + diamond gem, locked treatment (.station locked), click mở drawer", async () => {
     const onOpen = vi.fn();
     render(<StationCard view={mkView("m", "locked")} side="right" onOpen={onOpen} onContinue={() => {}} />);
     expect(screen.getByText(/MILESTONE: Ôn tập chặng/)).toBeTruthy();
-    expect(screen.getByRole("button").className).not.toContain("border-action-primary");
-    await userEvent.click(screen.getByRole("button"));
+    const btn = screen.getByRole("button");
+    expect(btn.className).not.toContain("border-action-primary");
+    // M-1: mock milestone card = .station locked
+    expect(btn.className).toContain("cursor-not-allowed");
+    expect(btn.className).toContain("opacity-85");
+    expect(btn.className).toContain("bg-surface-muted");
+    await userEvent.click(btn);
     expect(onOpen).toHaveBeenCalledWith("m");
   });
 });

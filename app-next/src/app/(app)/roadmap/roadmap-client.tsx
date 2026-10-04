@@ -2,7 +2,7 @@
 
 /* Client island trang /roadmap (spec 2026-10-04 §6): state level theo ?level=,
    drawer theo stationId; mọi số derive từ useRoadmapProgress (SSR-safe). */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RoadmapTopbar } from "@/components/roadmap/roadmap-topbar";
@@ -11,7 +11,11 @@ import { SerpentinePath } from "@/components/roadmap/serpentine-path";
 import { StationDrawer } from "@/components/roadmap/station-drawer";
 import { getRoadmapLevel, type LevelId, type RoadmapLevel } from "@/content/roadmap-stations";
 import { bannerSummary, useRoadmapProgress } from "@/lib/roadmap-progress";
+import { progressStore } from "@/lib/store/progress-store";
 import { useToastSafe } from "@/components/shell/toast-provider";
+
+/* Lộ trình Pinyin có 8 buổi (/roadmap/pinyin) — nền tảng cho level hsk-1. */
+const PINYIN_SESSIONS = 8;
 
 export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const search = useSearchParams();
@@ -21,8 +25,21 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const level = getRoadmapLevel(search.get("level") ?? "") ?? getRoadmapLevel("hsk-2")!;
   const [drawerId, setDrawerId] = useState<string | null>(null);
   const { views, mounted } = useRoadmapProgress(level);
+  // HSK 1 không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
+  const [pinyinDone, setPinyinDone] = useState(0);
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      setPinyinDone(progressStore.getRoadmapDone().length);
+    } catch {
+      setPinyinDone(0);
+    }
+  }, [mounted]);
+  const pinyinPct = Math.round((pinyinDone / PINYIN_SESSIONS) * 100);
 
   const summary = bannerSummary(level, views);
+  // Header pct 0 cho upcoming + hsk-1 (summary.pct = 100 khi level không có lesson — I-3)
+  const headerPct = !mounted || level.status === "upcoming" ? 0 : level.stations.length === 0 ? pinyinPct : summary.pct;
   const doneCount = views.filter((v) => v.station.kind === "lesson" && v.state === "done").length;
   const lessonTotal = views.filter((v) => v.station.kind === "lesson").length;
   const activeView = views.find((v) => v.state === "active" && v.station.kind === "lesson") ?? null;
@@ -50,7 +67,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
 
   return (
     <>
-      <RoadmapTopbar levels={levels} value={level.id} onLevelChange={changeLevel} pct={mounted ? summary.pct : 0} />
+      <RoadmapTopbar levels={levels} value={level.id} onLevelChange={changeLevel} pct={headerPct} />
       <main className="mx-auto flex max-w-5xl flex-col gap-4 px-6 pb-20 pt-4 max-[640px]:px-4">
         {level.status === "upcoming" ? (
           <MilestoneBanner
@@ -67,9 +84,13 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             kicker={level.kicker}
             title={level.title}
             sub={<>Nền tảng <b>Pinyin &amp; nét cơ bản</b> — 8 buổi phát âm</>}
-            pct={100}
+            pct={pinyinPct}
             ariaLabel={`Tiến độ ${level.title}`}
-            currentLabel="Đã hoàn thành · ôn tập giữ streak"
+            currentLabel={
+              pinyinDone === 0
+                ? "Chưa bắt đầu · mở lộ trình Pinyin"
+                : `Đã hoàn thành ${pinyinDone}/${PINYIN_SESSIONS} buổi · ôn tập giữ streak`
+            }
             endLabel={
               <Link href="/roadmap/pinyin" className="font-bold text-action-primary">
                 Xem lộ trình Pinyin →

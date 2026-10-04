@@ -31,7 +31,7 @@ export function StationNode({
           : state === "done"
             ? "border-jade text-jade"
             : state === "active"
-              ? "border-action-primary text-action-primary hz-node-pulse"
+              ? "border-action-primary text-action-primary hz-node-ring hz-node-pulse"
               : "border-border-default bg-surface-muted text-text-secondary",
         state === "locked" && "cursor-not-allowed",
       )}

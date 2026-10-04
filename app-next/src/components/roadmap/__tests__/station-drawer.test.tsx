@@ -8,6 +8,10 @@ import type { StationView } from "@/lib/roadmap-progress";
 const tts = vi.hoisted(() => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }));
 vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => tts }));
 
+// M-12: mock useToastSafe → assert đúng nội dung toast launch (không cần ToastProvider thật)
+const toast = vi.hoisted(() => vi.fn());
+vi.mock("@/components/shell/toast-provider", () => ({ useToastSafe: () => toast }));
+
 const hsk2 = getRoadmapLevel("hsk-2")!;
 const mkView = (id: string, state: StationView["state"]): StationView => ({
   station: hsk2.stations.find((s) => s.id === id)!,
@@ -18,6 +22,7 @@ const mkView = (id: string, state: StationView["state"]): StationView => ({
 
 beforeEach(() => {
   tts.speak.mockClear();
+  toast.mockClear();
 });
 
 describe("StationDrawer", () => {
@@ -59,9 +64,9 @@ describe("StationDrawer", () => {
     expect(onClose).toHaveBeenCalledTimes(1); // không tăng — no-op khi đóng
   });
 
-  it("click nút launch gọi toast qua provider (test dùng useToastSafe → cần ToastProvider)", async () => {
-    // Smoke: không crash khi không có provider (useToastSafe no-op)
+  it("click nút launch gọi toast qua provider", async () => {
     render(<StationDrawer view={mkView("1", "done")} open onClose={() => {}} />);
     await userEvent.click(screen.getByRole("button", { name: "Học Flashcard" }));
+    expect(toast).toHaveBeenCalledWith("Học Flashcard — sắp ra mắt trong bản demo");
   });
 });

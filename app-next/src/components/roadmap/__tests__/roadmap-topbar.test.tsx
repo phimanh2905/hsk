@@ -12,7 +12,7 @@ describe("RoadmapTopbar", () => {
     render(<RoadmapTopbar levels={levels} value="hsk-2" onLevelChange={() => {}} pct={30} />);
     expect(screen.getByRole("link", { name: /Home/ }).getAttribute("href")).toBe("/");
   });
-  it("head-progress hiện % + progressbar con", () => {
+  it("head-progress hiện nhãn %", () => {
     render(<RoadmapTopbar levels={levels} value="hsk-2" onLevelChange={() => {}} pct={30} />);
     expect(screen.getByText("30%")).toBeTruthy();
   });

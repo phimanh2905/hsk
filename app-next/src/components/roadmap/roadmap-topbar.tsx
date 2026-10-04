@@ -4,7 +4,7 @@
    back-link + level switcher + head-progress. Theme toggle thuộc shell toàn
    cục nên KHÔNG port (spec §6). Sticky + backdrop-blur như mock. */
 import Link from "next/link";
-import { ArrowLeft, ICON_STROKE } from "@/components/ui/icon";
+import { ArrowLeft } from "@/components/ui/icon";
 import { LevelSwitcher } from "./level-switcher";
 import type { LevelId } from "@/content/roadmap-stations";
 
@@ -20,7 +20,7 @@ export function RoadmapTopbar({
   pct: number;
 }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border-default bg-surface-paper/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border-default bg-surface-paper/90 backdrop-blur-lg">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-2.5 px-6 py-2.5 max-[640px]:px-4">
         <Link
           href="/"

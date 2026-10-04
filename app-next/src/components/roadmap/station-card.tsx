@@ -30,7 +30,7 @@ export function StationCard({
 }) {
   const { station, state, pct, stars } = view;
   const base = cn(
-    "w-full max-w-[340px] max-[760px]:max-w-none rounded-card border bg-surface-elevated p-4 text-left shadow-xs",
+    "w-full max-w-[340px] max-[760px]:max-w-none rounded-card border border-border-default bg-surface-elevated px-4 py-3.5 text-left shadow-xs",
     "transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:shadow-md",
     connectorClasses(side),
     state === "active" && "border-2 border-action-primary",
@@ -46,7 +46,7 @@ export function StationCard({
             <Trophy size={18} strokeWidth={ICON_STROKE} className="-rotate-45 text-learning-streak" aria-hidden="true" />
           </span>
           <span>
-            <span className="block text-sm font-extrabold">MILESTONE: Ôn tập chặng &amp; Mini test</span>
+            <span className="block text-sm font-extrabold">MILESTONE: {station.title}</span>
             <span className="mt-1 block text-[12.5px] text-text-secondary">{station.meta}</span>
           </span>
         </span>
@@ -91,7 +91,7 @@ export function StationCard({
       </h3>
       <p className="mt-1 text-[12.5px] text-text-secondary">{station.meta}</p>
       {state === "done" && (
-        <span className="mt-2 flex gap-0.5 text-amber-ink" aria-label={`Đạt ${stars}/3 sao`}>
+        <span className="mt-2 flex gap-[3px] text-amber-ink dark:text-learning-streak" aria-label={`Đạt ${stars}/3 sao`}>
           {[0, 1, 2].map((i) => (
             <Star key={i} size={13} className={cn(i < stars ? "fill-current" : "opacity-30")} aria-hidden="true" />
           ))}

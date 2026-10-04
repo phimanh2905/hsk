@@ -157,12 +157,14 @@ body {
   75% { transform: translateX(-6px); }
 }
 
-/* Node trạm active — halo pulse (port roadmap.html @keyframes pulse) */
+/* Node trạm active — halo tĩnh 6px accent 16% + pulse (port roadmap.html .node.active) */
+.hz-node-ring { box-shadow: 0 0 0 6px color-mix(in srgb, var(--action-primary) 16%, transparent); }
 @keyframes hz-node-pulse {
   0%, 100% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--action-primary) 16%, transparent); }
   50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--action-primary) 7%, transparent); }
 }
 .hz-node-pulse { animation: hz-node-pulse 2.2s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
+  /* animation tắt → ring tĩnh .hz-node-ring vẫn còn (mock .node.active giữ box-shadow) */
   .hz-node-pulse { animation: none; }
 }

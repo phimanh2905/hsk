@@ -20,23 +20,26 @@ export function deriveStationStates(
   level: RoadmapLevel,
   record: Record<string, StationProgress>,
 ): StationView[] {
-  let allLessonsDone = true;
-  const base = level.stations.map((station) => {
+  // Milestone chỉ mở khi MỌI lesson ĐỨNG TRƯỚC nó done (spec §5) — Trạm 6
+  // nằm sau milestone nên không được chặn (content order [1,2,3,4,5,m,6]).
+  const milestoneIdx = level.stations.findIndex((s) => s.kind === "milestone");
+  let allPriorLessonsDone = true;
+  const base = level.stations.map((station, index) => {
     const rec = record[station.id] ?? null;
     if (station.kind === "milestone") {
       return { station, rec, done: rec != null && rec.pct >= 100, isLesson: false };
     }
     const done = rec != null && rec.pct >= 100;
-    if (!done) allLessonsDone = false;
+    if (!done && (milestoneIdx < 0 || index < milestoneIdx)) allPriorLessonsDone = false;
     return { station, rec, done, isLesson: true };
   });
 
   let activeAssigned = false;
   return base.map(({ station, rec, done, isLesson }) => {
     if (!isLesson) {
-      // Milestone chỉ mở khi toàn bộ lesson xong (Review Focus #4)
-      if (done && allLessonsDone) return { station, state: "done", pct: 100, stars: rec?.stars ?? 0 };
-      if (allLessonsDone) return { station, state: "active", pct: 0, stars: 0 };
+      // Milestone chỉ mở khi toàn bộ lesson TRƯỚC milestone xong (Review Focus #4)
+      if (done && allPriorLessonsDone) return { station, state: "done", pct: 100, stars: rec?.stars ?? 0 };
+      if (allPriorLessonsDone) return { station, state: "active", pct: 0, stars: 0 };
       return { station, state: "locked", pct: 0, stars: 0 };
     }
     if (done) return { station, state: "done", pct: 100, stars: rec?.stars ?? 0 };

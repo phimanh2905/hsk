@@ -96,7 +96,7 @@ export function StationDrawer({
         aria-hidden="true"
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-50 bg-[rgba(17,19,24,0.45)] transition-opacity duration-300",
+          "fixed inset-0 z-50 bg-[rgba(17,19,24,0.45)] transition-opacity duration-[250ms]",
           open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -104,9 +104,10 @@ export function StationDrawer({
         ref={panelRef}
         role="dialog"
         aria-modal="true"
+        aria-hidden={!open}
         aria-label="Chi tiết trạm học"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-[420px] max-w-full flex-col border-l border-border-default bg-surface-elevated shadow-md transition-transform duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)]",
+          "fixed inset-y-0 right-0 z-50 flex w-[420px] max-w-full flex-col border-l border-border-default bg-surface-elevated shadow-md transition-transform duration-[280ms] ease-[cubic-bezier(0.2,0.7,0.2,1)]",
           open ? "translate-x-0" : "translate-x-[102%]",
         )}
       >

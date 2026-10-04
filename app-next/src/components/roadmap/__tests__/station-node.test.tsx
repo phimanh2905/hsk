@@ -10,9 +10,11 @@ describe("StationNode", () => {
     expect(node.className).not.toContain("hz-node-pulse");
     expect(node.className).toContain("border-jade");
   });
-  it("active: có class pulse, disabled animation qua CSS reduced-motion (class tĩnh)", () => {
+  it("active: ring tĩnh + class pulse (reduced-motion tắt animation vẫn còn ring — M-9)", () => {
     render(<StationNode state="active" label="Trạm 4 — đang học" />);
-    expect(screen.getByRole("button").className).toContain("hz-node-pulse");
+    const node = screen.getByRole("button");
+    expect(node.className).toContain("hz-node-ring");
+    expect(node.className).toContain("hz-node-pulse");
   });
   it("locked: nền muted", () => {
     render(<StationNode state="locked" label="Trạm 5 — đang khóa" />);

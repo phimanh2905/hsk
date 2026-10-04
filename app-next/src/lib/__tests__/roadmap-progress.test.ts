@@ -47,6 +47,14 @@ describe("deriveStationStates", () => {
     expect(stateOf(recM, "m")).toBe("done");
   });
 
+  it("I-2 — gate theo vị trí: Trạm 1–5 done, Trạm 6 (sau milestone) chưa → milestone active", () => {
+    const rec = Object.fromEntries(
+      ["1", "2", "3", "4", "5"].map((id) => [id, { pct: 100, stars: 3 as const }]),
+    );
+    expect(stateOf(rec, "m")).toBe("active");
+    expect(stateOf(rec, "6")).toBe("active"); // lesson đầu chưa done → active, không giữ milestone locked
+  });
+
   it("active chỉ gán cho lesson đầu tiên chưa done (dù record rải rác)", () => {
     const rec = { "2": { pct: 50, stars: 0 as const } };
     expect(stateOf(rec, "1")).toBe("active");
