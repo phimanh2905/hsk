@@ -49,6 +49,14 @@ describe("RoadmapClient", () => {
     expect(screen.getByText(/Bài 2: Số đếm & Mua sắm/)).toBeTruthy();
   });
 
+  it("banner-only hsk-1: banner Pinyin pct 100 + link, không render path", () => {
+    renderClient("hsk-1");
+    expect(screen.getByRole("heading", { name: "Nền tảng: Pinyin & nét cơ bản" })).toBeTruthy();
+    expect(screen.getByRole("progressbar", { name: "Tiến độ Nền tảng: Pinyin & nét cơ bản" })).toHaveAttribute("aria-valuenow", "100");
+    expect(screen.getByRole("link", { name: /Xem lộ trình Pinyin/ })).toHaveAttribute("href", "/roadmap/pinyin");
+    expect(screen.queryByRole("button", { name: /— đang học/ })).toBeNull();
+  });
+
   it("chuyển level gọi router.replace với ?level mới", async () => {
     renderClient("hsk-2");
     await userEvent.click(screen.getByRole("button", { name: "HSK 3" }));

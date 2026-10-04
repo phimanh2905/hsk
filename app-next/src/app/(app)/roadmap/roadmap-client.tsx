@@ -58,7 +58,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             title={level.title}
             sub={<>Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–3</>}
             pct={0}
-            ariaLabel={`Tiến độ ${level.label}`}
+            ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={<>Trạng thái: <b>Chưa mở</b></>}
             endLabel="Theo dõi cập nhật"
           />
@@ -68,7 +68,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             title={level.title}
             sub={<>Nền tảng <b>Pinyin &amp; nét cơ bản</b> — 8 buổi phát âm</>}
             pct={100}
-            ariaLabel={`Tiến độ ${level.label}`}
+            ariaLabel={`Tiến độ ${level.title}`}
             currentLabel="Đã hoàn thành · ôn tập giữ streak"
             endLabel={
               <Link href="/roadmap/pinyin" className="font-bold text-action-primary">
@@ -97,7 +97,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             }
           />
         )}
-        {level.stations.length > 0 && (
+        {level.status !== "upcoming" && level.stations.length > 0 && (
           <SerpentinePath views={views} onOpen={openDrawer} onContinue={onContinue} />
         )}
         <StationDrawer view={drawerView} open={drawerId !== null} onClose={closeDrawer} />
