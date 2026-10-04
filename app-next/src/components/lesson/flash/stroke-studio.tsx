@@ -193,11 +193,15 @@ export function StrokeStudio({
   /* dọn timer khi unmount */
   useEffect(() => clearTimers, []);
 
-  /* Esc đóng sheet (port keydown Escape → closeStrokeModal) */
+  /* Esc đóng sheet (port keydown Escape → closeStrokeModal). stopPropagation để sheet
+     "nuốt" phím: nếu không, listener window của FlashStage chạy tiếp trong cùng event và
+     mở luôn exit modal (spec §3.4: Esc theo thứ tự sheet → modal → exit modal). */
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      onClose();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);

@@ -35,7 +35,9 @@ export function Progress({ value, max = 100, label, ariaLabel, gradient, tone = 
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
-        className={cn("relative flex-1 overflow-hidden rounded-full bg-border-subtle", size === "sm" || stacked ? "h-1.5" : "h-2.5")}
+        /* stacked: container là flex-col nên flex-1 ép chiều cao theo flex-basis 0
+           → track vô hình. Ở layout dọc chỉ cần rộng đầy, cao lấy từ size. */
+        className={cn("relative overflow-hidden rounded-full bg-border-subtle", stacked ? "w-full" : "flex-1", size === "sm" || stacked ? "h-1.5" : "h-2.5")}
       >
         <div
           className={cn(

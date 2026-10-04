@@ -84,6 +84,18 @@ describe("StrokeStudio (port [data-od-id=stroke-modal] của opendesign lesson.h
     expect(onClose).toHaveBeenCalled();
   });
 
+  it("Escape bị sheet nuốt (stopPropagation) → hotkey window của FlashStage không chạy", async () => {
+    mockedLoad.mockResolvedValue(FAKE as never);
+    const onClose = vi.fn();
+    const stageHandler = vi.fn();
+    window.addEventListener("keydown", stageHandler);
+    render(<StrokeStudio open onClose={onClose} word="爱" pinyin="ài" />);
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(onClose).toHaveBeenCalled();
+    expect(stageHandler).not.toHaveBeenCalled();
+    window.removeEventListener("keydown", stageHandler);
+  });
+
   it("Review Focus 1: đóng rồi mở lại ở từ khác → cur đồng bộ về chữ đầu (tab aria-pressed + load đúng chữ)", async () => {
     mockedLoad.mockResolvedValue(FAKE as never);
     const { rerender } = render(<StrokeStudio open onClose={vi.fn()} word="爱" pinyin="ài" />);

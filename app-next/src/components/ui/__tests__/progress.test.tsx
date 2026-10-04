@@ -84,6 +84,13 @@ describe("Progress stacked (port .progress-zone lesson.html)", () => {
     expect(screen.queryByText("53%")).not.toBeInTheDocument(); // không render span % riêng
   });
 
+  it("stacked: track không dùng flex-1 (flex-col sẽ ép cao theo basis 0 → vô hình)", () => {
+    render(<Progress value={8} max={15} stacked ariaLabel="Tiến độ" />);
+    const bar = screen.getByRole("progressbar", { name: "Tiến độ" });
+    expect(bar.className).not.toContain("flex-1");
+    expect(bar.className).toContain("w-full");
+  });
+
   it("mặc định giữ hành vi cũ: fill primary, hiện %", () => {
     render(<Progress value={50} label="Tiến độ" />);
     const bar = screen.getByRole("progressbar", { name: "Tiến độ" });
