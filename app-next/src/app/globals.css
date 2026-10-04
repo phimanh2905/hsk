@@ -170,3 +170,18 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hz-node-pulse { animation: none; }
 }
+
+/* ripple nút phát âm (port .speaker.ripple của opendesign lesson.html) */
+@keyframes ripple {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.55); opacity: 0; }
+}
+.speaker-ripple {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--action-primary);
+  animation: ripple .7s ease-out;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .speaker-ripple { animation: none; }
+}
