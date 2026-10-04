@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — Bài 4 · Flashcard 8/15</title>
+<style>
+:root{
+  --bg:#FAF9F5;--surface:#f1f3f2;--elev:#ffffff;--card:#ffffff;
+  --fg:#1C1917;--body:#57534E;--faint:#A8A29E;
+  --border:#e8ecea;
+  --accent:#C83C32;--accent-hover:#B33229;--accent-ink:#ffffff;
+  --jade:#2D7D5B;
+  --amber:#E68A00;
+  --rose-bg:#FEF2F2;--rose-bd:#FECACA;--rose-tx:#B91C1C;
+  --amber-bg:#FFFBEB;--amber-bd:#FDE68A;--amber-tx:#B45309;
+  --shadow:0 1px 2px rgba(28,25,23,.05),0 12px 32px rgba(28,25,23,.08);
+  --r:8px;--r-card:24px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;
+}
+html[data-theme="dark"]{
+  --bg:#111318;--surface:#1a1d24;--elev:#1c2029;--card:#1A1D24;
+  --fg:#eceeed;--body:#b6b0aa;--faint:#6b7280;
+  --border:#2a2f37;
+  --accent:#E05349;--accent-hover:#c7453c;
+  --jade:#4caf8a;
+  --rose-bg:rgba(127,29,29,.25);--rose-bd:rgba(127,29,29,.5);--rose-tx:#FCA5A5;
+  --amber-bg:rgba(120,53,15,.28);--amber-bd:rgba(120,53,15,.55);--amber-tx:#FCD34D;
+  --shadow:none;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+.hanzi{font-family:var(--font-hanzi)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* top utility bar */
+.topbar{border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px)}
+.topbar-inner{max-width:880px;margin:0 auto;padding:10px 20px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px}
+.tile{width:40px;height:40px;border-radius:var(--r);border:1px solid transparent;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--body);transition:all .2s;position:relative}
+.tile:hover{background:var(--surface);color:var(--fg)}
+.tile[aria-pressed="true"]{border-color:var(--border);background:var(--surface);color:var(--accent)}
+.tile[aria-pressed="true"]::after{content:"";position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.progress-zone{min-width:0;text-align:center}
+.progress-label{font-size:12px;color:var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-label b{color:var(--fg)}
+.track{height:6px;border-radius:999px;background:var(--border);overflow:hidden;margin-top:6px}
+html[data-theme="dark"] .track{background:#2a2f37}
+.fill{height:100%;border-radius:999px;background:var(--jade);transition:width .3s ease}
+.controls{display:flex;gap:4px}
+
+/* stage */
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:880px;width:100%;margin:0 auto;padding:28px 20px 20px;gap:18px}
+.card{
+  width:min(560px,100%);background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r-card);box-shadow:var(--shadow);padding:36px 32px 30px;text-align:center;
+  cursor:pointer;transition:transform .12s ease,box-shadow .2s;position:relative;
+}
+.card:active{transform:scale(.99)}
+.card:hover{box-shadow:0 1px 2px rgba(28,25,23,.06),0 18px 44px rgba(28,25,23,.10)}
+html[data-theme="dark"] .card:hover{box-shadow:none}
+.counter{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--faint)}
+.glyph{font-size:68px;font-weight:600;letter-spacing:.08em;line-height:1.35;margin:10px 0 2px}
+@media(max-width:480px){.glyph{font-size:60px}.card{padding:28px 20px 24px}}
+.pinyin{font-size:21px;color:var(--body);letter-spacing:.02em}
+.audio-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px}
+.speaker{
+  width:52px;height:52px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;
+  background:var(--surface);color:var(--accent);transition:all .2s;position:relative;
+}
+.speaker:hover{filter:brightness(.96);transform:translateY(-1px)}
+.speaker.ripple::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);animation:ripple .7s ease-out}
+@keyframes ripple{from{transform:scale(1);opacity:.8}to{transform:scale(1.55);opacity:0}}
+@media(prefers-reduced-motion:reduce){.speaker.ripple::before{animation:none}}
+.stroke-link{display:inline-flex;align-items:center;gap:6px;background:none;border:0;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--body);min-height:40px;padding:0 8px}
+.stroke-link:hover{color:var(--accent)}
+.reveal{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s ease,opacity .3s ease}
+.reveal.open{max-height:480px;opacity:1}
+.divider{border:0;border-top:1px solid var(--border);margin:18px 0}
+.meta-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.pos{font-size:11.5px;font-weight:800;letter-spacing:.06em;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 12px;color:var(--body)}
+.meaning{font-size:16px;font-weight:700;margin-top:10px}
+.example{margin-top:14px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-align:left;animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.example .zh{font-family:var(--font-hanzi);font-size:17px;font-weight:700}
+.example .py{font-size:13px;color:var(--body);margin-top:2px}
+.example .vi{font-size:13.5px;color:var(--body);margin-top:4px}
+.sent-row{display:flex;align-items:flex-start;gap:8px}
+.mini-audio{width:32px;height:32px;min-width:32px;border-radius:50%;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body)}
+.mini-audio:hover{color:var(--accent);border-color:var(--accent)}
+.hint{font-size:12px;color:var(--faint);margin-top:12px}
+.hint kbd{font-family:var(--font-ui);font-size:11px;border:1px solid var(--border);border-radius:5px;padding:1px 7px;background:var(--surface);color:var(--body)}
+
+/* bottom deck */
+.deck{width:min(560px,100%);display:grid;gap:10px;padding-bottom:26px}
+.reveal-btn{min-height:56px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.reveal-btn:hover{filter:brightness(.97);transform:translateY(-1px)}
+.reveal-btn:active{transform:scale(.99)}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:480px){.grades{grid-template-columns:1fr}}
+.grade{border-radius:16px;padding:12px 8px;min-height:76px;cursor:pointer;font-weight:700;font-size:13.5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .2s;border:1px solid;position:relative}
+.grade small{font-weight:400;font-size:11.5px;opacity:.9}
+.grade:active{transform:scale(.99)}
+.grade.rose{background:var(--rose-bg);border-color:var(--rose-bd);color:var(--rose-tx)}
+.grade.rose:hover{filter:brightness(.97)}
+.grade.amberb{background:var(--amber-bg);border-color:var(--amber-bd);color:var(--amber-tx)}
+.grade.amberb:hover{filter:brightness(.97)}
+.grade.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 4px 12px rgba(200,60,50,.25)}
+.grade.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.hotkey{position:absolute;top:6px;right:8px;font-size:10px;font-weight:800;opacity:.55;border:1px solid currentColor;border-radius:4px;padding:0 5px;line-height:1.5}
+
+/* modals */
+.overlay{position:fixed;inset:0;background:rgba(17,19,24,.5);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{position:fixed;z-index:51;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;transition:all .22s ease;width:min(400px,calc(100% - 32px));background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal h2{font-size:16px}
+.modal p{font-size:13.5px;color:var(--body);margin:8px 0 16px}
+.modal .mrow{display:flex;gap:10px}
+.modal .mrow button{flex:1;min-height:48px;border-radius:12px;font-weight:700;font-size:13.5px;cursor:pointer;border:1px solid var(--border);background:var(--surface)}
+.modal .mrow button.danger{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.modal .mrow button.danger:hover{background:var(--accent-hover)}
+.keys{display:grid;gap:8px;margin:12px 0 18px;font-size:13px;color:var(--body)}
+.keys div{display:flex;justify-content:space-between;align-items:center}
+.keys kbd{font-family:var(--font-ui);font-size:11.5px;border:1px solid var(--border);border-radius:6px;padding:2px 9px;background:var(--surface);color:var(--fg);font-weight:700}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.done-emoji{font-size:44px}
+
+/* stroke studio sheet */
+.sheet-overlay{position:fixed;inset:0;background:rgba(28,25,23,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.sheet-overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:61;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;transition:all .25s ease;width:min(860px,calc(100% - 32px));max-height:min(640px,calc(100vh - 48px));overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);padding:20px 22px}
+.sheet.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+@media(max-width:640px){
+  .sheet{left:0;right:0;top:auto;bottom:0;transform:translateY(30%);width:100%;max-height:92vh;border-radius:20px 20px 0 0}
+  .sheet.show{transform:none}
+}
+.sheet-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.char-tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+.char-tabs button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;color:var(--body);cursor:pointer;min-height:40px;display:flex;gap:8px;align-items:center}
+.char-tabs button .hanzi{font-size:16px}
+.char-tabs button[aria-pressed="true"]{background:var(--card);color:var(--fg);box-shadow:var(--shadow);border:1px solid var(--border)}
+.char-tabs button small{font-size:11px;font-weight:400;color:var(--faint)}
+.py-pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:6px 8px 6px 16px;margin:0 auto}
+.py-pill button{width:32px;height:32px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--body)}
+.py-pill button:hover{background:var(--card);color:var(--fg)}
+.sheet-close{margin-left:auto}
+.sheet-body{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;margin-top:16px}
+@media(max-width:760px){.sheet-body{grid-template-columns:1fr}}
+.grid-box{position:relative;width:min(320px,100%);aspect-ratio:1;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.grid-box svg{position:absolute;inset:0;width:100%;height:100%}
+.grid-bg rect{fill:none}
+.st{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:13}
+.st.todo{stroke:var(--fg);opacity:.14}
+.st.done{stroke:var(--fg);opacity:1}
+.st.now{stroke:var(--accent);opacity:1}
+.ink-path{fill:none;stroke:var(--accent);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tool-btn{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 14px;border-radius:16px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s}
+.tool-btn:hover{border-color:var(--muted);transform:translateY(-1px)}
+.tool-btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tool-btn.accent:hover{background:var(--accent-hover)}
+.tool-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.speed-seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:3px;gap:2px}
+.speed-seg button{border:0;background:transparent;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;color:var(--body);cursor:pointer;min-height:38px}
+.speed-seg button[aria-pressed="true"]{background:var(--card);color:var(--fg);box-shadow:var(--shadow)}
+.practice-bar{display:none;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:12.5px;color:var(--body);font-weight:700}
+.practice-bar.show{display:flex}
+.info-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.radical-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;gap:14px;align-items:center}
+.radical-sym{width:56px;height:56px;min-width:56px;border-radius:14px;background:color-mix(in srgb,var(--jade) 12%,transparent);border:1px solid var(--jade);display:grid;place-items:center;font-family:var(--font-hanzi);font-size:28px;font-weight:700;color:var(--jade)}
+.radical-card b{font-size:14px;display:block}
+.radical-card span{font-size:12.5px;color:var(--body)}
+.facts{display:flex;gap:8px;flex-wrap:wrap}
+.fact{flex:1;min-width:120px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.fact small{font-size:11px;color:var(--faint);display:block;font-weight:700;letter-spacing:.06em}
+.fact b{font-size:13.5px}
+.order-list{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:8px;max-height:165px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--faint) transparent}
+.order-list::-webkit-scrollbar{width:6px}
+.order-list::-webkit-scrollbar-thumb{background:var(--faint);border-radius:999px}
+.order-list::-webkit-scrollbar-track{background:transparent}
+.order-list h4,.tip-box h4{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--faint);padding:6px 8px 4px}
+.orow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:8px;font-size:13px;cursor:pointer;color:var(--fg)}
+.orow:hover{background:var(--surface)}
+.orow.cur{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.orow .n{width:24px;height:24px;min-width:24px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;font-size:11px;font-weight:800}
+.orow.cur .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.orow small{margin-left:auto;color:var(--body);font-size:12px}
+.tip-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px}
+.tip-box p{font-size:13px;color:var(--body)}
+.tip-box p b{color:var(--fg)}
+.nodata{text-align:center;padding:28px 12px;color:var(--body);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="topbar" data-od-id="lesson-topbar">
+  <div class="topbar-inner">
+    <button class="tile" id="exitBtn" data-od-id="exit-button" aria-label="Thoát bài học"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="progress-zone" data-od-id="lesson-progress">
+      <div class="progress-label" id="progressLabel">Bài 4: Sở thích &amp; Thời gian rảnh · <b>8/15 từ (55%)</b></div>
+      <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="55" aria-label="Tiến độ từ vựng" id="progressTrack"><div class="fill" id="progressFill" style="width:53%"></div></div>
+    </div>
+    <div class="controls">
+      <button class="tile" id="autoBtn" data-od-id="autoplay-toggle" aria-pressed="true" aria-label="Tự động phát âm" title="Tự động phát âm"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button>
+      <button class="tile" id="keysBtn" data-od-id="shortcuts-button" aria-label="Phím tắt" title="Phím tắt"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/></svg></button>
+      <button class="tile" id="themeBtn" data-od-id="theme-toggle" aria-label="Chế độ sáng tối" title="Sáng / tối"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="stage">
+  <article class="card" id="flashcard" data-od-id="flashcard" aria-live="polite" aria-label="Thẻ ghi nhớ, chạm để xem nghĩa">
+    <div class="counter" id="cardCounter">THẺ 8 / 15</div>
+    <div class="glyph hanzi" id="cardGlyph">爱好</div>
+    <div class="pinyin" id="cardPinyin">àihào</div>
+    <div class="audio-row">
+      <button class="speaker" id="audioBtn" data-od-id="audio-button" aria-label="Phát âm từ vựng"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg></button>
+      <button class="stroke-link" id="strokeBtn" data-od-id="stroke-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>Xem nét viết</button>
+    </div>
+    <div class="reveal" id="reveal">
+      <hr class="divider" />
+      <div class="meta-row"><span class="pos" id="cardPos">Danh từ · Động từ</span></div>
+      <p class="meaning" id="cardMeaning">Sở thích, hứng thú, đam mê</p>
+      <div class="example" id="cardExample">
+        <div class="sent-row">
+          <div style="flex:1"><div class="zh" id="exZh">我的爱好是看书和听音乐。</div><div class="py" id="exPy">Wǒ de àihào shì kànshū hé tīng yīnyuè.</div><div class="vi" id="exVi">Sở thích của tôi là đọc sách và nghe nhạc.</div></div>
+          <button class="mini-audio" id="sentAudio" aria-label="Phát âm câu ví dụ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <p class="hint" id="cardHint">Chạm thẻ hoặc nhấn <kbd>Space</kbd> để xem nghĩa</p>
+  </article>
+
+  <div class="deck" data-od-id="srs-deck">
+    <button class="reveal-btn" id="revealBtn" data-od-id="reveal-button">Chạm để xem nghĩa &amp; ví dụ&nbsp;&nbsp;<kbd style="font-size:11px;border:1px solid var(--border);border-radius:5px;padding:1px 7px">Space</kbd></button>
+    <div class="grades" id="grades" hidden>
+      <button class="grade rose" data-grade="1" data-od-id="grade-again"><span class="hotkey">1</span>Chưa thuộc<small>Ôn lại sau 1 phút</small></button>
+      <button class="grade amberb" data-grade="2" data-od-id="grade-hard"><span class="hotkey">2</span>Mơ hồ · Khó<small>Ôn lại sau 5 phút</small></button>
+      <button class="grade primary" data-grade="3" data-od-id="grade-good"><span class="hotkey">3</span>Đã thuộc · Tốt<small>Chuyển từ tiếp theo</small></button>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="exitModal" role="alertdialog" aria-modal="true" aria-label="Xác nhận thoát" data-od-id="exit-modal">
+  <h2>Rời khỏi Bài 4?</h2>
+  <p>Tiến độ 8/15 từ đã được lưu · streak hôm nay vẫn giữ. Quay lại lộ trình để tiếp tục sau.</p>
+  <div class="mrow"><button id="stayBtn">Ở lại học</button><button class="danger" id="leaveBtn">Về lộ trình</button></div>
+</div>
+<div class="modal" id="keysModal" role="dialog" aria-modal="true" aria-label="Phím tắt" data-od-id="shortcuts-modal">
+  <h2>Phím tắt học nhanh</h2>
+  <div class="keys">
+    <div><span>Lật / xem nghĩa · phát lại audio</span><kbd>Space</kbd></div>
+    <div><span>Chưa thuộc · lặp sau 1 phút</span><kbd>1</kbd></div>
+    <div><span>Mơ hồ · lặp sau 5 phút</span><kbd>2</kbd></div>
+    <div><span>Đã thuộc · từ tiếp theo</span><kbd>3</kbd></div>
+    <div><span>Phát lại âm thanh chữ Hán</span><kbd>R</kbd></div>
+    <div><span>Thoát bài học</span><kbd>Esc</kbd></div>
+  </div>
+  <div class="mrow"><button id="keysClose" style="flex:1">Đã hiểu</button></div>
+</div>
+
+<div class="sheet-overlay" id="strokeOverlay"></div>
+<section class="sheet" id="strokeModal" role="dialog" aria-modal="true" aria-label="Nét chữ và bút thuận" data-od-id="stroke-modal">
+  <div class="sheet-head">
+    <div class="char-tabs" id="charTabs" role="group" aria-label="Chọn chữ"></div>
+    <span class="py-pill"><span id="strokePy">ài</span><button id="strokeAudio" aria-label="Phát âm chữ Hán"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button></span>
+    <button class="tile sheet-close" id="strokeClose" aria-label="Đóng bảng nét chữ"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="sheet-body">
+    <div>
+      <div class="grid-box" id="gridBox">
+        <svg class="grid-bg" viewBox="0 0 300 300" aria-hidden="true">
+          <rect x="4" y="4" width="292" height="292" stroke="var(--faint)" stroke-width="1.5" rx="4"/>
+          <line x1="150" y1="4" x2="150" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="7 6"/>
+          <line x1="4" y1="150" x2="296" y2="150" stroke="var(--faint)" stroke-width="1" stroke-dasharray="7 6"/>
+          <line x1="4" y1="4" x2="296" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="5 7" opacity=".7"/>
+          <line x1="296" y1="4" x2="4" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="5 7" opacity=".7"/>
+        </svg>
+        <svg id="strokeSvg" viewBox="0 0 300 300" role="img" aria-label="Hoạt họa bút thuận"></svg>
+        <svg id="inkSvg" viewBox="0 0 300 300" style="display:none;touch-action:none" aria-label="Bảng tự luyện viết"></svg>
+      </div>
+      <div class="toolbar" data-od-id="stroke-toolbar">
+        <button class="tool-btn" id="strokePrev" aria-label="Nét trước"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15 5.5v13L4 12z"/></svg>Nét trước</button>
+        <button class="tool-btn accent" id="strokeReplay"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>Phát lại</button>
+        <button class="tool-btn" id="strokeNext" aria-label="Nét sau">Nét sau<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 5.5v13l11-6.5z"/></svg></button>
+        <div class="speed-seg" role="group" aria-label="Tốc độ hoạt họa">
+          <button data-speed="0.75" aria-pressed="false">0.75x</button>
+          <button data-speed="1" aria-pressed="true">1.0x</button>
+          <button data-speed="1.5" aria-pressed="false">1.5x</button>
+        </div>
+        <button class="tool-btn" id="practiceBtn" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>Tự luyện viết</button>
+      </div>
+      <div class="practice-bar" id="practiceBar">
+        <button class="tool-btn" id="inkUndo">Hoàn tác</button>
+        <button class="tool-btn" id="inkClear">Xóa hết</button>
+        <span id="inkCount">0 nét đã viết</span>
+      </div>
+    </div>
+    <div class="info-col" id="strokeInfo"></div>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+  try{var s=localStorage.getItem('hanzi:theme');if(s)root.setAttribute('data-theme',s);}catch(e){}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);try{localStorage.setItem('hanzi:theme',n)}catch(e){}
+    say(n==='dark'?'Đã chuyển chế độ tối':'Đã chuyển chế độ sáng');
+  });
+
+  var WORDS=[
+    {zh:'打球',py:'dǎ qiú',pos:'Động từ',mean:'Chơi bóng',ex:['周末我喜欢和朋友打球。','Zhōumò wǒ xǐhuan hé péngyou dǎ qiú.','Cuối tuần tôi thích chơi bóng cùng bạn bè.']},
+    {zh:'音乐',py:'yīnyuè',pos:'Danh từ',mean:'Âm nhạc',ex:['她最喜欢听音乐。','Tā zuì xǐhuan tīng yīnyuè.','Cô ấy thích nghe nhạc nhất.']},
+    {zh:'电影',py:'diànyǐng',pos:'Danh từ',mean:'Phim điện ảnh',ex:['这部电影很有意思。','Zhè bù diànyǐng hěn yǒu yìsi.','Bộ phim này rất thú vị.']},
+    {zh:'喜欢',py:'xǐhuan',pos:'Động từ',mean:'Thích, yêu thích',ex:['你喜欢做什么？','Nǐ xǐhuan zuò shénme?','Bạn thích làm gì?']},
+    {zh:'觉得',py:'juéde',pos:'Động từ',mean:'Cảm thấy, cho rằng',ex:['我觉得学中文很有意思。','Wǒ juéde xué Zhōngwén hěn yǒu yìsi.','Tôi thấy học tiếng Trung rất thú vị.']},
+    {zh:'有意思',py:'yǒu yìsi',pos:'Tính từ',mean:'Thú vị, hay ho',ex:['这本书很有意思。','Zhè běn shū hěn yǒu yìsi.','Cuốn sách này rất hay.']},
+    {zh:'看书',py:'kàn shū',pos:'Động từ',mean:'Đọc sách',ex:['晚上我喜欢看书。','Wǎnshang wǒ xǐhuan kàn shū.','Buổi tối tôi thích đọc sách.']},
+    {zh:'爱好',py:'àihào',pos:'Danh từ · Động từ',mean:'Sở thích, hứng thú, đam mê',ex:['我的爱好是看书和听音乐。','Wǒ de àihào shì kànshū hé tīng yīnyuè.','Sở thích của tôi là đọc sách và nghe nhạc.']},
+    {zh:'空闲',py:'kòngxián',pos:'Tính từ · Danh từ',mean:'Rảnh rỗi, thời gian rảnh',ex:['你空闲的时候做什么？','Nǐ kòngxián de shíhou zuò shénme?','Lúc rảnh bạn thường làm gì?']},
+    {zh:'唱歌',py:'chàng gē',pos:'Động từ',mean:'Hát',ex:['她唱歌很好听。','Tā chàng gē hěn hǎotīng.','Cô ấy hát rất hay.']},
+    {zh:'跳舞',py:'tiào wǔ',pos:'Động từ',mean:'Nhảy múa',ex:['妈妈喜欢跳舞。','Māma xǐhuan tiào wǔ.','Mẹ tôi thích khiêu vũ.']},
+    {zh:'足球',py:'zúqiú',pos:'Danh từ',mean:'Bóng đá',ex:['他们在踢足球。','Tāmen zài tī zúqiú.','Họ đang đá bóng.']},
+    {zh:'篮球',py:'lánqiú',pos:'Danh từ',mean:'Bóng rổ',ex:['我不会打篮球。','Wǒ bú huì dǎ lánqiú.','Tôi không biết chơi bóng rổ.']},
+    {zh:'游泳',py:'yóuyǒng',pos:'Động từ',mean:'Bơi lội',ex:['夏天游泳很舒服。','Xiàtiān yóuyǒng hěn shūfu.','Mùa hè bơi lội rất dễ chịu.']},
+    {zh:'听',py:'tīng',pos:'Động từ',mean:'Nghe',ex:['你听，这是谁的歌？','Nǐ tīng, zhè shì shéi de gē?','Bạn nghe này, đây là bài hát của ai?']}
+  ];
+  var idx=7, revealed=false, done=0, autoplay=true;
+  var card=document.getElementById('flashcard'),reveal=document.getElementById('reveal'),
+      revealBtn=document.getElementById('revealBtn'),grades=document.getElementById('grades'),
+      hint=document.getElementById('cardHint');
+
+  function speak(text){
+    try{
+      if(!('speechSynthesis' in window))return;
+      speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.85;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+  function ripple(btn){btn.classList.remove('ripple');void btn.offsetWidth;btn.classList.add('ripple');}
+  function playWord(){var w=WORDS[idx];speak(w.zh);ripple(document.getElementById('audioBtn'));}
+  function render(n){
+    var w=WORDS[idx];
+    document.getElementById('cardGlyph').textContent=w.zh;
+    document.getElementById('cardPinyin').textContent=w.py;
+    document.getElementById('cardPos').textContent=w.pos;
+    document.getElementById('cardMeaning').textContent=w.mean;
+    document.getElementById('exZh').textContent=w.ex[0];
+    document.getElementById('exPy').textContent=w.ex[1];
+    document.getElementById('exVi').textContent=w.ex[2];
+    var n1=idx+1;
+    document.getElementById('cardCounter').textContent='THẺ '+n1+' / 15';
+    var pct=Math.round(n1/15*100);
+    document.getElementById('progressLabel').innerHTML='Bài 4: Sở thích & Thời gian rảnh · <b>'+n1+'/15 từ ('+pct+'%)</b>';
+    document.getElementById('progressFill').style.width=pct+'%';
+    document.getElementById('progressTrack').setAttribute('aria-valuenow',pct);
+    setRevealed(false);
+    if(autoplay&&n)setTimeout(playWord,350);
+  }
+  function setRevealed(v){
+    revealed=v;
+    reveal.classList.toggle('open',v);
+    revealBtn.hidden=v;grades.hidden=!v;
+    hint.innerHTML=v?'Chấm mức độ ghi nhớ bên dưới <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd>':'Chạm thẻ hoặc nhấn <kbd>Space</kbd> để xem nghĩa';
+    card.setAttribute('aria-label',v?'Thẻ đã lật, chấm điểm ghi nhớ bên dưới':'Thẻ ghi nhớ, chạm để xem nghĩa');
+  }
+  function grade(g){
+    if(!revealed)return;
+    done++;
+    var label=g===1?'Chưa thuộc — ôn lại sau 1 phút':g===2?'Mơ hồ — ôn lại sau 5 phút':'Đã thuộc — tuyệt vời!';
+    say(label);
+    if(idx>=WORDS.length-1){
+      document.getElementById('cardGlyph').textContent='棒';
+      document.getElementById('cardPinyin').textContent='bàng';
+      document.getElementById('cardPos').textContent='Hoàn thành';
+      document.getElementById('cardMeaning').textContent='Xong 15/15 từ Bài 4 — quay lại lộ trình để mở Trạm 5';
+      setRevealed(true);revealBtn.hidden=true;grades.hidden=true;
+      hint.innerHTML='Nhấn <kbd>Esc</kbd> để về lộ trình';
+      return;
+    }
+    idx++;render(true);
+  }
+  card.addEventListener('click',function(e){
+    if(e.target.closest('#audioBtn,#strokeBtn,#sentAudio'))return;
+    if(!revealed)setRevealed(true);else playWord();
+  });
+  revealBtn.addEventListener('click',function(){setRevealed(true);});
+  document.getElementById('audioBtn').addEventListener('click',function(e){e.stopPropagation();playWord();});
+  document.getElementById('sentAudio').addEventListener('click',function(e){e.stopPropagation();speak(WORDS[idx].ex[0]);ripple(this);});
+  document.getElementById('strokeBtn').addEventListener('click',function(e){e.stopPropagation();openStrokeModal();});
+  // ---- stroke studio ----
+  var STROKE_DATA={
+    '爱':{py:'ài',total:10,radical:{sym:'爫',name:'Bộ Trảo',mean:'Móng vuốt',n:4},struct:'Trên – Giữa – Dưới',tip:'Phía trên là móng vuốt (爫), phía dưới là bạn bè (友) che chở — <b>yêu (爱) là nâng niu, che chở</b>.',
+      order:[['㇒','Phẩy · piě'],['㇔','Chấm · diǎn'],['㇔','Chấm · diǎn'],['㇒','Phẩy · piě'],['㇔','Chấm · diǎn'],['㇖','Phẩy ngang · héngpiě'],['一','Ngang · héng'],['㇒','Phẩy · piě'],['㇖','Phẩy ngang · héngpiě'],['㇏','Mác · nà']],
+      paths:['M156,32 C140,58 124,76 108,92','M188,58 C190,66 191,74 192,82','M132,96 C134,102 135,108 136,114','M92,130 C140,128 185,124 216,102','M150,148 C151,154 152,160 153,166','M120,176 C150,174 180,174 200,170','M100,196 C135,195 170,195 205,193','M150,206 C136,226 123,242 111,256','M102,262 C142,260 184,255 216,240','M152,212 C172,230 192,246 212,258']},
+    '好':{py:'hǎo · hào',total:6,radical:{sym:'女',name:'Bộ Nữ',mean:'Phụ nữ, con gái',n:3},struct:'Trái – Phải (女 + 子)',tip:'Người phụ nữ (女) bên đứa trẻ (子) — điều <b>tốt đẹp (好)</b>. Trong 爱好 đọc là <b>hào</b> (sở thích).',
+      order:[['㇙','Gập phẩy · zhépiě'],['㇒','Phẩy · piě'],['一','Ngang · héng'],['㇖','Phẩy ngang · héngpiě'],['亅','Sổ móc · shùgōu'],['一','Ngang · héng']],
+      paths:['M118,66 C104,116 92,158 76,202','M148,84 C134,122 120,156 104,190','M70,205 C100,203 125,203 150,201','M168,112 C200,110 228,106 248,96','M208,116 C208,160 208,200 206,232 C205,242 197,246 190,242','M165,248 C195,246 222,246 250,244']}
+  };
+  var strokeModal=document.getElementById('strokeModal'),strokeOverlay=document.getElementById('strokeOverlay'),
+      charTabs=document.getElementById('charTabs'),strokeSvg=document.getElementById('strokeSvg'),
+      inkSvg=document.getElementById('inkSvg'),strokeInfo=document.getElementById('strokeInfo'),
+      sChars=[],sChar='',sCur=-1,sSpeed=1,sTimer=null,sPractice=false,inkPaths=[];
+  function strokeOpen(){return strokeModal.classList.contains('show');}
+  function openStrokeModal(){
+    var w=(document.getElementById('cardGlyph').textContent||'爱好').replace(/\s+/g,'');
+    sChars=w.split('').filter(function(c,i,a){return a.indexOf(c)===i;});
+    if(!sChars.length)sChars=['爱','好'];
+    charTabs.innerHTML='';
+    sChars.forEach(function(c){
+      var d=STROKE_DATA[c],b=document.createElement('button');
+      b.setAttribute('data-ch',c);b.setAttribute('aria-pressed',c===sChars[0]);
+      b.innerHTML='<span class="hanzi">'+c+'</span>'+(d?'<small>'+d.total+' nét</small>':'<small>demo 爱·好</small>');
+      b.addEventListener('click',function(){selectChar(c);});
+      charTabs.appendChild(b);
+    });
+    selectChar(sChars[0]);
+    strokeOverlay.classList.add('show');strokeModal.classList.add('show');
+  }
+  function closeStrokeModal(){stopPlay();strokeOverlay.classList.remove('show');strokeModal.classList.remove('show');}
+  document.getElementById('strokeClose').addEventListener('click',closeStrokeModal);
+  strokeOverlay.addEventListener('click',closeStrokeModal);
+  function selectChar(c){
+    sChar=c;stopPlay();setPractice(false);inkPaths=[];sCur=-1;
+    charTabs.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-ch')===c);});
+    var d=STROKE_DATA[c];
+    document.getElementById('strokePy').textContent=d?d.py:'—';
+    renderGrid();renderInfo();
+    if(d)playAll();
+  }
+  function renderGrid(){
+    var d=STROKE_DATA[sChar];
+    strokeSvg.innerHTML='';inkSvg.innerHTML='';
+    document.getElementById('inkCount').textContent='0 nét đã viết';
+    if(!d){strokeSvg.innerHTML='<text x="150" y="150" text-anchor="middle" font-size="15" fill="var(--faint)">Dữ liệu nét demo hiện có 爱 · 好</text>';return;}
+    d.paths.forEach(function(p,i){
+      var el=document.createElementNS('http://www.w3.org/2000/svg','path');
+      el.setAttribute('d',p);el.setAttribute('class','st '+(i<=sCur?'done':'todo'));
+      el.dataset.i=i;strokeSvg.appendChild(el);
+    });
+    renderOrder();
+  }
+  function renderInfo(){
+    var d=STROKE_DATA[sChar];
+    if(!d){strokeInfo.innerHTML='<div class="nodata">Chữ “'+sChar+'” sẽ được bổ sung dữ liệu bút thuận.<br>Demo hiện hỗ trợ <b>爱</b> (10 nét) và <b>好</b> (6 nét).</div>';return;}
+    var rows=d.order.map(function(o,i){
+      return '<button class="orow'+(i===sCur?' cur':'')+'" data-step="'+i+'"><span class="n">'+(i+1)+'</span><span>'+o[1].split(' · ')[0]+'</span><small>'+o[1].split(' · ')[1]+'</small></button>';
+    }).join('');
+    strokeInfo.innerHTML=
+      '<div class="radical-card"><span class="radical-sym">'+d.radical.sym+'</span><span><b>'+d.radical.sym+' — '+d.radical.name+'</b><span>“'+d.radical.mean+'” · '+d.radical.n+' nét</span></span></div>'+
+      '<div class="facts"><div class="fact"><small>TỔNG SỐ NÉT</small><b>'+d.total+' nét • Cơ bản</b></div><div class="fact"><small>CẤU TRÚC</small><b>'+d.struct+'</b></div></div>'+
+      '<div class="order-list"><h4>DANH SÁCH BÚT THUẬN</h4>'+rows+'</div>'+
+      '<div class="tip-box"><h4>MẸO GHI NHỚ</h4><p>'+d.tip+'</p></div>';
+  }
+  function renderOrder(){
+    strokeInfo.querySelectorAll('.orow').forEach(function(r){
+      r.classList.toggle('cur',+r.getAttribute('data-step')===sCur);
+    });
+  }
+  function paintState(){
+    strokeSvg.querySelectorAll('.st').forEach(function(el){
+      var i=+el.dataset.i;
+      el.setAttribute('class','st '+(i<sCur||(i===sCur&&!sTimer)?(i===sCur?'now':'done'):(i===sCur?'now':'todo')));
+      if(i===sCur&&!sTimer)el.style.strokeDashoffset='0';
+    });
+    renderOrder();
+  }
+  function stopPlay(){sTimer=null;var d=STROKE_DATA[sChar];if(d)paintIdle();}
+  function paintIdle(){
+    strokeSvg.querySelectorAll('.st').forEach(function(el){
+      var i=+el.dataset.i;
+      el.style.transition='';el.style.strokeDasharray='';el.style.strokeDashoffset='';
+      el.setAttribute('class','st '+(i<=sCur?'done':'todo'));
+    });
+    renderOrder();
+  }
+  function animateStroke(i,done){
+    var el=strokeSvg.querySelectorAll('.st')[i];if(!el){done&&done();return;}
+    var len=el.getTotalLength();
+    el.setAttribute('class','st now');
+    el.style.transition='none';el.style.strokeDasharray=String(len);el.style.strokeDashoffset=String(len);
+    void el.getBoundingClientRect();
+    var dur=Math.max(280,720/sSpeed);
+    el.style.transition='stroke-dashoffset '+dur+'ms ease';
+    el.style.strokeDashoffset='0';
+    renderOrder();
+    sTimer=setTimeout(function(){
+      el.setAttribute('class','st done');el.style.transition='';el.style.strokeDasharray='';el.style.strokeDashoffset='';
+      sCur=i;sTimer=null;done&&done();
+    },dur+60);
+    sCur=i;
+  }
+  function playAll(){
+    var d=STROKE_DATA[sChar];if(!d)return;
+    if(sTimer)return;
+    sCur=-1;paintIdle();
+    var i=0;
+    (function next(){
+      if(!strokeOpen())return;
+      if(i>=d.paths.length){sCur=d.paths.length-1;paintIdle();say('Hoàn thành '+d.total+' nét chữ “'+sChar+'”');return;}
+      animateStroke(i,function(){i++;next();});
+    })();
+  }
+  document.getElementById('strokeReplay').addEventListener('click',function(){if(sPractice)return;stopPlay();sCur=-1;playAll();});
+  document.getElementById('strokePrev').addEventListener('click',function(){
+    var d=STROKE_DATA[sChar];if(!d||sPractice)return;stopPlay();sCur=Math.max(-1,sCur-1);paintIdle();stepSay();
+  });
+  document.getElementById('strokeNext').addEventListener('click',function(){
+    var d=STROKE_DATA[sChar];if(!d||sPractice)return;stopPlay();sCur=Math.min(d.paths.length-1,sCur+1);paintIdle();stepSay();
+  });
+  function stepSay(){var d=STROKE_DATA[sChar];if(d&&sCur>=0)say('Nét '+(sCur+1)+'/'+d.total+': '+d.order[sCur][1]);}
+  strokeInfo.addEventListener('click',function(e){
+    var r=e.target.closest('.orow');if(!r)return;
+    var d=STROKE_DATA[sChar];if(!d)return;stopPlay();sCur=+r.getAttribute('data-step');paintIdle();stepSay();
+  });
+  document.querySelectorAll('.speed-seg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.speed-seg button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');sSpeed=parseFloat(b.getAttribute('data-speed'));
+    });
+  });
+  document.getElementById('strokeAudio').addEventListener('click',function(){
+    var d=STROKE_DATA[sChar];speak(d?sChar+sChar:sChar);
+  });
+  // practice pad
+  var drawing=null;
+  function setPractice(v){
+    sPractice=v;stopPlay();
+    document.getElementById('practiceBtn').setAttribute('aria-pressed',v);
+    document.getElementById('practiceBar').classList.toggle('show',v);
+    inkSvg.style.display=v?'block':'none';
+    if(!v){inkPaths=[];inkSvg.innerHTML='';}
+    document.getElementById('inkCount').textContent='0 nét đã viết';
+  }
+  document.getElementById('practiceBtn').addEventListener('click',function(){setPractice(!sPractice);say(sPractice?'Chế độ tự luyện: vẽ lên ô chữ':'Đã về chế độ phát lại');});
+  inkSvg.addEventListener('pointerdown',function(e){
+    if(!sPractice)return;
+    inkSvg.setPointerCapture(e.pointerId);
+    var pt=svgPoint(e);
+    drawing=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    drawing.setAttribute('class','ink-path');drawing.setAttribute('points',pt.x+','+pt.y);
+    inkSvg.appendChild(drawing);
+  });
+  inkSvg.addEventListener('pointermove',function(e){
+    if(!drawing)return;
+    var pt=svgPoint(e);
+    drawing.setAttribute('points',drawing.getAttribute('points')+' '+pt.x+','+pt.y);
+  });
+  inkSvg.addEventListener('pointerup',function(){
+    if(!drawing)return;
+    var pts=(drawing.getAttribute('points')||'').trim().split(/\s+/);
+    if(pts.length<3){drawing.remove();}else{
+      inkPaths.push(drawing);
+      var d=STROKE_DATA[sChar],n=inkPaths.length;
+      document.getElementById('inkCount').textContent=n+' nét đã viết'+(d?' / '+d.total:'');
+      if(d&&n===d.total)say('Đủ '+d.total+' nét — đối chiếu với thứ tự mẫu bên phải');
+    }
+    drawing=null;
+  });
+  function svgPoint(e){
+    var r=inkSvg.getBoundingClientRect();
+    return {x:((e.clientX-r.left)/r.width*300).toFixed(1),y:((e.clientY-r.top)/r.height*300).toFixed(1)};
+  }
+  document.getElementById('inkUndo').addEventListener('click',function(){
+    var last=inkPaths.pop();if(last)last.remove();
+    document.getElementById('inkCount').textContent=inkPaths.length+' nét đã viết';
+  });
+  document.getElementById('inkClear').addEventListener('click',function(){
+    inkPaths=[];inkSvg.innerHTML='';
+    document.getElementById('inkCount').textContent='0 nét đã viết';
+  });
+  grades.addEventListener('click',function(e){var b=e.target.closest('[data-grade]');if(b)grade(+b.getAttribute('data-grade'));});
+  document.getElementById('autoBtn').addEventListener('click',function(){
+    autoplay=!autoplay;this.setAttribute('aria-pressed',autoplay);
+    say(autoplay?'Đã bật tự động phát âm':'Đã tắt tự động phát âm');
+  });
+  // modals
+  var overlay=document.getElementById('overlay'),exitM=document.getElementById('exitModal'),keysM=document.getElementById('keysModal');
+  function openM(m){overlay.classList.add('show');m.classList.add('show');}
+  function closeM(){overlay.classList.remove('show');exitM.classList.remove('show');keysM.classList.remove('show');}
+  document.getElementById('exitBtn').addEventListener('click',function(){openM(exitM);});
+  document.getElementById('keysBtn').addEventListener('click',function(){openM(keysM);});
+  document.getElementById('keysClose').addEventListener('click',closeM);
+  document.getElementById('stayBtn').addEventListener('click',closeM);
+  document.getElementById('leaveBtn').addEventListener('click',function(){location.href='roadmap.html';});
+  overlay.addEventListener('click',closeM);
+  // keyboard
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){if(strokeOpen()){closeStrokeModal();return;}if(exitM.classList.contains('show')||keysM.classList.contains('show'))closeM();else openM(exitM);return;}
+    if(exitM.classList.contains('show')||keysM.classList.contains('show'))return;
+    if(e.code==='Space'){e.preventDefault();if(!revealed)setRevealed(true);else playWord();}
+    else if(e.key==='1')grade(1);
+    else if(e.key==='2')grade(2);
+    else if(e.key==='3')grade(3);
+    else if(e.key==='r'||e.key==='R')playWord();
+  });
+  render(false);
+})();
+</script>
+</body>
+</html>

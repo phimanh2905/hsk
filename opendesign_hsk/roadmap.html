@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — Lộ trình HSK 2</title>
+<style>
+:root{
+  --bg:#FAF9F5;--surface:#f1f3f2;--elev:#ffffff;
+  --fg:#1f2a27;--muted:#66756f;--border:#e8ecea;
+  --accent:#C83C32;--accent-hover:#B33229;--accent-600:#d24b3f;--accent-ink:#ffffff;
+  --jade:#2D7D5B;--amber:#e68a00;--amber-ink:#7a4a00;--amber-wash:#fdf3e2;
+  --ring-track:#e8ecea;
+  --shadow:0 1px 2px rgba(31,42,39,.05);
+  --shadow-hover:0 2px 4px rgba(31,42,39,.06),0 10px 24px rgba(31,42,39,.08);
+  --r:8px;--r-card:16px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-mono:SFMono,ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#111318;--surface:#1a1d24;--elev:#1c2029;
+  --fg:#eceeed;--muted:#9aa3a0;--border:#2a2f37;
+  --accent:#E05349;--accent-hover:#c7453c;--accent-600:#E05349;--accent-ink:#ffffff;
+  --jade:#4caf8a;--amber:#dcaa37;--amber-ink:#f5d98b;--amber-wash:#2a2416;
+  --ring-track:#2a2f37;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+  --shadow-hover:0 2px 6px rgba(0,0,0,.5),0 14px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.hanzi{font-family:var(--font-hanzi);font-weight:700}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent-600);outline-offset:2px;border-radius:4px}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1024px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px 0 10px;border:1px solid var(--border);background:var(--elev);border-radius:var(--r);font-size:13px;font-weight:700;text-decoration:none;transition:all .2s}
+.back:hover{border-color:var(--muted)}
+.levels{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin:0 auto}
+.levels button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;min-height:36px;transition:all .2s}
+.levels button[aria-pressed="true"]{background:var(--elev);color:var(--fg);box-shadow:var(--shadow);border:1px solid var(--border)}
+.icon-btn{width:40px;height:40px;border-radius:var(--r);border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.head-progress{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:700}
+.head-progress .bar{width:90px;height:6px;border-radius:999px;background:var(--ring-track);overflow:hidden}
+.head-progress .bar i{display:block;height:100%;background:var(--jade);border-radius:999px}
+
+/* page */
+.page{max-width:1024px;margin:0 auto;padding:16px 24px 80px;display:flex;flex-direction:column;gap:16px}
+@media(max-width:640px){.page{padding:16px 16px 80px}.topbar-inner{padding:10px 16px}.levels{order:3;width:100%;overflow-x:auto}.levels button{flex:1;white-space:nowrap}}
+
+/* milestone banner */
+.banner{background:var(--elev);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:20px}
+.banner-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--muted)}
+.banner h1{font-size:20px;letter-spacing:-.01em;margin:4px 0 2px}
+.banner p{font-size:13px;color:var(--muted)}
+.banner p b{color:var(--fg)}
+.bar{height:8px;border-radius:999px;background:var(--ring-track);overflow:hidden;margin-top:12px}
+.bar-fill{height:100%;border-radius:999px;background:var(--jade);transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.banner-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+.banner-meta b{color:var(--fg)}
+
+/* serpentine path */
+.path-wrap{position:relative;padding:8px 0 0}
+.spine{position:absolute;top:0;bottom:0;left:50%;width:0;border-left:2px dashed var(--border);transform:translateX(-50%)}
+html[data-theme="dark"] .spine{border-color:var(--border)}
+@media(max-width:760px){.spine{left:27px}}
+.path{display:flex;flex-direction:column;gap:4px;position:relative}
+.row{display:grid;grid-template-columns:1fr 72px 1fr;align-items:center;min-height:132px}
+.row .side{min-width:0}
+.row.left .card-l{grid-column:1;justify-self:end}
+.row.right .card-r{grid-column:3;justify-self:start}
+.node-col{grid-column:2;grid-row:1;display:flex;justify-content:center;position:relative;z-index:1}
+@media(max-width:760px){
+  .row{grid-template-columns:56px 1fr;min-height:0;padding:10px 0}
+  .row.left .card-l,.row.right .card-r{grid-column:2;justify-self:stretch}
+  .node-col{grid-column:1;grid-row:1}
+}
+.node{
+  width:56px;height:56px;border-radius:50%;cursor:pointer;flex-shrink:0;
+  display:grid;place-items:center;background:var(--elev);border:2px solid var(--border);
+  transition:transform .2s,box-shadow .2s,border-color .2s;min-width:56px;min-height:56px;
+}
+.node:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.node.done{border-color:var(--jade);color:var(--jade)}
+.node.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 16%,transparent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 16%,transparent)}50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--accent) 7%,transparent)}}
+@media(prefers-reduced-motion:reduce){.node.active{animation:none}}
+.node.locked{color:var(--muted);background:var(--surface);cursor:not-allowed}
+.node.mile{width:48px;height:48px;min-width:48px;min-height:48px;margin:auto;border-radius:15px;transform:rotate(45deg);border:2px solid var(--amber);background:var(--amber-wash);color:var(--amber-ink)}
+.node.mile:hover{transform:rotate(45deg) translateY(-2px)}
+.node.mile .mile-ic{transform:rotate(-45deg);display:grid;place-items:center}
+.station{
+  position:relative;
+  background:var(--elev);border:1px solid var(--border);border-radius:var(--r-card);
+  box-shadow:var(--shadow);padding:14px 16px;max-width:340px;width:100%;cursor:pointer;
+  transition:transform .2s,box-shadow .2s,border-color .2s;text-align:left;
+}
+/* horizontal connectors: card edge → central node */
+.row.left .station::after{content:"";position:absolute;right:-25px;top:50%;width:25px;border-top:2px dashed var(--border)}
+.row.right .station::after{content:"";position:absolute;left:-25px;top:50%;width:25px;border-top:2px dashed var(--border)}
+@media(max-width:760px){
+  .row.left .station::after,.row.right .station::after{left:-13px;right:auto;width:13px}
+}
+@media(max-width:760px){.station{max-width:none}}
+.station:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.station.current{border:2px solid var(--accent)}
+.station.locked{opacity:.85;background:var(--surface);cursor:not-allowed}
+.station h3{font-size:14px;line-height:1.4}
+.station h3 .hanzi{color:var(--muted);font-weight:700}
+.station .meta{font-size:12.5px;color:var(--muted);margin-top:4px}
+.station .meta b{color:var(--fg)}
+.stars{display:flex;gap:3px;margin-top:8px}
+.stars svg{color:var(--amber)}
+html[data-theme="light"] .stars svg{color:var(--amber-ink)}
+.station .mini-bar{height:6px;border-radius:999px;background:var(--ring-track);overflow:hidden;margin-top:10px}
+.station .mini-bar i{display:block;height:100%;background:var(--jade);border-radius:999px}
+.float-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.06em;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:4px 12px;margin-bottom:8px}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:var(--r);min-height:44px;padding:0 18px;font-weight:700;font-size:13.5px;cursor:pointer;margin-top:12px;width:100%;transition:all .2s}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.lock-note{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:8px;font-weight:700}
+.mile-diamond{display:flex;align-items:center;gap:10px}
+.mile-diamond .gem{width:44px;height:44px;transform:rotate(45deg);border-radius:12px;background:var(--amber-wash);border:1px solid var(--amber);display:grid;place-items:center;flex-shrink:0}
+.mile-diamond .gem svg{transform:rotate(-45deg);color:var(--amber)}
+
+/* drawer */
+.overlay{position:fixed;inset:0;background:rgba(17,19,24,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:50}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--elev);border-left:1px solid var(--border);z-index:51;transform:translateX(102%);transition:transform .28s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(0,0,0,.18)}
+.drawer.show{transform:none}
+.drawer-head{padding:18px 20px 0}
+.drawer-head .rowline{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.drawer h2{font-size:17px;line-height:1.4}
+.drawer h2 .hanzi{color:var(--accent)}
+.status{font-size:11px;font-weight:800;letter-spacing:.08em;border-radius:999px;padding:4px 10px;border:1px solid var(--border);white-space:nowrap}
+.status.doing{background:var(--surface);color:var(--fg)}
+.status.todo{background:var(--amber-wash);color:var(--amber-ink)}
+html[data-theme="light"] .status.todo{color:#7a4a00}
+.drawer-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin:14px 20px 0}
+.tabs button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px;font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--elev);color:var(--fg);box-shadow:var(--shadow);border:1px solid var(--border)}
+.drawer-body{padding:14px 20px;overflow-y:auto;flex:1}
+.vrow{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:10px 12px;margin-bottom:8px}
+.vrow .zh{font-family:var(--font-hanzi);font-weight:700;font-size:16px}
+.vrow .py{font-size:12px;color:var(--muted)}
+.vrow .vn{margin-left:auto;text-align:right;font-size:12px;color:var(--muted)}
+.audio{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;flex-shrink:0;min-width:36px}
+.audio:hover{border-color:var(--accent);color:var(--accent)}
+.grow{border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;background:var(--surface)}
+.grow b{font-size:13px;display:block}
+.grow span{font-size:12.5px;color:var(--muted)}
+.launch{padding:14px 20px 20px;border-top:1px solid var(--border);display:grid;gap:8px}
+.launch button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-weight:700;font-size:13.5px;cursor:pointer;transition:all .2s}
+.launch button:hover{background:var(--elev);border-color:var(--muted);transform:translateY(-1px)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:12px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:70;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<header class="topbar" data-od-id="roadmap-topbar">
+  <div class="topbar-inner">
+    <a class="back" href="index.html" data-od-id="back-home"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Home</a>
+    <div class="levels" role="group" aria-label="Chọn cấp độ HSK" data-od-id="level-switcher">
+      <button data-level="HSK 1" aria-pressed="false">HSK 1</button>
+      <button data-level="HSK 2" aria-pressed="true">HSK 2</button>
+      <button data-level="HSK 3" aria-pressed="false">HSK 3</button>
+      <button data-level="HSK 4–6" aria-pressed="false">HSK 4–6</button>
+    </div>
+    <div class="head-progress" data-od-id="header-progress"><span id="headPct">30%</span><span class="bar"><i id="headBar" style="width:30%"></i></span></div>
+    <button class="icon-btn" id="themeBtn" data-od-id="theme-toggle" aria-label="Chuyển chế độ sáng tối"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+  </div>
+</header>
+
+<main class="page">
+  <section class="banner" data-od-id="milestone-banner" aria-label="Tiến độ chặng">
+    <div class="banner-kicker">CHẶNG 1 · NỀN TẢNG GIAO TIẾP</div>
+    <h1 id="bannerTitle">Chặng 1: Giao tiếp thường nhật</h1>
+    <p id="bannerSub">Đã đạt: <b>6/20 bài</b> hoàn thành (30%) · <b>185/300</b> từ vựng · Demo HSK 2</p>
+    <div class="bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Tiến độ chặng 1"><div class="bar-fill" id="bannerBar" style="width:30%"></div></div>
+    <div class="banner-meta"><span>Trạm hiện tại: <b>Bài 4 · Sở thích</b></span><span>Còn <b>14 bài</b> tới mốc kiểm tra</span></div>
+  </section>
+
+  <div class="path-wrap" data-od-id="serpentine-path">
+    <div class="spine" aria-hidden="true"></div>
+    <div class="path" id="path"></div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Chi tiết trạm học" data-od-id="node-drawer">
+  <div class="drawer-head">
+    <div class="rowline">
+      <span class="status doing" id="drawerStatus">ĐANG HỌC · BÀI 4</span>
+      <button class="icon-btn" id="drawerClose" aria-label="Đóng chi tiết" style="width:36px;height:36px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <h2 id="drawerTitle">Bài 4: Sở thích &amp; Thời gian rảnh <span class="hanzi">爱好</span></h2>
+    <p class="drawer-sub" id="drawerSub">8/15 từ vựng · 55% hoàn thành · 2 điểm ngữ pháp</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Tổng quan trạm">
+    <button role="tab" id="tabVocab" aria-selected="true">Từ vựng mới</button>
+    <button role="tab" id="tabGram" aria-selected="false">Ngữ pháp trọng tâm</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="launch" data-od-id="drawer-launch">
+    <button data-act="Học Flashcard"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 22h8M12 18v4"/></svg>Học Flashcard</button>
+    <button data-act="Luyện viết Hanzi"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>Luyện viết Hanzi</button>
+    <button data-act="Thi trắc nghiệm Quiz"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>Thi trắc nghiệm Quiz</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+  try{var s=localStorage.getItem('hanzi:theme');if(s)root.setAttribute('data-theme',s);}catch(e){}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n);try{localStorage.setItem('hanzi:theme',n)}catch(e){}
+    say(n==='dark'?'Đã chuyển chế độ tối':'Đã chuyển chế độ sáng');
+  });
+
+  var CHECK='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  var LOCK='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+  var PLAY='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>';
+  var TROPHY='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
+  var STAR='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.26 6.6.57-5 4.4 1.5 6.47L12 16.9 5.99 19.7l1.5-6.47-5-4.4 6.6-.57z"/></svg>';
+  var VOL='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>';
+
+  var STATIONS=[
+    {id:1,side:'left',state:'done',no:'Trạm 1',title:'Chào hỏi & Làm quen',zh:'你好',meta:'15/15 từ · 100% · 3 điểm ngữ pháp',stars:3,
+     vocab:[['你好','nǐ hǎo','xin chào'],['谢谢','xièxie','cảm ơn'],['再见','zàijiàn','tạm biệt'],['请','qǐng','xin mời'],['对不起','duìbuqǐ','xin lỗi']],
+     gram:[['Câu chào + tên','我叫… / 你叫什么？'],['Phủ định cơ bản','不 + động từ / tính từ']]},
+    {id:2,side:'right',state:'done',no:'Trạm 2',title:'Số đếm & Mua sắm',zh:'数字',meta:'15/15 từ · 100% · 2 điểm ngữ pháp',stars:3,
+     vocab:[['买','mǎi','mua'],['多少钱','duōshao qián','bao nhiêu tiền'],['便宜','piányi','rẻ'],['贵','guì','đắt'],['个','gè','lượng từ']],
+     gram:[['Hỏi giá','…多少钱？'],['Lượng từ 个','Số + 个 + danh từ']]},
+    {id:3,side:'left',state:'done',no:'Trạm 3',title:'Thời gian & Lịch trình',zh:'时间',meta:'15/15 từ · 100% · 2 điểm ngữ pháp',stars:3,
+     vocab:[['今天','jīntiān','hôm nay'],['明天','míngtiān','ngày mai'],['几点','jǐ diǎn','mấy giờ'],['上班','shàngbān','đi làm'],['休息','xiūxi','nghỉ ngơi']],
+     gram:[['Trạng từ thời gian','今天 / 明天 + V'],['Hỏi giờ','现在几点？']]},
+    {id:4,side:'right',state:'active',no:'Trạm 4',title:'Sở thích & Thời gian rảnh',zh:'爱好',meta:'8/15 từ vựng · 55% · Còn ~6 phút',pct:55,
+     vocab:[['爱好','àihào','sở thích'],['空闲','kòngxián','rảnh rỗi'],['打球','dǎ qiú','chơi bóng'],['音乐','yīnyuè','âm nhạc'],['电影','diànyǐng','phim'],['喜欢','xǐhuan','thích'],['觉得','juéde','cảm thấy'],['有意思','yǒu yìsi','thú vị']],
+     gram:[['Câu chữ 把','把 + tân ngữ + V + 补语'],['Biểu đạt sở thích','喜欢 + V / 觉得…有意思']]},
+    {id:5,side:'left',state:'locked',no:'Trạm 5',title:'Đi lại & Chỉ đường',zh:'问路',meta:'Khóa · mở sau khi xong Bài 4',
+     vocab:[['地铁','dìtiě','tàu điện ngầm'],['怎么走','zěnme zǒu','đi thế nào'],['附近','fùjìn','gần đây']],
+     gram:[['Hỏi đường','请问，…怎么走？'],['Phương vị','在…旁边 / 对面']]},
+    {id:'m',side:'right',state:'milestone',no:'Milestone',title:'Ôn tập chặng & Mini test',zh:'复习',meta:'Khóa · mở sau Trạm 5 · Đánh giá năng lực HSK 2',
+     vocab:[['Tổng ôn 60 từ','zǒng fùxí','flashcard chặng 1']],
+     gram:[['Tổng hợp ngữ pháp','把 · Hỏi giá · Hỏi giờ'],['Mini test 20 câu','Nghe · Đọc · Viết']]},
+    {id:6,side:'left',state:'locked',no:'Trạm 6',title:'Thời tiết & Bốn mùa',zh:'天气',meta:'Khóa · mở sau Milestone',
+     vocab:[['天气','tiānqì','thời tiết'],['下雨','xià yǔ','mưa'],['冷','lěng','lạnh']],
+     gram:[['Miêu tả thời tiết','今天… / 明天会…'],['So sánh','比 + adj']]},
+  ];
+
+  var path=document.getElementById('path');
+  function stars(n){var h='<div class="stars" aria-label="Đạt '+n+'/3 sao">';for(var i=0;i<3;i++)h+=STAR;return h+'</div>';}
+  STATIONS.forEach(function(st){
+    var row=document.createElement('div');
+    row.className='row '+(st.side==='left'?'left':'right');
+    var nodeHtml,cardHtml;
+    if(st.state==='done'){
+      nodeHtml='<button class="node done" data-node="'+st.id+'" aria-label="'+st.no+': '+st.title+' — hoàn thành">'+CHECK+'</button>';
+      cardHtml='<button class="station" data-node="'+st.id+'" data-od-id="station-'+st.id+'"><h3>'+st.no+': '+st.title+' <span class="hanzi">'+st.zh+'</span></h3><p class="meta">'+st.meta+'</p>'+stars(st.stars)+'</button>';
+    }else if(st.state==='active'){
+      nodeHtml='<button class="node active" data-node="'+st.id+'" aria-label="'+st.no+': '+st.title+' — đang học">'+PLAY+'</button>';
+      cardHtml='<div class="station current" data-od-id="station-4"><span class="float-badge">★ TRẠM 4 ĐANG HỌC · 55%</span><h3>'+st.title+' <span class="hanzi">'+st.zh+'</span></h3><p class="meta">Tiến độ: <b>8/15 từ vựng · 55%</b></p><div class="mini-bar"><i style="width:55%"></i></div><button class="btn-primary" id="ctaContinue" data-od-id="station-cta-continue">'+PLAY+' Vào bài học</button></div>';
+    }else if(st.state==='milestone'){
+      nodeHtml='<button class="node mile locked" data-node="m" aria-label="Milestone ôn tập chặng — đang khóa"><span class="mile-ic">'+TROPHY+'</span></button>';
+      cardHtml='<button class="station locked" data-node="m" data-od-id="station-milestone"><div class="mile-diamond"><span class="gem">'+TROPHY+'</span><span><h3>MILESTONE: Ôn tập chặng 1 &amp; Mini test</h3><p class="meta">'+st.meta+'</p></span></div></button>';
+    }else{
+      nodeHtml='<button class="node locked" data-node="'+st.id+'" aria-label="'+st.no+': '+st.title+' — đang khóa">'+LOCK+'</button>';
+      cardHtml='<button class="station locked" data-node="'+st.id+'" data-od-id="station-'+st.id+'"><h3>'+st.no+': '+st.title+' <span class="hanzi">'+st.zh+'</span></h3><p class="meta">'+st.meta+'</p></button>';
+    }
+    row.innerHTML='<div class="side '+(st.side==='left'?'card-l':'card-r')+'">'+(st.side==='left'?cardHtml:'')+'</div><div class="node-col">'+nodeHtml+'</div><div class="side '+(st.side==='right'?'card-r':'card-l')+'">'+(st.side==='right'?cardHtml:'')+'</div>';
+    // fix: place card in correct side only
+    var sides=row.querySelectorAll('.side');
+    if(st.side==='left'){sides[1].innerHTML='';}else{sides[0].innerHTML='';}
+    path.appendChild(row);
+  });
+
+  // drawer
+  var drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay');
+  var dStatus=document.getElementById('drawerStatus'),dTitle=document.getElementById('drawerTitle'),
+      dSub=document.getElementById('drawerSub'),dBody=document.getElementById('drawerBody');
+  var tabV=document.getElementById('tabVocab'),tabG=document.getElementById('tabGram'),mode='vocab',current=null;
+  function find(id){return STATIONS.filter(function(s){return String(s.id)===String(id)})[0];}
+  function renderBody(){
+    if(!current)return;
+    if(mode==='vocab'){
+      var h='';
+      current.vocab.forEach(function(v){
+        h+='<div class="vrow"><button class="audio" data-audio="'+v[0]+'" aria-label="Nghe phát âm '+v[0]+'">'+VOL+'</button><span><span class="zh">'+v[0]+'</span><br><span class="py">'+v[1]+'</span></span><span class="vn">'+v[2]+'</span></div>';
+      });
+      if(current.state==='active')h+='<p style="font-size:12px;color:var(--muted)">Danh sách rút gọn 8/15 từ · mở bài học để xem đủ 15 từ + audio chuẩn.</p>';
+      if(current.state==='locked'||current.state==='milestone')h='<p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">Xem trước khi mở khóa · audio đầy đủ sau khi hoàn thành trạm trước.</p>'+h;
+      dBody.innerHTML=h;
+    }else{
+      var g='';
+      current.gram.forEach(function(x){g+='<div class="grow"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>';});
+      g+='<p style="font-size:12px;color:var(--muted)">Chế độ học: Flashcard · Quiz · Viết Hanzi — lưu tiến độ về dashboard.</p>';
+      dBody.innerHTML=g;
+    }
+  }
+  function openDrawer(id){
+    current=find(id);if(!current)return;
+    var locked=(current.state==='locked'||current.state==='milestone');
+    dStatus.className='status '+(current.state==='active'?'doing':'todo');
+    dStatus.textContent=(current.state==='done'?'HOÀN THÀNH · '+current.no.toUpperCase():current.state==='active'?'ĐANG HỌC · BÀI 4':locked?'ĐANG KHÓA · '+(typeof current.id==='number'?'BÀI '+current.id:'MILESTONE'):'');
+    dTitle.innerHTML=(typeof current.id==='number'?'Bài '+current.id+': ':'')+current.title+' <span class="hanzi">'+current.zh+'</span>';
+    dSub.textContent=current.state==='active'?'8/15 từ vựng · 55% hoàn thành · 2 điểm ngữ pháp':current.meta;
+    mode='vocab';tabV.setAttribute('aria-selected','true');tabG.setAttribute('aria-selected','false');
+    renderBody();
+    drawer.classList.add('show');overlay.classList.add('show');
+  }
+  function closeDrawer(){drawer.classList.remove('show');overlay.classList.remove('show');}
+  path.addEventListener('click',function(e){
+    var el=e.target.closest('[data-node]');
+    if(!el)return;
+    var st=find(el.getAttribute('data-node'));
+    if(el.id==='ctaContinue'){say('Vào Bài 4 — chúc học tốt!');return;}
+    openDrawer(el.getAttribute('data-node'));
+    if(st&&(st.state==='locked'||st.state==='milestone'))say('Trạm đang khóa — xong Bài 4 để mở');
+  });
+  document.getElementById('drawerClose').addEventListener('click',closeDrawer);
+  overlay.addEventListener('click',closeDrawer);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});
+  tabV.addEventListener('click',function(){mode='vocab';tabV.setAttribute('aria-selected','true');tabG.setAttribute('aria-selected','false');renderBody();});
+  tabG.addEventListener('click',function(){mode='gram';tabG.setAttribute('aria-selected','false');tabV.setAttribute('aria-selected','false');tabG.setAttribute('aria-selected','true');renderBody();});
+  dBody.addEventListener('click',function(e){
+    var b=e.target.closest('[data-audio]');
+    if(b)say('Phát âm “'+b.getAttribute('data-audio')+'” (demo)');
+  });
+  document.querySelectorAll('.launch button').forEach(function(b){
+    b.addEventListener('click',function(){say(b.getAttribute('data-act')+' — sắp ra mắt trong bản demo');});
+  });
+
+  // level switcher (demo data, honestly labeled)
+  var levels={
+    'HSK 1':{t:'Chặng nền tảng: Pinyin & nét cơ bản',s:'Đã đạt: <b>20/20 bài</b> hoàn thành (100%) · <b>150/150</b> từ vựng · Demo HSK 1',pct:100,cur:'Đã hoàn thành · ôn tập giữ streak',left:'6 bài còn lại'},
+    'HSK 2':{t:'Chặng 1: Giao tiếp thường nhật',s:'Đã đạt: <b>6/20 bài</b> hoàn thành (30%) · <b>185/300</b> từ vựng · Demo HSK 2',pct:30,cur:'Trạm hiện tại: <b>Bài 4 · Sở thích</b>',left:'Còn <b>14 bài</b> tới mốc kiểm tra'},
+    'HSK 3':{t:'Chặng 2: Mở rộng xã hội',s:'Đã đạt: <b>0/24 bài</b> (0%) · <b>0/600</b> từ vựng · Sắp học sau HSK 2',pct:0,cur:'Bắt đầu từ: <b>Bài 1 · Kế hoạch cuối tuần</b>',left:'Hoàn thành HSK 2 để mở'},
+    'HSK 4–6':{t:'Chặng nâng cao: Học thuật & nghề nghiệp',s:'Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–3',pct:0,cur:'Trạng thái: <b>Chưa mở</b>',left:'Theo dõi cập nhật'}
+  };
+  var btns=document.querySelectorAll('.levels button');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.setAttribute('aria-pressed','false')});
+      b.setAttribute('aria-pressed','true');
+      var d=levels[b.getAttribute('data-level')];
+      document.getElementById('bannerTitle').textContent=d.t;
+      document.getElementById('bannerSub').innerHTML=d.s;
+      document.getElementById('bannerBar').style.width=d.pct+'%';
+      document.querySelector('.banner-meta').innerHTML='<span>'+d.cur+'</span><span>'+d.left+'</span>';
+      document.getElementById('headPct').textContent=d.pct+'%';
+      document.getElementById('headBar').style.width=d.pct+'%';
+      document.querySelector('.banner .bar').setAttribute('aria-valuenow',d.pct);
+      say('Đã chuyển sang '+b.getAttribute('data-level'));
+    });
+  });
+})();
+</script>
+</body>
+</html>
