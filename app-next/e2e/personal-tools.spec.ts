@@ -39,7 +39,7 @@ async function fakeLogin(page: import("@playwright/test").Page) {
 
 test.describe("public routes (không cần login)", () => {
   for (const [path, text] of [
-    ["/review", "Thống kê học tập"],
+    ["/review", "cần kích hoạt lại trí nhớ"],
     ["/dictionary", "Tra từ điển"],
     ["/hanzi", "Phân tích Hán tự"],
     ["/reading", "Bài đọc"],
