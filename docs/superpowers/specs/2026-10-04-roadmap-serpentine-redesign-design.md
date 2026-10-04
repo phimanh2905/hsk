@@ -115,8 +115,8 @@ src/components/roadmap/
 
 ## 9. Dọn dẹp kèm theo
 
-- Xóa `src/components/roadmap/journey-card.tsx` + `timeline-client.tsx` (chỉ trang `/roadmap` cũ dùng — kiểm tra không còn import trước khi xóa).
-- Giữ nguyên: `steps-client.tsx`, `session-client.tsx`, `/roadmap/pinyin`, session routes, `src/content/roadmap.ts` (nếu `roadmapStages` còn dùng nơi khác — kiểm tra; nếu chỉ trang cũ dùng thì xóa luôn).
+- Xóa `src/components/roadmap/journey-card.tsx` (chỉ trang `/roadmap` cũ dùng — kiểm tra không còn import trước khi xóa). **Giữ `timeline-client.tsx`** vì `/roadmap/pinyin/page.tsx` đang import nó.
+- Giữ nguyên: `steps-client.tsx`, `session-client.tsx`, `timeline-client.tsx`, `/roadmap/pinyin`, session routes. Trong `src/content/roadmap.ts`: giữ `roadmapSessions` (timeline-client/session-client/session page dùng); `roadmapStages` + `roadmapCopy` xóa nếu sau khi trang cũ + journey-card bị xóa không còn import nào.
 - Route `/roadmap` giữ path, thay nội dung; `metadata` cập nhật đúng.
 
 ## 10. Testing
