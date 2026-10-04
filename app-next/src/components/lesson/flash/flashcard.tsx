@@ -4,7 +4,7 @@
    counter → glyph → pinyin → speaker ripple + Xem nét viết → panel reveal → hint.
    Click card reveal; click nút con không reveal (stopPropagation, port closest check mockup). */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLesson } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { pinyinLine } from "@/lib/pinyin-utils";
@@ -22,6 +22,15 @@ export function Flashcard({
   const { items, index, revealed, setRevealed, done } = useLesson();
   const { speak } = useTts();
   const [rippled, setRippled] = useState(false);
+  const rippleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* dọn timer ripple khi unmount (tránh setState sau unmount) */
+  useEffect(
+    () => () => {
+      if (rippleTimerRef.current) clearTimeout(rippleTimerRef.current);
+    },
+    []
+  );
 
   const item = items[index];
   if (!item) return null;
@@ -32,7 +41,8 @@ export function Flashcard({
   const playWord = () => {
     speak(item.hanzi, { lang: "zh-CN" });
     setRippled(true);
-    setTimeout(() => setRippled(false), 700); // khớp duration ripple .7s
+    if (rippleTimerRef.current) clearTimeout(rippleTimerRef.current);
+    rippleTimerRef.current = setTimeout(() => setRippled(false), 700); // khớp duration ripple .7s
   };
 
   const glyph = done ? "棒" : item.hanzi;
@@ -97,14 +107,10 @@ export function Flashcard({
       </div>
 
       {/* panel reveal (port .reveal/.reveal.open) — render có điều kiện để nội dung
-          thực sự rời khỏi DOM khi chưa reveal (đọc màn/AT nhất quán) */}
+          thực sự rời khỏi DOM khi chưa reveal (đọc màn/AT nhất quán). Vì không mount
+          sẵn (mount/unmount thay vì max-height) nên không còn transition max-height. */}
       {(revealed || done) && (
-      <div
-        className={cn(
-          "overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
-          "max-h-[480px] opacity-100",
-        )}
-      >
+      <div>
         <hr className="my-[18px] border-border-default" />
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           <span className="rounded-full border border-border-default bg-surface-muted px-3 py-1 text-[11.5px] font-extrabold tracking-[.06em] text-text-secondary">

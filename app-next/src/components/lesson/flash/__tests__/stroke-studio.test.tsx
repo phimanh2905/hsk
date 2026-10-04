@@ -84,6 +84,41 @@ describe("StrokeStudio (port [data-od-id=stroke-modal] của opendesign lesson.h
     expect(onClose).toHaveBeenCalled();
   });
 
+  it("Review Focus 1: đóng rồi mở lại ở từ khác → cur đồng bộ về chữ đầu (tab aria-pressed + load đúng chữ)", async () => {
+    mockedLoad.mockResolvedValue(FAKE as never);
+    const { rerender } = render(<StrokeStudio open onClose={vi.fn()} word="爱" pinyin="ài" />);
+    await waitFor(() => expect(mockedLoad).toHaveBeenCalledWith("爱"));
+
+    // đóng sheet (component vẫn mounted, chỉ return null) rồi mở lại ở từ khác
+    rerender(<StrokeStudio open={false} onClose={vi.fn()} word="爱" pinyin="ài" />);
+    expect(screen.queryByRole("group", { name: "Chọn chữ" })).toBeNull();
+    rerender(<StrokeStudio open onClose={vi.fn()} word="音乐" pinyin="yīnyuè" />);
+
+    const tabs = screen.getByRole("group", { name: "Chọn chữ" });
+    // chữ đầu (音) phải được press — không còn đọng chữ 愛 của lần mở trước
+    await waitFor(() =>
+      expect(tabs.querySelectorAll("button")[0].getAttribute("aria-pressed")).toBe("true")
+    );
+    expect(screen.getByRole("button", { name: /音/ })).toHaveAttribute("aria-pressed", "true");
+    await waitFor(() => expect(mockedLoad).toHaveBeenCalledWith("音"));
+  });
+
+  it("Review Focus 2: a11y focus — mở sheet focus nút đóng, đóng lại trả focus về trigger", async () => {
+    mockedLoad.mockResolvedValue(FAKE as never);
+    const trigger = document.createElement("button");
+    trigger.textContent = "Mở bảng nét";
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    const { rerender } = render(<StrokeStudio open={false} onClose={vi.fn()} word="爱" pinyin="ài" />);
+    rerender(<StrokeStudio open onClose={vi.fn()} word="爱" pinyin="ài" />);
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Đóng bảng nét chữ" }));
+
+    rerender(<StrokeStudio open={false} onClose={vi.fn()} word="爱" pinyin="ài" />);
+    expect(document.activeElement).toBe(trigger);
+    trigger.remove();
+  });
+
   it("mẹo ghi nhớ chỉ hiện với chữ có data TIPS", async () => {
     mockedLoad.mockResolvedValue(FAKE as never);
     render(<StrokeStudio open onClose={vi.fn()} word="爱好" pinyin="àihào" />);

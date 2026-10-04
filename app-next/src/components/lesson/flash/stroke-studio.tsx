@@ -59,6 +59,23 @@ export function StrokeStudio({
   const drawingRef = useRef(false);
   const playingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const restoreRef = useRef<HTMLElement | null>(null);
+
+  /* Đồng bộ chữ đang xem khi mở sheet / đổi từ. Component vẫn mounted khi open=false
+     (chỉ return null), nên state `cur` sẽ đọng lại chữ cũ: set trong render để effect
+     load bên dưới chạy đúng 1 lần với chữ mới thay vì load 2 lần (chữ cũ + chữ mới). */
+  const sheetKey = open ? word : null;
+  const sheetKeyRef = useRef<string | null>(null);
+  if (sheetKeyRef.current !== sheetKey) {
+    sheetKeyRef.current = sheetKey;
+    if (sheetKey !== null) {
+      setCur(chars[0] ?? "");
+      setPractice(false);
+      setInk([]);
+      setCurInk(null);
+    }
+  }
 
   const clearTimers = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -186,6 +203,19 @@ export function StrokeStudio({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  /* aria-modal="true" ⇒ focus phải vào trong sheet khi mở và trả về phần tử đang
+     focus trước đó khi đóng/unmount (repo Dialog không trap focus, chỉ cần 2 việc này). */
+  useEffect(() => {
+    if (!open) return;
+    restoreRef.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    return () => {
+      const back = restoreRef.current;
+      restoreRef.current = null;
+      back?.focus?.();
+    };
+  }, [open]);
+
   /* Nét trước / Nét sau / click row (port strokePrev/strokeNext/orow click) */
   const stepTo = (n: number) => {
     if (!data || practice || playing) return;
@@ -299,7 +329,7 @@ export function StrokeStudio({
                   aria-pressed={c === cur}
                   onClick={() => setCur(c)}
                   className={cn(
-                    "flex min-h-10 items-center gap-2 rounded-full border px-3.5 text-[13px] font-bold transition-colors",
+                    "flex min-h-11 items-center gap-2 rounded-full border px-3.5 text-[13px] font-bold transition-colors",
                     c === cur
                       ? "border-border-default bg-surface-elevated text-text-primary shadow-xs"
                       : "border-transparent bg-transparent text-text-secondary hover:text-text-primary",
@@ -323,6 +353,7 @@ export function StrokeStudio({
             </button>
           </span>
           <button
+            ref={closeRef}
             type="button"
             aria-label="Đóng bảng nét chữ"
             onClick={onClose}
@@ -431,7 +462,7 @@ export function StrokeStudio({
                     aria-pressed={speed === s}
                     onClick={() => setSpeed(s)}
                     className={cn(
-                      "min-h-[38px] rounded-[12px] border border-transparent px-2.5 text-xs font-bold transition-colors",
+                      "min-h-11 rounded-[12px] border border-transparent px-2.5 text-xs font-bold transition-colors",
                       speed === s
                         ? "border-border-default bg-surface-elevated text-text-primary shadow-xs"
                         : "text-text-secondary",
@@ -529,7 +560,7 @@ export function StrokeStudio({
                     onClick={() => stepTo(i)}
                     className={cn(
                       "flex w-full items-center gap-2.5 rounded-[10px] px-2 py-2 text-left text-[13px] text-text-primary hover:bg-surface-muted",
-                      active && "bg-surface-muted shadow-[inset_3px_0_0_var(--action-primary)]",
+                      active && "bg-surface-muted hz-row-cur",
                     )}
                   >
                     <span

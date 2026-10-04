@@ -129,7 +129,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-be-vietnam-pro), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.zh, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
+.zh, .hanzi, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
 .zh-faded { opacity: .25; }
 
 /* Ô tập tô + khung trang A4 preview — dùng bởi svg-render.ts (chuỗi HTML inject vào DOM)
@@ -192,3 +192,5 @@ body {
 .hz-st.done { opacity: 1; }
 .hz-st.now { stroke: var(--action-primary); opacity: 1; }
 .hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+/* row nét đang chọn — gạch dọc action-primary bên trái (thay shadow-[inset_...] trong TSX) */
+.hz-row-cur { box-shadow: inset 3px 0 0 var(--action-primary); }
