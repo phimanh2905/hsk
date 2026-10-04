@@ -53,4 +53,34 @@ describe("LevelPopover", () => {
     render(<LevelPopover />);
     await waitFor(() => expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" }).textContent).toContain("HSK 4"));
   });
+
+  /* F1: Escape đóng popover → focus phải quay về trigger, không rơi xuống <body>. */
+  it("Escape đóng popover → focus trả về trigger (F1)", async () => {
+    render(<LevelPopover />);
+    const trigger = screen.getByRole("button", { name: "Đổi cấp độ HSK" });
+    await userEvent.click(trigger);
+    const item = screen.getByRole("menuitemradio", { name: /HSK 3/ });
+    item.focus();
+    expect(item).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
+
+  /* F1: chọn mục làm item đang focus bị unmount → focus quay về trigger. */
+  it("chọn mục → focus trả về trigger (F1)", async () => {
+    render(<LevelPopover />);
+    const trigger = screen.getByRole("button", { name: "Đổi cấp độ HSK" });
+    await userEvent.click(trigger);
+    await userEvent.click(screen.getByRole("menuitemradio", { name: /HSK 4/ }));
+    await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
+  /* F2: trigger đạt min touch target 44px (min-h-11), không phải h-10. */
+  it("trigger cao tối thiểu 44px cho touch target (F2)", () => {
+    render(<LevelPopover />);
+    const cls = screen.getByRole("button", { name: "Đổi cấp độ HSK" }).className;
+    expect(cls).toContain("min-h-11");
+    expect(cls).not.toContain("h-10");
+  });
 });

@@ -14,6 +14,7 @@ export function LevelPopover({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const [level, setLevel] = useState<string>("HSK 2");
   const wrapRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   /* Đọc nhai.goal lúc mount — setState nằm trong callback sync() (pattern useHomeSummary)
      để không dính react-hooks/set-state-in-effect; server vẫn render "HSK 2" → không lệch hydration. */
@@ -34,7 +35,13 @@ export function LevelPopover({ className }: { className?: string }) {
     const onDown = (e: MouseEvent) => {
       if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    /* F1: Escape đóng popover → trả focus về trigger, không rơi xuống <body>
+       (cùng ý với focus restore của command-palette.tsx). */
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      triggerRef.current?.focus();
+    };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -46,6 +53,8 @@ export function LevelPopover({ className }: { className?: string }) {
   const choose = (l: string) => {
     setLevel(l);
     setOpen(false);
+    /* F1: chọn mục làm item đang focus bị unmount → trả focus về trigger. */
+    triggerRef.current?.focus();
     try {
       localStorage.setItem(GOAL_KEY, l);
     } catch {
@@ -56,12 +65,13 @@ export function LevelPopover({ className }: { className?: string }) {
   return (
     <div ref={wrapRef} className={cn("relative", className)}>
       <button
+        ref={triggerRef}
         type="button"
         aria-label="Đổi cấp độ HSK"
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-border-default bg-surface-elevated pl-3 pr-2.5 text-[13px] font-bold text-text-primary hover:border-border-strong"
+        className="flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-border-default bg-surface-elevated pl-3 pr-2.5 text-[13px] font-bold text-text-primary hover:border-border-strong"
       >
         <span className="h-2 w-2 rounded-full bg-learning-mastered" aria-hidden="true" />
         <span className="hidden min-[900px]:inline">Mục tiêu:</span>
