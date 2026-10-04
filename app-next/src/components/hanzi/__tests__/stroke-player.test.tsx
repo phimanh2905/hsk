@@ -56,7 +56,7 @@ describe("StrokePlayer (G2)", () => {
   });
   it("chữ không có data → generic 4 nét; showArrows gắn marker; zoom đổi viewBox", () => {
     expect(genericStrokes()).toHaveLength(4);
-    const { container } = render(<Harness char="好" />);
+    const { container } = render(<Harness char="吗" />);
     expect(container.querySelectorAll("polyline")).toHaveLength(4);
     (container.querySelectorAll("button")[1] as HTMLButtonElement).click();
     expect(container.querySelector("polyline")!.getAttribute("marker-end")).toMatch(/url\(#nhai-hw-.*-arrow\)/);
