@@ -10,8 +10,8 @@ colors:
   ink: "#1f2a27"
   slate: "#66756f"
   line: "#e8ecea"
-  jade: "#0f766e"
-  vermilion: "#d24b3f"
+  jade: "#2d7d5b"
+  vermilion: "#c83c32"
 ---
 
 # Hanzi
@@ -22,7 +22,7 @@ colors:
 
 *Know what to learn. Practice it. See progress.*
 
-Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: Ink + Jade + Vermilion — Ink carries knowledge and typography, Jade signals learning and progress, Vermilion is reserved for attention, milestones and exam moments. Amber owns streaks; purple marks AI features. v1.1 keeps the seven core brand colors fixed and expresses new UI meaning through semantic and state tokens (surface/text/border/action/feedback/learning/feature). Calm-first layout where Chinese content is the hero and chrome stays quiet. Product promise: Know what to learn. Practice it. See progress. One primary action per learning screen; progress before decoration; feedback is specific and actionable; gamification motivates without visual noise; every HSK level feels like a destination.
+Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: Ink + Vermilion + Jade — Ink carries knowledge and typography, Vermilion is the primary action color (vermilion 600 #d24b3f for focus rings), Jade signals secondary progress and success accents. Amber owns streaks; purple marks AI features. Small error text uses vermilion 700 #A9342B to stay distinct from the primary action. Amber owns streaks; purple marks AI features. v1.1 keeps the seven core brand colors fixed and expresses new UI meaning through semantic and state tokens (surface/text/border/action/feedback/learning/feature). Calm-first layout where Chinese content is the hero and chrome stays quiet. Product promise: Know what to learn. Practice it. See progress. One primary action per learning screen; progress before decoration; feedback is specific and actionable; gamification motivates without visual noise; every HSK level feels like a destination.
 
 ## Color Palette
 
@@ -33,8 +33,8 @@ Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: 
 | foreground | Ink | `#1f2a27` | body text and headings (ink 900 / textPrimary) |
 | muted | Slate | `#66756f` | secondary text and metadata (ink 500 / textSecondary) |
 | border | Line | `#e8ecea` | rules, dividers and card borders (ink 100) |
-| accent | Jade | `#0f766e` | primary actions, progress and brand signal (jade 700 / brandPrimary) |
-| accent-secondary | Vermilion | `#d24b3f` | attention, errors, milestones and exam moments only — amber owns streaks (vermilion 600 / brandAccent; small error text uses vermilion 700 #A9342B) |
+| accent | Vermilion | `#C83C32` | primary actions and brand signal (vermilion / brandPrimary; dark #E05349) |
+| accent-secondary | Jade | `#2D7D5B` | progress accents, success signals, secondary arcs |
 
 ## Typography
 - **Display:** Inter — weights 650, 700 — fallbacks: system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, sans-serif
@@ -66,16 +66,16 @@ Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: 
 
 ## Layout
 
-- **Radius:** 14px
+- **Radius:** 16px cards / 8px controls
 - **Border weight:** 1px
 - **Spacing:** 4px baseline grid
 
 ### Posture rules
-- Cards: 14px radius, 24px padding, 1px #E8ECEA border; controls/inputs/buttons: 10px radius, 44px height
+- Cards: 16px radius, 20px padding, 1px #E8ECEA border; controls/inputs/buttons: 8px radius, 44px height (48px for hero CTAs)
 - Content max-widths: lesson 760px, reading 820px, dashboard 1200px; page padding desktop 32 / tablet 24 / mobile 16
 - One primary action per learning screen — lesson bottom bar pins primary right, secondary left; sticky primary on mobile
-- Borders before shadows: default surfaces use borders; shadows (xs-md) only for dialogs and floating cards; borders have subtle/default/strong levels plus jade focus and vermilion danger
+- Borders before shadows: default surfaces use borders; shadows (xs-md) only for dialogs and floating cards; borders have subtle/default/strong levels plus vermilion focus and vermilion-700 danger
 - Desktop persistent sidebar (Learn/Review/Read/Practice/HSK); mobile bottom nav (Home/Learn/Review/Read/Profile)
 - Exam mode is restrained: minimal chrome, visible timer + counter, feedback hidden until end, no celebratory gamification
-- States are first-class with visible focus (jade 3px ring, 2px offset): vocabulary states pair labels with icons and color; answers and inputs define default/hover/focus/selected/correct/error/disabled; small error text uses vermilion 700 #A9342B
+- States are first-class with visible focus (vermilion 3px ring, 2px offset): vocabulary states pair labels with icons and color; answers and inputs define default/hover/focus/selected/correct/error/disabled; small error text uses vermilion 700 #A9342B
 - Components consume semantic tokens (text/surface/border/action/feedback/learning/feature), never hard-coded primitives; progress pairs every visual with a number and keeps streaks subordinate

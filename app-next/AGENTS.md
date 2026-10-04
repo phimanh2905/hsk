@@ -14,9 +14,9 @@ All UI work in this app must follow the Hanzi design system — `../opendesign_h
 
 Quick anchors:
 
-- 7 core colors fixed: Paper `#fafbfa`, Elevated `#ffffff`, Ink `#1f2a27`, Slate `#66756f`, Line `#e8ecea`, Jade `#0f766e` (primary/progress), Vermilion `#d24b3f` (attention/milestones/exam only; small error text = vermilion 700 `#A9342B`)
+- 7 core colors fixed: Paper `#fafbfa`, Elevated `#ffffff`, Ink `#1f2a27`, Slate `#66756f`, Line `#e8ecea`, Vermilion `#C83C32` (primary action; focus ring = vermilion 600 `#d24b3f`; small error text = vermilion 700 `#A9342B`; dark #E05349), Jade `#2D7D5B` (secondary progress/success)
 - Components consume semantic tokens (surface/text/border/action/feedback/learning/feature) — never hard-coded primitives
 - Inter for Latin UI, Noto Sans SC / PingFang SC for hanzi glyphs
-- 14px card radius / 10px controls, 1px borders before shadows, 4px spacing grid, 44px min touch targets, one primary action per learning screen
+- 16px card radius / 8px controls, 1px borders before shadows, 4px spacing grid, 44px min touch targets, one primary action per learning screen
 
 See also the project skill `.zcode/skills/hanzi-design-system/SKILL.md` for the full usage guide.

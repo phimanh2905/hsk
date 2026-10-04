@@ -20,11 +20,15 @@ describe("globals.css Hanzi design system tokens", () => {
     expect(css).toContain(".print-page,");
     expect(css).toContain(".sheet {");
   });
-  it("có đủ token Hanzi light + dark và màu chủ đạo jade", () => {
-    expect(css).toContain("--hz-jade: #0f766e");
+  it("có đủ token Hanzi light + dark và màu chủ đạo vermilion (spec 2026-10-04: Vermilion primary)", () => {
+    expect(css).toContain("--hz-jade: #2d7d5b");
+    expect(css).toContain("--hz-vermilion: #c83c32");
+    expect(css).toContain("--action-primary: var(--hz-vermilion)");
     expect(css).toContain("html.dark");
-    expect(css).toContain("--hz-paper: #1d1d1d"); // dark page
+    expect(css).toContain("--hz-paper: #111318"); // dark page
     expect(css).toContain("--color-action-primary");
+    expect(css).toContain("--color-amber-wash");
+    expect(css).toContain("--color-ring-track");
   });
   it("không còn Tailwind CDN / @tailwind directive cũ", () => {
     expect(css).not.toContain("cdn.tailwindcss.com");
