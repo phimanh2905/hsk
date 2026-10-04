@@ -25,12 +25,16 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
   const { speak } = useTts();
 
   useEffect(() => setCh(chars[0]), [chars]); // word đổi → về chữ đầu
-  useEffect(() => setCur(-1), [ch]); // đổi chữ → reset con trỏ nét (curRef trong hook cũng tự reset theo effect)
+  /* Đổi chữ → hook reset curRef lẫn speedRef về 1, nên state phải reset theo để
+     seg tốc độ và playback khớp nhau (review F2), và con trỏ nét không lệch (F1). */
+  useEffect(() => { setCur(-1); setSpeed(1); }, [ch]);
 
   const api = useStrokePlayer(hostRef, ch, undefined, { onStep: setCur });
   const entry = STROKE_PATH_DATA[ch];
   const total = api.total;
-  const hasData = !!entry || api.source !== "generic";
+  /* hasCustomStrokes tính đồng bộ trong hook; api.source/total là state nên frame
+     đầu còn "generic"/0 — đừng dựa vào nó để quyết định có data hay không (F1). */
+  const hasData = !!entry || api.hasCustomStrokes;
 
   useEffect(() => { api.setSpeed(speed); }, [speed]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -43,7 +47,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
       open
       onClose={onClose}
       labelledBy="stroke-studio-title"
-      className="w-[min(780px,calc(100%-32px))] max-h-[min(620px,calc(100vh-48px))] overflow-y-auto rounded-[20px] p-5"
+      className="w-[min(780px,calc(100%-32px))] max-w-none max-h-[min(620px,calc(100vh-48px))] overflow-y-auto rounded-[20px] p-5"
     >
       <h2 id="stroke-studio-title" className="sr-only">Nét chữ và bút thuận</h2>
       <div className="flex flex-wrap items-center gap-2.5">
@@ -55,7 +59,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
               data-testid="char-tab"
               aria-pressed={c === ch}
               onClick={() => setCh(c)}
-              className="flex min-h-10 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[13px] font-bold text-text-secondary aria-pressed:bg-surface-elevated aria-pressed:text-text-primary aria-pressed:shadow-xs"
+              className="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[13px] font-bold text-text-secondary aria-pressed:bg-surface-elevated aria-pressed:text-text-primary aria-pressed:shadow-xs"
             >
               <span className="zh text-base">{c}</span>
               {STROKE_PATH_DATA[c] && <small className="text-[11px] text-text-secondary/70">{STROKE_PATH_DATA[c].total} nét</small>}
@@ -68,7 +72,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
             type="button"
             aria-label="Phát âm chữ Hán"
             onClick={() => speak(ch)}
-            className="grid h-8 w-8 place-items-center rounded-full text-text-secondary hover:bg-surface-elevated hover:text-text-primary"
+            className="grid h-11 w-11 place-items-center rounded-full text-text-secondary hover:bg-surface-elevated hover:text-text-primary"
           >
             <Volume2 size={14} strokeWidth={1.5} aria-hidden="true" />
           </button>
@@ -109,7 +113,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
                   data-testid="speed-btn"
                   aria-pressed={s === speed}
                   onClick={() => setSpeed(s)}
-                  className="min-h-9 rounded-xl px-2.5 text-xs font-bold text-text-secondary aria-pressed:bg-surface-elevated aria-pressed:text-text-primary"
+                  className="min-h-11 rounded-xl px-2.5 text-xs font-bold text-text-secondary aria-pressed:bg-surface-elevated aria-pressed:text-text-primary"
                 >
                   {s}x
                 </button>
@@ -132,7 +136,7 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
                   data-testid="order-row"
                   onClick={() => api.stepTo(i)}
                   className={cn(
-                    "flex w-full items-center gap-2.5 rounded-[10px] px-2 py-2 text-left text-[13px]",
+                    "flex min-h-11 w-full items-center gap-2.5 rounded-[10px] px-2 py-2 text-left text-[13px]",
                     i === cur && "bg-surface-muted shadow-[inset_3px_0_0_var(--action-primary)]",
                   )}
                 >

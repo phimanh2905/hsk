@@ -42,6 +42,15 @@ describe("StrokeStudio", () => {
     expect(seg[2].getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(container.querySelector("[data-testid='order-row']")!);
   });
+  it("đổi chữ reset tốc độ về 1x (seg khớp playback)", () => {
+    const { container } = render(<StrokeStudio word="爱好" onClose={() => {}} />);
+    fireEvent.click(container.querySelectorAll("[data-testid='speed-btn']")[2]); // 1.5x
+    expect(container.querySelectorAll("[data-testid='speed-btn']")[2].getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(container.querySelectorAll("[data-testid='char-tab']")[1]);
+    const seg = container.querySelectorAll("[data-testid='speed-btn']");
+    expect(seg[1].getAttribute("aria-pressed")).toBe("true"); // về 1x
+    expect(seg[2].getAttribute("aria-pressed")).toBe("false");
+  });
   it("nút đóng gọi onClose", () => {
     const onClose = vi.fn();
     const { container } = render(<StrokeStudio word="爱" onClose={onClose} />);
