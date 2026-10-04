@@ -57,7 +57,7 @@ recordReview(key: string, grade: 1 | 2 | 3): void
 - `3` → status `learned`, `dueAt = null`
 - Tăng `reviewCount`, cập nhật `lastReviewedAt`/`updatedAt`, bắn event `nhai:progress`.
 
-Grade item key dùng đúng `itemKey` hiện có của lesson (`"${book}.${page}.${i}"`). `/review` **không** đổi trong spec này nhưng sẽ đọc được `dueAt` mới sau này.
+Grade item key dùng đúng `itemKey` hiện có của lesson (`"${book}.${page}.${i}"`). `recordReview` **tạo mới** SRS entry nếu từ chưa có (không chỉ cập nhật entry sẵn có) — đúng mục đích của SRS: từ được chấm trong bài học vào hàng đợi ôn tập với `dueAt` tương ứng (grade 1 → 1 phút, 2 → 5 phút, 3 → không đến hạn). `/review` và các màn đếm số từ đã học đọc được `dueAt` này ngay, nên hệ review có dữ liệu mới mà không cần đổi code trong spec này.
 
 ### 3.3 TTS & autoplay
 
