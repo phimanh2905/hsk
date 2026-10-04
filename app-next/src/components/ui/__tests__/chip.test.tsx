@@ -44,3 +44,24 @@ describe("Chip", () => {
     expect(onClick).toHaveBeenCalledOnce();
   });
 });
+
+describe("Chip — status tones (spec 2026-10-04)", () => {
+  it("tone doing: nền surface-muted, chữ text-primary", () => {
+    render(<Chip tone="doing">ĐANG THỰC HIỆN</Chip>);
+    const cls = screen.getByText("ĐANG THỰC HIỆN").className;
+    expect(cls).toContain("bg-surface-muted");
+    expect(cls).toContain("text-text-primary");
+  });
+  it("tone todo: nền amber-wash, chữ amber-ink", () => {
+    render(<Chip tone="todo">CẦN LÀM</Chip>);
+    const cls = screen.getByText("CẦN LÀM").className;
+    expect(cls).toContain("bg-amber-wash");
+    expect(cls).toContain("text-amber-ink");
+  });
+  it("tone idle: trong suốt, chữ secondary", () => {
+    render(<Chip tone="idle">CHƯA BẮT ĐẦU</Chip>);
+    const cls = screen.getByText("CHƯA BẮT ĐẦU").className;
+    expect(cls).toContain("bg-transparent");
+    expect(cls).toContain("text-text-secondary");
+  });
+});
