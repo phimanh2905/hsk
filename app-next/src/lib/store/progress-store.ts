@@ -30,6 +30,8 @@ export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
 export type ProgressSnapshot = { xp: number };
 
+export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
+
 export interface ProgressStoreApi {
   getXp(): number;
   getToday(): number;
@@ -50,6 +52,8 @@ export interface ProgressStoreApi {
   markRoadmapSession(n: number): void;
   getRoadmapLearnSeen(): number[];
   markRoadmapLearnSeen(n: number): void;
+  getStationProgress(levelId: string): Record<string, StationProgress>;
+  setStationProgress(levelId: string, stationId: string, rec: StationProgress): void;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -93,6 +97,9 @@ function writeNum(key: string, n: number): void {
    hoàn thành) nhưng CÙNG họ progress → phải nằm trong store để HybridStore
    (SP2) đồng bộ được, không đọc localStorage trực tiếp ở component. */
 const ROADMAP_LEARN_SEEN_KEY = "nhai.roadmap.learnSeen";
+
+/* Lộ trình serpentine (spec 2026-10-04): Record<levelId, Record<stationId, {pct, stars}>> */
+const ROADMAP_STATIONS_KEY = "nhai.roadmap.stations.v1";
 
 function readNumArray(key: string): number[] {
   const arr = readJSON<unknown>(key, []);
@@ -343,6 +350,26 @@ export class ProgressStore implements ProgressStoreApi {
     seen.add(n);
     writeNumArray(ROADMAP_LEARN_SEEN_KEY, [...seen].sort((a, b) => a - b));
     dispatchProgress();
+  }
+
+  getStationProgress(levelId: string): Record<string, StationProgress> {
+    try {
+      const all = readJSON<Record<string, Record<string, StationProgress>>>(ROADMAP_STATIONS_KEY, {});
+      return all[levelId] ?? {};
+    } catch {
+      return {};
+    }
+  }
+
+  setStationProgress(levelId: string, stationId: string, rec: StationProgress): void {
+    try {
+      const all = readJSON<Record<string, Record<string, StationProgress>>>(ROADMAP_STATIONS_KEY, {});
+      all[levelId] = { ...all[levelId], [stationId]: rec };
+      writeJSON(ROADMAP_STATIONS_KEY, all);
+      window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
+    } catch {
+      /* silent */
+    }
   }
 
   /* ---------- migration 3 format SRS cũ ---------- */
