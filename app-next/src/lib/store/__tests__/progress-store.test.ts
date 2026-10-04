@@ -114,3 +114,34 @@ describe("getToday + roadmap learnSeen (fix wave 2026-10-01)", () => {
     window.removeEventListener("nhai:progress", () => events.push("evt"));
   });
 });
+
+describe("recordReview — chấm điểm SRS từ flashcard (port srs-deck lesson.html)", () => {
+  it("grade 1 → learning + due sau 1 phút, tăng reviewCount", () => {
+    localStorage.clear();
+    progressStore.recordReview("hsk1.lesson-4.0", 1);
+    const it = progressStore.getSrs("hsk1.lesson-4.0")!;
+    expect(it.status).toBe("learning");
+    expect(it.dueAt).toBeGreaterThan(Date.now() + 50_000);
+    expect(it.reviewCount).toBe(1);
+    expect(it.lastReviewedAt).not.toBeNull();
+  });
+
+  it("grade 2 → learning + due sau 5 phút", () => {
+    localStorage.clear();
+    progressStore.recordReview("hsk1.lesson-4.1", 2);
+    const it = progressStore.getSrs("hsk1.lesson-4.1")!;
+    expect(it.status).toBe("learning");
+    expect(it.dueAt).toBeGreaterThan(Date.now() + 4 * 60_000);
+    expect(it.dueAt).toBeLessThan(Date.now() + 6 * 60_000);
+  });
+
+  it("grade 3 → learned, dueAt null; review lại từ đã có thì cộng dồn reviewCount", () => {
+    localStorage.clear();
+    progressStore.recordReview("hsk1.lesson-4.2", 3);
+    const it = progressStore.getSrs("hsk1.lesson-4.2")!;
+    expect(it.status).toBe("learned");
+    expect(it.dueAt).toBeNull();
+    progressStore.recordReview("hsk1.lesson-4.2", 1);
+    expect(progressStore.getSrs("hsk1.lesson-4.2")!.reviewCount).toBe(2);
+  });
+});
