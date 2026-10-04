@@ -7,6 +7,11 @@ describe("StreakPill", () => {
     render(<StreakPill days={12} />);
     expect(screen.getByText("12")).toBeInTheDocument();
   });
+  it("mini kèm unit", () => {
+    render(<StreakPill days={12} unit="ngày" />);
+    expect(screen.getByText("ngày")).toBeInTheDocument();
+    expect(screen.getByText("12")).toBeInTheDocument();
+  });
   it("full: hiện '12 ngày liên tục' + caption", () => {
     render(<StreakPill days={12} variant="full" />);
     expect(screen.getByText("12 ngày liên tục")).toBeInTheDocument();

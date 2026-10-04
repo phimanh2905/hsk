@@ -6,10 +6,12 @@ import { Flame, ICON_STROKE } from "@/components/ui/icon";
 export function StreakPill({
   days,
   variant = "mini",
+  unit,
   className,
 }: {
   days: number;
   variant?: "mini" | "full";
+  unit?: string;
   className?: string;
 }) {
   if (variant === "mini") {
@@ -23,6 +25,7 @@ export function StreakPill({
       >
         <Flame size={16} strokeWidth={ICON_STROKE} aria-hidden="true" className="text-learning-streak" />
         {days}
+        {unit && <span className="font-semibold">{unit}</span>}
       </span>
     );
   }

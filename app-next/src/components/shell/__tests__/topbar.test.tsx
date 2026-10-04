@@ -1,53 +1,95 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Topbar from "../topbar";
 import { ThemeProvider } from "../theme-provider";
 
-// SearchField dùng useRouter — cần mock ngoài AppRouterContext
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }) }));
+// pathname đổi được giữa các test → chứng minh breadcrumb theo route, không hardcode.
+const nav = vi.hoisted(() => ({ pathname: "/roadmap" }));
+vi.mock("next/navigation", () => ({ usePathname: () => nav.pathname, useRouter: () => ({ push: vi.fn() }) }));
 
-vi.mock("@/lib/use-session", () => ({
-  useSession: () => ({ loggedIn: false, name: "", image: null, isPending: false, logout: vi.fn() }),
-}));
-const openLogin = vi.fn();
-vi.mock("../login-modal", () => ({ useLoginModal: () => ({ openLogin }) }));
+const openNav = vi.fn();
+window.addEventListener("nhai:open-nav", openNav);
 
 beforeEach(() => {
   localStorage.clear();
-  openLogin.mockClear();
+  nav.pathname = "/roadmap";
+  openNav.mockClear();
+  document.documentElement.classList.remove("dark");
+});
+
+afterEach(() => {
   document.documentElement.classList.remove("dark");
 });
 
 function renderTopbar() {
-  return render(<ThemeProvider><Topbar /></ThemeProvider>);
+  return render(
+    <ThemeProvider>
+      <Topbar />
+    </ThemeProvider>,
+  );
 }
 
-describe("Topbar mới (spec 2026-10-04)", () => {
-  it("brand tile + tên Nhai", () => {
+describe("Topbar v2 (app-shell.html)", () => {
+  it("breadcrumb hiện tên trang theo pathname", async () => {
+    nav.pathname = "/roadmap";
     renderTopbar();
-    expect(screen.getByText("奈", { selector: "span" })).toBeInTheDocument();
-    expect(screen.getByText("Nhai")).toBeInTheDocument();
+    expect(await screen.findByText("Lộ trình HSK")).toBeInTheDocument();
   });
-  it("streak pill mini hiện số từ nhai.streak", async () => {
-    localStorage.setItem("nhai.streak", "7");
+
+  it("breadcrumb đổi theo pathname", async () => {
+    nav.pathname = "/my-vocab";
     renderTopbar();
-    expect(await screen.findByText("7")).toBeInTheDocument();
+    expect(await screen.findByText("Sổ tay từ vựng")).toBeInTheDocument();
+    expect(screen.queryByText("Lộ trình HSK")).not.toBeInTheDocument();
   });
-  it("nút theme toggle class dark trên html", async () => {
+
+  it("nút hamburger chỉ ở mobile (lg:hidden) và dispatch nhai:open-nav", async () => {
+    renderTopbar();
+    const btn = screen.getByRole("button", { name: "Mở menu" });
+    expect(btn.className).toContain("lg:hidden");
+    await userEvent.click(btn);
+    expect(openNav).toHaveBeenCalled();
+  });
+
+  it("SearchTrigger mở command palette", async () => {
+    renderTopbar();
+    await userEvent.click(screen.getByRole("button", { name: "Tìm kiếm" }));
+    expect(await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" })).toBeInTheDocument();
+  });
+
+  it("⌘K mở command palette", async () => {
+    renderTopbar();
+    await userEvent.keyboard("{Meta>}k");
+    expect(await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" })).toBeInTheDocument();
+  });
+
+  it("có LevelPopover và StreakPill mini kèm unit", async () => {
+    localStorage.setItem("nhai.streak", "12");
+    renderTopbar();
+    expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" })).toBeInTheDocument();
+    const pill = await screen.findByTitle("Chuỗi ngày học liên tục");
+    await waitFor(() => expect(pill.textContent).toContain("12"));
+    expect(pill.textContent).toContain("ngày");
+  });
+
+  it("theme toggle bật/tắt class dark", async () => {
     renderTopbar();
     await userEvent.click(screen.getByRole("button", { name: "Chuyển chế độ sáng tối" }));
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
-  it("HSK switcher chọn mục tiêu lưu nhai.goal", async () => {
+
+  it("KHÔNG còn brand/avatar ở topbar (đã chuyển sang sidebar)", () => {
     renderTopbar();
-    const select = screen.getByLabelText("Cấp độ HSK") as HTMLSelectElement;
-    await userEvent.selectOptions(select, "HSK 3");
-    expect(localStorage.getItem("nhai.goal")).toBe("HSK 3");
+    expect(screen.queryByText("HSK LEARNING")).not.toBeInTheDocument();
+    expect(screen.queryByText("Nhai")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Đăng nhập" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tài khoản" })).not.toBeInTheDocument();
   });
-  it("avatar khi logged out có aria-label Đăng nhập, click gọi openLogin", async () => {
-    renderTopbar();
-    await userEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));
-    expect(openLogin).toHaveBeenCalledTimes(1);
+
+  it("không còn select ghi nhai.goal — LevelPopover là chủ sở hữu duy nhất", () => {
+    const { container } = renderTopbar();
+    expect(container.querySelector("select")).toBeNull();
+    expect(screen.queryByLabelText("Cấp độ HSK")).not.toBeInTheDocument();
   });
 });
