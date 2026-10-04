@@ -4,7 +4,7 @@
    Flashcard + SrsDeck + StrokeStudio. Hotkeys Space/1/2/3/R/Esc (port keydown mockup)
    — bỏ qua khi có modal/sheet mở; autoplay 350ms khi sang từ mới (port render(n)). */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useLesson } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { useKeyboard } from "@/lib/use-keyboard";
@@ -20,10 +20,18 @@ function anyModalOpen(): boolean {
   );
 }
 
-export default function FlashStage({ onRequestExit }: { onRequestExit: () => void }) {
+export default function FlashStage({
+  onRequestExit,
+  strokeOpen,
+  onStrokeOpen,
+}: {
+  onRequestExit: () => void;
+  /** sheet nét chữ do LessonBody điều khiển (một overlay duy nhất: mở cái này thì đóng cái kia). */
+  strokeOpen: boolean;
+  onStrokeOpen: (v: boolean) => void;
+}) {
   const { items, index, revealed, setRevealed, grade, done, autoplay } = useLesson();
   const { speak } = useTts();
-  const [strokeOpen, setStrokeOpen] = useState(false);
 
   const item = items[index];
   const playWord = () => {
@@ -48,6 +56,8 @@ export default function FlashStage({ onRequestExit }: { onRequestExit: () => voi
   useKeyboard({
     " ": (e) => {
       if (anyModalOpen()) return;
+      // done = màn hoàn thành: Space không re-reveal (nếu không, 1/2/3 sẽ chấm lại từ đã grade)
+      if (done) return;
       e.preventDefault();
       if (!revealed) setRevealed(true);
       else playWord();
@@ -78,11 +88,11 @@ export default function FlashStage({ onRequestExit }: { onRequestExit: () => voi
 
   return (
     <div className="flex flex-col items-center gap-[18px]" data-testid="flash-stage">
-      <Flashcard onOpenStroke={() => setStrokeOpen(true)} />
+      <Flashcard onOpenStroke={() => onStrokeOpen(true)} />
       {!done && <SrsDeck className="w-full max-w-[560px]" />}
       <StrokeStudio
         open={strokeOpen}
-        onClose={() => setStrokeOpen(false)}
+        onClose={() => onStrokeOpen(false)}
         word={item.hanzi}
         pinyin={item.pinyin}
       />

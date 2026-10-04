@@ -106,8 +106,11 @@ export function LessonProvider({
   };
 
   // grade (port grade() của mockup): chỉ khi revealed; hết bài → done
+  // done=true là màn hoàn thành: deck đã ẩn nhưng phím 1/2/3 vẫn còn trên window.
+  // Không chặn thì bấm Space (setRevealed(true)) + 1/2/3 sẽ recordReview lại chính
+  // từ vừa chấm → ghi đè "Đã thuộc" bằng "learning" (sai dữ liệu SRS).
   const grade = (level: GradeLevel) => {
-    if (!revealed) return;
+    if (!revealed || done) return;
     const item = items[index];
     if (!item) return;
     progressStore.recordReview(item.itemKey, level);

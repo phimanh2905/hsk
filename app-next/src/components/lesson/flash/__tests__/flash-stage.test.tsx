@@ -3,6 +3,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { LessonProvider } from "../../lesson-provider";
 import type { LessonItem } from "../../lesson-provider";
 import { progressStore } from "@/lib/store/progress-store";
+import { Dialog } from "@/components/ui/dialog";
 import FlashStage from "../flash-stage";
 
 const items: LessonItem[] = [
@@ -34,7 +35,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
   it("Review Focus 6: items rỗng → không crash, không render card", () => {
     const { container } = render(
       <LessonProvider items={[]}>
-        <FlashStage onRequestExit={vi.fn()} />
+        <FlashStage onRequestExit={vi.fn()} strokeOpen={false} onStrokeOpen={vi.fn()} />
       </LessonProvider>
     );
     expect(container.querySelector('[data-od-id="flashcard"]')).toBeNull();
@@ -44,7 +45,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
     const spy = vi.spyOn(progressStore, "recordReview");
     const { container } = render(
       <LessonProvider items={items} book="hsk1" page="lesson-4">
-        <FlashStage onRequestExit={vi.fn()} />
+        <FlashStage onRequestExit={vi.fn()} strokeOpen={false} onStrokeOpen={vi.fn()} />
       </LessonProvider>
     );
     act(() => {
@@ -65,7 +66,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
     const spy = vi.spyOn(progressStore, "recordReview");
     render(
       <LessonProvider items={items}>
-        <FlashStage onRequestExit={vi.fn()} />
+        <FlashStage onRequestExit={vi.fn()} strokeOpen={false} onStrokeOpen={vi.fn()} />
       </LessonProvider>
     );
     act(() => {
@@ -80,12 +81,58 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
     const onRequestExit = vi.fn();
     render(
       <LessonProvider items={items}>
-        <FlashStage onRequestExit={onRequestExit} />
+        <FlashStage onRequestExit={onRequestExit} strokeOpen={false} onStrokeOpen={vi.fn()} />
       </LessonProvider>
     );
     act(() => {
       fireEvent.keyDown(window, { key: "Escape" });
     });
     expect(onRequestExit).toHaveBeenCalled();
+  });
+
+  it("đã grade thẻ cuối (done): Space + 1 KHÔNG recordReview lần nữa", () => {
+    const spy = vi.spyOn(progressStore, "recordReview");
+    render(
+      <LessonProvider items={[items[0]]} book="hsk1" page="lesson-4">
+        <FlashStage onRequestExit={vi.fn()} strokeOpen={false} onStrokeOpen={vi.fn()} />
+      </LessonProvider>
+    );
+    act(() => {
+      fireEvent.keyDown(window, { key: " " });
+    });
+    act(() => {
+      fireEvent.keyDown(window, { key: "3" });
+    });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", 3);
+    expect(screen.getByText("HOÀN THÀNH")).toBeInTheDocument();
+    spy.mockClear();
+    // trước fix: Space set revealed=true rồi "1" grade lại chính từ vừa chấm
+    act(() => {
+      fireEvent.keyDown(window, { key: " " });
+    });
+    act(() => {
+      fireEvent.keyDown(window, { key: "1" });
+    });
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it("Dialog đang mở: Escape chỉ đóng dialog, KHÔNG kích hoạt onRequestExit", () => {
+    const onRequestExit = vi.fn();
+    const onClose = vi.fn();
+    render(
+      <LessonProvider items={items}>
+        <FlashStage onRequestExit={onRequestExit} strokeOpen={false} onStrokeOpen={vi.fn()} />
+        <Dialog open onClose={onClose} labelledBy="exit-modal-title">
+          <h2 id="exit-modal-title">Rời khỏi bài học?</h2>
+        </Dialog>
+      </LessonProvider>,
+    );
+    act(() => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
+    expect(onClose).toHaveBeenCalledOnce();
+    expect(onRequestExit).not.toHaveBeenCalled();
   });
 });

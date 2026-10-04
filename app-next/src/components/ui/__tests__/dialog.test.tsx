@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Dialog } from "../dialog";
 
@@ -34,6 +34,21 @@ describe("Dialog", () => {
     );
     await userEvent.keyboard("{Escape}");
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  /* final review: listener window (useKeyboard của lesson) chạy sau listener document →
+     Dialog phải stopPropagation để Esc không mở thêm exit modal. */
+  it("Escape stopPropagation: listener window phía sau không nhận phím", () => {
+    const onWindowKey = vi.fn();
+    window.addEventListener("keydown", onWindowKey);
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t">
+        X
+      </Dialog>,
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    window.removeEventListener("keydown", onWindowKey);
+    expect(onWindowKey).not.toHaveBeenCalled();
   });
 
   it("backdrop click đóng; click panel không đóng", async () => {

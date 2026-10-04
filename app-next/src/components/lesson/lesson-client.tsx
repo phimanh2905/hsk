@@ -85,8 +85,13 @@ function AddAllButton() {
 function LessonBody({ topbarTitle }: { topbarTitle: string }) {
   const { items, index, setIndex, mode, setMode, autoplay, toggleAutoplay } = useLesson();
   const [tab, setTab] = useState<"vocab" | "examples">("vocab");
-  const [exitOpen, setExitOpen] = useState(false);
-  const [keysOpen, setKeysOpen] = useState(false);
+  /* Một overlay duy nhất: mở cái này thì đóng cái kia (trước đây sheet nét + ExitModal
+     cùng mở được, Esc phụ thuộc thứ tự đăng ký listener). Thứ tự Esc theo spec:
+     sheet → đóng sheet · dialog → đóng dialog · không gì mở → mở exit modal. */
+  const [overlay, setOverlay] = useState<"none" | "exit" | "keys" | "stroke">("none");
+  const exitOpen = overlay === "exit";
+  const keysOpen = overlay === "keys";
+  const strokeOpen = overlay === "stroke";
   const Mode = modeRegistry[mode];
   // customNoExample (clone/js/lesson.js:66,118): deck không có ví dụ nào → ẩn Đọc hiểu + Nghe ghép câu
   const hasExample = items.some(hasOwnExample);
@@ -100,8 +105,8 @@ function LessonBody({ topbarTitle }: { topbarTitle: string }) {
         total={items.length}
         autoplay={autoplay}
         onToggleAutoplay={toggleAutoplay}
-        onExit={() => setExitOpen(true)}
-        onShortcuts={() => setKeysOpen(true)}
+        onExit={() => setOverlay("exit")}
+        onShortcuts={() => setOverlay("keys")}
       />
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_240px]">
@@ -109,7 +114,11 @@ function LessonBody({ topbarTitle }: { topbarTitle: string }) {
         <div className="relative min-w-0">
           {mode === "flash" ? (
             /* flash SRS mới (port main.stage) — thay tabs + flashcard 3D cũ */
-            <FlashStage onRequestExit={() => setExitOpen(true)} />
+            <FlashStage
+              onRequestExit={() => setOverlay("exit")}
+              strokeOpen={strokeOpen}
+              onStrokeOpen={(v) => setOverlay(v ? "stroke" : "none")}
+            />
           ) : (
             <div className="relative">
               {/* Watermark bản đồ Việt Nam (SPEC-14 §1, port lesson.html:64) */}
@@ -232,8 +241,8 @@ function LessonBody({ topbarTitle }: { topbarTitle: string }) {
       </div>
 
       {/* modals dùng chung mọi mode (port #exitModal/#keysModal) */}
-      <ExitModal open={exitOpen} onClose={() => setExitOpen(false)} lessonTitle={topbarTitle} />
-      <ShortcutsModal open={keysOpen} onClose={() => setKeysOpen(false)} />
+      <ExitModal open={exitOpen} onClose={() => setOverlay("none")} lessonTitle={topbarTitle} />
+      <ShortcutsModal open={keysOpen} onClose={() => setOverlay("none")} />
     </div>
   );
 }

@@ -34,4 +34,22 @@ describe("WordList + SRS (C9)", () => {
     act(() => screen.getByRole("button", { name: "Phát âm từ" }).click());
     expect(window.speechSynthesis.speak).toHaveBeenCalled();
   });
+  /* final review: grade ở màn flash bắn nhai:progress → ngôi sao phải tự đồng bộ,
+     không đọc 1 lần lúc mount rồi để cứng. */
+  it("ngôi sao đồng bộ lại khi nhai:progress bắn (grade ở màn flash)", () => {
+    render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
+    const star = screen.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" });
+    expect(star.querySelector(".text-learning-streak")).toBeNull();
+    act(() => progressStore.recordReview("hsk1.lesson-1.0", 3));
+    expect(star.querySelector(".text-learning-streak")).not.toBeNull();
+  });
+  it("bỏ listener nhai:progress khi unmount", () => {
+    const remove = vi.spyOn(window, "removeEventListener");
+    const { unmount } = render(
+      <LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>
+    );
+    unmount();
+    expect(remove).toHaveBeenCalledWith("nhai:progress", expect.any(Function));
+    remove.mockRestore();
+  });
 });

@@ -61,3 +61,26 @@ describe("LessonClient hasExample guard (custom deck)", () => {
     expect(screen.getByRole("button", { name: /Nghe ghép câu/ })).toBeInTheDocument();
   });
 });
+
+/* Một overlay duy nhất (final review): mở sheet nét chữ rồi bấm X ở topbar không được
+   để hai lớp overlay cùng mở — X phải đóng sheet và mở ExitModal. */
+describe("LessonClient overlay đơn nhất", () => {
+  it("mở sheet nét chữ → bấm X topbar: đóng sheet, mở ExitModal", () => {
+    mount(<LessonClient items={[withExample]} deckName="Bộ của tôi" />);
+    click(screen.getByRole("button", { name: "Xem nét viết" }));
+    expect(screen.getByRole("dialog", { name: "Nét chữ và bút thuận" })).toBeInTheDocument();
+    click(screen.getByRole("button", { name: "Thoát bài học" }));
+    expect(screen.queryByRole("dialog", { name: "Nét chữ và bút thuận" })).toBeNull();
+    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+  });
+
+  it("mở ExitModal rồi mở sheet → ExitModal đóng, chỉ còn sheet", () => {
+    mount(<LessonClient items={[withExample]} deckName="Bộ của tôi" />);
+    click(screen.getByRole("button", { name: "Thoát bài học" }));
+    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    click(screen.getByRole("button", { name: "Ở lại học" }));
+    click(screen.getByRole("button", { name: "Xem nét viết" }));
+    expect(screen.getByRole("dialog", { name: "Nét chữ và bút thuận" })).toBeInTheDocument();
+    expect(screen.queryByRole("alertdialog")).toBeNull();
+  });
+});

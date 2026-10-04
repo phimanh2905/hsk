@@ -56,6 +56,9 @@ export function StrokeStudio({
 
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const inkRef = useRef<SVGSVGElement | null>(null);
+  /* nét đang vẽ: ref đồng bộ NGAY trong pointerdown/move — state setCurInk chỉ flush
+     ở render sau, nên nếu đọc state trong onInkMove thì nét nhanh sẽ mất đoạn đầu. */
+  const curInkRef = useRef<string | null>(null);
   const drawingRef = useRef(false);
   const playingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -156,6 +159,7 @@ export function StrokeStudio({
     setSCur(-1);
     setPractice(false);
     setInk([]);
+    curInkRef.current = null;
     setCurInk(null);
     if (!cur) return;
     let alive = true;
@@ -247,6 +251,7 @@ export function StrokeStudio({
         setPlaying(false);
       } else {
         setInk([]);
+        curInkRef.current = null;
         setCurInk(null);
       }
       return nv;
@@ -263,25 +268,30 @@ export function StrokeStudio({
   const onInkDown = (e: React.PointerEvent) => {
     if (!practice) return;
     inkRef.current?.setPointerCapture?.(e.pointerId); // môi trường thiếu pointer capture vẫn vẽ được
-    setCurInk(svgPoint(e));
+    curInkRef.current = svgPoint(e);
+    setCurInk(curInkRef.current);
     drawingRef.current = true;
   };
   const onInkMove = (e: React.PointerEvent) => {
-    if (!drawingRef.current || !curInk) return;
-    setCurInk((pts) => `${pts} ${svgPoint(e)}`);
+    if (!drawingRef.current || !curInkRef.current) return;
+    const next = `${curInkRef.current} ${svgPoint(e)}`;
+    curInkRef.current = next;
+    setCurInk(next);
   };
   const onInkUp = () => {
-    if (!drawingRef.current || !curInk) return;
-    const pts = curInk.trim().split(/\s+/);
+    const ptsStr = curInkRef.current;
+    if (!drawingRef.current || !ptsStr) return;
+    const pts = ptsStr.trim().split(/\s+/);
     if (pts.length >= 3) {
       setInk((arr) => {
-        const next = [...arr, curInk];
+        const next = [...arr, ptsStr];
         if (data && next.length === data.strokes.length) {
           toast(`Đủ ${data.strokes.length} nét — đối chiếu với thứ tự mẫu bên phải`);
         }
         return next;
       });
     }
+    curInkRef.current = null;
     setCurInk(null);
     drawingRef.current = false;
   };

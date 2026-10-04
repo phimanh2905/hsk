@@ -20,7 +20,8 @@ export function Progress({ value, max = 100, label, ariaLabel, gradient, tone = 
   className?: string;
 }) {
   const pct = max > 0 ? Math.min(100, Math.max(0, Math.round((value / max) * 100))) : 0;
-  const name = ariaLabel ?? (typeof label === "string" ? label : "") ?? "";
+  /* không có ariaLabel và label không phải string → BỎ attribute (không phát aria-label="") */
+  const name: string | undefined = ariaLabel ?? (typeof label === "string" ? label : undefined);
   return (
     <div className={cn(stacked ? "flex min-w-0 flex-col items-stretch gap-1.5" : "flex items-center gap-3", className)}>
       {label && stacked && (
@@ -31,7 +32,7 @@ export function Progress({ value, max = 100, label, ariaLabel, gradient, tone = 
       {label && !stacked && <span className="text-sm text-text-primary">{label}</span>}
       <div
         role="progressbar"
-        aria-label={name}
+        {...(name ? { "aria-label": name } : {})}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
