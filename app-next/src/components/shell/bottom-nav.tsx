@@ -1,18 +1,19 @@
 "use client";
 
-/* BottomNav — điều hướng mobile (lg:hidden), thay drawer sidebar ở Task 3.
-   5 mục chính, active = text-action-primary theo usePathname (prefix match, "/" exact). */
+/* BottomNav — port .bottomnav của opendesign index.html (spec 2026-10-04).
+   5 mục Home/Roadmap/Hanzi/Practice/Profile, hiện < md (mock: <760px).
+   Active: icon màu action-primary + aria-current=page theo usePathname. */
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, GraduationCap, Home, RotateCcw, User, type LucideIcon } from "@/components/ui/icon";
+import { Home, Map, PenTool, RotateCcw, User, type LucideIcon } from "@/components/ui/icon";
 
 const ITEMS: ReadonlyArray<{ href: string; label: string; Icon: LucideIcon; exact?: boolean }> = [
-  { href: "/", label: "Trang chủ", Icon: Home, exact: true },
-  { href: "/lesson", label: "Học", Icon: GraduationCap },
-  { href: "/review", label: "Ôn tập", Icon: RotateCcw },
-  { href: "/reading", label: "Đọc", Icon: BookOpen },
-  { href: "/progress", label: "Hồ sơ", Icon: User },
+  { href: "/", label: "Home", Icon: Home, exact: true },
+  { href: "/roadmap", label: "Roadmap", Icon: Map },
+  { href: "/hanzi", label: "Hanzi", Icon: PenTool },
+  { href: "/review", label: "Practice", Icon: RotateCcw },
+  { href: "/progress", label: "Profile", Icon: User },
 ] as const;
 
 export default function BottomNav() {
@@ -21,9 +22,9 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Điều hướng chính"
-      className="lg:hidden fixed bottom-0 inset-x-0 z-[450] bg-surface-elevated border-t border-border-default"
+      className="md:hidden fixed bottom-0 inset-x-0 z-[450] border-t border-border-default bg-[color-mix(in_srgb,var(--surface-elevated)_94%,transparent)] backdrop-blur-xl"
     >
-      <div className="flex items-stretch justify-around">
+      <div className="mx-auto grid max-w-[560px] grid-cols-5 px-2 pt-1.5 pb-[calc(8px+env(safe-area-inset-bottom))]">
         {ITEMS.map(({ href, label, Icon, exact }) => {
           const active = exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
           return (
@@ -32,8 +33,8 @@ export default function BottomNav() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={
-                "flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-medium " +
-                (active ? "text-action-primary" : "text-text-secondary")
+                "flex min-h-[52px] flex-col items-center justify-center gap-0.5 rounded-control text-[10.5px] font-bold " +
+                (active ? "text-text-primary [&>svg]:text-action-primary" : "text-text-secondary")
               }
             >
               <Icon size={20} strokeWidth={1.5} aria-hidden="true" />

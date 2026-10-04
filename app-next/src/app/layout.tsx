@@ -2,7 +2,6 @@ import { ThemeProvider } from "@/components/shell/theme-provider";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
 import Topbar from "@/components/shell/topbar";
-import SidebarNav from "@/components/shell/sidebar-nav";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
 import AiWidget from "@/components/social/ai-widget";
@@ -38,10 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ToastProvider>
             <LoginProvider>
               <Topbar />
-              <div className="flex">
-                <SidebarNav />
-                <main className="flex-1">{children}</main>
-              </div>
+              <main className="min-h-[60vh]">{children}</main>
               <BottomNav />
               <SettingsModal />
               <LoginModal />
