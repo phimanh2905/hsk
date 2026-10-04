@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import Topbar from "../topbar";
 import { ThemeProvider } from "../theme-provider";
@@ -31,12 +32,6 @@ function renderTopbar() {
 }
 
 describe("Topbar v2 (app-shell.html)", () => {
-  it("breadcrumb hiện tên trang theo pathname", async () => {
-    nav.pathname = "/roadmap";
-    renderTopbar();
-    expect(await screen.findByText("Lộ trình HSK")).toBeInTheDocument();
-  });
-
   it("breadcrumb đổi theo pathname", async () => {
     nav.pathname = "/my-vocab";
     renderTopbar();
@@ -56,6 +51,37 @@ describe("Topbar v2 (app-shell.html)", () => {
     renderTopbar();
     await userEvent.click(screen.getByRole("button", { name: "Tìm kiếm" }));
     expect(await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" })).toBeInTheDocument();
+  });
+
+  it("palette không nằm trong <header> (backdrop-blur sẽ khóa position:fixed)", async () => {
+    renderTopbar();
+    await userEvent.click(screen.getByRole("button", { name: "Tìm kiếm" }));
+    const dialog = await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" });
+    expect(dialog.closest("header")).toBeNull();
+  });
+
+  it("hamburger + SearchTrigger đạt touch target 44px", () => {
+    renderTopbar();
+    const menu = screen.getByRole("button", { name: "Mở menu" });
+    expect(menu.className).toContain("h-11");
+    expect(menu.className).not.toContain("h-10");
+    expect(screen.getByRole("button", { name: "Tìm kiếm" }).className).toContain("min-h-11");
+  });
+
+  it("ngày chỉ render sau mount — prerender không đóng băng ngày / không lệch hydration", async () => {
+    const today = new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "numeric", month: "long" }).format(
+      new Date(),
+    );
+    const staticHtml = renderToStaticMarkup(
+      <ThemeProvider>
+        <Topbar />
+      </ThemeProvider>,
+    );
+    expect(staticHtml).toContain("Lộ trình HSK"); // breadcrumb là dữ liệu tĩnh → vẫn có ngay
+    expect(staticHtml).not.toContain(today);
+
+    const { container } = renderTopbar();
+    await waitFor(() => expect(container.textContent).toContain(today));
   });
 
   it("⌘K mở command palette", async () => {

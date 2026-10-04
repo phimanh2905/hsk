@@ -3,6 +3,7 @@
 const TITLES: Record<string, string> = {
   "": "Trang chủ",
   course: "Khoá học",
+  lesson: "Bài học",
   roadmap: "Lộ trình HSK",
   review: "Ôn tập SRS",
   hanzi: "Hanzi Studio",
@@ -10,6 +11,7 @@ const TITLES: Record<string, string> = {
   reading: "Thư viện đọc hiểu",
   shadowing: "Luyện nói & Đọc",
   dictionary: "Từ điển",
+  notebook: "Sổ tay",
   "my-vocab": "Sổ tay từ vựng",
   "my-grammar": "Sổ tay ngữ pháp",
   progress: "Thống kê tiến độ",
@@ -17,6 +19,12 @@ const TITLES: Record<string, string> = {
   radicals: "Bộ thủ",
   "sound-rules": "Quy tắc phát âm",
   "certificate-test": "Thi chứng chỉ",
+  /* Ngoài nhóm (app): Topbar mount ở root layout nên các route này cũng đi qua topbar. */
+  leaderboard: "Bảng xếp hạng",
+  feedback: "Góp ý",
+  terms: "Điều khoản",
+  privacy: "Quyền riêng tư",
+  "delete-account": "Xoá tài khoản",
 };
 
 export function pageTitle(pathname: string): string {
