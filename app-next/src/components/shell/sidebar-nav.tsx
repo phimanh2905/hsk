@@ -5,7 +5,7 @@
    (hamburger ở topbar + nút More ở bottom-nav), đóng bằng scrim / Escape / click link.
    Active: nền action-primary/10 + rail trái 3px — dùng aria-current="page" thay class .active. */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -74,15 +74,14 @@ export default function SidebarNav() {
     };
   }, [open]);
 
-  /* Đóng drawer khi đổi route (điều hướng KHÔNG qua link sidebar — router.push từ topbar/redirect).
-     Adjust state trong render (pattern "adjusting state when a prop changes" của React docs) thay vì
-     effect: setState trong effect body bị react-hooks/set-state-in-effect chặn, và ở đây render-phase
-     đúng nghĩa — pathname đổi là input bên ngoài, ta chỉ hạ cờ. */
-  const [seenPath, setSeenPath] = useState(pathname);
-  if (seenPath !== pathname) {
-    setSeenPath(pathname);
+  /* Đóng drawer khi route đổi mà KHÔNG qua link sidebar (router.push từ topbar, redirect).
+     Gate bằng ref pathname trước đó: lần mount đầu prev === pathname → return sớm, không setState thừa. */
+  const prevPath = useRef(pathname);
+  useEffect(() => {
+    if (prevPath.current === pathname) return;
+    prevPath.current = pathname;
     setOpen(false);
-  }
+  }, [pathname]);
 
   const close = () => setOpen(false);
   const initials = (name.trim() || "T").slice(0, 2).toUpperCase();
