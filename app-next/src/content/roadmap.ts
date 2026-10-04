@@ -243,25 +243,6 @@ export const roadmapSessions: PinyinSession[] = [
   }
 ];
 
-/* ================= Chặng E1 — lộ trình tổng (SPEC-05 §1) ================= */
-export type RoadmapStage = { marker: string; book: string; level: string; title: string; desc: string; tags: string[] };
-export const roadmapStages: RoadmapStage[] = [
-  { marker: "拼音", book: "Pinyin", level: "Nền tảng", title: "Bảng chữ cái Pinyin", desc: "Thanh mẫu, vận mẫu, 4 thanh điệu và quy tắc đánh dấu — bước đầu tiên trước khi vào HSK 1.", tags: ["Phát âm", "Thanh điệu"] },
-  { marker: "1级", book: "HSK 1", level: "Sơ cấp 1", title: "HSK 1", desc: "500 từ vựng đầu tiên, mẫu câu cơ bản, chào hỏi và giao tiếp đời thường.", tags: ["Từ vựng", "Ngữ pháp"] },
-  { marker: "2级", book: "HSK 2", level: "Sơ cấp 2", title: "HSK 2", desc: "Mở rộng vốn từ, ngữ pháp sơ cấp và hội thoại tình huống hằng ngày.", tags: ["Từ vựng", "Ngữ pháp", "Nghe hiểu"] },
-  { marker: "3级", book: "HSK 3", level: "Trung cấp 1", title: "HSK 3", desc: "Hoàn thiện sơ cấp: đọc đoạn văn ngắn, kể chuyện và diễn đạt ý kiến đơn giản.", tags: ["Từ vựng", "Ngữ pháp", "Luyện đề"] },
-  { marker: "4–6级", book: "HSK 4–6", level: "Trung cấp – Cao cấp", title: "HSK 4–6", desc: "Trung cấp: đọc hiểu bài dài, ngữ pháp nâng cao và luyện đề theo cấp độ.", tags: ["Từ vựng", "Ngữ pháp", "Luyện đề"] },
-  { marker: "7–9级", book: "HSK 7–9", level: "Cao cấp", title: "HSK 7–9", desc: "Cao cấp: văn bản học thuật, chuyên ngành và chiến lược thi thật.", tags: ["Từ vựng", "Nghe hiểu", "Luyện đề"] }
-];
-export const roadmapCopy = {
-  badge: "🚧 Tính năng đang phát triển",
-  yourJourney: "Hành trình của bạn 🚩",
-  atNow: "Bạn đang ở: 拼音 · Bảng chữ cái Pinyin",
-  continueCta: "Tiếp tục học",
-  reviewDesc: "Ôn tập ngắt quãng (SRS) từ vựng & ngữ pháp đã học — thêm thẻ bằng nút ⭐ trong bài, đến hạn là vào ôn.",
-  ending: "Đích đến: HSK 7–9 — đọc hiểu văn bản học thuật, báo chí chuyên sâu và giao tiếp thành thạo như người bản ngữ."
-};
-
 /* ================= zod validate (pattern Task 7-8) ================= */
 const learnExSchema = z.object({ hanzi: z.string().min(1), pinyin: z.string().min(1), meaning: z.string() });
 const sessionLearnSchema = z.object({
@@ -292,14 +273,4 @@ const pinyinSessionSchema = z.object({
   quiz: z.array(sessionQuizSchema).min(2),
   test: z.array(sessionTestItemSchema).min(2),
 });
-const roadmapStageSchema = z.object({
-  marker: z.string().min(1),
-  book: z.string().min(1),
-  level: z.string().min(1),
-  title: z.string().min(1),
-  desc: z.string().min(1),
-  tags: z.array(z.string().min(1)).min(1),
-});
-
 roadmapSessions.forEach((s) => pinyinSessionSchema.parse(s));
-roadmapStages.forEach((s) => roadmapStageSchema.parse(s));

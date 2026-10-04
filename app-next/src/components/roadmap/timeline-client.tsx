@@ -2,7 +2,7 @@
 
 /* Timeline 8 buổi khoá tuần tự — port từ clone/js/roadmap-pinyin.js (PLAN-21)
    + SPEC-21 §A: node dọc xen kẽ trái/phải trên desktop, 1 cột mobile.
-   Trạng thái: sessionStatus(getRoadmapDone(), n) — mount-gate như JourneyCard
+   Trạng thái: sessionStatus(getRoadmapDone(), n) — mount-gate như SessionClient
    (SSG-safe: chỉ đọc localStorage sau mount). Locked: Lock icon + card mờ + tooltip hover.
    Unlock qua Bài kiểm tra của buổi trước (Task 27 ghi markRoadmapSession). */
 
