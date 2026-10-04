@@ -71,6 +71,25 @@ describe("SidebarNav (app-shell.html)", () => {
     await vi.waitFor(() => expect(nav.className).toContain("-translate-x-full"));
   });
 
+  it("scrim đóng drawer (đường đóng #2)", async () => {
+    render(<SidebarNav />);
+    const nav = screen.getByRole("navigation", { name: "Điều hướng chính" });
+    window.dispatchEvent(new CustomEvent("nhai:open-nav"));
+    await vi.waitFor(() => expect(nav.className).not.toContain("-translate-x-full"));
+    await userEvent.click(screen.getByRole("button", { name: "Đóng menu" }));
+    await vi.waitFor(() => expect(nav.className).toContain("-translate-x-full"));
+  });
+
+  it("badge SRS không hiện khi không có từ đến hạn (srsDue = 0)", () => {
+    render(<SidebarNav />);
+    // Badge render srsDue ON !! 0, localStorage sạch -> không span nào chứa "0"
+    const badge = screen.queryByText("0");
+    expect(badge).not.toBeInTheDocument();
+    // Và link Ôn tập SRS không chứa badge container (ml-auto)
+    const reviewLink = screen.getByRole("link", { name: /Ôn tập SRS/ });
+    expect(reviewLink.querySelector("span.ml-auto")).not.toBeInTheDocument();
+  });
+
   it("user-card: logged out hiện nút Đăng nhập gọi openLogin", async () => {
     render(<SidebarNav />);
     await userEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));

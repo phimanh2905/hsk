@@ -74,8 +74,15 @@ export default function SidebarNav() {
     };
   }, [open]);
 
-  /* Đóng drawer khi đổi route (điều hướng bằng link sidebar — Review Focus #1). */
-  useEffect(() => setOpen(false), [pathname]);
+  /* Đóng drawer khi đổi route (điều hướng KHÔNG qua link sidebar — router.push từ topbar/redirect).
+     Adjust state trong render (pattern "adjusting state when a prop changes" của React docs) thay vì
+     effect: setState trong effect body bị react-hooks/set-state-in-effect chặn, và ở đây render-phase
+     đúng nghĩa — pathname đổi là input bên ngoài, ta chỉ hạ cờ. */
+  const [seenPath, setSeenPath] = useState(pathname);
+  if (seenPath !== pathname) {
+    setSeenPath(pathname);
+    setOpen(false);
+  }
 
   const close = () => setOpen(false);
   const initials = (name.trim() || "T").slice(0, 2).toUpperCase();
