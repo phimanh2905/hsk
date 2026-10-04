@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from "vitest";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { StrokeStudio } from "../stroke-studio";
 
 afterEach(cleanup);
@@ -56,5 +56,66 @@ describe("StrokeStudio", () => {
     const { container } = render(<StrokeStudio word="爱" onClose={onClose} />);
     fireEvent.click(container.querySelector("[aria-label='Đóng bảng nét chữ']")!);
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+});
+
+/* Auto-phát nét (mock .sheet: selectStroke() → playAll()). Hai góc kiểm:
+   - spy: đếm lần StrokeStudio gọi api.play() (không phụ thuộc animation),
+   - thật: drive rAF thủ công rồi xem nét có tự hiện (dashoffset 0).
+   Mock bọc hook thật (importOriginal) nên hành vi các test khác giữ nguyên. */
+const playSpy = vi.hoisted(() => vi.fn());
+vi.mock("@/components/hanzi/stroke-player", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/components/hanzi/stroke-player")>();
+  return {
+    ...actual,
+    useStrokePlayer: (...args: Parameters<typeof actual.useStrokePlayer>) => {
+      const api = actual.useStrokePlayer(...args);
+      return { ...api, play: () => { playSpy(); api.play(); } };
+    },
+  };
+});
+
+let rafQueue: { cb: (ts: number) => void; id: number }[] = [];
+let rafId = 0;
+function stubRaf() {
+  rafQueue = [];
+  vi.stubGlobal("requestAnimationFrame", (cb: (ts: number) => void) => {
+    rafQueue.push({ cb, id: ++rafId });
+    return rafId;
+  });
+  vi.stubGlobal("cancelAnimationFrame", () => {});
+}
+function flushRaf(ts: number) {
+  const q = rafQueue;
+  rafQueue = [];
+  q.forEach(({ cb }) => cb(ts));
+}
+
+describe("StrokeStudio auto-phát nét", () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+
+  it("gọi play() khi mở bảng và khi đổi tab chữ (không cần bấm nút)", async () => {
+    playSpy.mockClear();
+    const { container } = render(<StrokeStudio word="爱好" onClose={() => {}} />);
+    await waitFor(() => expect(playSpy).toHaveBeenCalledTimes(1)); // mở bảng → tự phát
+
+    playSpy.mockClear();
+    fireEvent.click(container.querySelectorAll("[data-testid='char-tab']")[1]);
+    await waitFor(() => expect(playSpy).toHaveBeenCalledTimes(1)); // đổi chữ → tự phát lại
+
+    playSpy.mockClear();
+    fireEvent.click(container.querySelectorAll("[data-testid='char-tab']")[0]);
+    await waitFor(() => expect(playSpy).toHaveBeenCalledTimes(1));
+  });
+
+  it("nét tự hiện hết sau khi mở bảng (không bấm 'Phát lại')", () => {
+    stubRaf();
+    const { container } = render(<StrokeStudio word="爱" onClose={() => {}} />);
+    const strokes = container.querySelectorAll("path[stroke], polyline[stroke]") as NodeListOf<SVGElement>;
+    expect(strokes.length).toBeGreaterThan(0);
+    expect(strokes[0].style.strokeDashoffset).toBe("1"); // mới mount, chưa flush frame
+
+    for (let ts = 0; ts <= 8000; ts += 20) flushRaf(ts); // 10 nét × (420 + 90)ms
+    strokes.forEach((p) => expect(p.style.strokeDashoffset).toBe("0"));
   });
 });

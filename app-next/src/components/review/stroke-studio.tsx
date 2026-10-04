@@ -38,6 +38,15 @@ export function StrokeStudio({ word, onClose }: { word: string; onClose: () => v
 
   useEffect(() => { api.setSpeed(speed); }, [speed]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  /* Tự phát nét khi mở bảng và mỗi lần đổi chữ (mock: selectStroke() gọi playAll()).
+     Nét do hook tự dựng trong effect riêng nên lịch qua rAF cho chắc; cleanup huỷ
+     nếu đóng sheet/đổi chữ ngay. play() chỉ đụng refs nên giữ closure cũ cũng an. */
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => api.play());
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ch]);
+
   const order: [string, string][] = entry
     ? entry.order
     : Array.from({ length: total }, (_, i) => [`Nét ${i + 1}`, ""] as [string, string]);
