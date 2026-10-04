@@ -63,3 +63,32 @@ describe("Progress tone", () => {
     expect((container.querySelector('[role="progressbar"] > div') as HTMLElement).style.width).toBe("45%");
   });
 });
+
+describe("Progress stacked (port .progress-zone lesson.html)", () => {
+  it("stacked: label trên track 6px, ẩn %, fill jade (port .progress-zone/.fill lesson.html)", () => {
+    render(
+      <Progress
+        value={8}
+        max={15}
+        stacked
+        tone="jade"
+        ariaLabel="Tiến độ từ vựng"
+        label={<span>Bài 4 · <b>8/15 từ (53%)</b></span>}
+      />
+    );
+    const bar = screen.getByRole("progressbar", { name: "Tiến độ từ vựng" });
+    expect(bar.className).toContain("h-1.5");
+    const fill = bar.firstElementChild as HTMLElement;
+    expect(fill.className).toContain("bg-learning-mastered");
+    expect(fill.style.width).toBe("53%");
+    expect(screen.queryByText("53%")).not.toBeInTheDocument(); // không render span % riêng
+  });
+
+  it("mặc định giữ hành vi cũ: fill primary, hiện %", () => {
+    render(<Progress value={50} label="Tiến độ" />);
+    const bar = screen.getByRole("progressbar", { name: "Tiến độ" });
+    expect(bar.className).toContain("h-2.5");
+    expect((bar.firstElementChild as HTMLElement).className).toContain("bg-action-primary");
+    expect(screen.getByText("50%")).toBeInTheDocument();
+  });
+});
