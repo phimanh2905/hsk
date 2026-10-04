@@ -22,7 +22,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      aria-label="Điều hướng chính"
+      aria-label="Điều hướng di động"
       className="fixed inset-x-0 bottom-0 z-[450] border-t border-border-default bg-[color-mix(in_srgb,var(--surface-elevated)_94%,transparent)] backdrop-blur-xl lg:hidden"
     >
       <div className="mx-auto grid max-w-[560px] grid-cols-5 px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-1.5">

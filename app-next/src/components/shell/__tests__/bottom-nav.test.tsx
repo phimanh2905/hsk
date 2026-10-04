@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import BottomNav from "../bottom-nav";
 
@@ -43,22 +43,24 @@ describe("BottomNav (app-shell.html)", () => {
   it("badge Review hiện số từ đến hạn", () => {
     hs.srsDue = 7;
     render(<BottomNav />);
-    expect(screen.getByText("7")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Review/ })).toHaveTextContent("7");
+    const review = screen.getByRole("link", { name: /Review/ });
+    expect(within(review).getByText("7")).toBeInTheDocument();
+    expect(review).toHaveTextContent("7");
   });
 
   it("badge ẩn khi srsDue = 0", () => {
     hs.srsDue = 0;
     render(<BottomNav />);
-    expect(screen.getByRole("link", { name: "Review" })).toBeInTheDocument();
-    expect(screen.queryByText("0")).not.toBeInTheDocument();
+    // name chính xác "Review": có badge thì accessible name thành "Review 7" → getByRole exact sẽ fail.
+    const review = screen.getByRole("link", { name: "Review" });
+    expect(within(review).queryByText(/\d/)).not.toBeInTheDocument();
   });
 
   it("badge ẩn khi chưa mounted (guard hydration)", () => {
     hs.mounted = false;
     hs.srsDue = 7;
     render(<BottomNav />);
-    expect(screen.queryByText("7")).not.toBeInTheDocument();
+    expect(within(screen.getByRole("link", { name: "Review" })).queryByText("7")).not.toBeInTheDocument();
   });
 
   it("More dispatch nhai:open-nav (mở drawer)", async () => {
@@ -69,7 +71,7 @@ describe("BottomNav (app-shell.html)", () => {
 
   it("ẩn từ lg trở lên (class lg:hidden)", () => {
     render(<BottomNav />);
-    const nav = screen.getByRole("navigation", { name: "Điều hướng chính" });
+    const nav = screen.getByRole("navigation", { name: "Điều hướng di động" });
     expect(nav.className).toContain("lg:hidden");
   });
 });
