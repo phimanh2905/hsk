@@ -76,6 +76,12 @@ Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: 
 - One primary action per learning screen — lesson bottom bar pins primary right, secondary left; sticky primary on mobile
 - Borders before shadows: default surfaces use borders; shadows (xs-md) only for dialogs and floating cards; borders have subtle/default/strong levels plus vermilion focus and vermilion-700 danger
 - Desktop persistent sidebar (Learn/Review/Read/Practice/HSK); mobile bottom nav (Home/Learn/Review/Read/Profile)
+
+### App shell (v2)
+- **Sidebar:** 256px fixed at `lg` (≥1024px) — brand tile + grouped nav (Học tập cốt lõi / Kỹ năng & Luyện tập / Cá nhân & Công cụ) + footer (login/settings); below `lg` it becomes an off-canvas drawer (`-translate-x-full` → `translate-x-0`) with a 50% black scrim, opened by the topbar hamburger or the bottom-nav More button, closed by scrim click / Escape / nav link
+- **Topbar:** 64px sticky — hamburger (`lg:hidden`), breadcrumb (page title + secondary date line hidden on mobile), search trigger with ⌘K hint, level popover, streak pill + theme toggle (right group `lg:` only)
+- **Command palette:** ⌘K/Ctrl+K opens a full-viewport overlay (`fixed inset-0`, 50% black backdrop) with a centered 560px panel — never clipped inside the header; filter + Enter navigates, Escape closes
+- **Bottom nav:** mobile only (`lg:hidden`), 5 items with the 5th ("More") opening the sidebar drawer
 - Exam mode is restrained: minimal chrome, visible timer + counter, feedback hidden until end, no celebratory gamification
 - States are first-class with visible focus (vermilion 3px ring, 2px offset): vocabulary states pair labels with icons and color; answers and inputs define default/hover/focus/selected/correct/error/disabled; small error text uses vermilion 700 #A9342B
 - Components consume semantic tokens (text/surface/border/action/feedback/learning/feature), never hard-coded primitives; progress pairs every visual with a number and keeps streaks subordinate
