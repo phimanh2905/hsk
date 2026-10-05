@@ -84,6 +84,7 @@ export function useNotebookEntries() {
             method: "POST", headers: { "content-type": "application/json" },
             body: JSON.stringify({ id: m.id, kind: m.kind, tag: m.tag, tagTone: m.tagTone, payload: m.payload, hsk: m.hsk, source: m.source }),
           })
+          .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r; })
         ));
         if (missing.length) localStorage.removeItem(NOTEBOOK_KEY); // đã sync hết local → clear (Review Focus 3)
         if (alive) { setEntries([...local.filter((l) => !missing.includes(l)), ...items].sort(byNewest)); setReady(true); }
