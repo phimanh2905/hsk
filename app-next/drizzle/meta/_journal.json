@@ -8,6 +8,13 @@
       "when": 1790936603412,
       "tag": "0000_init_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1791208988220,
+      "tag": "0001_fuzzy_venus",
+      "breakpoints": true
     }
   ]
 }

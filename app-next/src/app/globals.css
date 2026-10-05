@@ -134,6 +134,13 @@ body {
 .zh, .hanzi, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
 .zh-faded { opacity: .25; }
 
+/* Thumb gradient cho daily-pick hero + video card /shadowing (port shadowing.html).
+   Tailwind không gradient được qua token var() → định nghĩa 1 lần tại đây bằng
+   đúng primitive hex của DESIGN.md (vermilion-600 → vermilion → amber). */
+.hz-thumb-gradient {
+  background: linear-gradient(135deg, var(--hz-vermilion-600), var(--hz-vermilion) 55%, var(--hz-amber));
+}
+
 /* Ô tập tô + khung trang A4 preview — dùng bởi svg-render.ts (chuỗi HTML inject vào DOM)
    và a4-preview.tsx; tokenized theo Hanzi (ink không flip dark để in ấn nhất quán). */
 .grid-cell {
@@ -204,3 +211,18 @@ body {
 .hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
 /* row nét đang chọn — gạch dọc action-primary bên trái (thay shadow-[inset_...] trong TSX) */
 .hz-row-cur { box-shadow: inset 3px 0 0 var(--action-primary); }
+
+/* Studio shadowing thoát max-w-5xl của (app)/layout — full-bleed, tự giới hạn 1280px.
+   Chỉ dùng page-local (spec §3). */
+.hz-breakout {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+}
+
+/* Câu transcript đang phát — viền vermilion + wash (spec §3, mock .sent.cur).
+   Dùng CSS thuần với token theme (không @apply) để an toàn với cả 2 mode sáng/tối. */
+.sent-active {
+  border-color: var(--action-primary);
+  background: var(--hz-rose-wash);
+}

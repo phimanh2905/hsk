@@ -16,52 +16,50 @@ window.addEventListener("message", function (e) {
 });
 </script></body></html>`;
 
-test.describe("G5 shadowing video player (YouTube stubbed)", () => {
+// Lưu ý: test phím Space thu âm (recorder) KHÔNG đưa vào e2e — cần fake mic device;
+// đã phủ bởi unit test của use-recorder/use-player-engine (Task 9).
+test.describe("G5 shadowing (UI redesign)", () => {
   test.use({ viewport: { width: 1280, height: 900 } });
 
-  test("thư viện → card → player: ytReady (overlay ẩn), câu active highlight, seekTo đúng start", async ({ page }) => {
-    await page.route("**/www.youtube-nocookie.com/embed/**", (route) => route.fulfill({ contentType: "text/html", body: YT_STUB }));
+  test("library: hero + filter + grid + drawer dẫn sang studio", async ({ page }) => {
     await page.goto("/shadowing");
-    await expect(page.getByRole("heading", { level: 2 })).toHaveCount(5);
-    await page.click('a[href="/shadowing/EA3rwvr99Q0"]');
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("墓碑上的QR碼");
-    await page.waitForTimeout(300); // stub onReady → markYtReady
-    await expect(page.getByTestId("video-overlay")).toBeHidden();
-    await page.click('[data-sent="4"]'); // câu #5 start 56
-    // yêu cầu getCurrentTime mỗi 500ms; bấm câu sinh command seekTo [56,true] — kiểm qua transcript active
-    await expect(page.locator('[data-sent="4"].sent-active')).toBeVisible();
-    await expect(page.getByTestId("pos")).toHaveText("Câu 5/9");
+    await expect(page.getByTestId("shadow-header")).toBeVisible();
+    await expect(page.getByTestId("daily-pick")).toBeVisible();
+    await expect(page.getByTestId("video-grid").locator("button").first()).toBeVisible();
+    // card dùng data-od-id (không phải data-testid)
+    await page.locator('[data-od-id="video-EA3rwvr99Q0"]').click();
+    const drawer = page.getByRole("dialog", { name: "Xem trước hội thoại" });
+    await expect(drawer).toBeVisible();
+    await drawer.getByRole("link", { name: "Mở bài luyện đầy đủ" }).click();
+    await expect(page).toHaveURL(/\/shadowing\/EA3rwvr99Q0/);
   });
 
-  test("phím tắt Space/←/→/R hoạt động; không kích hoạt khi focus input dictation", async ({ page }) => {
-    await page.route("**/www.youtube-nocookie.com/embed/**", (route) => route.fulfill({ contentType: "text/html", body: YT_STUB }));
+  test("studio: yt-stub ready, transcript active, phím K play, dictation", async ({ page }) => {
     await page.goto("/shadowing/EA3rwvr99Q0");
-    // Chờ player thật sự sẵn sàng (overlay biến mất = đã nhận onReady từ stub)
-    // thay vì sleep cố định — sleep fail khi CPU bận (CI chạy song song worker).
-    // Restyle hydration chậm hơn: nếu iframe onLoad bắn trước khi React gắn handler,
-    // handshake "listening" không được gửi → reload một lần để iframe mount sau hydration.
+    await page.route("**/www.youtube-nocookie.com/embed/**", (route) =>
+      route.fulfill({ contentType: "text/html", body: YT_STUB }));
+    // Chờ player sẵn sàng (overlay biến mất = đã nhận onReady từ stub);
+    // hydration chậm hơn iframe → reload một lần để iframe mount sau hydration.
     if (await page.getByTestId("video-overlay").isVisible()) {
       await page.reload();
     }
     await expect(page.getByTestId("video-overlay")).toBeHidden();
-    await page.click('[data-sent="2"]');
-    await expect(page.getByTestId("pos")).toHaveText("Câu 3/9");
+    const first = page.locator("[data-sent='0']");
+    await expect(first).toHaveClass(/sent-active/);
+    await expect(page.getByTestId("pos")).toHaveText(/Câu 1\//);
+    await page.keyboard.press("k");
+    await expect(page.locator("[data-play]")).toHaveText(/Tạm dừng/);
     await page.keyboard.press("ArrowRight");
-    await expect(page.getByTestId("pos")).toHaveText("Câu 4/9");
-    await page.keyboard.press("ArrowLeft");
-    await page.keyboard.press("r");
-    await expect(page.getByTestId("pos")).toHaveText("Câu 3/9");
-    await page.click('button[data-mode="dictation"]');
-    await page.getByTestId("dict-input").fill("退");
-    await page.keyboard.press("ArrowRight"); // KHÔNG đổi câu khi đang gõ
-    await expect(page.getByTestId("pos")).toHaveText("Câu 3/9");
-  });
-
-  test("chặn YouTube 4s → overlay + fallback TTS banner", async ({ page }) => {
-    await page.route("**/www.youtube-nocookie.com/embed/**", (route) => route.abort());
-    await page.goto("/shadowing/EA3rwvr99Q0");
-    await expect(page.getByTestId("video-overlay")).toBeVisible({ timeout: 6000 });
-    await expect(page.getByText(/Dùng TTS đọc câu/)).toBeVisible();
+    await expect(page.locator("[data-sent='1']")).toHaveClass(/sent-active/);
+    // dictation
+    await page.getByRole("button", { name: "Chép chính tả" }).click();
+    const zh = await page.locator("[data-sent='1'] [data-zh]").innerText();
+    await page.getByTestId("dict-input").fill(zh);
+    await page.getByTestId("dict-check").click();
+    await expect(page.getByTestId("dict-result")).toContainText(/Chính xác/);
+    // hydration & sent-active style thật
+    const border = await page.locator("[data-sent='1']").evaluate((el) => getComputedStyle(el).borderColor);
+    expect(border).not.toBe("rgba(0, 0, 0, 0)");
   });
 });
 
