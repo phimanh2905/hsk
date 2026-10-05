@@ -8,7 +8,7 @@ const TITLES: Record<string, string> = {
   review: "Ôn tập SRS",
   hanzi: "Hanzi Studio",
   pinyin: "Bảng âm Pinyin",
-  reading: "Thư viện đọc hiểu",
+  reading: "Thư viện bài đọc",
   shadowing: "Luyện nói & Đọc",
   dictionary: "Từ điển",
   notebook: "Sổ tay",

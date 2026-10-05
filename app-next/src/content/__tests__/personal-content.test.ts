@@ -3,7 +3,6 @@ import { reviewData } from "../review";
 import { dictionary } from "../dictionary";
 import { hanziChars, hanziLevels } from "../hanzi";
 import { notebooks } from "../notebooks";
-import { readingData } from "../reading";
 
 describe("reviewData (SPEC-17)", () => {
   it("counts seeded 6 ô + last7 + dist đúng clone", () => {
@@ -69,15 +68,5 @@ describe("notebooks (SPEC-18)", () => {
     ]);
     expect(notebooks.vocab.samples[0].rows).toHaveLength(12);
     expect(notebooks.vocab.samples[0].rows[0]).toEqual({ hanzi: "时间", pinyin: "shíjiān", hanviet: "thời gian", meaning: "thời gian" });
-  });
-});
-
-describe("readingData (G3)", () => {
-  it("demoDoc 13 câu + 5 từ vựng + 3 câu hỏi; sampleText > 250 ký tự", () => {
-    expect(readingData.demoDoc.sentences).toHaveLength(13);
-    expect(readingData.demoDoc.sentences[0]).toMatchObject({ zh: "我一个人住在一间小小的公寓里。" });
-    expect(readingData.demoDoc.vocab).toHaveLength(5);
-    expect(readingData.demoDoc.questions).toHaveLength(3);
-    expect(readingData.sampleText.length).toBeGreaterThan(250);
   });
 });

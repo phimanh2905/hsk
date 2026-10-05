@@ -17,7 +17,7 @@ const TOOLS = [
   { href: "/hanzi", name: "Hanzi Studio", zh: "写字", desc: "Luyện viết nét & bộ thủ", Icon: PenTool },
   { href: "/pinyin", name: "Bảng âm Pinyin", zh: null, desc: "Quy tắc ngữ âm & biến điệu", Icon: Volume2 },
   { href: "/my-vocab", name: "Sổ tay từ vựng", zh: null, desc: "Từ đã lưu & ghi chú", Icon: BookmarkCheck },
-  { href: "/reading", name: "Thư viện đọc hiểu", zh: null, desc: "Truyện ngắn theo cấp độ", Icon: BookOpenText },
+  { href: "/reading", name: "Thư viện bài đọc", zh: null, desc: "Truyện ngắn theo cấp độ", Icon: BookOpenText },
 ] as const;
 
 export default function ProgressMatrix() {

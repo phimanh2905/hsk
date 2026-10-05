@@ -11,7 +11,7 @@ const PAGES: ReadonlyArray<CommandItem> = [
   { label: "Ôn tập SRS", href: "/review", group: "Trang" },
   { label: "Hanzi Studio", href: "/hanzi", group: "Luyện tập" },
   { label: "Bảng âm Pinyin", href: "/pinyin", group: "Luyện tập" },
-  { label: "Thư viện đọc hiểu", href: "/reading", group: "Luyện tập" },
+  { label: "Thư viện bài đọc", href: "/reading", group: "Luyện tập" },
   { label: "Luyện nói", href: "/shadowing", group: "Luyện tập" },
   { label: "Từ điển", href: "/dictionary", group: "Tra cứu" },
   { label: "Sổ tay từ vựng", href: "/my-vocab", group: "Cá nhân" },

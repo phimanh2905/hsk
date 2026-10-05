@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3, BookmarkCheck, Brain, Compass, Home, Pencil, Printer, Settings,
+  BarChart3, BookOpen, BookmarkCheck, Brain, Compass, Home, Pencil, Printer, Settings,
   Volume2, AudioLines, ICON_STROKE, type LucideIcon,
 } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
@@ -37,6 +37,7 @@ const GROUPS: ReadonlyArray<{
       { href: "/hanzi", label: "Hanzi Studio", Icon: Pencil },
       { href: "/shadowing", label: "Luyện nói & Đọc", Icon: AudioLines },
       { href: "/pinyin", label: "Bảng âm Pinyin", Icon: Volume2 },
+      { href: "/reading", label: "Đọc hiểu", Icon: BookOpen },
     ],
   },
   {

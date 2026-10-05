@@ -18,7 +18,7 @@ describe("ProgressMatrix (spec 2026-10-04)", () => {
       [/Hanzi Studio/, "/hanzi"],
       [/Bảng âm Pinyin/, "/pinyin"],
       [/Sổ tay từ vựng/, "/my-vocab"],
-      [/Thư viện đọc hiểu/, "/reading"],
+      [/Thư viện bài đọc/, "/reading"],
     ] as const) {
       expect((await screen.findByRole("link", { name })).getAttribute("href")).toBe(href);
     }
