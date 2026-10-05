@@ -1,41 +1,25 @@
-/* /pinyin (D1) — Bảng Pinyin: ma trận thanh mẫu × vận mẫu.
-   Server SSG; tương tác (filter, dialog, TTS) trong MatrixClient. */
+/* /pinyin — Pinyin Lab: ma trận âm & 4 thanh điệu + luyện phản xạ tai nghe
+   (port opendesign_hsk/pinyin.html, spec 2026-10-05). Server SSG đọc searchParams
+   cho mode/drill; tương tác trong PinyinLabRoot. */
 
-import Link from "next/link";
-import MatrixClient from "@/components/pinyin/matrix-client";
+import type { Metadata } from "next";
+import PinyinLabRoot from "./pinyin-lab-root";
 
-export const metadata = {
-  title: "Bảng Pinyin",
-  description: "Bảng Pinyin 406 âm tiết chuẩn — thanh mẫu × vận mẫu, bấm ô bất kỳ để xem chi tiết và nghe phát âm.",
+export const metadata: Metadata = {
+  title: "Pinyin Lab",
+  description: "Làm chủ ngữ âm, vị trí đặt lưỡi và phản xạ 4 thanh điệu tiếng Trung.",
 };
 
-export default function PinyinPage() {
+export default async function PinyinPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mode?: string; drill?: string }>;
+}) {
+  const sp = await searchParams;
   return (
-    <div className="mb-8">
-      <h1 className="text-3xl font-extrabold tracking-tight">Bảng Pinyin</h1>
-      <p className="text-sm font-semibold text-text-secondary mt-1">
-        拼音表 — Thanh mẫu (声母) × Vận mẫu (韵母)
-      </p>
-      <p className="text-sm text-text-secondary mt-1">
-        406 âm tiết chuẩn — bấm ô bất kỳ để xem chi tiết và nghe phát âm
-      </p>
-
-      <div className="flex gap-2 mt-4 mb-6">
-        <Link
-          href="/roadmap/pinyin"
-          className="inline-flex items-center min-h-11 rounded-control border border-border-default bg-surface-elevated px-3 py-1.5 text-sm font-bold text-text-primary hover:border-action-primary hover:text-action-primary"
-        >
-          Học theo lộ trình
-        </Link>
-        <Link
-          href="/pinyin/practice"
-          className="inline-flex items-center min-h-11 rounded-control border border-transparent bg-action-primary px-3 py-1.5 text-sm font-bold text-white hover:bg-action-primary-hover active:bg-action-primary-active"
-        >
-          Bài tập
-        </Link>
-      </div>
-
-      <MatrixClient />
-    </div>
+    <PinyinLabRoot
+      initialMode={sp.mode === "quiz" ? "quiz" : "matrix"}
+      initialDrill={typeof sp.drill === "string" ? sp.drill : null}
+    />
   );
 }
