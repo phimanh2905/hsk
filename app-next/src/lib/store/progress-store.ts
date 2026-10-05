@@ -30,6 +30,9 @@ export type NotebookKind = "vocab" | "grammar";
 
 export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
+/* Meta theo từng Hán tự (Sổ tay từ vựng — spec 2026-10-05 §2.2), key bye.wordMeta */
+export type WordMeta = { star?: 1; note?: string };
+
 export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
@@ -69,6 +72,9 @@ export interface ProgressStoreApi {
   deleteDeck(kind: NotebookKind, id: string): void;
   getVocabBook(): VocabBookEntry[];
   addToVocabBook(entry: VocabBookEntry): boolean;
+  getWordMeta(): Record<string, WordMeta>;
+  toggleWordStar(hanzi: string): boolean;
+  setWordNote(hanzi: string, note: string): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -529,6 +535,35 @@ export class ProgressStore implements ProgressStoreApi {
     writeJSON("bye.vocabBook", [...this.getVocabBook(), entry]);
     dispatchProgress();
     return true;
+  }
+
+  /* ---------- word meta (bye.wordMeta — spec 2026-10-05 §2.2) ---------- */
+
+  getWordMeta(): Record<string, WordMeta> {
+    return readJSON<Record<string, WordMeta>>("bye.wordMeta", {});
+  }
+
+  toggleWordStar(hanzi: string): boolean {
+    const all = this.getWordMeta();
+    const cur = all[hanzi] ?? {};
+    const star: 1 | undefined = cur.star ? undefined : 1;
+    const next: WordMeta = { ...cur, star };
+    if (!next.star && !next.note) delete all[hanzi];
+    else all[hanzi] = next;
+    writeJSON("bye.wordMeta", all);
+    dispatchProgress();
+    return !!star;
+  }
+
+  setWordNote(hanzi: string, note: string): void {
+    const all = this.getWordMeta();
+    const cur = all[hanzi] ?? {};
+    const trimmed = note.trim() ? note.trim() : undefined;
+    const next: WordMeta = { ...cur, note: trimmed };
+    if (!next.star && !next.note) delete all[hanzi];
+    else all[hanzi] = next;
+    writeJSON("bye.wordMeta", all);
+    dispatchProgress();
   }
 }
 
