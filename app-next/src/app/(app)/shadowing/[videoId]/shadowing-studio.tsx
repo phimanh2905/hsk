@@ -1,9 +1,12 @@
 "use client";
 /* ShadowingStudio (port shadowing-video.html) — engine dùng usePlayerEngine;
    ghi chú: nút Ẩn video, checkbox show-vi/py, Cài đặt của player cũ bị bỏ theo mock. */
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
+import { useRecorder } from "@/lib/shadowing/use-recorder";
+import { barHeights } from "@/lib/shadowing/waveform";
+import { scoreFor, toneChipsFor } from "@/lib/shadowing/scoring";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { normDict } from "@/lib/shadowing/dictation";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
@@ -13,13 +16,37 @@ import { topicVi } from "@/content/shadowing";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
-import { Volume2, Play, Pause, Repeat, ChevronLeft, ICON_STROKE } from "@/components/ui/icon";
+import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
   const m = Math.floor(t / 60);
   const s = Math.round(t % 60);
   return m + ":" + String(s).padStart(2, "0");
+}
+
+/* Vẽ dãy bar giả lên canvas — port drawBars() của mock; roundRect nếu có, fallback rect */
+function drawBars(canvas: HTMLCanvasElement, heights: number[], color: string) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = color;
+  const bw = W / heights.length;
+  heights.forEach((h, i) => {
+    const bh = 6 + h * (H * 0.72);
+    const x = i * bw + bw * 0.2;
+    const y = (H - bh) / 2;
+    const w = bw * 0.6;
+    if (typeof ctx.roundRect === "function") {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, bh, 3);
+      ctx.fill();
+    } else {
+      ctx.fillRect(x, y, w, bh);
+    }
+  });
 }
 
 /* dictChars của mock: full text trừ dấu câu + khoảng trắng, tách từng chữ */
@@ -40,12 +67,71 @@ export default function ShadowingStudio({
   const toast = useToast();
   const { speak } = useTts();
   const { progressMap, recordPractice } = useShadowingProgress();
-  const rec = progressMap[video.id];
+  const prog = progressMap[video.id];
   const [subMode, setSubMode] = useState<0 | 1 | 2>(2); // 0: chỉ hanzi, 1: chỉ pinyin, 2: cả hai
-  // tab cột phải — đặt ở level component để record dock (Task 9) nhận dimmed={tab === "dict"}
+  // tab cột phải — đặt ở level component để record dock nhận dimmed={tab === "dict"}
   const [tab, setTab] = useState<"script" | "dict">("script");
+  const dimmed = tab === "dict";
 
-  const linesDone = rec?.linesDone ?? 0;
+  /* ---------- SLOT-RECORD: recorder + chấm điểm (port waveform-card/record-dock) ---------- */
+  const [level, setLevel] = useState(0);
+  const rec = useRecorder(setLevel);
+  const [lastScore, setLastScore] = useState<number | null>(null);
+  const [lastRatio, setLastRatio] = useState(0);
+  useEffect(() => { setLastScore(null); setLastRatio(0); }, [eng.cur]);
+
+  const nativeCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const mineCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    if (nativeCanvasRef.current) drawBars(nativeCanvasRef.current, barHeights(eng.cur + 3, 1), getComputedStyle(document.documentElement).getPropertyValue("--hz-text-secondary") || "currentColor");
+  }, [eng.cur]);
+  useEffect(() => {
+    if (mineCanvasRef.current && rec.lastUrl != null) {
+      drawBars(mineCanvasRef.current, barHeights(eng.cur * 7 + 2, 0.55 + lastRatio * 0.4), getComputedStyle(document.documentElement).getPropertyValue("--hz-action-primary") || "currentColor");
+    }
+  }, [eng.cur, rec.lastUrl, lastRatio]);
+
+  const onStop = useCallback(() => {
+    const r = rec.stop();
+    if (!r) return;
+    const zh = subs[eng.cur].parts.map((p) => p.zh).join(" ");
+    const score = scoreFor(r.secs, zh.length, eng.rate, rec.simMode);
+    setLastScore(score);
+    setLastRatio(Math.min(1, r.secs / Math.max(2, (zh.length * 0.55) / eng.rate)));
+    recordPractice(video.id, { score, secondsDelta: Math.round(r.secs), linesDoneDelta: 1 });
+    toast("Đã chấm câu " + (eng.cur + 1) + ": " + score + "% (theo nhịp & độ dài bản ghi)");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rec.stop, rec.simMode, eng.cur, eng.rate, video.id, toast]);
+
+  /* Space giữ để thu — đăng ký ở component (KHÔNG ở engine); onStop qua ref
+     để keyup luôn gọi bản mới nhất dù effect không chạy lại. */
+  const onStopRef = useRef(onStop);
+  onStopRef.current = onStop;
+  useEffect(() => {
+    const isTyping = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      return !!t && ((t.matches?.("input, textarea, select") ?? false) || t.isContentEditable);
+    };
+    const down = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || e.repeat || isTyping(e)) return;
+      e.preventDefault();
+      if (!dimmed) rec.start();
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || isTyping(e)) return;
+      e.preventDefault();
+      onStopRef.current();
+    };
+    document.addEventListener("keydown", down);
+    document.addEventListener("keyup", up);
+    return () => {
+      document.removeEventListener("keydown", down);
+      document.removeEventListener("keyup", up);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dimmed, rec.start]);
+
+  const linesDone = prog?.linesDone ?? 0;
   const pct = subs.length > 0 ? Math.round((linesDone / subs.length) * 100) : 0;
 
   /* ---------- transcript: autoscroll câu active theo pref (port renderActive) ---------- */
@@ -74,6 +160,7 @@ export default function ShadowingStudio({
 
   const hintLen = Math.max(8, Math.floor((curSub?.pinyin.length ?? 0) * 0.4));
   const chars = dictChars(full);
+  const chips = toneChipsFor(lastScore ?? -1, (curSub?.parts ?? []).map((p) => p.zh));
 
   return (
     <>
@@ -205,7 +292,171 @@ export default function ShadowingStudio({
               </Button>
             </div>
           </section>
-          {/* SLOT-RECORD (Task 9): cắm waveform card + record dock vào đây (dock nhận dimmed={tab === "dict"}) */}
+          {/* SLOT-RECORD: waveform card + tone inspector + record dock */}
+          <section
+            aria-label="Sóng âm và chấm điểm"
+            data-od-id="waveform-card"
+            data-testid="waveform-card"
+            className="rounded-card border border-border-subtle bg-surface-elevated p-4 shadow-xs"
+          >
+            <h3 className="text-[13px] font-bold">Sóng âm đối chiếu</h3>
+
+            {/* hàng 1 — bản xứ */}
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-text-secondary">Bản xứ</span>
+              <button
+                type="button"
+                onClick={() => eng.speakSentence(eng.cur)}
+                className="min-h-9 rounded-control border border-border-subtle bg-surface-elevated px-3 text-xs font-bold text-text-primary hover:border-border-default focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+              >
+                Nghe mẫu
+              </button>
+            </div>
+            <canvas
+              ref={nativeCanvasRef}
+              data-testid="wave-native"
+              width={600}
+              height={80}
+              className="mt-1.5 h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+            />
+
+            {/* hàng 2 — giọng của bạn */}
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-text-secondary">Giọng của bạn</span>
+              <button
+                type="button"
+                onClick={() => {
+                  if (rec.lastUrl == null) { toast("Chưa có bản ghi để phát lại"); return; }
+                  new Audio(rec.lastUrl).play().catch(() => { /* silent */ });
+                }}
+                className="min-h-9 rounded-control border border-border-subtle bg-surface-elevated px-3 text-xs font-bold text-text-primary hover:border-border-default focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+              >
+                Phát lại
+              </button>
+            </div>
+            <div className="relative mt-1.5">
+              <canvas
+                ref={mineCanvasRef}
+                data-testid="wave-mine"
+                width={600}
+                height={80}
+                className="h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+              />
+              {rec.lastUrl == null && (
+                <div
+                  data-testid="wave-mine-empty"
+                  className="absolute inset-0 grid place-items-center rounded-[10px] bg-surface-muted px-2 text-center text-[11px] text-text-secondary"
+                >
+                  Chưa có bản ghi — nhấn giữ mic để thu âm câu {eng.cur + 1}
+                </div>
+              )}
+            </div>
+
+            {/* tone inspector */}
+            <div data-od-id="tone-inspector" className="mt-3 border-t border-border-subtle pt-3">
+              <h3 className="text-[13px] font-bold">Chấm điểm thanh điệu câu này</h3>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {chips.map((c, i) =>
+                  lastScore == null ? (
+                    <Chip key={i} tone="neutral" className="min-h-7 px-2 text-[11px]">
+                      <b className="hanzi">{c.zh}</b>
+                    </Chip>
+                  ) : (
+                    <Chip
+                      key={i}
+                      className={
+                        "min-h-7 px-2 text-[11px] font-bold " +
+                        (c.ok
+                          ? "border-feedback-success bg-jade-wash text-feedback-success"
+                          : "border-amber-wash bg-amber-wash text-amber-ink")
+                      }
+                    >
+                      <span className="hanzi">{c.zh}</span>
+                      {c.ok ? " ✓" : " ~"}
+                    </Chip>
+                  ),
+                )}
+              </div>
+              <div className="mt-2.5">
+                {lastScore == null ? (
+                  <span
+                    data-testid="tone-score"
+                    className="inline-flex items-center rounded-[12px] border border-border-subtle bg-surface-muted px-3.5 py-2 text-[13px] font-extrabold text-text-secondary"
+                  >
+                    Chưa chấm — hãy thu âm câu này
+                  </span>
+                ) : lastScore < 70 ? (
+                  <span
+                    data-testid="tone-score"
+                    className="inline-flex items-center rounded-[12px] border border-amber-wash bg-amber-wash px-3.5 py-2 text-[13px] font-extrabold text-amber-ink"
+                  >
+                    Khớp nhịp nói: {lastScore}% · Cần luyện thêm
+                  </span>
+                ) : lastScore < 85 ? (
+                  <span
+                    data-testid="tone-score"
+                    className="inline-flex items-center rounded-[12px] border border-amber-wash bg-amber-wash px-3.5 py-2 text-[13px] font-extrabold text-amber-ink"
+                  >
+                    Khớp nhịp nói: {lastScore}% · Khá tốt
+                  </span>
+                ) : (
+                  <span
+                    data-testid="tone-score"
+                    className="inline-flex items-center rounded-[12px] border border-feedback-success bg-jade-wash px-3.5 py-2 text-[13px] font-extrabold text-feedback-success"
+                  >
+                    Khớp nhịp nói: {lastScore}% · Rất tốt!
+                  </span>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* record dock */}
+          <section
+            aria-label="Đế thu âm"
+            data-od-id="record-dock"
+            data-testid="record-dock"
+            className={
+              "rounded-card border border-border-subtle bg-surface-elevated p-2 text-center shadow-xs" +
+              (dimmed ? " opacity-45 saturate-50 pointer-events-none" : "")
+            }
+          >
+            <div className="flex items-center justify-center gap-4">
+              <button
+                type="button"
+                data-testid="mic-btn"
+                aria-pressed={rec.recording}
+                aria-label="Nhấn giữ để thu âm"
+                onPointerDown={(e) => { e.preventDefault(); if (!dimmed) rec.start(); }}
+                onPointerUp={onStop}
+                onPointerLeave={onStop}
+                onPointerCancel={onStop}
+                className="relative grid size-14 touch-none select-none place-items-center rounded-full bg-action-primary text-white shadow-md transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+              >
+                {rec.recording && (
+                  <span aria-hidden className="absolute inset-0 animate-ping rounded-full border-2 border-action-primary" />
+                )}
+                <Mic size={24} strokeWidth={ICON_STROKE} />
+              </button>
+            </div>
+            <p className="mt-1.5 text-[11px] text-text-secondary">
+              Nhấn giữ để nói (hoặc giữ <kbd className="rounded border border-border-subtle bg-surface-muted px-1 font-bold">Space</kbd>)
+            </p>
+            <div className="mx-auto mt-2 h-1.5 max-w-[260px] overflow-hidden rounded-full bg-ring-track" aria-hidden>
+              <i className="block h-full rounded-full bg-action-primary transition-[width]" style={{ width: Math.round(level * 100) + "%" }} />
+            </div>
+            <div className="mt-2 flex gap-2">
+              <Button variant="secondary" size="sm" onClick={eng.prev} className="min-h-12 flex-1">◀ Câu trước</Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => { eng.next(); eng.speakSentence(Math.min(eng.cur + 1, subs.length - 1)); }}
+                className="min-h-12 flex-1"
+              >
+                Câu tiếp theo ▶
+              </Button>
+            </div>
+          </section>
         </div>
 
         {/* ---------- SLOT-TRANSCRIPT (Task 8) ---------- */}
@@ -296,8 +547,8 @@ export default function ShadowingStudio({
                     </button>
                   </div>
                   <div className="mt-2">
-                    {rec?.score ? (
-                      <Chip tone="correct" className="min-h-6 px-2 text-[11px] font-bold">{rec.score}%</Chip>
+                    {prog?.score ? (
+                      <Chip tone="correct" className="min-h-6 px-2 text-[11px] font-bold">{prog.score}%</Chip>
                     ) : (
                       <Chip tone="neutral" className="min-h-6 px-2 text-[11px] font-bold">Chưa luyện</Chip>
                     )}

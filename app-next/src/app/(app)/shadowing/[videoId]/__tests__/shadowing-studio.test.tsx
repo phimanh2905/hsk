@@ -68,3 +68,33 @@ describe("transcript + dictation (port script-tabs/transcript-stream/dictation-b
     expect(screen.getAllByText("?").length).toBe(masked - 1);
   });
 });
+
+describe("waveform + record dock (port waveform-card/record-dock)", () => {
+  it("render 2 canvas rows + nút Nghe mẫu / Phát lại + mic", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    expect(screen.getByTestId("waveform-card")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Nghe mẫu" })).toBeInTheDocument();
+    expect(screen.getByTestId("wave-mine-empty")).toHaveTextContent(/Chưa có bản ghi/);
+    expect(screen.getByRole("button", { name: "Nhấn giữ để thu âm" })).toBeInTheDocument();
+  });
+  it("Space giữ → recording, Space nhả → dừng và chấm (simMode jsdom)", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.keyDown(document, { code: "Space" });
+    expect(screen.getByTestId("mic-btn")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyUp(document, { code: "Space" });
+    expect(screen.getByTestId("mic-btn")).toHaveAttribute("aria-pressed", "false");
+  });
+  it("Space bỏ qua khi focus trong textarea dictation", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByRole("button", { name: "Chép chính tả" }));
+    const input = screen.getByTestId("dict-input");
+    input.focus();
+    fireEvent.keyDown(input, { code: "Space" });
+    expect(screen.getByTestId("mic-btn")).toHaveAttribute("aria-pressed", "false");
+  });
+  it("tab dict → dock mờ", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByRole("button", { name: "Chép chính tả" }));
+    expect(screen.getByTestId("record-dock")).toHaveClass("opacity-45", "saturate-50");
+  });
+});
