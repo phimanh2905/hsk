@@ -2,26 +2,32 @@
 
 /* Glance header (port .glance của opendesign index.html, spec 2026-10-04):
    chào theo giờ (hanzi) + ngày, streak full pill + goal ring 44px (DAILY_GOAL_XP).
-   Client island vì đọc localStorage qua useHomeSummary. */
+   Client island vì đọc localStorage qua useHomeSummary.
+   C1 (review H16 fix 1): greeting + ngày phụ thuộc giờ/ngày ĐỊA PHƯƠNG — bắt buộc
+   nằm sau `mounted` gate. Next prerender trang ở server (TZ có thể khác client),
+   text node này mà vào HTML ban đầu sẽ hydration mismatch (cùng họ lỗi C2 Task 5). */
 
 import { DonutRing } from "@/components/ui/donut-ring";
 import { StreakPill } from "@/components/ui/streak-pill";
 import { useHomeSummary, DAILY_GOAL_XP } from "@/lib/home-summary";
 
-export function greeting(): string {
+function timeGreeting(): string {
   const h = new Date().getHours();
   return h < 11 ? "早上好" : h < 18 ? "下午好" : "晚上好";
 }
 
 export default function GlanceGreeting() {
   const s = useHomeSummary();
-  const today = new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+  const greeting = s.mounted ? timeGreeting() : "";
+  const today = s.mounted
+    ? new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "numeric", month: "long" }).format(new Date())
+    : "";
 
   return (
     <section aria-label="Tổng quan hôm nay" className="flex flex-wrap items-end justify-between gap-4">
       <div>
         <h1 className="text-[26px] font-bold leading-tight tracking-tight">
-          <span className="zh text-[1.06em]">{greeting()}</span>, chào bạn!
+          <span className="zh text-[1.06em]">{greeting}</span>, chào bạn!
         </h1>
         <p className="mt-2 text-[13.5px] capitalize text-text-secondary">{today}</p>
       </div>

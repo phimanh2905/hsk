@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import GlanceGreeting, { greeting } from "../glance-greeting";
+import { renderToString } from "react-dom/server";
+import GlanceGreeting from "../glance-greeting";
 
 /* Goal ring là điểm dễ vỡ nhất (toạ độ <text> theo viewBox 44 + aria-label động):
    test khoá cả greeting theo giờ lẫn aria-label goal ring — sai bất kỳ cái nào
@@ -25,16 +26,46 @@ beforeEach(() => {
   mockState.mounted = true;
 });
 
+/* Mount xong greeting phải chứa bucket đúng theo giờ ĐỊA PHƯƠNG (render, không
+   gọi hàm nội bộ — M1/M3: verify qua output UI). */
+function expectGreeting(zh: string) {
+  expect(screen.getByRole("heading", { name: /, chào bạn!/ }).textContent).toContain(zh);
+}
+
 describe("GlanceGreeting (spec 2026-10-04)", () => {
   it("greeting theo giờ VN: sáng/chiều/tối", () => {
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date("2026-10-05T08:00:00"));
-      expect(greeting()).toBe("早上好");
+      const { unmount } = render(<GlanceGreeting />);
+      expectGreeting("早上好");
+      unmount();
       vi.setSystemTime(new Date("2026-10-05T13:00:00"));
-      expect(greeting()).toBe("下午好");
+      const { unmount: u2 } = render(<GlanceGreeting />);
+      expectGreeting("下午好");
+      u2();
       vi.setSystemTime(new Date("2026-10-05T20:00:00"));
-      expect(greeting()).toBe("晚上好");
+      render(<GlanceGreeting />);
+      expectGreeting("晚上好");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("SSR-stable: HTML prerender KHÔNG phụ thuộc giờ hệ thống (C1 hydration gate)", () => {
+    mockState.mounted = false;
+    vi.useFakeTimers();
+    try {
+      // 2 mốc giờ khác bucket — nếu greeting/ngày lọt vào HTML prerender,
+      // server TZ ≠ client TZ sẽ hydration mismatch. Output phải giống hệt nhau.
+      vi.setSystemTime(new Date("2026-10-05T08:00:00"));
+      const ssrMorning = renderToString(<GlanceGreeting />);
+      vi.setSystemTime(new Date("2026-10-05T20:00:00"));
+      const ssrEvening = renderToString(<GlanceGreeting />);
+      expect(ssrEvening).toBe(ssrMorning);
+      expect(ssrMorning).not.toContain("早上好");
+      expect(ssrMorning).not.toContain("下午好");
+      expect(ssrMorning).not.toContain("晚上好");
     } finally {
       vi.useRealTimers();
     }
