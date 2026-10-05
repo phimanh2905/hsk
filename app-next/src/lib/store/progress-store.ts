@@ -69,6 +69,11 @@ export interface ProgressStoreApi {
   deleteDeck(kind: NotebookKind, id: string): void;
   getVocabBook(): VocabBookEntry[];
   addToVocabBook(entry: VocabBookEntry): boolean;
+  getReadingProgress(id: string): { pct: number; quizDone: boolean } | null;
+  recordReadingProgress(id: string, pct: number): void;
+  recordReadingQuizDone(id: string): boolean;
+  getReadingSavedIds(): string[];
+  toggleReadingSaved(id: string): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -529,6 +534,45 @@ export class ProgressStore implements ProgressStoreApi {
     writeJSON("bye.vocabBook", [...this.getVocabBook(), entry]);
     dispatchProgress();
     return true;
+  }
+
+  /* ---------- reading progress/saved/quiz (reading redesign 2026-10-05) ---------- */
+
+  private readingKey(id: string): string {
+    return `bye.reading.${id}`;
+  }
+
+  getReadingProgress(id: string): { pct: number; quizDone: boolean } | null {
+    const v = readJSON<{ pct?: unknown; quizDone?: unknown } | null>(this.readingKey(id), null);
+    if (!v || typeof v !== "object" || typeof v.pct !== "number" || typeof v.quizDone !== "boolean") return null;
+    return { pct: v.pct, quizDone: v.quizDone };
+  }
+
+  recordReadingProgress(id: string, pct: number): void {
+    const cur = this.getReadingProgress(id);
+    const next = { pct: Math.max(cur?.pct ?? 0, pct), quizDone: cur?.quizDone ?? false };
+    writeJSON(this.readingKey(id), next);
+    dispatchProgress();
+  }
+
+  recordReadingQuizDone(id: string): boolean {
+    const cur = this.getReadingProgress(id);
+    if (cur?.quizDone) return false;
+    writeJSON(this.readingKey(id), { pct: cur?.pct ?? 0, quizDone: true });
+    dispatchProgress();
+    return true;
+  }
+
+  getReadingSavedIds(): string[] {
+    const v = readJSON<unknown>("bye.reading.saved", []);
+    return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+  }
+
+  toggleReadingSaved(id: string): void {
+    const saved = this.getReadingSavedIds();
+    const next = saved.includes(id) ? saved.filter((x) => x !== id) : [...saved, id];
+    writeJSON("bye.reading.saved", next);
+    dispatchProgress();
   }
 }
 
