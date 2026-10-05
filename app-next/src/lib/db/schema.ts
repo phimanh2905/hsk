@@ -105,3 +105,23 @@ export const shadowingProgress = sqliteTable(
   },
   (t) => [uniqueIndex("shadowing_progress_user_video_uq").on(t.userId, t.videoId)]
 );
+
+/* Entries sổ tay /notebook (spec §3.1). `id` do client sinh (crypto.randomUUID)
+   để sync-on-login idempotent; `payload` là JSON theo zod schema lib/notebook/payload. */
+export const notebookEntries = sqliteTable(
+  "notebook_entries",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    kind: text("kind", { enum: ["wrong", "chars", "personal"] }).notNull(),
+    tag: text("tag").notNull(),
+    tagTone: text("tagTone", { enum: ["red", "lav", "per"] }).notNull().default("red"),
+    payload: text("payload").notNull(),
+    saved: integer("saved", { mode: "boolean" }).notNull().default(false),
+    hsk: text("hsk"),
+    source: text("source", { enum: ["auto", "manual"] }).notNull().default("manual"),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index("notebook_entries_user_created_idx").on(t.userId, t.createdAt)]
+);
