@@ -7,6 +7,8 @@ import { pickDaily, syntheticLines } from "@/lib/shadowing/daily";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
+import { ShadowingDrawer } from "./shadowing-drawer";
+import { PracticeOverlay } from "./practice-overlay";
 import { Button } from "@/components/ui/button";
 import { Play } from "@/components/ui/icon";
 
@@ -53,8 +55,8 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
   const [q, setQ] = useState("");
   // SLOT-DRAWER / SLOT-OVERLAY (Task 11): drawerVideo + practiceVideo state giữ sẵn,
   // render ShadowingDrawer / PracticeOverlay sẽ được nối ở Task 11.
-  const [, setDrawerVideo] = useState<ShadowingVideo | null>(null);
-  const [, setPracticeVideo] = useState<ShadowingVideo | null>(null);
+  const [drawerVideo, setDrawerVideo] = useState<ShadowingVideo | null>(null);
+  const [practiceVideo, setPracticeVideo] = useState<ShadowingVideo | null>(null);
 
   const daily = useMemo(() => pickDaily(videos, subtitlesByVideo, new Date()), [videos, subtitlesByVideo]);
 
@@ -253,6 +255,14 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
           <p className="col-span-full py-7 text-center text-[13.5px] text-text-secondary">Không có video nào khớp bộ lọc.</p>
         )}
       </div>
+
+      {/* ── script-drawer / practice-session (Task 11) ────────────── */}
+      {drawerVideo && (
+        <ShadowingDrawer video={drawerVideo} lines={linesOf(drawerVideo)} onClose={() => setDrawerVideo(null)} />
+      )}
+      {practiceVideo && (
+        <PracticeOverlay video={practiceVideo} lines={linesOf(practiceVideo)} onClose={() => setPracticeVideo(null)} />
+      )}
     </div>
   );
 }
