@@ -123,18 +123,22 @@ export function useRecorder(onLevel?: (level: number) => void) {
   }, [stopLevelLoop]);
 
   const stop = useCallback((): { blob: Blob; secs: number } | null => {
-    if (!recording) return null;
+    // Cho phép stop() khi getUserMedia còn pending (recording vẫn false nhưng
+    // startingRef true): đánh dấu hủy để .then() không bật lại recording
+    // (review t5 r2 — otherwise dead code → stuck "recording").
+    if (!recording && !startingRef.current) return null;
     const secs = (Date.now() - t0Ref.current) / 1000;
     stopLevelLoop();
     if (recRef.current) {
       try { recRef.current.stop(); } catch { /* silent */ }
       recRef.current = null;
       streamRef.current = null;
-    } else if (startingRef.current || stopDuringStartRef.current) {
+    } else if (startingRef.current) {
       // getUserMedia còn pending: đánh dấu để .then() tự dọn stream và không
-      // bật lại recording. Vẫn trả kết quả đồng bộ theo hợp đồng.
+      // bật lại recording. Bản ghi chưa từng bắt đầu với người dùng → trả null.
       stopDuringStartRef.current = true;
       startingRef.current = false;
+      return null;
     }
     setRecording(false);
     // LƯU Ý (đường dẫn thật): blob có thể chưa chứa đủ chunk (MediaRecorder
