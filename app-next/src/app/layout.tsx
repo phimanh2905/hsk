@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/shell/theme-provider";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
+import SidebarNav from "@/components/shell/sidebar-nav";
 import Topbar from "@/components/shell/topbar";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
@@ -36,8 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <ToastProvider>
             <LoginProvider>
-              <Topbar />
-              <main className="min-h-[60vh]">{children}</main>
+              <SidebarNav />
+              <div className="flex min-h-screen flex-col lg:ml-64">
+                <Topbar />
+                <main className="flex-1">{children}</main>
+              </div>
               <BottomNav />
               <SettingsModal />
               <LoginModal />

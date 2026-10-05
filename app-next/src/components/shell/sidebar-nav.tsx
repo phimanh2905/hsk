@@ -10,7 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3, BookmarkCheck, Brain, Compass, Home, Pencil, Printer, Settings,
-  Volume2, AudioLines, ICON_STROKE,
+  Volume2, AudioLines, ICON_STROKE, type LucideIcon,
 } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { useHomeSummary } from "@/lib/home-summary";
@@ -21,7 +21,7 @@ const OPEN_NAV_EVENT = "nhai:open-nav";
 
 const GROUPS: ReadonlyArray<{
   title: string;
-  items: ReadonlyArray<{ href: string; label: string; Icon: typeof Home; badge?: "srs" }>;
+  items: ReadonlyArray<{ href: string; label: string; Icon: LucideIcon; badge?: "srs" }>;
 }> = [
   {
     title: "HỌC TẬP CỐT LÕI",
