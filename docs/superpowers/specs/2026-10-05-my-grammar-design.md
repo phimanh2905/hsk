@@ -31,7 +31,9 @@ export type GrammarPoint = {
   topic: GrammarTopic;
   def: string;                 // mô tả ngắn
   formula: [label: string, isKey?: "key"][];  // blocks nối "+", key = jade + font hanzi
-  pitfall: [bold: string, rest: string];      // mock pit có <b> giữa câu — tách 2 phần render
+  pitfall: [lead: string, bold: string, rest: string];  // mock pit có <b> giữa câu — tách 3 phần,
+                                                        // ghép lead+bold+rest = đúng câu mock; render
+                                                        // "Bẫy người Việt: {lead}<b>{bold}</b>{rest}"
   ex: { hz: string; py: string; vi: string }[];
 };
 export const GRAMMAR_POINTS: GrammarPoint[];   // 6 điểm port 1:1 mock
