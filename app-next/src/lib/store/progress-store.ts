@@ -30,6 +30,8 @@ export type NotebookKind = "vocab" | "grammar";
 
 export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
+export type GrammarMeta = { saved?: 1 };
+
 export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
@@ -69,6 +71,8 @@ export interface ProgressStoreApi {
   deleteDeck(kind: NotebookKind, id: string): void;
   getVocabBook(): VocabBookEntry[];
   addToVocabBook(entry: VocabBookEntry): boolean;
+  getGrammarMeta(): Record<string, GrammarMeta>;
+  toggleGrammarSaved(id: string): boolean;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -529,6 +533,23 @@ export class ProgressStore implements ProgressStoreApi {
     writeJSON("bye.vocabBook", [...this.getVocabBook(), entry]);
     dispatchProgress();
     return true;
+  }
+
+  /* ---------- grammar meta (bye.grammarMeta — spec 2026-10-05 §2.2) ---------- */
+
+  getGrammarMeta(): Record<string, GrammarMeta> {
+    return readJSON<Record<string, GrammarMeta>>("bye.grammarMeta", {});
+  }
+
+  toggleGrammarSaved(id: string): boolean {
+    const all = this.getGrammarMeta();
+    const saved = all[id]?.saved ? undefined : (1 as const);
+    const next: GrammarMeta = { saved };
+    if (!saved) delete all[id];
+    else all[id] = next;
+    writeJSON("bye.grammarMeta", all);
+    dispatchProgress();
+    return !!saved;
   }
 }
 
