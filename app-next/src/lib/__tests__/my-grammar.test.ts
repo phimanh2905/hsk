@@ -13,6 +13,7 @@ describe("filterPoints", () => {
   it("topic: ba → ba + bei; saved qua savedIds (Review Focus #2)", () => {
     expect(ids(filterPoints(GRAMMAR_POINTS, { level: "all", topic: "ba", q: "" }, []))).toEqual(["ba", "bei"]);
     expect(ids(filterPoints(GRAMMAR_POINTS, { level: "all", topic: "saved", q: "" }, ["bi", "yue"]))).toEqual(["bi", "yue"]);
+    expect(ids(filterPoints(GRAMMAR_POINTS, { level: "all", topic: "saved", q: "" }, []))).toEqual([]);
   });
   it("q: Hán, không dấu, ví dụ py — kết hợp level (Review Focus #5)", () => {
     expect(ids(filterPoints(GRAMMAR_POINTS, { level: "all", topic: "all", q: "把" }, []))).toEqual(["ba"]);
