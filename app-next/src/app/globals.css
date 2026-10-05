@@ -11,7 +11,8 @@
   --hz-line: #e8ecea;    --hz-jade: #2d7d5b;
   --hz-vermilion: #c83c32;  --hz-vermilion-600: #d24b3f;  --hz-vermilion-700: #a9342b;
   --hz-amber: #e68a00;   --hz-amber-wash: #fdf3e2;  --hz-amber-ink: #5c3600;
-  --hz-rose-wash: #fef2f2;  --hz-jade-wash: #ecfdf5;
+  --hz-rose-wash: #fef2f2;  --hz-rose-line: #fecaca;  --hz-rose-ink: #b91c1c;
+  --hz-jade-wash: #ecfdf5;
   --hz-purple: #722ed1;
   --hz-ring-track: #e8ecea;
   /* lớp 2 — semantic */
@@ -52,7 +53,8 @@ html.dark {
   --hz-jade: #4caf8a;
   --hz-vermilion: #e05349;  --hz-vermilion-600: #e05349;  --hz-vermilion-700: #e08a84;
   --hz-amber: #dcaa37;   --hz-amber-wash: #312512;  --hz-amber-ink: #f5d98b;
-  --hz-rose-wash: rgba(127,29,29,.25);  --hz-jade-wash: rgba(6,95,70,.25);
+  --hz-rose-wash: rgba(127,29,29,.25);  --hz-rose-line: rgba(127,29,29,.5);  --hz-rose-ink: #fca5a5;
+  --hz-jade-wash: rgba(6,95,70,.25);
   --hz-ring-track: #3e3e3e;
   --surface-paper: var(--hz-paper);
   --surface-elevated: var(--hz-elevated);
@@ -88,6 +90,8 @@ html.dark {
   --color-amber-wash: var(--hz-amber-wash);
   --color-amber-ink: var(--hz-amber-ink);
   --color-rose-wash: var(--hz-rose-wash);
+  --color-rose-line: var(--hz-rose-line);
+  --color-rose-ink: var(--hz-rose-ink);
   --color-jade-wash: var(--hz-jade-wash);
   --color-ring-track: var(--hz-ring-track);
   --color-text-primary: var(--text-primary);
@@ -125,7 +129,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-be-vietnam-pro), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.zh, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
+.zh, .hanzi, [lang="zh"] { font-family: var(--font-noto-sans-sc), "PingFang SC", "Hiragino Sans GB", sans-serif; }
 .zh-faded { opacity: .25; }
 
 /* Ô tập tô + khung trang A4 preview — dùng bởi svg-render.ts (chuỗi HTML inject vào DOM)
@@ -168,3 +172,27 @@ body {
   /* animation tắt → ring tĩnh .hz-node-ring vẫn còn (mock .node.active giữ box-shadow) */
   .hz-node-pulse { animation: none; }
 }
+
+/* ripple nút phát âm (port .speaker.ripple của opendesign lesson.html) */
+@keyframes ripple {
+  from { transform: scale(1); opacity: .8; }
+  to { transform: scale(1.55); opacity: 0; }
+}
+.speaker-ripple {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--action-primary);
+  animation: ripple .7s ease-out;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .speaker-ripple { animation: none; }
+}
+
+/* Stroke Studio — nét chữ & mực luyện viết (port .st/.ink-path của opendesign lesson.html) */
+.hz-st { fill: none; stroke: var(--text-primary); stroke-linecap: round; stroke-linejoin: round; stroke-width: 13; }
+.hz-st.todo { opacity: .14; }
+.hz-st.done { opacity: 1; }
+.hz-st.now { stroke: var(--action-primary); opacity: 1; }
+.hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+/* row nét đang chọn — gạch dọc action-primary bên trái (thay shadow-[inset_...] trong TSX) */
+.hz-row-cur { box-shadow: inset 3px 0 0 var(--action-primary); }

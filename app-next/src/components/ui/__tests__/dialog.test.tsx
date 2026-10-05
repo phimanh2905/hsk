@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Dialog } from "../dialog";
 
@@ -36,6 +36,21 @@ describe("Dialog", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
+  /* final review: listener window (useKeyboard của lesson) chạy sau listener document →
+     Dialog phải stopPropagation để Esc không mở thêm exit modal. */
+  it("Escape stopPropagation: listener window phía sau không nhận phím", () => {
+    const onWindowKey = vi.fn();
+    window.addEventListener("keydown", onWindowKey);
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t">
+        X
+      </Dialog>,
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    window.removeEventListener("keydown", onWindowKey);
+    expect(onWindowKey).not.toHaveBeenCalled();
+  });
+
   it("backdrop click đóng; click panel không đóng", async () => {
     const onClose = vi.fn();
     const { container } = render(
@@ -48,5 +63,23 @@ describe("Dialog", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
     await userEvent.click(screen.getByText("Nội dung"));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("role=alertdialog render alertdialog (port #exitModal lesson.html)", () => {
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t" role="alertdialog">
+        <h2 id="t">Rời khỏi Bài 4?</h2>
+      </Dialog>
+    );
+    expect(screen.getByRole("alertdialog", { name: "Rời khỏi Bài 4?" })).toBeInTheDocument();
+  });
+
+  it("mặc định role=dialog", () => {
+    render(
+      <Dialog open onClose={vi.fn()} labelledBy="t2">
+        <h2 id="t2">X</h2>
+      </Dialog>
+    );
+    expect(screen.getByRole("dialog", { name: "X" })).toBeInTheDocument();
   });
 });

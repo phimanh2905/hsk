@@ -1,18 +1,30 @@
 "use client";
 
 /* LessonProvider (C1) — state machine chế độ học, port clone/js/lesson.js:16-25 (S).
-   Provider chỉ giữ state; timer/tài nguyên của từng mode do mode component
-   tự dọn trong useEffect return (như addCleanup trong clone/js/lesson.js). */
+   Bổ sung state flash SRS theo opendesign lesson.html: revealed, autoplay (persist),
+   grade 1|2|3 (recordReview vào progress-store) và done (hết bài). */
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { VocabWord } from "@/content/vocab";
+import { progressStore } from "@/lib/store/progress-store";
+import { useToastSafe } from "@/components/shell/toast-provider";
 
 export type LessonMode = "flash" | "quiz" | "typing" | "reading" | "listen" | "dance" | "battle";
 
 export type LessonItem = VocabWord & { index: number; itemKey: string };
 
 export type KnownFlag = "known" | "unknown";
+
+export type GradeLevel = 1 | 2 | 3;
+
+const AUTOPLAY_KEY = "nhai.lesson.autoplay";
+
+const GRADE_TOAST: Record<GradeLevel, string> = {
+  1: "Chưa thuộc — ôn lại sau 1 phút",
+  2: "Mơ hồ — ôn lại sau 5 phút",
+  3: "Đã thuộc — tuyệt vời!",
+};
 
 type LessonCtx = {
   items: LessonItem[];
@@ -25,6 +37,12 @@ type LessonCtx = {
   setIndex(i: number): void;
   known: Record<number, KnownFlag>;
   markKnown(i: number, f: KnownFlag): void;
+  revealed: boolean;
+  setRevealed(v: boolean): void;
+  autoplay: boolean;
+  toggleAutoplay(): void;
+  grade(level: GradeLevel): void;
+  done: boolean;
 };
 
 const LessonContext = createContext<LessonCtx | null>(null);
@@ -51,12 +69,58 @@ export function LessonProvider({
   const [mode, setMode] = useState<LessonMode>("flash");
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState<Record<number, KnownFlag>>({});
+  const [revealed, setRevealed] = useState(false);
+  const [done, setDone] = useState(false);
+  const [autoplay, setAutoplay] = useState(false);
+  const toast = useToastSafe();
 
-  // RULING Task 12: đổi mode phải reset index về 0 (khớp switchMode của clone/js/lesson.js)
+  // RULING Task 12: đọc localStorage SAU mount (hydration) — render đầu luôn autoplay=false
+  useEffect(() => {
+    try {
+      setAutoplay(localStorage.getItem(AUTOPLAY_KEY) === "1");
+    } catch {
+      /* silent */
+    }
+  }, []);
+
+  // persist autoplay, bỏ qua lần mount đầu (tránh ghi đè giá trị đã lưu)
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    try {
+      localStorage.setItem(AUTOPLAY_KEY, autoplay ? "1" : "0");
+    } catch {
+      /* silent */
+    }
+  }, [autoplay]);
+
+  // RULING Task 12: đổi mode reset index về 0; flash SRS reset luôn revealed/done
   const setModeAndReset = (m: LessonMode) => {
     setMode(m);
     setIndex(0);
+    setRevealed(false);
+    setDone(false);
   };
+
+  // grade (port grade() của mockup): chỉ khi revealed; hết bài → done
+  // done=true là màn hoàn thành: deck đã ẩn nhưng phím 1/2/3 vẫn còn trên window.
+  // Không chặn thì bấm Space (setRevealed(true)) + 1/2/3 sẽ recordReview lại chính
+  // từ vừa chấm → ghi đè "Đã thuộc" bằng "learning" (sai dữ liệu SRS).
+  const grade = (level: GradeLevel) => {
+    if (!revealed || done) return;
+    const item = items[index];
+    if (!item) return;
+    progressStore.recordReview(item.itemKey, level);
+    toast(GRADE_TOAST[level]);
+    setRevealed(false);
+    if (index >= items.length - 1) setDone(true);
+    else setIndex(index + 1);
+  };
+
+  const toggleAutoplay = () => setAutoplay((v) => !v);
 
   const value = useMemo<LessonCtx>(
     () => ({
@@ -70,8 +134,15 @@ export function LessonProvider({
       setIndex,
       known,
       markKnown: (i: number, f: KnownFlag) => setKnown((k) => ({ ...k, [i]: f })),
+      revealed,
+      setRevealed,
+      autoplay,
+      toggleAutoplay,
+      grade,
+      done,
     }),
-    [items, book, page, deckName, mode, index, known]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [items, book, page, deckName, mode, index, known, revealed, autoplay, done]
   );
 
   return <LessonContext.Provider value={value}>{children}</LessonContext.Provider>;

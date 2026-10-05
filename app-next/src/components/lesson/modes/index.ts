@@ -1,11 +1,10 @@
 "use client";
 
-/* Mode registry — thay window.NHAI.lessonModes của clone/js/lesson.js.
-   Task 12–17 sẽ thay từng placeholder component. */
+/* Mode registry — mode flash đã thay bằng FlashStage (flash/flash-stage.tsx, port
+   main.stage của opendesign lesson.html) nên không qua registry nữa; 6 mode còn lại giữ nguyên. */
 
 import type { ComponentType } from "react";
 import type { LessonMode } from "../lesson-provider";
-import FlashcardMode from "./flashcard";
 import QuizMode from "./quiz";
 import TypingMode from "./typing";
 import ReadingMode from "./reading";
@@ -13,8 +12,7 @@ import ListenMode from "./listen";
 import DanceMode from "./dance";
 import BattleMode from "./battle";
 
-export const modeRegistry: Record<LessonMode, ComponentType> = {
-  flash: FlashcardMode,
+export const modeRegistry: Partial<Record<LessonMode, ComponentType>> = {
   quiz: QuizMode,
   typing: TypingMode,
   reading: ReadingMode,

@@ -5,19 +5,25 @@ export function Dialog({
   open,
   onClose,
   labelledBy,
+  role = "dialog",
   className,
   children,
 }: {
   open: boolean;
   onClose: () => void;
   labelledBy: string;
+  role?: "dialog" | "alertdialog";
   className?: string;
   children: ReactNode;
 }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      // "Nuốt" phím: listener window của FlashStage (useKeyboard) chạy sau ở cùng
+      // event nên nếu không chặn, Esc đóng dialog lại mở luôn exit modal.
+      e.stopPropagation();
+      onClose();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -31,7 +37,7 @@ export function Dialog({
       onClick={onClose}
     >
       <div
-        role="dialog"
+        role={role}
         aria-modal="true"
         aria-labelledby={labelledBy}
         className={cn(

@@ -49,6 +49,8 @@ export interface ProgressStoreApi {
   addSrsBatch(keys: string[]): number;
   recordReview(key: string, grade: Grade, now?: number): SrsItem | null;
   countSrsNew(): number;
+  /** Chấm điểm 1 từ từ flashcard SRS (port 3 nút grade của opendesign lesson.html). */
+  recordReview(key: string, grade: 1 | 2 | 3): void;
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null;
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
   getRoadmapDone(): number[];
@@ -319,6 +321,23 @@ export class ProgressStore implements ProgressStoreApi {
 
   countSrsNew(): number {
     return readNum(SRS_NEW_KEY);
+  }
+
+  /* grade 1 → learning + 1 phút · 2 → learning + 5 phút · 3 → learned (port .grades lesson.html) */
+  recordReview(key: string, grade: 1 | 2 | 3): void {
+    const items = this.readSrsItems();
+    const now = Date.now();
+    const cur = items[key];
+    items[key] = {
+      key,
+      status: grade === 3 ? "learned" : "learning",
+      dueAt: grade === 1 ? now + 60_000 : grade === 2 ? now + 300_000 : null,
+      reviewCount: (cur?.reviewCount ?? 0) + 1,
+      lastReviewedAt: now,
+      updatedAt: now,
+    };
+    this.writeSrsItems(items);
+    dispatchProgress();
   }
 
   /* ---------- battle best ---------- */
