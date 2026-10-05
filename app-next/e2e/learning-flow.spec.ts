@@ -2,7 +2,10 @@ import { test, expect } from "@playwright/test";
 
 test("home → course → lesson → flip → star từ (luồng chính)", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Chào bạn" })).toBeVisible(); // emoji đã bỏ trong restyle Hanzi
+  // trang chủ mới (glance + hero + matrix): h1 chào theo giờ + section Lộ trình HSK
+  await expect(page.getByRole("heading", { name: /chào bạn!/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Lộ trình HSK" })).toBeVisible();
+  await page.goto("/course");
   await page.getByRole("link", { name: /Nhai HSK 1/ }).click();
   await expect(page).toHaveURL(/\/course\/hsk1/);
   await page.getByRole("link", { name: /Xin chào!/ }).click();
