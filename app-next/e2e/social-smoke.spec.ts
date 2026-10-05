@@ -22,7 +22,7 @@ test("feedback: gửi góp ý hiện toast và lưu localStorage", async ({ page
   await page.getByLabel("Nội dung góp ý").fill("Smoke test góp ý");
   await page.getByRole("button", { name: "Gửi góp ý" }).click();
   await expect(page.getByText("Cảm ơn bạn! Góp ý đã được ghi nhận.")).toBeVisible();
-  const stored = await page.evaluate(() => localStorage.getItem("nhai.feedback"));
+  const stored = await page.evaluate(() => localStorage.getItem("bye.feedback"));
   expect(stored).toContain("Smoke test góp ý");
 });
 

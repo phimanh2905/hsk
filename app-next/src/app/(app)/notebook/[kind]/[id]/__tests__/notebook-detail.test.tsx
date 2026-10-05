@@ -10,7 +10,7 @@ beforeEach(() => localStorage.clear());
 
 describe("NotebookDetail (F5)", () => {
   it("deck user không có rows → fallback 12 dòng mẫu của sample đầu; kind quyết định storage (fix round-1)", () => {
-    localStorage.setItem("nhai.notebooks", JSON.stringify([
+    localStorage.setItem("bye.notebooks", JSON.stringify([
       { id: "nb-g1", name: "Sổ ngữ pháp của tôi", rows: [], updatedAt: new Date().toISOString() },
     ]));
     render(<NotebookDetail kind="grammar" id="nb-g1" />);
@@ -21,7 +21,7 @@ describe("NotebookDetail (F5)", () => {
     expect(screen.getByText("Nghĩa")).toBeInTheDocument();
   });
   it("user rows có nội dung → hiện rows user (hanviet thường giữ nguyên)", () => {
-    localStorage.setItem("nhai.decks", JSON.stringify([
+    localStorage.setItem("bye.decks", JSON.stringify([
       { id: "nb-1", name: "Bộ thử", rows: [{ hanzi: "朋友", pinyin: "péngyou", hanviet: "bằng hữu", meaning: "bạn bè" }], updatedAt: new Date().toISOString() },
     ]));
     render(<NotebookDetail kind="vocab" id="nb-1" />);
@@ -30,7 +30,7 @@ describe("NotebookDetail (F5)", () => {
     expect(screen.queryByText("时间")).not.toBeInTheDocument();
   });
   it("bấm ＋ Thêm từ → toast demo (SP1 không fake bảng editable)", () => {
-    localStorage.setItem("nhai.decks", JSON.stringify([
+    localStorage.setItem("bye.decks", JSON.stringify([
       { id: "nb-1", name: "Bộ thử", rows: [], updatedAt: new Date().toISOString() },
     ]));
     render(<NotebookDetail kind="vocab" id="nb-1" />);

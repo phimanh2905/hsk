@@ -1,4 +1,4 @@
-/* Nhai HSK — dữ liệu thứ tự nét (port clone/js/hanzi-writer.js:9-29).
+/* Bye HSK — dữ liệu thứ tự nét (port clone/js/hanzi-writer.js:9-29).
    Toạ độ 0–100. Mỗi nét: mảng điểm theo thứ tự bút chạy. */
 export type StrokePolyline = number[][];
 

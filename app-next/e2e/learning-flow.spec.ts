@@ -6,7 +6,7 @@ test("home → course → lesson → flip → star từ (luồng chính)", async
   await expect(page.getByRole("heading", { name: /chào bạn!/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Lộ trình HSK" })).toBeVisible();
   await page.goto("/course");
-  await page.getByRole("link", { name: /Nhai HSK 1/ }).click();
+  await page.getByRole("link", { name: /Bye HSK 1/ }).click();
   await expect(page).toHaveURL(/\/course\/hsk1/);
   await page.getByRole("link", { name: /Xin chào!/ }).click();
   await expect(page).toHaveURL(/\/lesson\/hsk1\/lesson-1/);

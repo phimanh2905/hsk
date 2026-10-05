@@ -17,17 +17,17 @@ describe("readHomeSummary", () => {
     expect(Number.isNaN(s.recallPct)).toBe(false);
   });
   it("JSON hỏng → defaults (try/catch như progressStore)", () => {
-    localStorage.setItem("nhai.pageDone", "{không phải json");
-    localStorage.setItem("nhai.srs.items", "???");
+    localStorage.setItem("bye.pageDone", "{không phải json");
+    localStorage.setItem("bye.srs.items", "???");
     expect(() => readHomeSummary()).not.toThrow();
     const s = readHomeSummary();
     expect(s.lessonsDone).toBe(0);
     expect(s.srsTotal).toBe(0);
   });
   it("pageDone + SRS → lesson kế tiếp, due count, recall %", () => {
-    localStorage.setItem("nhai.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
+    localStorage.setItem("bye.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
     localStorage.setItem(
-      "nhai.srs.items",
+      "bye.srs.items",
       JSON.stringify({
         "hsk1.lesson-1.0": { key: "k1", status: "learned", dueAt: Date.now() - 1000, reviewCount: 3, lastReviewedAt: 1, updatedAt: 1 },
         "hsk1.lesson-1.1": { key: "k2", status: "new", dueAt: Date.now() - 1000, reviewCount: 0, lastReviewedAt: null, updatedAt: 1 },

@@ -14,7 +14,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ videoId: string }> }): Promise<Metadata> {
   const { videoId } = await params;
   const video = shadowingVideoById(videoId);
-  return { title: video ? `${video.title} | Shadowing | Nhai HSK` : "Shadowing | Nhai HSK" };
+  return { title: video ? `${video.title} | Shadowing | Bye HSK` : "Shadowing | Bye HSK" };
 }
 const FALLBACK_SUBS = (durSec: number): SubtitleSentence[] => [
   { n: 1, start: 0, end: durSec || 60, parts: [{ zh: "(Video này chưa có bản chép — đang cập nhật.)" }], pinyin: "", vi: "" },

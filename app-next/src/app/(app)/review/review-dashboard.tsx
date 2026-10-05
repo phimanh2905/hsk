@@ -17,7 +17,7 @@ import { useTts } from "@/lib/tts/use-tts";
 import { useToastSafe } from "@/components/shell/toast-provider";
 
 /* Review redesign (spec 2026-10-04) — compose hero/buckets/inspector/session/studio.
-   mounted-gate + tick nhai:progress như dashboard cũ; session giữ snapshot queue. */
+   mounted-gate + tick bye:progress như dashboard cũ; session giữ snapshot queue. */
 
 const LEVELS = ["HSK 1", "HSK 2", "HSK 3"] as const;
 
@@ -48,8 +48,8 @@ export default function ReviewDashboard() {
   useEffect(() => {
     setMounted(true);
     const sync = () => setTick((t) => t + 1);
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
   }, []);
 
   const now = Date.now();

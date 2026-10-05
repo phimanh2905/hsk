@@ -1,4 +1,4 @@
-/* Đọc deck tự tạo qua ProgressStore (key `nhai.decks`, shape MẢNG [{ id, name, rows, updatedAt }] của clone) —
+/* Đọc deck tự tạo qua ProgressStore (key `bye.decks`, shape MẢNG [{ id, name, rows, updatedAt }] của clone) —
    port clone/js/lesson.js:41-52 (readStore + loadData nhánh ?custom=).
    CHỈ ĐỌC: CRUD deck thuộc ProgressStore (sp1-personal-tools Task 1); file này chỉ map
    DeckRow.hanviet → Deck.hanViet để route /lesson/custom/[deckId] tiếp tục dùng được. */

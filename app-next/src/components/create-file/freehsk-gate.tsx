@@ -1,7 +1,7 @@
 "use client";
 
 /* Gate mã FREEHSK (G8, spec 12 — port clone/js/create-file.js badge gate).
-   SP1 mock: nhập đúng "FREEHSK" → setFileCode() (nhai.fileCode="1") + toast
+   SP1 mock: nhập đúng "FREEHSK" → setFileCode() (bye.fileCode="1") + toast
    "Đã mở khóa in"; sai → toast hướng dẫn. UPG-2: badge "Đăng nhập để in" mở
    thẳng Login modal thật thay vì toast báo "chức năng đăng nhập mock". */
 

@@ -91,7 +91,7 @@ test.describe("gated routes (session thật qua better-auth)", () => {
   test("luồng tạo deck → học deck qua lesson custom", async ({ page }) => {
     await fakeLogin(page);
     await page.addInitScript(() => {
-      localStorage.setItem("nhai.decks", JSON.stringify([
+      localStorage.setItem("bye.decks", JSON.stringify([
         { id: "nb-e2e", name: "Bộ e2e", rows: [
           { hanzi: "时间", pinyin: "shíjiān", hanviet: "thời gian", meaning: "thời gian" },
           { hanzi: "朋友", pinyin: "péngyou", hanviet: "bằng hữu", meaning: "bạn bè" },

@@ -25,7 +25,7 @@ const SKILLS: { key: Skill; label: string }[] = [
   { key: "hanzi", label: "Chữ Hán · 汉字" }
 ];
 
-const PROGRESS_EVENT = "nhai:progress";
+const PROGRESS_EVENT = "bye:progress";
 
 function LessonList({ slug, skill }: { slug: string; skill: Skill }) {
   const { openLogin } = useLoginModal();

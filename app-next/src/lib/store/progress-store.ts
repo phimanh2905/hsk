@@ -1,8 +1,8 @@
 "use client";
 
 /* ProgressStore — LocalStorage-backed progress store (Task 6).
-   Keys giữ tương thích với app cũ (clone/js): nhai.xp, nhai.today, nhai.heat,
-   nhai.streak, nhai.pageDone, nhai.feedback, nhai.srs.* , nhai.battle.best.*, nhai.roadmap.pinyin.
+   Keys giữ tương thích với app cũ (clone/js): bye.xp, bye.today, bye.heat,
+   bye.streak, bye.pageDone, bye.feedback, bye.srs.* , bye.battle.best.*, bye.roadmap.pinyin.
    Mọi getter bọc try/catch trả mặc định khi JSON hỏng (như clone/js/review.js). */
 
 import { useEffect, useState } from "react";
@@ -69,10 +69,10 @@ export interface ProgressStoreApi {
   addToVocabBook(entry: VocabBookEntry): boolean;
 }
 
-const PROGRESS_EVENT = "nhai:progress";
-const SRS_ITEMS_KEY = "nhai.srs.items";
-const SRS_NEW_KEY = "nhai.srs.new";
-const LEGACY_WORD_RE = /^nhai\.srs\.w\.([a-z0-9-]+)\.(.+)\.(\d+)$/;
+const PROGRESS_EVENT = "bye:progress";
+const SRS_ITEMS_KEY = "bye.srs.items";
+const SRS_NEW_KEY = "bye.srs.new";
+const LEGACY_WORD_RE = /^bye\.srs\.w\.([a-z0-9-]+)\.(.+)\.(\d+)$/;
 const VALID_STATUS: SrsStatus[] = ["new", "learning", "learned", "known"];
 
 /* ---------- helpers (an toàn đọc/ghi) ---------- */
@@ -96,13 +96,13 @@ function writeNum(key: string, n: number): void {
   }
 }
 
-/* Roadmap "đã đọc tab Học" — key riêng khỏi nhai.roadmap.pinyin (buổi đã
+/* Roadmap "đã đọc tab Học" — key riêng khỏi bye.roadmap.pinyin (buổi đã
    hoàn thành) nhưng CÙNG họ progress → phải nằm trong store để HybridStore
    (SP2) đồng bộ được, không đọc localStorage trực tiếp ở component. */
-const ROADMAP_LEARN_SEEN_KEY = "nhai.roadmap.learnSeen";
+const ROADMAP_LEARN_SEEN_KEY = "bye.roadmap.learnSeen";
 
 /* Lộ trình serpentine (spec 2026-10-04): Record<levelId, Record<stationId, {pct, stars}>> */
-const ROADMAP_STATIONS_KEY = "nhai.roadmap.stations.v1";
+const ROADMAP_STATIONS_KEY = "bye.roadmap.stations.v1";
 
 function readNumArray(key: string): number[] {
   const arr = readJSON<unknown>(key, []);
@@ -173,40 +173,40 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- XP / heat / streak / today ---------- */
 
   getXp(): number {
-    return readNum("nhai.xp");
+    return readNum("bye.xp");
   }
 
   addXp(n: number): void {
     const xp = this.getXp() + n;
-    writeNum("nhai.xp", xp);
+    writeNum("bye.xp", xp);
 
     const today = vnDayString();
-    const storedDay = localStorage.getItem("nhai.todayDay");
-    let todayCount = readNum("nhai.today");
+    const storedDay = localStorage.getItem("bye.todayDay");
+    let todayCount = readNum("bye.today");
     if (storedDay !== today) todayCount = 0;
     todayCount += n;
-    writeNum("nhai.today", todayCount);
+    writeNum("bye.today", todayCount);
     try {
-      localStorage.setItem("nhai.todayDay", today);
+      localStorage.setItem("bye.todayDay", today);
     } catch {
       /* silent */
     }
 
     // heat: { "YYYY-MM-DD": xp } — hôm nay cộng vào
-    const heat = readJSON<Record<string, number>>("nhai.heat", {});
+    const heat = readJSON<Record<string, number>>("bye.heat", {});
     heat[today] = (heat[today] || 0) + n;
-    writeJSON("nhai.heat", heat);
+    writeJSON("bye.heat", heat);
 
     // streak: tăng nếu hôm nay liền sau ngày heat gần nhất, reset nếu đứt
     const days = Object.keys(heat).sort();
     const last = days.length >= 2 ? days[days.length - 2] : null;
-    const streak = readNum("nhai.streak");
+    const streak = readNum("bye.streak");
     if (todayCount === n) {
       // lần đầu cộng hôm nay
       if (last === dayOffset(today, -1) || last === today || streak === 0) {
-        writeNum("nhai.streak", last === today ? streak : streak + 1);
+        writeNum("bye.streak", last === today ? streak : streak + 1);
       } else {
-        writeNum("nhai.streak", 1);
+        writeNum("bye.streak", 1);
       }
     }
 
@@ -216,7 +216,7 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- feedback ---------- */
 
   getFeedback(): FeedbackEntry[] {
-    return readJSON<FeedbackEntry[]>("nhai.feedback", []).filter(
+    return readJSON<FeedbackEntry[]>("bye.feedback", []).filter(
       (e): e is FeedbackEntry => !!e && typeof e === "object" && typeof e.text === "string"
     );
   }
@@ -224,13 +224,13 @@ export class ProgressStore implements ProgressStoreApi {
   appendFeedback(entry: FeedbackEntry): void {
     const list = this.getFeedback();
     list.push(entry);
-    writeJSON("nhai.feedback", list);
+    writeJSON("bye.feedback", list);
   }
 
   /* ---------- pageDone ---------- */
 
   private readPageDone(): Record<string, number> {
-    return readJSON<Record<string, number>>("nhai.pageDone", {});
+    return readJSON<Record<string, number>>("bye.pageDone", {});
   }
 
   getPageDone(book: string, page: string): boolean {
@@ -240,7 +240,7 @@ export class ProgressStore implements ProgressStoreApi {
   markPageDone(book: string, page: string): void {
     const map = this.readPageDone();
     map[`${book}/${page}`] = 1;
-    writeJSON("nhai.pageDone", map);
+    writeJSON("bye.pageDone", map);
   }
 
   listPageDone(book?: string): string[] {
@@ -275,7 +275,7 @@ export class ProgressStore implements ProgressStoreApi {
   /* sp1-personal-tools Task 5 — đọc toàn bộ SRS items cho dashboard /review. */
   getAllSrs(): SrsItem[] {
     try {
-      const v = JSON.parse(localStorage.getItem("nhai.srs.items") || "{}");
+      const v = JSON.parse(localStorage.getItem("bye.srs.items") || "{}");
       return v && typeof v === "object" ? Object.values(v as Record<string, SrsItem>) : [];
     } catch {
       return [];
@@ -324,24 +324,24 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- battle best ---------- */
 
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null {
-    return readJSON<{ correct: number; timeMs: number } | null>(`nhai.battle.best.${ctx}`, null);
+    return readJSON<{ correct: number; timeMs: number } | null>(`bye.battle.best.${ctx}`, null);
   }
 
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean {
     const best = this.getBattleBest(ctx);
     const isBetter = !best || correct > best.correct || (correct === best.correct && timeMs < best.timeMs);
-    if (isBetter) writeJSON(`nhai.battle.best.${ctx}`, { correct, timeMs });
+    if (isBetter) writeJSON(`bye.battle.best.${ctx}`, { correct, timeMs });
     return isBetter;
   }
 
   getToday(): number {
-    return readNum("nhai.today", 0);
+    return readNum("bye.today", 0);
   }
 
   /* ---------- roadmap ---------- */
 
   getRoadmapDone(): number[] {
-    const arr = readJSON<number[]>("nhai.roadmap.pinyin", []);
+    const arr = readJSON<number[]>("bye.roadmap.pinyin", []);
     return Array.isArray(arr) ? arr : [];
   }
 
@@ -350,7 +350,7 @@ export class ProgressStore implements ProgressStoreApi {
     if (!done.includes(n)) {
       done.push(n);
       done.sort((a, b) => a - b);
-      writeJSON("nhai.roadmap.pinyin", done);
+      writeJSON("bye.roadmap.pinyin", done);
     }
   }
 
@@ -391,7 +391,7 @@ export class ProgressStore implements ProgressStoreApi {
   migrateLegacySrs(): void {
     const items = this.readSrsItems();
 
-    // Format 1: "nhai.srs.w.<book>.<page>.<i>" = "1" → status "new"
+    // Format 1: "bye.srs.w.<book>.<page>.<i>" = "1" → status "new"
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -406,8 +406,8 @@ export class ProgressStore implements ProgressStoreApi {
       /* silent */
     }
 
-    // Format 2: "nhai.srs.st" = JSON { key → status }
-    const stMap = readJSON<Record<string, unknown>>("nhai.srs.st", {});
+    // Format 2: "bye.srs.st" = JSON { key → status }
+    const stMap = readJSON<Record<string, unknown>>("bye.srs.st", {});
     if (stMap && typeof stMap === "object") {
       for (const [key, v] of Object.entries(stMap)) {
         const status = toSrsStatus(v);
@@ -419,15 +419,15 @@ export class ProgressStore implements ProgressStoreApi {
       }
     }
 
-    // Format 3: "nhai.srs.st.<key>" = status + "nhai.srs.t.<key>" = epoch ms → có lastReviewedAt
+    // Format 3: "bye.srs.st.<key>" = status + "bye.srs.t.<key>" = epoch ms → có lastReviewedAt
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
-        if (!k || !k.startsWith("nhai.srs.st.")) continue;
-        const key = k.slice("nhai.srs.st.".length);
+        if (!k || !k.startsWith("bye.srs.st.")) continue;
+        const key = k.slice("bye.srs.st.".length);
         const status = toSrsStatus(localStorage.getItem(k));
         if (!status) continue;
-        const tRaw = localStorage.getItem(`nhai.srs.t.${key}`);
+        const tRaw = localStorage.getItem(`bye.srs.t.${key}`);
         const lastReviewedAt = tRaw ? parseInt(tRaw, 10) : NaN;
         const item: SrsItem = items[key] || newSrsItem(key, status);
         item.status = status;
@@ -444,13 +444,13 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- streak (sp1-personal-tools Task 1) ---------- */
 
   getStreak(): number {
-    return readNum("nhai.streak");
+    return readNum("bye.streak");
   }
 
-  /* sp1-personal-tools Task 6 — heat map cho /progress: JSON parse nhai.heat, hỏng → null. */
+  /* sp1-personal-tools Task 6 — heat map cho /progress: JSON parse bye.heat, hỏng → null. */
   getHeat(): Record<string, number> | null {
     try {
-      const raw = localStorage.getItem("nhai.heat");
+      const raw = localStorage.getItem("bye.heat");
       if (!raw) return null;
       const v = JSON.parse(raw) as Record<string, number>;
       return v && typeof v === "object" ? v : null;
@@ -462,7 +462,7 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- decks CRUD — shape mảng [{ id, name, rows, updatedAt }] của clone ---------- */
 
   private deckKey(kind: NotebookKind): string {
-    return kind === "grammar" ? "nhai.notebooks" : "nhai.decks";
+    return kind === "grammar" ? "bye.notebooks" : "bye.decks";
   }
 
   listDecks(kind: NotebookKind): DeckItem[] {
@@ -503,16 +503,16 @@ export class ProgressStore implements ProgressStoreApi {
     writeJSON(this.deckKey(kind), items);
   }
 
-  /* ---------- vocabBook (nhai.vocabBook) ---------- */
+  /* ---------- vocabBook (bye.vocabBook) ---------- */
 
   getVocabBook(): VocabBookEntry[] {
-    const v = readJSON<VocabBookEntry[] | null>("nhai.vocabBook", null);
+    const v = readJSON<VocabBookEntry[] | null>("bye.vocabBook", null);
     return Array.isArray(v) ? v : [];
   }
 
   addToVocabBook(entry: VocabBookEntry): boolean {
     if (this.getVocabBook().some((v) => v.hanzi === entry.hanzi)) return false;
-    writeJSON("nhai.vocabBook", [...this.getVocabBook(), entry]);
+    writeJSON("bye.vocabBook", [...this.getVocabBook(), entry]);
     dispatchProgress();
     return true;
   }

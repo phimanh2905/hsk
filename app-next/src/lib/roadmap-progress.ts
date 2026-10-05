@@ -90,8 +90,8 @@ export function useRoadmapProgress(level: RoadmapLevel): { views: StationView[];
     };
     sync();
     setMounted(true);
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
   }, [level.id]);
   return { views: deriveStationStates(level, record), mounted };
 }

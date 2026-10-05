@@ -10,7 +10,7 @@ describe("renderPages — blank-grid (grid-paper) lưới 12×14 đúng ô", () 
     expect(rows).toHaveLength(14); // fillRows 1 + blankRows 0 → tối thiểu 1 trang đầy 14 hàng
     expect(pages[0].match(/grid-cell/g)!.length).toBe(12 * 14);
     expect(pages[0]).toContain("--cell-c:#9ca3af");
-    expect(pages[0]).toContain("nhaihsk.com · facebook.com/groups/nhaihsk");
+    expect(pages[0]).toContain("byehsk.com · facebook.com/groups/byehsk");
   });
   it("blankRows 28 → 3 trang (14/14/14)", () => {
     const st = { ...cfDefaultsFor("grid-paper"), fillRows: 14, blankRows: 28 };

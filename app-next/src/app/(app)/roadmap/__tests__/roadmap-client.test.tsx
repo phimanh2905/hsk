@@ -59,7 +59,7 @@ describe("RoadmapClient", () => {
   });
 
   it("I-4 — banner-only hsk-1: pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
-    localStorage.setItem("nhai.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
+    localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
     renderClient("hsk-1");
     expect(screen.getByRole("heading", { name: "Nền tảng: Pinyin & nét cơ bản" })).toBeTruthy();
     // 4/8 buổi → 50% (header + banner cùng một con số thật)

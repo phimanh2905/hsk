@@ -109,18 +109,18 @@ describe("Flash SRS state (port opendesign lesson.html)", () => {
   it("autoplay đọc localStorage sau mount (không đọc lúc render đầu — hydration)", async () => {
     // Deviation so với brief: RTL render() đã flush effect trong act → không quan sát được
     // data-autoplay='false' sau khi đã seed localStorage. Thay bằng spy xác nhận giá trị
-    // CHỈ được đọc qua effect sau mount (getItem("nhai.lesson.autoplay")), rồi assert true.
+    // CHỈ được đọc qua effect sau mount (getItem("bye.lesson.autoplay")), rồi assert true.
     const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
-    localStorage.setItem("nhai.lesson.autoplay", "1");
+    localStorage.setItem("bye.lesson.autoplay", "1");
     const { container } = render(
       <LessonProvider items={items}>
         <FlashProbe />
       </LessonProvider>
     );
     await act(async () => {}); // flush effect
-    expect(getItemSpy).toHaveBeenCalledWith("nhai.lesson.autoplay"); // đọc sau mount
+    expect(getItemSpy).toHaveBeenCalledWith("bye.lesson.autoplay"); // đọc sau mount
     expect(container.querySelector("[data-autoplay='true']")).toBeTruthy();
-    localStorage.removeItem("nhai.lesson.autoplay");
+    localStorage.removeItem("bye.lesson.autoplay");
     getItemSpy.mockRestore();
   });
 
@@ -133,7 +133,7 @@ describe("Flash SRS state (port opendesign lesson.html)", () => {
     await act(async () => {}); // mount xong
     act(() => screen.getByText("toggle-auto").click());
     expect(container.querySelector("[data-autoplay='true']")).toBeTruthy();
-    expect(localStorage.getItem("nhai.lesson.autoplay")).toBe("1");
-    localStorage.removeItem("nhai.lesson.autoplay");
+    expect(localStorage.getItem("bye.lesson.autoplay")).toBe("1");
+    localStorage.removeItem("bye.lesson.autoplay");
   });
 });

@@ -2,7 +2,7 @@
 
 /* Habit loop 3 bước (port section habit-loop của opendesign index.html, spec 2026-10-04).
    Status tone: doing (đang làm) / todo (cần làm) / idle (chưa bắt đầu) — Chip tones Task 3.
-   Dữ liệu đồng bộ hero qua useHomeSummary (event nhai:progress).
+   Dữ liệu đồng bộ hero qua useHomeSummary (event bye:progress).
    Hydration gate: trước mounted mọi giá trị useHomeSummary là EMPTY → lesson=null,
    srsDue=0, tone idle — server/client render giống nhau (đã gate thêm srsDue). */
 

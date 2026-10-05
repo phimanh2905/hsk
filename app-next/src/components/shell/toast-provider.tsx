@@ -1,6 +1,6 @@
 "use client";
 
-/* ToastProvider — port clone/js/shell.js:20-27 (NHAI.toast).
+/* ToastProvider — port clone/js/shell.js:20-27 (BYE.toast).
    Chỉ 1 toast tại một thời điểm, tự ẩn sau 2600ms. */
 
 import { createContext, useCallback, useContext, useRef, useState } from "react";

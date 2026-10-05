@@ -10,13 +10,13 @@ type SrcSession = {
   learn: unknown; cards: unknown; quiz: unknown; test: SrcTestItem[];
 };
 type SrcStep = { key: string } & Record<string, unknown>;
-function loadSource<T>(file: string, pick: (root: { NHAI_DATA: NhaiSourceData }) => T): T {
+function loadSource<T>(file: string, pick: (root: { NHAI_DATA: ByeSourceData }) => T): T {
   const src = readFileSync(resolve(__dirname, "../../../../clone/js/data/" + file), "utf8");
   const win: Record<string, unknown> = {};
   new Function("window", src)(win);
-  return pick(win as unknown as { NHAI_DATA: NhaiSourceData });
+  return pick(win as unknown as { NHAI_DATA: ByeSourceData });
 }
-type NhaiSourceData = {
+type ByeSourceData = {
   roadmap: { pinyin: { sessions: SrcSession[] } };
   roadmapPinyin: { steps: SrcStep[] };
 };

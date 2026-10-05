@@ -28,14 +28,14 @@ export default function CatalogGrid(): React.JSX.Element {
 
       <Card className="no-print mt-5 flex flex-col md:flex-row md:items-center gap-3">
         <div className="flex-1">
-          <p className="font-bold">Cần mã tải file để in. Tham gia nhóm Facebook Nhai HSK, mã n…</p>
+          <p className="font-bold">Cần mã tải file để in. Tham gia nhóm Facebook Bye HSK, mã n…</p>
         </div>
         <a
-          href="https://www.facebook.com/groups/nhaihsk"
+          href="https://www.facebook.com/groups/byehsk"
           target="_blank"
           rel="noreferrer"
           className={chipLinkBase + " font-bold whitespace-nowrap text-action-primary hover:underline"}
-          onClick={() => toast("Mã tải file nằm ở phần mô tả của nhóm Facebook Nhai HSK.")}
+          onClick={() => toast("Mã tải file nằm ở phần mô tả của nhóm Facebook Bye HSK.")}
         >
           Tham gia nhóm để lấy mã
         </a>

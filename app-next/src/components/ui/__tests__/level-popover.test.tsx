@@ -14,7 +14,7 @@ describe("LevelPopover", () => {
   });
 
   it("4 mục HSK, item đang chọn có aria-checked=true", async () => {
-    localStorage.setItem("nhai.goal", "HSK 3");
+    localStorage.setItem("bye.goal", "HSK 3");
     render(<LevelPopover />);
     await userEvent.click(screen.getByRole("button", { name: "Đổi cấp độ HSK" }));
     for (const l of ["HSK 1", "HSK 2", "HSK 3", "HSK 4"]) {
@@ -24,11 +24,11 @@ describe("LevelPopover", () => {
     expect(screen.getByRole("menuitemradio", { name: /HSK 1/ })).toHaveAttribute("aria-checked", "false");
   });
 
-  it("chọn mục → lưu nhai.goal và popover đóng (Review Focus #4)", async () => {
+  it("chọn mục → lưu bye.goal và popover đóng (Review Focus #4)", async () => {
     render(<LevelPopover />);
     await userEvent.click(screen.getByRole("button", { name: "Đổi cấp độ HSK" }));
     await userEvent.click(screen.getByRole("menuitemradio", { name: /HSK 4/ }));
-    expect(localStorage.getItem("nhai.goal")).toBe("HSK 4");
+    expect(localStorage.getItem("bye.goal")).toBe("HSK 4");
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
 
@@ -49,7 +49,7 @@ describe("LevelPopover", () => {
   });
 
   it("nút hiện level đang chọn", async () => {
-    localStorage.setItem("nhai.goal", "HSK 4");
+    localStorage.setItem("bye.goal", "HSK 4");
     render(<LevelPopover />);
     await waitFor(() => expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" }).textContent).toContain("HSK 4"));
   });

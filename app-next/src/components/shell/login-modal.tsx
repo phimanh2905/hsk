@@ -1,7 +1,7 @@
 "use client";
 
 /* LoginModal — port clone/js/shell.js:300-355 (openLogin + renderLoggedIn).
-   SP1 từng mock: bấm Google/Apple/Email → set `nhai.mockLogin`. UPG-2 thay bằng
+   SP1 từng mock: bấm Google/Apple/Email → set `bye.mockLogin`. UPG-2 thay bằng
    better-auth: chỉ còn Google (spec 00 §1 — Apple ở site gốc là bịa, đã bỏ). */
 
 import Link from "next/link";

@@ -40,10 +40,10 @@ describe("NotebookList (F3/F4)", () => {
     await user.keyboard("{Enter}");
     expect(screen.getByText("Đã tạo Từ vựng giáo trình 2")).toBeInTheDocument();
     expect(screen.getAllByText("Từ vựng giáo trình 2").length).toBeGreaterThan(0);
-    const stored = JSON.parse(localStorage.getItem("nhai.decks")!);
+    const stored = JSON.parse(localStorage.getItem("bye.decks")!);
     expect(stored[0].name).toBe("Từ vựng giáo trình 2"); // prepend
   });
-  it("kind=grammar đọc nhai.notebooks — hai route dùng 1 template", () => {
+  it("kind=grammar đọc bye.notebooks — hai route dùng 1 template", () => {
     render(<NotebookList kind="grammar" />);
     expect(screen.getByRole("heading", { name: /Sổ tay ngữ pháp/ })).toBeInTheDocument();
     expect(screen.getByText("Mẫu câu gọi thoại")).toBeInTheDocument(); // 2 sample grammar
@@ -59,7 +59,7 @@ describe("NotebookList (F3/F4)", () => {
     await user.click(screen.getByRole("button", { name: "Tuỳ chọn" }));
     await user.click(screen.getByText("Xoá"));
     expect(screen.getByText("Đã xoá Bộ xoá")).toBeInTheDocument();
-    expect(JSON.parse(localStorage.getItem("nhai.decks")!)).toHaveLength(0);
+    expect(JSON.parse(localStorage.getItem("bye.decks")!)).toHaveLength(0);
     vi.unstubAllGlobals();
   });
 });

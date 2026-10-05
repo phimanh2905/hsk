@@ -109,8 +109,8 @@ export function useHomeSummary(): HomeSummary & { mounted: boolean } {
     const sync = () => setS(readHomeSummary());
     sync();
     setMounted(true);
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
   }, []);
   return { ...s, mounted };
 }

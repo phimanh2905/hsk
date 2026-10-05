@@ -10,7 +10,7 @@ const nav = vi.hoisted(() => ({ pathname: "/roadmap" }));
 vi.mock("next/navigation", () => ({ usePathname: () => nav.pathname, useRouter: () => ({ push: vi.fn() }) }));
 
 const openNav = vi.fn();
-window.addEventListener("nhai:open-nav", openNav);
+window.addEventListener("bye:open-nav", openNav);
 
 beforeEach(() => {
   localStorage.clear();
@@ -39,7 +39,7 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(screen.queryByText("Lộ trình HSK")).not.toBeInTheDocument();
   });
 
-  it("nút hamburger chỉ ở mobile (lg:hidden) và dispatch nhai:open-nav", async () => {
+  it("nút hamburger chỉ ở mobile (lg:hidden) và dispatch bye:open-nav", async () => {
     renderTopbar();
     const btn = screen.getByRole("button", { name: "Mở menu" });
     expect(btn.className).toContain("lg:hidden");
@@ -91,7 +91,7 @@ describe("Topbar v2 (app-shell.html)", () => {
   });
 
   it("có LevelPopover và StreakPill mini kèm unit", async () => {
-    localStorage.setItem("nhai.streak", "12");
+    localStorage.setItem("bye.streak", "12");
     renderTopbar();
     expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" })).toBeInTheDocument();
     const pill = await screen.findByTitle("Chuỗi ngày học liên tục");
@@ -108,12 +108,12 @@ describe("Topbar v2 (app-shell.html)", () => {
   it("KHÔNG còn brand/avatar ở topbar (đã chuyển sang sidebar)", () => {
     renderTopbar();
     expect(screen.queryByText("HSK LEARNING")).not.toBeInTheDocument();
-    expect(screen.queryByText("Nhai")).not.toBeInTheDocument();
+    expect(screen.queryByText("Bye")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Đăng nhập" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Tài khoản" })).not.toBeInTheDocument();
   });
 
-  it("không còn select ghi nhai.goal — LevelPopover là chủ sở hữu duy nhất", () => {
+  it("không còn select ghi bye.goal — LevelPopover là chủ sở hữu duy nhất", () => {
     const { container } = renderTopbar();
     expect(container.querySelector("select")).toBeNull();
     expect(screen.queryByLabelText("Cấp độ HSK")).not.toBeInTheDocument();

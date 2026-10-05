@@ -1,7 +1,7 @@
 "use client";
 
 /* BottomNav — port .bottomnav của opendesign_hsk/app-shell.html (spec 2026-10-04 §4.5).
-   5 mục: Home/Roadmap/Review/Hanzi/More; "More" mở drawer sidebar qua event "nhai:open-nav".
+   5 mục: Home/Roadmap/Review/Hanzi/More; "More" mở drawer sidebar qua event "bye:open-nav".
    lg:hidden — dưới lg thì drawer + bottom-nav cùng tồn tại (đúng mock). */
 
 import Link from "next/link";
@@ -51,7 +51,7 @@ export default function BottomNav() {
         <button
           type="button"
           aria-label="More"
-          onClick={() => window.dispatchEvent(new CustomEvent("nhai:open-nav"))}
+          onClick={() => window.dispatchEvent(new CustomEvent("bye:open-nav"))}
           className="flex min-h-[52px] flex-col items-center justify-center gap-0.5 rounded-control text-[10.5px] font-bold text-text-secondary"
         >
           <Ellipsis size={20} strokeWidth={ICON_STROKE} aria-hidden="true" />

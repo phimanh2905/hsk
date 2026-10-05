@@ -1,5 +1,5 @@
 "use client";
-/* Nhai HSK — VideoPlayer Shadowing (port clone/js/shadowing-video.js).
+/* Bye HSK — VideoPlayer Shadowing (port clone/js/shadowing-video.js).
    Engine imperative duy nhất: điều khiển iframe YouTube qua postMessage
    (handshake "listening", polling 500ms), fallback TTS sau 4s nếu iframe
    không sẵn sàng. Playback state giữ trong useRef, chỉ slice hiển thị
@@ -116,7 +116,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
 
   function onIframeLoad() {
     // bắt tay API widget: YouTube sẽ đẩy infoDelivery (currentTime, playerState)
-    ytSend({ event: "listening", id: "nhai-yt", channel: "widget" });
+    ytSend({ event: "listening", id: "bye-yt", channel: "widget" });
   }
 
   /* ---------- polling 500ms — port shadowing-video.js:87-107 ---------- */
@@ -126,7 +126,7 @@ export default function VideoPlayer({ video, subtitles: subs, postSink }: Props)
       // iframe có thể onLoad TRƯỚC khi hydration gắn handler → handshake "listening" mất,
       // widget không bao giờ nhận onReady và overlay kẹt. Gửi lại handshake mỗi nhịp cho tới khi sẵn sàng.
       if (!st.current.ytReady) {
-        ytSend({ event: "listening", id: "nhai-yt", channel: "widget" });
+        ytSend({ event: "listening", id: "bye-yt", channel: "widget" });
         return;
       }
       ytCmd("getCurrentTime");

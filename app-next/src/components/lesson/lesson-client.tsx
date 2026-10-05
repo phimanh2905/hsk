@@ -72,8 +72,8 @@ function AddAllButton() {
       onClick={() => {
         const added = progressStore.addSrsBatch(items.map((it) => it.itemKey));
         toast(added > 0 ? `Đã thêm ${added} từ vào ôn tập` : "Tất cả từ đã có trong bộ ôn tập");
-        // nhai:progress để Topbar update (đồng bộ nhai.srs.new như clone)
-        window.dispatchEvent(new CustomEvent("nhai:progress"));
+        // bye:progress để Topbar update (đồng bộ bye.srs.new như clone)
+        window.dispatchEvent(new CustomEvent("bye:progress"));
       }}
     >
       <Star size={16} strokeWidth={1.5} aria-hidden="true" />

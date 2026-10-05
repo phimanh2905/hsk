@@ -66,6 +66,6 @@ describe("LessonTopbar (port header[data-od-id=lesson-topbar] của opendesign l
     await userEvent.click(screen.getByRole("button", { name: "Chế độ sáng tối" }));
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     document.documentElement.classList.remove("dark");
-    localStorage.removeItem("nhai.theme");
+    localStorage.removeItem("bye.theme");
   });
 });

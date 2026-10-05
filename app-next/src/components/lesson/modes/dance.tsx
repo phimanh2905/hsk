@@ -31,7 +31,7 @@ export default function DanceMode() {
   const { items } = useLesson();
   const total = items.length;
 
-  // thứ tự từ xáo trộn mỗi lượt (port NHAI.shuffle ở render của clone)
+  // thứ tự từ xáo trộn mỗi lượt (port BYE.shuffle ở render của clone)
   const [order, setOrder] = useState<number[]>(() => shuffle(items.map((_, i) => i)));
   const [pos, setPos] = useState(0);
   const [playing, setPlaying] = useState(false);

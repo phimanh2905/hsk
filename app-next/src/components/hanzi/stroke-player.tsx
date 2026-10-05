@@ -55,7 +55,7 @@ export function useStrokePlayer(
     const source: StrokePlayerApi["source"] = polylines ? "polyline" : pathEntry ? "path" : "generic";
     const strokes: StrokePolyline[] = polylines ?? (source === "generic" ? genericStrokes() : []);
     const total = polylines ? polylines.length : pathEntry ? pathEntry.paths.length : genericStrokes().length;
-    const id = "nhai-hw-" + (++uidSeq);
+    const id = "bye-hw-" + (++uidSeq);
     const viewBox = source === "path" ? "0 0 300 300" : "0 0 100 100";
 
     const svg = document.createElementNS(NS, "svg") as SVGSVGElement;

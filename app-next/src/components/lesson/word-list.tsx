@@ -24,12 +24,12 @@ function WordListInner() {
   // trạng thái star khởi tạo 1 lần từ store, cập nhật khi bấm (như renderWordList của clone)
   const [starred, setStarred] = useState<Record<string, boolean>>(readStarred);
 
-  /* recordReview/grade và AddAllButton bắn "nhai:progress" → đọc lại store để ngôi sao
+  /* recordReview/grade và AddAllButton bắn "bye:progress" → đọc lại store để ngôi sao
      không bị stale sau khi chấm điểm ở màn flash (trước: chỉ đọc 1 lần lúc mount). */
   useEffect(() => {
     const sync = () => setStarred(readStarred());
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -37,8 +37,8 @@ function WordListInner() {
     const added = progressStore.toggleSrs(itemKey);
     setStarred((s) => ({ ...s, [itemKey]: added }));
     toast(added ? "Đã thêm vào ôn tập" : "Đã bỏ khỏi ôn tập");
-    // nhai:progress để Topbar/ô đếm SRS update (như clone cập nhật nhai.srs.new)
-    window.dispatchEvent(new CustomEvent("nhai:progress"));
+    // bye:progress để Topbar/ô đếm SRS update (như clone cập nhật bye.srs.new)
+    window.dispatchEvent(new CustomEvent("bye:progress"));
   };
 
   return (

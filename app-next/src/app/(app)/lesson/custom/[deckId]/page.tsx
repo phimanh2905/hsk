@@ -1,6 +1,6 @@
 "use client";
 /* Route /lesson/custom/[deckId] — học deck tự tạo (C10), port clone/js/lesson.js loadData() nhánh ?custom=<deckId>.
-   Deck đọc từ `nhai.decks`; itemKey `deck.<deckId>.<ord>` — không ghi page_dones (không có nút hoàn thành bài). */
+   Deck đọc từ `bye.decks`; itemKey `deck.<deckId>.<ord>` — không ghi page_dones (không có nút hoàn thành bài). */
 import { use } from "react";
 import Link from "next/link";
 import LessonClient from "@/components/lesson/lesson-client";

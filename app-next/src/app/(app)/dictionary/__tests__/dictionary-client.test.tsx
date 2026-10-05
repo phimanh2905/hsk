@@ -35,7 +35,7 @@ describe("DictionaryClient (G1)", () => {
     render(<DictionaryClient />);
     expect(screen.getByText(/kết quả cho/)).toBeInTheDocument();
   });
-  it("⭐ Thêm vào sổ tay: lần 1 ghi nhai.vocabBook, lần 2 toast trùng", async () => {
+  it("⭐ Thêm vào sổ tay: lần 1 ghi bye.vocabBook, lần 2 toast trùng", async () => {
     const user = userEvent.setup();
     render(<DictionaryClient />);
     await user.type(screen.getByPlaceholderText(/Chữ Hán, pinyin hoặc nghĩa tiếng Việt/), "学习");

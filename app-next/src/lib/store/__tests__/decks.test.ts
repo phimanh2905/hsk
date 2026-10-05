@@ -4,9 +4,9 @@ import { getDeck, listDecks } from "../decks";
 beforeEach(() => localStorage.clear());
 
 describe("getDeck / listDecks", () => {
-  it("đọc deck từ nhai.decks, map đúng trường rows", () => {
+  it("đọc deck từ bye.decks, map đúng trường rows", () => {
     localStorage.setItem(
-      "nhai.decks",
+      "bye.decks",
       JSON.stringify([
         {
           id: "nb-1",
@@ -23,7 +23,7 @@ describe("getDeck / listDecks", () => {
   });
   it("trả null khi không tồn tại / JSON hỏng", () => {
     expect(getDeck("nope")).toBeNull();
-    localStorage.setItem("nhai.decks", "{broken");
+    localStorage.setItem("bye.decks", "{broken");
     expect(listDecks()).toEqual([]);
   });
 });

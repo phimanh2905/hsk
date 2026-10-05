@@ -35,7 +35,7 @@ describe("ProgressClient (F2)", () => {
   });
   it("xp > 0 → rank = 14594 − xp", () => {
     session.loggedIn = true;
-    localStorage.setItem("nhai.xp", "94");
+    localStorage.setItem("bye.xp", "94");
     render(<ProgressClient />);
     expect(screen.getByText("#14500")).toBeInTheDocument();
   });

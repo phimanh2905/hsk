@@ -1,7 +1,7 @@
 "use client";
 
 /* SidebarNav — port .sidebar của opendesign_hsk/app-shell.html (spec 2026-10-04 §4.2).
-   Desktop lg: fixed 256px; dưới lg: off-canvas drawer mở qua event "nhai:open-nav"
+   Desktop lg: fixed 256px; dưới lg: off-canvas drawer mở qua event "bye:open-nav"
    (hamburger ở topbar + nút More ở bottom-nav), đóng bằng scrim / Escape / click link.
    Active: nền action-primary/10 + rail trái 3px — dùng aria-current="page" thay class .active. */
 
@@ -17,7 +17,7 @@ import { useHomeSummary } from "@/lib/home-summary";
 import { useSession } from "@/lib/use-session";
 import { useLoginModal } from "./login-modal";
 
-const OPEN_NAV_EVENT = "nhai:open-nav";
+const OPEN_NAV_EVENT = "bye:open-nav";
 
 const GROUPS: ReadonlyArray<{
   title: string;
@@ -119,7 +119,7 @@ export default function SidebarNav() {
             奈
           </span>
           <span className="leading-tight">
-            <b className="block text-[15px] font-bold">Nhai</b>
+            <b className="block text-[15px] font-bold">Bye</b>
             <small className="block text-[11px] tracking-[0.08em] text-text-secondary">HSK LEARNING</small>
           </span>
         </Link>
@@ -191,7 +191,7 @@ export default function SidebarNav() {
           )}
           <IconButton
             label="Cài đặt"
-            onClick={() => window.dispatchEvent(new CustomEvent("nhai:open-settings"))}
+            onClick={() => window.dispatchEvent(new CustomEvent("bye:open-settings"))}
           >
             <Settings size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
           </IconButton>

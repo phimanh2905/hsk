@@ -36,11 +36,11 @@ export function useTts() {
 
   useEffect(() => () => cancelRef.current(), []); // dọn dẹp khi unmount (C1)
 
-  /* Chọn voice theo preference "nhai.voice" (female/male), port shell.js:33-35 */
+  /* Chọn voice theo preference "bye.voice" (female/male), port shell.js:33-35 */
   const pickVoice = (lang: string): SpeechSynthesisVoice | null => {
     let pref: string | null = null;
     try {
-      pref = localStorage.getItem("nhai.voice");
+      pref = localStorage.getItem("bye.voice");
     } catch {
       pref = null;
     }

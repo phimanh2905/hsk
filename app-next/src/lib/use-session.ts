@@ -1,8 +1,8 @@
 "use client";
 
-/* Hook session thật, thay cho `useMockLogin` (đọc localStorage `nhai.mockLogin`).
+/* Hook session thật, thay cho `useMockLogin` (đọc localStorage `bye.mockLogin`).
    better-auth tự đồng bộ atom session qua BroadcastChannel + focus event, nên
-   đăng nhập ở một tab là các tab khác tự cập nhật — không cần event `nhai:progress`. */
+   đăng nhập ở một tab là các tab khác tự cập nhật — không cần event `bye:progress`. */
 
 import { useCallback } from "react";
 import { authClient } from "@/lib/auth-client";

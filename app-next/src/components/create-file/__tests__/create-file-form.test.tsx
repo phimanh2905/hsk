@@ -46,7 +46,7 @@ describe("CreateFileForm (G7 — 7 nhóm)", () => {
     renderTpl("grid-paper");
     expect(screen.getByTestId("pages-badge")).toHaveTextContent("1 trang");
     await user.click(screen.getByRole("radio", { name: "Ô vuông" }));
-    expect(sessionStorage.getItem("nhai.cf.state")).toContain('"cellType":"vuong"');
+    expect(sessionStorage.getItem("bye.cf.state")).toContain('"cellType":"vuong"');
     await user.click(screen.getByLabelText("Số hàng trống").parentElement!.querySelector('[data-dir="1"]')!);
     expect(screen.getByLabelText("Số hàng trống")).toHaveTextContent("1");
   });
@@ -56,13 +56,13 @@ describe("CreateFileForm (G7 — 7 nhóm)", () => {
     const firstMeaning = screen.getAllByPlaceholderText("Nghĩa…")[0];
     await user.clear(firstMeaning);
     await user.type(firstMeaning, "chào hỏi");
-    expect(sessionStorage.getItem("nhai.cf.state")).toContain("chào hỏi");
+    expect(sessionStorage.getItem("bye.cf.state")).toContain("chào hỏi");
     await user.click(screen.getByText("Khôi phục mặc định"));
     expect((window as unknown as { __lastToast?: string }).__lastToast).toBe("Đã khôi phục mặc định.");
-    expect(sessionStorage.getItem("nhai.cf.state")).not.toContain("chào hỏi");
+    expect(sessionStorage.getItem("bye.cf.state")).not.toContain("chào hỏi");
   });
   it("restore từ sessionStorage (reload giả lập) giữ state cũ", () => {
-    sessionStorage.setItem("nhai.cf.state", JSON.stringify({ ...JSON.parse(JSON.stringify({})), perRow: 9 }));
+    sessionStorage.setItem("bye.cf.state", JSON.stringify({ ...JSON.parse(JSON.stringify({})), perRow: 9 }));
     renderTpl("grid-paper");
     expect(screen.getByLabelText("Số ô mỗi hàng")).toHaveTextContent("9");
   });

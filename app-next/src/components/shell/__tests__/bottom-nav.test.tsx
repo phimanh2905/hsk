@@ -17,9 +17,9 @@ beforeEach(() => {
   openNav.mockClear();
   hs.srsDue = 0;
   hs.mounted = true;
-  window.addEventListener("nhai:open-nav", openNav);
+  window.addEventListener("bye:open-nav", openNav);
 });
-afterEach(() => window.removeEventListener("nhai:open-nav", openNav));
+afterEach(() => window.removeEventListener("bye:open-nav", openNav));
 
 describe("BottomNav (app-shell.html)", () => {
   it("5 mục: Home, Roadmap, Review, Hanzi, More", () => {
@@ -63,7 +63,7 @@ describe("BottomNav (app-shell.html)", () => {
     expect(within(screen.getByRole("link", { name: "Review" })).queryByText("7")).not.toBeInTheDocument();
   });
 
-  it("More dispatch nhai:open-nav (mở drawer)", async () => {
+  it("More dispatch bye:open-nav (mở drawer)", async () => {
     render(<BottomNav />);
     await userEvent.click(screen.getByRole("button", { name: "More" }));
     expect(openNav).toHaveBeenCalledTimes(1);

@@ -1,4 +1,4 @@
-/* Nhai HSK — dữ liệu 9 mẫu "Tạo file" (PLAN-16 / SPEC-16).
+/* Bye HSK — dữ liệu 9 mẫu "Tạo file" (PLAN-16 / SPEC-16).
    Port từ clone/js/data/templates.js — giữ nguyên id/name/desc/thumb.
    group ∈ hanzi | vocab | paper (3 section catalog). thumb = SVG inline 48×48 vẽ tay. */
 

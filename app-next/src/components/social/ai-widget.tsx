@@ -18,14 +18,14 @@ export default function AiWidget() {
   const [chatOpen, setChatOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Array<{ role: "user" | "ai"; text: string }>>([
-    { role: "ai", text: "Xin chào! Mình là trợ lý Nhai HSK. Hỏi về pinyin, từ vựng hoặc bấm một bài để học nhé!" },
+    { role: "ai", text: "Xin chào! Mình là trợ lý Bye HSK. Hỏi về pinyin, từ vựng hoặc bấm một bài để học nhé!" },
   ]);
   // SP1 mock: chatBubble=0 chỉ ẩn nút mascot (giữ clone — panel vẫn mở được nếu đang mở)
   // Mount-gate: đọc localStorage SAU mount, nếu không server/client render
   // khác nhau khi user đã tắt bubble → hydration mismatch.
   const [bubbleHidden, setBubbleHidden] = useState(false);
   useEffect(() => {
-    setBubbleHidden(localStorage.getItem("nhai.chatBubble") === "0");
+    setBubbleHidden(localStorage.getItem("bye.chatBubble") === "0");
   }, []);
 
   function send() {
@@ -45,7 +45,7 @@ export default function AiWidget() {
           <div className="flex items-center justify-between mb-2">
             <span className="flex items-center gap-1.5 font-bold text-sm">
               <Bot size={16} strokeWidth={ICON_STROKE} className="text-feature-ai" aria-hidden="true" />
-              Tiểu Ngữ — trợ lý AI của Nhai HSK
+              Tiểu Ngữ — trợ lý AI của Bye HSK
             </span>
             <IconButton label="Đóng chat" onClick={() => setChatOpen(false)}>
               <X size={14} strokeWidth={ICON_STROKE} />
@@ -97,8 +97,8 @@ export default function AiWidget() {
       <Button variant="ghost" size="sm" onClick={() => toast(loggedIn ? "Hộp tin nhắn đang được mở (demo)…" : "Tin nhắn chỉ khả dụng khi đăng nhập")}>
         <MessageCircle size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Nhắn tin
       </Button>
-      <Button size="sm" onClick={() => toast("Cảm ơn bạn đã ủng hộ Nhai HSK!")}>
-        <Heart size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Ủng hộ Nhai HSK
+      <Button size="sm" onClick={() => toast("Cảm ơn bạn đã ủng hộ Bye HSK!")}>
+        <Heart size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Ủng hộ Bye HSK
       </Button>
     </div>
   );

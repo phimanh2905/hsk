@@ -24,8 +24,8 @@ const notoSansSC = Noto_Sans_SC({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://nhaihsk.example"),
-  title: { default: "Nhai HSK — Học tiếng Trung mỗi ngày", template: "%s · Nhai HSK" },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://byehsk.example"),
+  title: { default: "Bye HSK — Học tiếng Trung mỗi ngày", template: "%s · Bye HSK" },
   description: "Học từ vựng tiếng Trung theo HSK 3.0 — flashcard, trắc nghiệm, pinyin, bộ thủ.",
   openGraph: { images: ["/assets/vietnam-map.svg"], locale: "vi_VN", type: "website" },
 };

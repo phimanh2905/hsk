@@ -53,8 +53,8 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
   useEffect(() => {
     sync();
     setMounted(true);
-    window.addEventListener("nhai:progress", sync);
-    return () => window.removeEventListener("nhai:progress", sync);
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
   }, [sync]);
 
   const submitModal = (name: string) => {

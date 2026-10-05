@@ -1,4 +1,4 @@
-export const metadata = { title: "Chính sách quyền riêng tư | Nhai HSK" };
+export const metadata = { title: "Chính sách quyền riêng tư | Bye HSK" };
 
 import { Card } from "@/components/ui/card";
 
@@ -6,7 +6,7 @@ export default function PrivacyPage() {
   return (
     <main className="mx-auto max-w-[760px] px-4 py-6 pb-20 lg:pb-6">
       <h1 className="text-3xl font-extrabold tracking-tight mb-2">Chính sách quyền riêng tư</h1>
-      <p className="text-text-secondary mb-6">Nhai HSK tôn trọng quyền riêng tư của bạn. Dưới đây là cách chúng tôi xử lý dữ liệu.</p>
+      <p className="text-text-secondary mb-6">Bye HSK tôn trọng quyền riêng tư của bạn. Dưới đây là cách chúng tôi xử lý dữ liệu.</p>
 
       <div className="space-y-4">
         <Card className="p-5">
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         </Card>
         <Card className="p-5">
           <h2 className="text-xl font-extrabold mb-2">5. Liên hệ</h2>
-          <p className="text-[15px] leading-relaxed">Mọi câu hỏi về chính sách quyền riêng tư, vui lòng gửi qua trang <a href="/feedback" className="text-action-primary font-semibold">Góp ý</a> hoặc liên hệ nhóm Nhai HSK qua nhóm Facebook chính thức. Chúng tôi thường xuyên phản hồi trong vòng 3–5 ngày làm việc.</p>
+          <p className="text-[15px] leading-relaxed">Mọi câu hỏi về chính sách quyền riêng tư, vui lòng gửi qua trang <a href="/feedback" className="text-action-primary font-semibold">Góp ý</a> hoặc liên hệ nhóm Bye HSK qua nhóm Facebook chính thức. Chúng tôi thường xuyên phản hồi trong vòng 3–5 ngày làm việc.</p>
         </Card>
       </div>
     </main>

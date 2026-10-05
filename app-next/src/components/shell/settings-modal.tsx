@@ -21,16 +21,16 @@ export default function SettingsModal() {
 
   useEffect(() => {
     const open = () => setIsOpen(true);
-    window.addEventListener("nhai:open-settings", open);
-    return () => window.removeEventListener("nhai:open-settings", open);
+    window.addEventListener("bye:open-settings", open);
+    return () => window.removeEventListener("bye:open-settings", open);
   }, []);
 
   useEffect(() => {
     if (!isOpen) return;
     try {
-      setVoice(localStorage.getItem("nhai.voice") === "male" ? "male" : "female");
-      setChatBubble(localStorage.getItem("nhai.chatBubble") !== "0");
-      setSelectionLookup(localStorage.getItem("nhai.selectionLookup") !== "0");
+      setVoice(localStorage.getItem("bye.voice") === "male" ? "male" : "female");
+      setChatBubble(localStorage.getItem("bye.chatBubble") !== "0");
+      setSelectionLookup(localStorage.getItem("bye.selectionLookup") !== "0");
     } catch {
       /* silent */
     }
@@ -44,13 +44,13 @@ export default function SettingsModal() {
   const pickVoice = (v: Voice) => {
     setVoice(v);
     try {
-      localStorage.setItem("nhai.voice", v);
+      localStorage.setItem("bye.voice", v);
     } catch {
       /* silent */
     }
   };
-  const toggleFlag = (key: "nhai.chatBubble" | "nhai.selectionLookup", checked: boolean) => {
-    if (key === "nhai.chatBubble") setChatBubble(checked);
+  const toggleFlag = (key: "bye.chatBubble" | "bye.selectionLookup", checked: boolean) => {
+    if (key === "bye.chatBubble") setChatBubble(checked);
     else setSelectionLookup(checked);
     try {
       localStorage.setItem(key, checked ? "1" : "0");
@@ -123,7 +123,7 @@ export default function SettingsModal() {
           <input
             type="checkbox"
             checked={chatBubble}
-            onChange={(e) => toggleFlag("nhai.chatBubble", e.target.checked)}
+            onChange={(e) => toggleFlag("bye.chatBubble", e.target.checked)}
           />
         </label>
         <label className="flex items-center justify-between rounded-card border border-border-default bg-surface-paper p-3 cursor-pointer">
@@ -131,7 +131,7 @@ export default function SettingsModal() {
           <input
             type="checkbox"
             checked={selectionLookup}
-            onChange={(e) => toggleFlag("nhai.selectionLookup", e.target.checked)}
+            onChange={(e) => toggleFlag("bye.selectionLookup", e.target.checked)}
           />
         </label>
       </div>

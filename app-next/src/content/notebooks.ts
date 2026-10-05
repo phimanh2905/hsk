@@ -38,7 +38,7 @@ function sample(id: string, name: string, count: number, unit: string, updated: 
 
 export const notebooks: Record<"vocab" | "grammar", NotebookConfig> = {
   vocab: {
-    storage: "nhai.decks",
+    storage: "bye.decks",
     h1: "Sổ tay từ vựng",
     sub: "Tự tạo bộ từ vựng để học chủ động — nhập từ tài liệu của bạn…",
     cta: "Tạo bộ mới",
@@ -53,7 +53,7 @@ export const notebooks: Record<"vocab" | "grammar", NotebookConfig> = {
     ]
   },
   grammar: {
-    storage: "nhai.notebooks",
+    storage: "bye.notebooks",
     h1: "Sổ tay ngữ pháp",
     sub: "Tự ghi chú các mẫu ngữ pháp quan trọng — sắp xếp theo chủ đề…",
     cta: "Tạo sổ tay mới",

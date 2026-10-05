@@ -35,7 +35,7 @@ export default async function CourseBookPage({ params }: { params: Promise<{ boo
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <Link href="/" className="text-sm font-semibold text-text-secondary hover:text-action-primary">Trang chủ</Link>
         <span className="text-sm text-text-secondary">/</span>
-        <Chip selected className="min-h-7 px-2.5 text-xs">Nhai</Chip>
+        <Chip selected className="min-h-7 px-2.5 text-xs">Bye</Chip>
         <span className="font-bold">{book.name}</span>
         <span className="text-sm text-text-secondary">· {book.lessons} bài</span>
       </div>

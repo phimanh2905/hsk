@@ -34,26 +34,26 @@ describe("WordList + SRS (C9)", () => {
     act(() => screen.getByRole("button", { name: "Phát âm từ" }).click());
     expect(window.speechSynthesis.speak).toHaveBeenCalled();
   });
-  /* final review: grade ở màn flash bắn nhai:progress → ngôi sao phải tự đồng bộ,
+  /* final review: grade ở màn flash bắn bye:progress → ngôi sao phải tự đồng bộ,
      không đọc 1 lần lúc mount rồi để cứng. */
-  it("ngôi sao đồng bộ lại khi nhai:progress bắn (grade ở màn flash)", () => {
+  it("ngôi sao đồng bộ lại khi bye:progress bắn (grade ở màn flash)", () => {
     render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
     const star = screen.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" });
     expect(star.querySelector(".text-learning-streak")).toBeNull();
-    // grade ở màn flash: provider enroll từ (addSrsBatch) rồi recordReview — cả hai bắn nhai:progress
+    // grade ở màn flash: provider enroll từ (addSrsBatch) rồi recordReview — cả hai bắn bye:progress
     act(() => {
       progressStore.addSrsBatch(["hsk1.lesson-1.0"]);
       progressStore.recordReview("hsk1.lesson-1.0", "good");
     });
     expect(star.querySelector(".text-learning-streak")).not.toBeNull();
   });
-  it("bỏ listener nhai:progress khi unmount", () => {
+  it("bỏ listener bye:progress khi unmount", () => {
     const remove = vi.spyOn(window, "removeEventListener");
     const { unmount } = render(
       <LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>
     );
     unmount();
-    expect(remove).toHaveBeenCalledWith("nhai:progress", expect.any(Function));
+    expect(remove).toHaveBeenCalledWith("bye:progress", expect.any(Function));
     remove.mockRestore();
   });
 });

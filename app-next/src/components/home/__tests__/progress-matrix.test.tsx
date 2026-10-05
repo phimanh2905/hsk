@@ -25,7 +25,7 @@ describe("ProgressMatrix (spec 2026-10-04)", () => {
   });
   it("có SRS learned → số từ đã nhớ > 0", async () => {
     localStorage.setItem(
-      "nhai.srs.items",
+      "bye.srs.items",
       JSON.stringify({
         a: { key: "a", status: "learned", dueAt: null, reviewCount: 2, lastReviewedAt: 1, updatedAt: 1 },
         b: { key: "b", status: "known", dueAt: null, reviewCount: 3, lastReviewedAt: 1, updatedAt: 1 },

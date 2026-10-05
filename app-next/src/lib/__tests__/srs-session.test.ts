@@ -43,9 +43,9 @@ describe("resolveWord", () => {
   });
   it("key deck → row từ progressStore decks", () => {
     const deck = progressStore.createDeck("vocab", "Deck test");
-    const decks = JSON.parse(localStorage.getItem("nhai.decks")!);
+    const decks = JSON.parse(localStorage.getItem("bye.decks")!);
     decks[0].rows = [{ hanzi: "爱", pinyin: "ài", meaning: "Yêu" }];
-    localStorage.setItem("nhai.decks", JSON.stringify(decks));
+    localStorage.setItem("bye.decks", JSON.stringify(decks));
     expect(resolveWord(`deck.${deck.id}.0`)).toEqual({ zh: "爱", pinyin: "ài", meaning: "Yêu" });
     expect(resolveWord(`deck.${deck.id}.7`)).toBeNull();
   });

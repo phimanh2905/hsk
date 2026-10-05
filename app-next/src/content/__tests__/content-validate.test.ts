@@ -6,7 +6,7 @@ import { vocabSchema, courseSchema } from "../schema";
 describe("courses", () => {
   it("đủ 7 sách đúng meta SPEC-01", () => {
     expect(books.map((b) => b.slug)).toEqual(["hsk1", "hsk2", "hsk3", "hsk4", "hsk5", "hsk6", "hsk79"]);
-    expect(books[0]).toMatchObject({ slug: "hsk1", name: "Nhai HSK 1", cardMeta: "333 từ vựng · 41 mẫu", lessons: 15 });
+    expect(books[0]).toMatchObject({ slug: "hsk1", name: "Bye HSK 1", cardMeta: "333 từ vựng · 41 mẫu", lessons: 15 });
     expect(books[6]).toMatchObject({ slug: "hsk79", cardMeta: "5606 từ vựng", lessons: 30 });
   });
   it("hsk1 đủ 15 bài vocab tên thật, bài 1 có 13 từ", () => {

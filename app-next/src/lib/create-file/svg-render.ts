@@ -202,7 +202,7 @@ function sheetHtml(state: CfState, content: string): string {
     "<span>Họ tên: ______________</span><span>Ngày: ____________</span></div>";
   return head +
     '<div class="sheet-body">' + content + "</div>" +
-    '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">nhaihsk.com · facebook.com/groups/nhaihsk</div>';
+    '<div class="text-center text-xs mt-6 pt-2 border-t border-[#dccfb8]" style="color:#999">byehsk.com · facebook.com/groups/byehsk</div>';
 }
 
 function strokeBlock(state: CfState, c: CfState["chars"][number]): string {

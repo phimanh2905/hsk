@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ tpl: string }> }): Promise<Metadata> {
   const { tpl } = await params;
   const t = templateById(tpl);
-  return { title: (t ? t.name : "Tạo file") + " | Tạo file | Nhai HSK", description: t ? t.desc : "" };
+  return { title: (t ? t.name : "Tạo file") + " | Tạo file | Bye HSK", description: t ? t.desc : "" };
 }
 
 export default async function CreateFileTplPage({ params }: { params: Promise<{ tpl: string }> }) {

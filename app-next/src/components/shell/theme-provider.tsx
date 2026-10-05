@@ -1,7 +1,7 @@
 "use client";
 
 /* ThemeProvider — port clone/js/shell.js applyTheme + settings theme.
-   Key "nhai.theme" (light|dark), toggle class "dark" trên <html>. */
+   Key "bye.theme" (light|dark), toggle class "dark" trên <html>. */
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
@@ -11,7 +11,7 @@ const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void 
 
 function readInitialTheme(): Theme {
   try {
-    return localStorage.getItem("nhai.theme") === "dark" ? "dark" : "light";
+    return localStorage.getItem("bye.theme") === "dark" ? "dark" : "light";
   } catch {
     return "light";
   }
@@ -35,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
     try {
-      localStorage.setItem("nhai.theme", t);
+      localStorage.setItem("bye.theme", t);
     } catch {
       /* silent */
     }

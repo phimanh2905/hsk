@@ -42,7 +42,7 @@ export default function Topbar() {
           <button
             type="button"
             aria-label="Mở menu"
-            onClick={() => window.dispatchEvent(new CustomEvent("nhai:open-nav"))}
+            onClick={() => window.dispatchEvent(new CustomEvent("bye:open-nav"))}
             className="grid h-11 w-11 shrink-0 place-items-center rounded-control border border-border-default bg-surface-elevated text-text-primary lg:hidden"
           >
             <Menu size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />

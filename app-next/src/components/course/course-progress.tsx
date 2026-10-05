@@ -3,14 +3,14 @@
 /* CourseProgress (B2) — khối "Tiến độ học" trên trang khóa học.
    Port từ clone/js/course.js (renderBook) + SPEC-01 §2: "x/N bài" (N = số bài vocab
    của book) + thanh progress %. SSG-safe: chỉ đọc localStorage sau mount,
-   re-read khi progressStore phát sự kiện nhai:progress. */
+   re-read khi progressStore phát sự kiện bye:progress. */
 
 import { useEffect, useState } from "react";
 import { courses } from "@/content/courses";
 import { progressStore } from "@/lib/store/progress-store";
 import { Card } from "@/components/ui/card";
 
-const PROGRESS_EVENT = "nhai:progress";
+const PROGRESS_EVENT = "bye:progress";
 
 export default function CourseProgress({ book }: { book: string }) {
   const [mounted, setMounted] = useState(false);

@@ -2,7 +2,7 @@
 
 /* Stepper 6 bước + nội dung từng bước — port 1:1 từ clone/js/roadmap-pinyin.js
    (renderStepper + renderStep) sang React. `?step=n` qua useSearchParams
-   (page bọc Suspense). Nút loa = IconButton + Volume2 (qua useTts thay NHAI.speak). */
+   (page bọc Suspense). Nút loa = IconButton + Volume2 (qua useTts thay BYE.speak). */
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { ProgressStore, progressStore } from "../progress-store";
 
-const KEY = "nhai.pageDone";
+const KEY = "bye.pageDone";
 
 beforeEach(() => localStorage.clear());
 
@@ -10,13 +10,13 @@ function fresh() {
 }
 
 describe("XP / heat / pageDone", () => {
-  it("addXp cộng dồn và đẩy event nhai:progress", () => {
+  it("addXp cộng dồn và đẩy event bye:progress", () => {
     const s = fresh();
     s.addXp(3); s.addXp(2);
     expect(s.getXp()).toBe(5);
-    const heat = JSON.parse(localStorage.getItem("nhai.heat")!);
+    const heat = JSON.parse(localStorage.getItem("bye.heat")!);
     expect((Object.values(heat) as number[]).reduce((a, b) => a + b, 0)).toBe(5); // hôm nay cộng vào heat
-    expect(localStorage.getItem("nhai.today")).toBe("5");
+    expect(localStorage.getItem("bye.today")).toBe("5");
   });
   it("markPageDone ghi map <book>/<page>", () => {
     const s = fresh();
@@ -41,11 +41,11 @@ describe("SRS — toggle, batch, migration 3 format cũ", () => {
     expect(s.addSrsBatch(["hsk1.lesson-1.0", "hsk1.lesson-1.1"])).toBe(2);
     expect(s.addSrsBatch(["hsk1.lesson-1.0", "hsk1.lesson-1.2"])).toBe(1);
   });
-  it("migrateLegacySrs gộp format 1 (nhai.srs.w.*) + format 2 (nhai.srs.st JSON) + format 3 (nhai.srs.st.<k>/t.<k>)", () => {
-    localStorage.setItem("nhai.srs.w.hsk1.lesson-1.0", "1");
-    localStorage.setItem("nhai.srs.st", JSON.stringify({ "hsk1.lesson-1.1": "learning" }));
-    localStorage.setItem("nhai.srs.st.hsk1.lesson-1.2", "learned");
-    localStorage.setItem("nhai.srs.t.hsk1.lesson-1.2", String(Date.now() - 1000));
+  it("migrateLegacySrs gộp format 1 (bye.srs.w.*) + format 2 (bye.srs.st JSON) + format 3 (bye.srs.st.<k>/t.<k>)", () => {
+    localStorage.setItem("bye.srs.w.hsk1.lesson-1.0", "1");
+    localStorage.setItem("bye.srs.st", JSON.stringify({ "hsk1.lesson-1.1": "learning" }));
+    localStorage.setItem("bye.srs.st.hsk1.lesson-1.2", "learned");
+    localStorage.setItem("bye.srs.t.hsk1.lesson-1.2", String(Date.now() - 1000));
     const s = fresh();
     s.migrateLegacySrs();
     expect(s.getSrs("hsk1.lesson-1.0")?.status).toBe("new");
@@ -63,7 +63,7 @@ describe("battle best + roadmap", () => {
     expect(s.saveBattleBest("hsk1.lesson-1", 12, 25_000)).toBe(true); // bằng điểm, nhanh hơn
     expect(s.saveBattleBest("hsk1.lesson-1", 9, 10_000)).toBe(false); // kém hơn
     expect(s.getBattleBest("hsk1.lesson-1")).toEqual({ correct: 12, timeMs: 25_000 });
-    expect(localStorage.getItem("nhai.battle.best.hsk1.lesson-1")).toBe(JSON.stringify({ correct: 12, timeMs: 25_000 }));
+    expect(localStorage.getItem("bye.battle.best.hsk1.lesson-1")).toBe(JSON.stringify({ correct: 12, timeMs: 25_000 }));
   });
   it("roadmap done lưu mảng buổi", () => {
     const s = fresh();
@@ -77,7 +77,7 @@ describe("feedback (contract plan sp1-social-legal)", () => {
   it("appendFeedback/getFeedback, trả [] khi rỗng/hỏng JSON", () => {
     const s = fresh();
     expect(s.getFeedback()).toEqual([]);
-    localStorage.setItem("nhai.feedback", "{broken");
+    localStorage.setItem("bye.feedback", "{broken");
     expect(s.getFeedback()).toEqual([]);
     s.appendFeedback({ text: "Ổn!", at: new Date().toISOString() });
     expect(s.getFeedback()).toEqual([{ text: "Ổn!", at: expect.any(String) }]);
@@ -87,31 +87,31 @@ describe("feedback (contract plan sp1-social-legal)", () => {
 describe("getToday + roadmap learnSeen (fix wave 2026-10-01)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("getToday đọc nhai.today, mặc định 0 khi rỗng/hỏng", () => {
+  it("getToday đọc bye.today, mặc định 0 khi rỗng/hỏng", () => {
     expect(progressStore.getToday()).toBe(0);
-    localStorage.setItem("nhai.today", "7");
+    localStorage.setItem("bye.today", "7");
     expect(progressStore.getToday()).toBe(7);
-    localStorage.setItem("nhai.today", "{broken");
+    localStorage.setItem("bye.today", "{broken");
     expect(progressStore.getToday()).toBe(0);
   });
 
   it("getRoadmapLearnSeen đọc qua store (không đọc localStorage ở component)", () => {
     expect(progressStore.getRoadmapLearnSeen()).toEqual([]);
-    localStorage.setItem("nhai.roadmap.learnSeen", JSON.stringify([2, 1, "x"]));
+    localStorage.setItem("bye.roadmap.learnSeen", JSON.stringify([2, 1, "x"]));
     // bỏ phần tử không phải số
     expect(progressStore.getRoadmapLearnSeen()).toEqual([2, 1]);
   });
 
-  it("markRoadmapLearnSeen thêm duy nhất, sort tăng, phát event nhai:progress", () => {
+  it("markRoadmapLearnSeen thêm duy nhất, sort tăng, phát event bye:progress", () => {
     const events: string[] = [];
-    window.addEventListener("nhai:progress", () => events.push("evt"));
+    window.addEventListener("bye:progress", () => events.push("evt"));
     progressStore.markRoadmapLearnSeen(3);
     progressStore.markRoadmapLearnSeen(1);
     progressStore.markRoadmapLearnSeen(3);
-    expect(localStorage.getItem("nhai.roadmap.learnSeen")).toBe("[1,3]");
+    expect(localStorage.getItem("bye.roadmap.learnSeen")).toBe("[1,3]");
     expect(progressStore.getRoadmapLearnSeen()).toEqual([1, 3]);
     expect(events.length).toBe(2);
-    window.removeEventListener("nhai:progress", () => events.push("evt"));
+    window.removeEventListener("bye:progress", () => events.push("evt"));
   });
 });
 

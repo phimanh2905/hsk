@@ -59,7 +59,7 @@ describe("StrokePlayer (G2)", () => {
     const { container } = render(<Harness char="吗" />);
     expect(container.querySelectorAll("polyline")).toHaveLength(4);
     (container.querySelectorAll("button")[1] as HTMLButtonElement).click();
-    expect(container.querySelector("polyline")!.getAttribute("marker-end")).toMatch(/url\(#nhai-hw-.*-arrow\)/);
+    expect(container.querySelector("polyline")!.getAttribute("marker-end")).toMatch(/url\(#bye-hw-.*-arrow\)/);
     (container.querySelectorAll("button")[2] as HTMLButtonElement).click();
     expect(container.querySelector("svg")!.getAttribute("viewBox")).not.toBe("0 0 100 100");
   });

@@ -6,7 +6,7 @@ import CatFilter from "@/components/shadowing/cat-filter";
 import XemTatCa from "@/components/shadowing/xem-tat-ca";
 
 export const metadata: Metadata = {
-  title: "Shadowing | Nhai HSK",
+  title: "Shadowing | Bye HSK",
   description: "Chọn video để luyện nghe, bắt chước phát âm hoặc viết chính tả.",
 };
 

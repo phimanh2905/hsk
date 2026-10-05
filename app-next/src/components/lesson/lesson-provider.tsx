@@ -19,7 +19,7 @@ export type KnownFlag = "known" | "unknown";
 
 export type GradeLevel = 1 | 2 | 3;
 
-const AUTOPLAY_KEY = "nhai.lesson.autoplay";
+const AUTOPLAY_KEY = "bye.lesson.autoplay";
 
 const GRADE_TOAST: Record<GradeLevel, string> = {
   1: "Chưa thuộc — ôn lại sau 1 phút",

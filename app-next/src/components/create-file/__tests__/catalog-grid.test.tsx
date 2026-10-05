@@ -18,7 +18,7 @@ describe("CatalogGrid (G6 — SPEC-16 §A)", () => {
   it("banner gate + link nhóm Facebook hiển thị; 9 SVG inline không ảnh ngoài", () => {
     const { container } = render(<CatalogGrid />);
     expect(screen.getByText(/Cần mã tải file để in/)).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Tham gia nhóm để lấy mã" })).toHaveAttribute("href", "https://www.facebook.com/groups/nhaihsk");
+    expect(screen.getByRole("link", { name: "Tham gia nhóm để lấy mã" })).toHaveAttribute("href", "https://www.facebook.com/groups/byehsk");
     expect(container.querySelectorAll("svg")).toHaveLength(9);
     expect(container.querySelector('svg image, svg [href*="http"]')).toBeNull();
   });

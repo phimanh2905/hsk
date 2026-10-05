@@ -6,7 +6,7 @@ import CertificateCardItem from "./card";
    SSG server component; card là client nhỏ cho toast coming-soon. */
 
 export const metadata: Metadata = {
-  title: "Luyện thi chứng chỉ | Nhai HSK",
+  title: "Luyện thi chứng chỉ | Bye HSK",
   description: "考试对策 — Luyện thi HSK và các chứng chỉ tiếng Trung",
 };
 

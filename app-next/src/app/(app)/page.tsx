@@ -22,11 +22,11 @@ export default function HomePage() {
         Học cùng cộng đồng:{" "}
         <Link
           className="font-semibold text-action-primary underline"
-          href="https://www.facebook.com/groups/nhaihsk"
+          href="https://www.facebook.com/groups/byehsk"
           target="_blank"
           rel="noreferrer"
         >
-          Nhai tiếng Trung mỗi ngày
+          Bye tiếng Trung mỗi ngày
         </Link>
       </footer>
     </div>

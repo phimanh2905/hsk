@@ -10,8 +10,8 @@ describe("globals.css Hanzi design system tokens", () => {
       expect(css).toContain(cls);
     }
   });
-  it("đã xóa hoàn toàn legacy theme Nhai", () => {
-    for (const legacy of ["--nhai-", "--color-nhai-", ".card {", ".btn-main", ".btn-ghost", ".pill", ".shadow-neo", ".toast", ".modal-backdrop", ".paper-grid"]) {
+  it("đã xóa hoàn toàn legacy theme Bye", () => {
+    for (const legacy of ["--bye-", "--color-bye-", ".card {", ".btn-main", ".btn-ghost", ".pill", ".shadow-neo", ".toast", ".modal-backdrop", ".paper-grid"]) {
       expect(css).not.toContain(legacy);
     }
   });

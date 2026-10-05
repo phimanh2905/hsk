@@ -84,7 +84,7 @@ test.describe("G6–G9 create-file + certificate smoke", () => {
     await page.getByRole("button", { name: "In / Lưu PDF" }).click();
     const printed = await page.evaluate(() => (window as unknown as { __printed: boolean }).__printed);
     expect(printed).toBe(true);
-    const code = await page.evaluate(() => localStorage.getItem("nhai.fileCode"));
+    const code = await page.evaluate(() => localStorage.getItem("bye.fileCode"));
     expect(code).toBe("1");
   });
   test("certificate-test prerender 10 card", async ({ page }) => {

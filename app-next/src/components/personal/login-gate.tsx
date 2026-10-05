@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useSession } from "@/lib/use-session";
 import { useLoginModal } from "@/components/shell/login-modal";
 
-/* UPG-2 — session thật từ better-auth, thay cho `nhai.mockLogin` của SP1.
+/* UPG-2 — session thật từ better-auth, thay cho `bye.mockLogin` của SP1.
    Vẫn gate ở client: các trang dùng nó vốn đã là client component, còn đọc
    session trong layout chung sẽ kéo cả nhóm route về dynamic và mất SSG.
    Spec 11 §F6 muốn server-render gate — để lát cắt UPG-2 tiếp theo, kèm route

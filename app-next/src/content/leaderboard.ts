@@ -1,4 +1,4 @@
-/* Nhai HSK — SP1: dữ liệu bảng xếp hạng (port từ clone/js/data/leaderboard.js + helper từ clone/js/leaderboard.js). */
+/* Bye HSK — SP1: dữ liệu bảng xếp hạng (port từ clone/js/data/leaderboard.js + helper từ clone/js/leaderboard.js). */
 
 export type XpRow = { name: string; points: number };
 export type BattleRow = { name: string; score: string; time: string };

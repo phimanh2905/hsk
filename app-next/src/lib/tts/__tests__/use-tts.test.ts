@@ -64,7 +64,7 @@ describe("useTts", () => {
     expect(window.speechSynthesis.cancel).toHaveBeenCalled();
   });
 
-  describe("voice preference nhai.voice", () => {
+  describe("voice preference bye.voice", () => {
     const setVoices = (voices: object[]) => {
       (window.speechSynthesis.getVoices as ReturnType<typeof vi.fn>).mockReturnValue(voices);
     };
@@ -72,7 +72,7 @@ describe("useTts", () => {
       (window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls[0][0].voice?.name;
 
     afterEach(() => {
-      localStorage.removeItem("nhai.voice");
+      localStorage.removeItem("bye.voice");
       vi.restoreAllMocks();
     });
 
@@ -86,7 +86,7 @@ describe("useTts", () => {
       expect(pickedName()).toBe("Tingting");
     });
     it("male -> ưu tiên voice khớp /male|daniel|tington/i", () => {
-      localStorage.setItem("nhai.voice", "male");
+      localStorage.setItem("bye.voice", "male");
       setVoices([
         { name: "Tingting", lang: "zh-CN" },
         { name: "Male-ZH", lang: "zh-CN" },
@@ -96,7 +96,7 @@ describe("useTts", () => {
       expect(pickedName()).toBe("Male-ZH");
     });
     it("không có voice khớp pref -> fallback voice zh đầu tiên", () => {
-      localStorage.setItem("nhai.voice", "male");
+      localStorage.setItem("bye.voice", "male");
       setVoices([{ name: "Tingting", lang: "zh-CN" }]);
       const { result } = renderHook(() => useTts());
       act(() => result.current.speak("你好"));

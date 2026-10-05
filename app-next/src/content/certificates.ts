@@ -1,4 +1,4 @@
-/* Nhai HSK — SP1: dữ liệu Luyện thi chứng chỉ (port từ clone/js/data/certificates.js — UI-only, đúng số liệu SPEC-07). */
+/* Bye HSK — SP1: dữ liệu Luyện thi chứng chỉ (port từ clone/js/data/certificates.js — UI-only, đúng số liệu SPEC-07). */
 
 export type CertificateCard = { logo: string; name: string; zh: string; desc: string };
 

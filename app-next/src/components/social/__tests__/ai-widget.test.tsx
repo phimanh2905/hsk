@@ -40,11 +40,11 @@ describe("AiWidget", () => {
     expect(screen.queryByText(REPLY)).toBeNull();
   });
 
-  it("nhai.chatBubble=0 ẩn nút mascot; nút Ủng hộ hiện toast đúng", () => {
-    localStorage.setItem("nhai.chatBubble", "0");
+  it("bye.chatBubble=0 ẩn nút mascot; nút Ủng hộ hiện toast đúng", () => {
+    localStorage.setItem("bye.chatBubble", "0");
     render(<AiWidget />);
     expect(screen.queryByRole("button", { name: /Hỏi AI/ })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: /Ủng hộ Nhai HSK/ }));
-    expect((window as unknown as { __lastToast?: string }).__lastToast).toBe("Cảm ơn bạn đã ủng hộ Nhai HSK!");
+    fireEvent.click(screen.getByRole("button", { name: /Ủng hộ Bye HSK/ }));
+    expect((window as unknown as { __lastToast?: string }).__lastToast).toBe("Cảm ơn bạn đã ủng hộ Bye HSK!");
   });
 });

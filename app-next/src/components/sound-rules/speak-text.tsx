@@ -1,6 +1,6 @@
 "use client";
 /* SpeakText (D4) — ví dụ "字 HV pinyin" kèm nút nghe (IconButton + Volume2),
-   port từ clone/js/sound-rules.js:35-77 (button data-speak, click → NHAI.speak(text, "zh-CN")).
+   port từ clone/js/sound-rules.js:35-77 (button data-speak, click → BYE.speak(text, "zh-CN")).
    Client nhỏ nhúng trong trang SSG. */
 
 import type { ReactNode } from "react";

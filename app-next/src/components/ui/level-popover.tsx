@@ -5,18 +5,18 @@ import { cn } from "@/lib/cn";
 import { ChevronDown, Check, ICON_STROKE } from "@/components/ui/icon";
 
 const LEVELS = ["HSK 1", "HSK 2", "HSK 3", "HSK 4"] as const;
-const GOAL_KEY = "nhai.goal";
+const GOAL_KEY = "bye.goal";
 
 /* Popover chọn mục tiêu HSK — port .level-btn/.pop của opendesign_hsk/app-shell.html
    (spec 2026-10-04 §4.4). Dùng role=menu/menuitemradio + aria-checked, key localStorage
-   "nhai.goal" (mock dùng "hanzi:level" — cơ chế demo, không port). */
+   "bye.goal" (mock dùng "hanzi:level" — cơ chế demo, không port). */
 export function LevelPopover({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const [level, setLevel] = useState<string>("HSK 2");
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  /* Đọc nhai.goal lúc mount — setState nằm trong callback sync() (pattern useHomeSummary)
+  /* Đọc bye.goal lúc mount — setState nằm trong callback sync() (pattern useHomeSummary)
      để không dính react-hooks/set-state-in-effect; server vẫn render "HSK 2" → không lệch hydration. */
   useEffect(() => {
     const sync = () => {

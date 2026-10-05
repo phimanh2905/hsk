@@ -7,8 +7,8 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-describe("cf storage (sessionStorage nhai.cf.state + mã FREEHSK)", () => {
-  it("persist → load roundtrip qua sessionStorage nhai.cf.state", () => {
+describe("cf storage (sessionStorage bye.cf.state + mã FREEHSK)", () => {
+  it("persist → load roundtrip qua sessionStorage bye.cf.state", () => {
     const st = { ...cfDefaults(), perRow: 9, tpl: "cover" };
     persistCfState(st);
     expect(sessionStorage.getItem(CF_SESSION_KEY)).toContain('"perRow":9');
@@ -23,6 +23,6 @@ describe("cf storage (sessionStorage nhai.cf.state + mã FREEHSK)", () => {
     expect(hasFileCode()).toBe(false);
     setFileCode();
     expect(hasFileCode()).toBe(true);
-    expect(localStorage.getItem("nhai.fileCode")).toBe("1");
+    expect(localStorage.getItem("bye.fileCode")).toBe("1");
   });
 });

@@ -45,18 +45,18 @@ describe("SidebarNav (app-shell.html)", () => {
 
   it("badge SRS hiện số từ đến hạn, không hiện khi 0", async () => {
     localStorage.setItem(
-      "nhai.srs.items",
+      "bye.srs.items",
       JSON.stringify({ k: { key: "k", status: "new", dueAt: Date.now() - 100, reviewCount: 0, lastReviewedAt: null, updatedAt: 1 } })
     );
     render(<SidebarNav />);
     expect(await screen.findByText("1")).toBeInTheDocument();
   });
 
-  it("event nhai:open-nav mở drawer; Escape đóng", async () => {
+  it("event bye:open-nav mở drawer; Escape đóng", async () => {
     render(<SidebarNav />);
     const nav = screen.getByRole("navigation", { name: "Điều hướng chính" });
     expect(nav.className).toContain("-translate-x-full");
-    window.dispatchEvent(new CustomEvent("nhai:open-nav"));
+    window.dispatchEvent(new CustomEvent("bye:open-nav"));
     await vi.waitFor(() => expect(nav.className).not.toContain("-translate-x-full"));
     await userEvent.keyboard("{Escape}");
     await vi.waitFor(() => expect(nav.className).toContain("-translate-x-full"));
@@ -65,7 +65,7 @@ describe("SidebarNav (app-shell.html)", () => {
   it("click link điều hướng thì drawer đóng lại (Review Focus #1)", async () => {
     render(<SidebarNav />);
     const nav = screen.getByRole("navigation", { name: "Điều hướng chính" });
-    window.dispatchEvent(new CustomEvent("nhai:open-nav"));
+    window.dispatchEvent(new CustomEvent("bye:open-nav"));
     await vi.waitFor(() => expect(nav.className).not.toContain("-translate-x-full"));
     await userEvent.click(screen.getByRole("link", { name: /Lộ trình HSK/ }));
     await vi.waitFor(() => expect(nav.className).toContain("-translate-x-full"));
@@ -74,7 +74,7 @@ describe("SidebarNav (app-shell.html)", () => {
   it("scrim đóng drawer (đường đóng #2)", async () => {
     render(<SidebarNav />);
     const nav = screen.getByRole("navigation", { name: "Điều hướng chính" });
-    window.dispatchEvent(new CustomEvent("nhai:open-nav"));
+    window.dispatchEvent(new CustomEvent("bye:open-nav"));
     await vi.waitFor(() => expect(nav.className).not.toContain("-translate-x-full"));
     await userEvent.click(screen.getByRole("button", { name: "Đóng menu" }));
     await vi.waitFor(() => expect(nav.className).toContain("-translate-x-full"));

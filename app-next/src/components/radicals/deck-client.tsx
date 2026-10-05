@@ -2,7 +2,7 @@
 
 /* RadicalsClient — deck flashcard 214 bộ thủ + grid theo số nét, port clone/js/radicals.js
    (PLAN-04 + PLAN-20, SPEC-04 §1, SPEC-20). Autoplay timers nằm trong useEffect cleanup
-   thay cho timer registry window của clone (NHAI_RAD). */
+   thay cho timer registry window của clone (BYE_RAD). */
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";

@@ -8,7 +8,7 @@ vi.mock("@/components/shell/toast-provider", () => ({
 }));
 
 function stored(): Array<{ text: string; at: string }> {
-  return JSON.parse(localStorage.getItem("nhai.feedback") || "[]");
+  return JSON.parse(localStorage.getItem("bye.feedback") || "[]");
 }
 
 beforeEach(() => {
@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 describe("feedback page", () => {
-  it("append entry {text, at ISO} vào nhai.feedback qua ProgressStore rồi xoá textarea", () => {
+  it("append entry {text, at ISO} vào bye.feedback qua ProgressStore rồi xoá textarea", () => {
     render(<FeedbackPage />);
     const textarea = screen.getByLabelText("Nội dung góp ý");
     fireEvent.change(textarea, { target: { value: "App hay quá!" } });
@@ -33,7 +33,7 @@ describe("feedback page", () => {
   });
 
   it("append nối tiếp vào dữ liệu cũ, không ghi đè", () => {
-    localStorage.setItem("nhai.feedback", JSON.stringify([{ text: "cũ", at: "2026-01-01T00:00:00.000Z" }]));
+    localStorage.setItem("bye.feedback", JSON.stringify([{ text: "cũ", at: "2026-01-01T00:00:00.000Z" }]));
     render(<FeedbackPage />);
     fireEvent.change(screen.getByLabelText("Nội dung góp ý"), { target: { value: "mới" } });
     fireEvent.click(screen.getByRole("button", { name: "Gửi góp ý" }));

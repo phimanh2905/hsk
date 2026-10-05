@@ -15,13 +15,13 @@ describe("progressStore.recordReview", () => {
     // persist thật
     expect(progressStore.getSrs("hsk1.lesson-1.0")!.reviewCount).toBe(1);
   });
-  it("bắn nhai:progress", () => {
+  it("bắn bye:progress", () => {
     progressStore.toggleSrs("hsk1.lesson-1.0");
     const spy = vi.fn();
-    window.addEventListener("nhai:progress", spy);
+    window.addEventListener("bye:progress", spy);
     progressStore.recordReview("hsk1.lesson-1.0", "forgot", NOW);
     expect(spy).toHaveBeenCalledTimes(1);
-    window.removeEventListener("nhai:progress", spy);
+    window.removeEventListener("bye:progress", spy);
   });
   it("key không tồn tại → null, không throw (Review Focus #4)", () => {
     expect(progressStore.recordReview("hsk1.khong-co.0", "good", NOW)).toBeNull();

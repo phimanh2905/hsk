@@ -24,12 +24,12 @@ beforeEach(() => {
 });
 
 describe("PrintButton gate (G8)", () => {
-  it("chưa login + chưa mã → 'Đăng nhập để in'; sau khi unlock (nhai.fileCode=1) → 'In / Lưu PDF' gọi window.print", async () => {
+  it("chưa login + chưa mã → 'Đăng nhập để in'; sau khi unlock (bye.fileCode=1) → 'In / Lưu PDF' gọi window.print", async () => {
     const user = userEvent.setup();
     const printSpy = vi.spyOn(window, "print").mockImplementation(() => {});
     const { rerender } = render(<PrintButton />);
     expect(screen.getByText("Đăng nhập để in")).toBeTruthy();
-    localStorage.setItem("nhai.fileCode", "1");
+    localStorage.setItem("bye.fileCode", "1");
     rerender(<PrintButton key="unlocked2" />);
     await user.click(await screen.findByRole("button", { name: "In / Lưu PDF" }));
     expect(printSpy).toHaveBeenCalled();
@@ -44,7 +44,7 @@ describe("PrintButton gate (G8)", () => {
 });
 
 describe("FreehskGate", () => {
-  it("mã FREEHSK → unlock + lưu nhai.fileCode; sai mã → toast đúng nội dung", async () => {
+  it("mã FREEHSK → unlock + lưu bye.fileCode; sai mã → toast đúng nội dung", async () => {
     const user = userEvent.setup();
     const onUnlocked = vi.fn();
     render(<FreehskGate onUnlocked={onUnlocked} />);
@@ -55,7 +55,7 @@ describe("FreehskGate", () => {
     await user.clear(screen.getByTestId("code-input"));
     await user.type(screen.getByTestId("code-input"), "FREEHSK");
     await user.click(screen.getByTestId("code-submit"));
-    expect(localStorage.getItem("nhai.fileCode")).toBe("1");
+    expect(localStorage.getItem("bye.fileCode")).toBe("1");
     expect(onUnlocked).toHaveBeenCalled();
   });
 });

@@ -32,9 +32,9 @@ function NotebookDetailInner({ kind, id }: { kind: NotebookKind; id: string }): 
 
   /* clone set document.title trong renderDetail — port sang effect */
   useEffect(() => {
-    document.title = title + " | Nhai HSK";
+    document.title = title + " | Bye HSK";
     return () => {
-      document.title = "Nhai HSK";
+      document.title = "Bye HSK";
     };
   }, [title]);
 

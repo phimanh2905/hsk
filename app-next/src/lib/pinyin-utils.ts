@@ -1,4 +1,4 @@
-/* Port 1:1 từ clone/js/pinyin-utils.js (+ NHAI.stripTones từ clone/js/shell.js) */
+/* Port 1:1 từ clone/js/pinyin-utils.js (+ BYE.stripTones từ clone/js/shell.js) */
 
 const MARKS: Record<string, string[]> = {
   a: ["ā", "á", "ǎ", "à", "a"],
@@ -58,7 +58,7 @@ export function toPinyin(input: string): string {
     .join(" ");
 }
 
-/* shell.js NHAI.stripTones — ü/ǖǘǚǜ -> v trước khi NFD
+/* shell.js BYE.stripTones — ü/ǖǘǚǜ -> v trước khi NFD
    (U+0308 nằm trong dải \u0300-\u036f nên phải thay trước để còn "v") */
 export function stripTones(s: string): string {
   return String(s)

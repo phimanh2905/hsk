@@ -18,7 +18,7 @@ describe("HabitLoop (spec 2026-10-04)", () => {
   });
   it("SRS due>0 → tone todo + số từ", async () => {
     localStorage.setItem(
-      "nhai.srs.items",
+      "bye.srs.items",
       JSON.stringify({ k: { key: "k", status: "new", dueAt: Date.now() - 100, reviewCount: 0, lastReviewedAt: null, updatedAt: 1 } })
     );
     render(<HabitLoop />);

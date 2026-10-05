@@ -31,14 +31,14 @@ describe("HeroAction (spec 2026-10-04)", () => {
     expect(link.getAttribute("href")).toBe("/course");
   });
   it("có pageDone → tab lesson hiện bài kế tiếp, CTA /lesson/...", async () => {
-    localStorage.setItem("nhai.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
+    localStorage.setItem("bye.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
     render(<HeroAction />);
     const cta = await screen.findByRole("link", { name: /Tiếp tục/ });
     expect(cta.getAttribute("href")).toBe("/lesson/hsk1/lesson-2");
     expect(screen.getByRole("progressbar")).toHaveAttribute("aria-label", "Tiến độ bài học");
   });
   it("chuyển tab SRS đổi CTA sang /review và aria-pressed đúng", async () => {
-    localStorage.setItem("nhai.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
+    localStorage.setItem("bye.pageDone", JSON.stringify({ "hsk1/lesson-1": 1 }));
     render(<HeroAction />);
     await screen.findByRole("link", { name: /Tiếp tục/ });
     await userEvent.click(screen.getByRole("button", { name: /Ôn tập SRS/ }));

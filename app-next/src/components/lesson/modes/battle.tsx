@@ -3,7 +3,7 @@
 /* Mode Battle (C8) — Đấu trí, port clone/js/lesson-battle.js.
    13 câu trộn đủ 5 dạng (han2vi, vi2han, han2py, cloze, typing), mỗi câu 4 options;
    timer đếm giây (setInterval 1s — useEffect return clear); kết thúc lưu best qua
-   ProgressStore.saveBattleBest (key "nhai.battle.best.<book>.<page>" — giữ tương thích clone).
+   ProgressStore.saveBattleBest (key "bye.battle.best.<book>.<page>" — giữ tương thích clone).
    "Đăng nhập" mở LoginModal (không điều hướng); Top-10 là dữ liệu cứng theo SPEC-02 §7 (SP1). */
 
 import { useEffect, useRef, useState } from "react";
