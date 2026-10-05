@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — Sổ tay &amp; Ghi chép</title>
+<style>
+:root{
+  --bg:#FAF9F5; --elev:#ffffff; --card:rgba(255,255,255,.85); --cream:#F5F4F0;
+  --fg:#1f2a27; --body:#66756f; --faint:#8a9a94; --border:#E7E5E4;
+  --jade:#2D7D5B; --jade-ink:#144d38; --jade-soft:#D1FAE5; --jade-bg:#e7f2ec; --jade-bd:#bcd9c9;
+  --amber:#E68A00; --amber-ink:#92400e; --amber-soft:#FEF3C7; --amber-bg:#fffaeb;
+  --vermilion:#C83C32; --vermilion-hover:#B33229;
+  --red-soft:#fdeceb;
+  --shadow:0 1px 2px rgba(31,42,39,.05);
+  --shadow-md:0 2px 6px rgba(31,42,39,.06),0 18px 40px rgba(31,42,39,.08);
+  --r-card:20px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;letter-spacing:-.01em;min-height:100vh;-webkit-font-smoothing:antialiased}
+.hanzi{font-family:var(--font-hanzi)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px;border-radius:6px}
+.shell-side{display:none}
+@media(min-width:1024px){body{padding-left:256px}.shell-side{display:flex;position:fixed;left:0;top:0;bottom:0;width:256px;z-index:30;background:var(--elev);border-right:1px solid var(--border);flex-direction:column}}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 16px;text-decoration:none;color:var(--fg)}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--jade);color:#fff;display:grid;place-items:center;font-family:var(--font-hanzi);font-size:21px;font-weight:800}
+.brand b{font-size:15px;display:block;line-height:1.2}
+.brand small{font-size:10px;letter-spacing:.14em;color:var(--body)}
+.shell-nav{flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:2px}
+.shell-nav h5{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--faint);padding:14px 10px 6px}
+.shell-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px;border-radius:10px;font-size:13.5px;color:var(--body);text-decoration:none;border:1px solid transparent}
+.shell-link .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.shell-link:hover{background:var(--cream);color:var(--fg)}
+.shell-link.active{background:var(--jade-bg);color:var(--jade-ink);font-weight:700;border-color:var(--jade-bd)}
+.shell-link.active .dot{background:var(--jade)}
+.shell-foot{border-top:1px solid var(--border);padding:12px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user b{font-size:13px;display:block}
+.user small{font-size:11px;color:var(--body)}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(250,249,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1160px;margin:0 auto;min-height:64px;padding:10px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.crumb{font-size:13px;color:var(--body);white-space:nowrap}
+.crumb a{color:var(--fg);font-weight:700;text-decoration:none}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.search{display:flex;align-items:center;gap:8px;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:0 6px 0 14px;min-height:44px;min-width:280px}
+.search input{border:0;background:transparent;outline:none;font:inherit;font-size:13px;color:var(--fg);flex:1;min-width:0}
+.search input::placeholder{color:var(--faint)}
+.search kbd{font-size:11px;font-weight:700;color:var(--body);background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:2px 8px;margin-right:4px}
+.icon-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);flex-shrink:0}
+.icon-btn:hover{color:var(--fg);border-color:var(--faint)}
+.page{max-width:1160px;margin:0 auto;padding:20px 24px 90px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:22px}
+.hero{background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-md);padding:24px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+@media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center;justify-items:center}}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--jade-ink)}
+.hero h1{font-size:21px;line-height:1.35;margin-top:4px}
+.hero p{font-size:13.5px;color:var(--body);margin-top:6px}
+.hpills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:860px){.hpills{justify-content:center}}
+.hpill{font-size:12.5px;font-weight:700;border:1px solid var(--border);border-radius:999px;padding:7px 14px}
+.hpill.p1,.hpill.p2{background:var(--cream);color:var(--fg)}
+.hpill.p3{background:var(--jade-soft);border-color:var(--jade-bd);color:var(--jade-ink)}
+.btn-vermilion{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--vermilion);color:#fff;border:1px solid var(--vermilion);border-radius:14px;min-height:52px;padding:0 26px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 14px rgba(200,60,50,.28);white-space:nowrap;text-decoration:none;max-width:300px;line-height:1.4;text-align:center}
+.btn-vermilion:hover{background:var(--vermilion-hover);border-color:var(--vermilion-hover)}
+.shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1023px) and (min-width:641px){.shelf{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.shelf{grid-template-columns:1fr}}
+.book{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:6px}
+.book:hover{transform:translateY(-2px);transition:transform .18s}
+.book .pic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--cream);border:1px solid var(--border);font-size:19px;margin-bottom:4px}
+.book h3{font-size:13.5px;line-height:1.45}
+.book h3 .sub{display:block;font-size:11px;font-weight:400;color:var(--body);font-family:var(--font-hanzi)}
+.book .big{font-size:17px;margin-top:4px}
+.book .meta{font-size:12px;color:var(--body)}
+.pbadge{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid;white-space:nowrap;vertical-align:middle}
+.pbadge.warn{background:var(--amber-bg);border-color:var(--amber);color:var(--amber-ink)}
+.pbadge.ok{background:var(--jade-bg);border-color:var(--jade-bd);color:var(--jade-ink)}
+.pbadge.soft{background:var(--cream);border-color:var(--border);color:var(--fg)}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;min-height:44px;padding:0 16px;border-radius:11px;background:var(--cream);border:1px solid var(--border);font-size:12.5px;font-weight:700;cursor:pointer;color:var(--fg);width:100%;text-decoration:none}
+.btn-secondary:hover{border-color:var(--faint);background:#efede8}
+.stream-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--border);background:var(--elev);border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:40px;white-space:nowrap}
+.chip:hover{color:var(--fg);border-color:var(--faint)}
+.chip[aria-pressed="true"]{background:var(--elev);color:var(--vermilion);border-color:var(--vermilion);box-shadow:0 0 0 3px rgba(200,60,50,.12)}
+.btn-add{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border-radius:999px;background:var(--cream);border:1px solid var(--border);font-size:12.5px;font-weight:700;cursor:pointer;color:var(--fg)}
+.btn-add:hover{border-color:var(--faint);background:#efede8}
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;gap:12px}
+.mhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;border-radius:999px;padding:5px 12px;border:1px solid}
+.tag.red{background:var(--red-soft);border-color:#f3b8b3;color:var(--vermilion-hover)}
+.tag.lav{background:#eef0fb;border-color:#c9cdf2;color:#3f46a8}
+.tag.per{background:var(--jade-bg);border-color:var(--jade-bd);color:var(--jade-ink)}
+.time{font-size:12px;color:var(--body)}
+.mactions{margin-left:auto;display:flex;gap:6px}
+.mini{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);font-size:15px}
+.mini:hover{color:var(--fg);border-color:var(--faint)}
+.mini.saved{color:var(--amber-ink);border-color:#f5d78a;background:var(--amber-bg)}
+.q{font-family:var(--font-hanzi);font-size:18px;line-height:1.7}
+.contrast{display:grid;gap:8px}
+.cline{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;font-size:13.5px;border:1px solid}
+.cline.wrong{background:#fff7f6;border-color:#f3c4c0}
+.cline.wrong .w{color:var(--vermilion-hover);text-decoration:line-through;font-weight:700}
+.cline.right{background:var(--jade-bg);border-color:var(--jade-bd)}
+.cline.right .w{color:var(--jade-ink);font-weight:700}
+.cause{display:flex;gap:9px;background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12.5px}
+.bigchars{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:14px}
+.bigchars .c{text-align:center}
+.bigchars .c b{font-family:var(--font-hanzi);font-size:28px;display:block;line-height:1.2}
+.bigchars .c span{font-size:11.5px;color:var(--body)}
+.bigchars .vs{color:var(--faint);font-weight:700}
+.note{font-size:13px;color:var(--fg);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.empty{display:none;text-align:center;padding:30px;color:var(--body);font-size:13.5px}
+.empty.show{display:block}
+.bottomnav{display:none}
+@media(max-width:1023px){.bottomnav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border)}.bottomnav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 8px calc(8px + env(safe-area-inset-bottom))}.bnav{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:54px;justify-content:center;border-radius:10px}.bnav.active{color:var(--jade-ink)}.page{padding:16px 16px 130px}.search{min-width:0;flex:1}}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:90;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<aside class="shell-side" aria-label="Điều hướng chính" data-od-id="app-sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark hanzi">汉</span><span><b>Hanzi</b><small>HSK LEARNING</small></span></a>
+  <nav class="shell-nav">
+    <h5>NỀN TẢNG · CORE SHELL</h5>
+    <a class="shell-link" href="index.html"><span class="dot"></span>Trang chủ</a>
+    <a class="shell-link" href="roadmap.html"><span class="dot"></span>Lộ trình HSK</a>
+    <a class="shell-link" href="review.html"><span class="dot"></span>Ôn tập SRS</a>
+    <h5>LUYỆN TẬP &amp; KỸ NĂNG</h5>
+    <a class="shell-link" href="hanzi.html"><span class="dot"></span>Hanzi Studio</a>
+    <a class="shell-link" href="shadowing.html"><span class="dot"></span>Luyện nói &amp; Đọc</a>
+    <a class="shell-link" href="pinyin.html"><span class="dot"></span>Bảng âm Pinyin</a>
+    <h5>CÁ NHÂN &amp; CÔNG CỤ</h5>
+    <a class="shell-link" href="my-vocab.html"><span class="dot"></span>Sổ tay từ vựng</a>
+    <a class="shell-link" href="my-grammar.html"><span class="dot"></span>Sổ tay ngữ pháp</a>
+    <a class="shell-link active" href="notebook.html" aria-current="page"><span class="dot"></span>Sổ tay</a>
+  </nav>
+  <div class="shell-foot"><div class="user"><span class="avatar">M</span><span><b>Minh</b><small>HSK 2 · Chặng 1/3</small></span></div></div>
+</aside>
+
+<header class="topbar" data-od-id="notebook-topbar"><div class="topbar-inner">
+  <span class="crumb"><a href="index.html">Trang chủ</a> / Sổ tay &amp; Ghi chép</span>
+  <div class="topbar-right">
+    <label class="search" data-od-id="notebook-search">🔍<input id="q" type="search" placeholder="Tìm kiếm trong tất cả sổ tay..." aria-label="Tìm kiếm trong tất cả sổ tay" /><kbd>/</kbd></label>
+    <button class="icon-btn" id="settingsBtn" data-od-id="settings-btn" aria-label="Cài đặt sổ tay"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </div>
+</div></header>
+
+<main class="page">
+  <section class="hero" data-od-id="notebook-hero" aria-label="Bàn chỉ huy sổ tay">
+    <div>
+      <div class="hero-eyebrow">TRUNG TÂM GHI CHÉP &amp; HÓA GIẢI ĐIỂM MÙ</div>
+      <h1>Có 14 câu làm sai tuần này cần xem lại trước kỳ thi HSK 4</h1>
+      <p>Mỗi lỗi sai đã được gắn nguyên nhân gốc — sửa 1 lần, nhớ cả cụm.</p>
+      <div class="hpills">
+        <span class="hpill p1">📕 4 Sổ chuyên đề</span>
+        <span class="hpill p2">📝 86 Mục ghi chép</span>
+        <span class="hpill p3">🛡️ Đã khắc phục: 65%</span>
+      </div>
+    </div>
+    <a class="btn-vermilion" href="review.html" data-od-id="notebook-cta">🎯 Ôn tập 14 lỗi sai ngay</a>
+  </section>
+
+  <section class="shelf" aria-label="Tủ sổ tay chuyên đề" data-od-id="notebook-shelf">
+    <article class="book" data-od-id="book-mistakes">
+      <div class="pic">🛑</div>
+      <h3>SỔ CÂU LÀM SAI<span class="sub">错题本 · Tự động gom</span></h3>
+      <div class="big">24 câu hỏi cần nhớ</div>
+      <div class="meta"><span class="pbadge warn">Cần xử lý: 14 câu</span></div>
+      <a class="btn-secondary" href="#stream">Mở sổ lỗi sai</a>
+    </article>
+    <article class="book" data-od-id="book-confusables">
+      <div class="pic">🔍</div>
+      <h3>CHỮ HÁN DỄ NHẦM<span class="sub">形近字 / 易混字</span></h3>
+      <div class="big">18 cặp chữ hay nhầm</div>
+      <div class="meta"><span class="pbadge ok">Đã thuộc: 12 cặp</span></div>
+      <a class="btn-secondary" href="#stream">Luyện phân biệt</a>
+    </article>
+    <article class="book" data-od-id="book-idioms">
+      <div class="pic">🐉</div>
+      <h3>THÀNH NGỮ HSK<span class="sub">成语 / 惯用语</span></h3>
+      <div class="big">32 thành ngữ bỏ túi</div>
+      <div class="meta"><span class="pbadge soft">HSK 4 – HSK 5</span></div>
+      <a class="btn-secondary" href="#stream">Học thành ngữ</a>
+    </article>
+    <article class="book" data-od-id="book-speaking">
+      <div class="pic">💼</div>
+      <h3>KHẨU NGỮ THỰC TẾ<span class="sub">口语 · Giao tiếp &amp; VP</span></h3>
+      <div class="big">12 mẫu câu thực tế</div>
+      <div class="meta"><span class="pbadge soft">Giao tiếp VP</span></div>
+      <a class="btn-secondary" href="#stream">Luyện giao tiếp</a>
+    </article>
+  </section>
+
+  <div class="stream-head" id="stream" role="group" aria-label="Bộ lọc dòng ghi chép" data-od-id="stream-filters">
+    <button class="chip" data-f="all" aria-pressed="false">Tất cả mục</button>
+    <button class="chip" data-f="wrong" aria-pressed="true">Câu sai chưa sửa</button>
+    <button class="chip" data-f="chars" aria-pressed="false">Chữ Hán dễ nhầm</button>
+    <button class="chip" data-f="personal" aria-pressed="false">Ghi chú cá nhân</button>
+    <button class="btn-add" id="addBtn" data-od-id="add-note">+ Tạo sổ mới</button>
+  </div>
+
+  <section id="list" style="display:flex;flex-direction:column;gap:16px" aria-label="Dòng ghi chép gần đây" data-od-id="mistake-stream"></section>
+  <div class="card empty" id="empty">Không có mục nào khớp bộ lọc. Thử từ khóa khác.</div>
+</main>
+
+<nav class="bottomnav" aria-label="Điều hướng di động" data-od-id="bottom-nav"><div class="bottomnav-inner">
+  <button class="bnav" data-go="index.html">Trang chủ</button>
+  <button class="bnav" data-go="roadmap.html">Lộ trình</button>
+  <button class="bnav" data-go="review.html">Ôn tập</button>
+  <button class="bnav" data-go="hanzi.html">Hanzi</button>
+  <button class="bnav active" aria-current="page">Tôi</button>
+</div></nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+  var DATA=[
+    {id:'m1',kind:'wrong',saved:true,tag:['red','🛑 Lỗi sai trong bài thi thử HSK 4'],time:'2 ngày trước',
+     q:'昨天太累了，我一回到家就______睡着了。',
+     wrong:['忽然','hūrán · đột nhiên'],right:['居然','jūrán · lại có thể, không ngờ lại'],
+     cause:'“居然” biểu thị sự bất ngờ ngoài dự kiến, còn “忽然” chỉ hành động diễn ra chớp nhoáng. Câu này nhấn mạnh “không ngờ lại ngủ luôn” nên phải dùng 居然。',
+     cta:'Thử thách lại câu này'},
+    {id:'m2',kind:'chars',saved:false,tag:['lav','🔍 Cặp chữ dễ nhầm'],time:'Sổ Chữ dễ lẫn',
+     chars:[['已','yǐ · đã'],['己','jǐ · bản thân'],['巳','sì · chi tỵ']],
+     tip:'Mẹo nhớ: “Mở nửa là ĐÃ (已), khép kín là TỴ (巳), mở toang là BẢN THÂN (己).”',
+     cta:'Xem bút thuận nét viết'},
+    {id:'m3',kind:'personal',saved:true,tag:['per','📝 Ghi chú cá nhân'],time:'Hôm qua · Sổ Khẩu ngữ',
+     note:'Khi từ chối lịch sự trong email, dùng “恐怕不太方便” mềm hơn “不行”. Mẫu: 恐怕这周不太方便，我们下周再约吧。',
+     cta:'Ôn lại ghi chú này'}
+  ];
+  var f='wrong',q='';
+  function paint(){
+    var list=DATA.filter(function(d){
+      var okF=f==='all'||d.kind===f;
+      var okQ=!q||JSON.stringify(d).toLowerCase().indexOf(q)>-1;
+      return okF&&okQ;
+    });
+    document.getElementById('list').innerHTML=list.map(function(d){
+      var head='<div class="mhead"><span class="tag '+d.tag[0]+'">'+d.tag[1]+'</span><span class="time">'+d.time+'</span><span class="mactions"><button class="mini'+(d.saved?' saved':'')+'" data-save="'+d.id+'" aria-pressed="'+d.saved+'" aria-label="Yêu thích">★</button><button class="mini" data-menu="'+d.id+'" aria-label="Tùy chọn">⋮</button></span></div>';
+      var body='';
+      if(d.kind==='wrong'){
+        body='<div class="q">'+d.q+'</div><div class="contrast"><div class="cline wrong"><span>❌</span><span>Bạn đã chọn: <span class="w">'+d.wrong[0]+'</span> ('+d.wrong[1]+')</span></div><div class="cline right"><span>✅</span><span>Đáp án đúng: <span class="w">'+d.right[0]+'</span> ('+d.right[1]+')</span></div></div><div class="cause"><span>💡</span><span><b>Điểm mấu chốt:</b> '+d.cause+'</span></div>';
+      }else if(d.kind==='chars'){
+        body='<div class="bigchars">'+d.chars.map(function(c,i){return (i?'<span class="vs">vs</span>':'')+'<div class="c"><b>'+c[0]+'</b><span>'+c[1]+'</span></div>';}).join('')+'</div><div class="cause"><span>💡</span><span>'+d.tip+'</span></div>';
+      }else{
+        body='<div class="note">'+d.note+'</div>';
+      }
+      return '<article class="mcard" data-od-id="note-'+d.id+'">'+head+body+'<a class="btn-secondary" href="review.html">'+d.cta+'</a></article>';
+    }).join('');
+    document.getElementById('empty').classList.toggle('show',!list.length);
+  }
+  document.getElementById('list').addEventListener('click',function(e){
+    var sv=e.target.closest('[data-save]');
+    if(sv){var d=DATA.filter(function(x){return x.id===sv.getAttribute('data-save');})[0];d.saved=!d.saved;paint();say(d.saved?'Đã ghim ★ ghi chú':'Đã bỏ ghim ghi chú');return;}
+    if(e.target.closest('[data-menu]')){say('Tùy chọn: ghim · chuyển sổ · báo lỗi nội dung');return;}
+  });
+  document.querySelectorAll('[data-f]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-f]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');f=b.getAttribute('data-f');paint();
+    });
+  });
+  document.getElementById('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();paint();});
+  document.addEventListener('keydown',function(e){var tag=(e.target.tagName||'').toUpperCase();if(e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA'){e.preventDefault();document.getElementById('q').focus();}});
+  document.getElementById('addBtn').addEventListener('click',function(){say('Tạo sổ mới: đặt tên + chọn biểu tượng + thêm mục đầu tiên');});
+  document.getElementById('settingsBtn').addEventListener('click',function(){say('Cài đặt sổ tay: tự gom câu sai · nhắc ôn lúc 20:00');});
+  document.querySelectorAll('.bnav[data-go]').forEach(function(b){b.addEventListener('click',function(){location.href=b.getAttribute('data-go');});});
+  paint();
+})();
+</script>
+</body>
+</html>
