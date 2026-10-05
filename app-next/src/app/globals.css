@@ -89,6 +89,8 @@ html.dark {
   --color-surface-muted: var(--surface-muted);
   --color-amber-wash: var(--hz-amber-wash);
   --color-amber-ink: var(--hz-amber-ink);
+  /* port opendesign_hsk/pinyin.html: viền pill streak */
+  --color-amber-line: var(--hz-amber);
   --color-rose-wash: var(--hz-rose-wash);
   --color-rose-line: var(--hz-rose-line);
   --color-rose-ink: var(--hz-rose-ink);

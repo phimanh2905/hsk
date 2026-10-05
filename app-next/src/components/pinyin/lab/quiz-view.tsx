@@ -96,7 +96,7 @@ export function QuizView(p: QuizViewProps) {
                   className={cn(
                     "flex min-h-[76px] items-center gap-3 rounded-[14px] border border-border-subtle bg-surface-muted px-[18px] text-2xl font-semibold tracking-[0.02em] text-text-primary",
                     p.picked === null && "hover:border-border-strong",
-                    isRight && "good border-2 border-learning-mastered bg-jade-wash text-[color:var(--hz-jade-ink,#065F46)]",
+                    isRight && "good border-2 border-learning-mastered bg-jade-wash text-jade",
                     isPicked && !isRight && "bad border-2 border-action-primary bg-rose-wash text-rose-ink animate-[shake_0.35s_ease]",
                     p.picked !== null && "cursor-default",
                   )}
