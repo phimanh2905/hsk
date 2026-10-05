@@ -64,9 +64,9 @@ export function bucket(dx: number, dy: number): Bucket
 export function matchStroke(pts: {x:number;y:number}[], exp: StrokeDir): boolean
   // exp "T" → pts.length > 4; DOT → chấp nhận khi exp là "SE"|"S";
   // còn lại so bucket(đầu–cuối) === exp
-export function scoreInk(ink: {ok:boolean}[], expected: StrokeDir[]): {acc: number|null; done: number}
-  // acc = round(ok/n*100) hoặc null khi n=0; done = số nét đã vẽ
 ```
+
+Độ chuẩn xác hiển thị tính tại UI (workbench): `acc = done > 0 ? round(ok/done*100) : null` — không cần hàm riêng.
 
 ## 4. Layout & container — route group `(wide)`
 
@@ -87,11 +87,11 @@ Thứ tự section trong trang: `.head` (h1 + subtitle) → filterbar → state 
 | `components/hanzi/studio/studio-catalog.tsx` | client | Props: `{ chars (đã lọc + phân trang), page, pages, total, level, cur, onSelect, onPage }`. Panel "Kho Hán tự": panel-head (h2 + `catCount` = `N chữ mẫu · LEVEL`), grid zcard 3 cột (≥1400px 4 cột), `cat-scroll` max-h 680px, pager ◀/▶ + label. Zcard: badge (done = jade tròn + icon check; mid = amber tròn; new = vòng nét đứt), glyph 36px `.zh`, `py · n nét`, spill pill ("Đã thuộc"/"Đang luyện"/"Mới"). Active: border 2 accent + accent-soft. Empty state "Không có chữ nào khớp bộ lọc." |
 | `components/hanzi/studio/studio-workbench.tsx` | client | Props: `{ char, mode, onMode }`. Chứa `studio-grid` làm con. wb-head: glyph 44px `.zh` + py-pill (pinyin + IconButton Volume2 → `speak(ch+ch)`) + mean. Mode-tabs (Xem mẫu bút thuận / Tự luyện viết (chấm điểm)). Toolbars: watchBar (Nét trước / Phát lại accent / Nét sau + speed-seg 0.75x/1.0x/1.5x) ↔ drawBar (Xóa bảng / Hoàn tác / Gợi ý nét mờ toggle). Meter (chỉ draw): "Độ chuẩn xác: X% · Nét n/total" + bar jade — số liệu từ callback `onStats` của grid. Chips: BỘ THỦ (hanzi tô jade) / CẤU TRÚC / ÂM HÁN-VIỆT. Tip amber-wash "Mẹo nhớ: …" |
 | `components/hanzi/studio/studio-grid.tsx` | client | Props: `{ char, mode, apiRef?, onStats }`. Ô thiên tự: SVG nền (khung + trục dashes) + SVG nét (watch) + SVG ink (draw, `touch-action:none`). Chứa `useStudioStrokes` + pointer-vẽ + hint. `onStats({ done, ok, total })` gọi mỗi khi ink đổi (vẽ/undo/clear/đổi chữ) để workbench render meter; toolbar play/step/hint/goi qua `apiRef` (imperative handle của hook) — workbench không giữ state animation |
-| `components/hanzi/studio/use-studio-strokes.ts` | hook | Watch-mode animation, port đúng mock: mỗi nét `<path>` class `todo` (fg, opacity .13) / `done` (fg) / `now` (accent) / `hint` (accent, .3, dash 6 8). Animate nét i: set dasharray/offset = tổng chiều dài, transition `stroke-dashoffset max(280, 720/speed)ms ease`, xong → `done`. `playAll()` chuỗi hết các nét; `stepTo(i)` tĩnh (Nét trước/sau); `setSpeed()`. Chế độ draw: toàn bộ nét ở trạng thái `done` làm mẫu tham chiếu dưới lớp ink |
+| `components/hanzi/studio/use-studio-strokes.ts` | hook | `useStudioStrokes(svgRef, char, opts?: { onPlayEnd? })` → api `{ build, playAll, stop, stepTo(i), stepBy(delta), setSpeed, showHint(i), clearHint, total }`. Watch-mode animation, port đúng mock: mỗi nét `<path>` class `hz-st todo` (fg, mờ) / `done` (fg đậm) / `now` (accent) / `hint` (accent, .3, dash 6 8 — thêm CSS mới, phần còn lại tái dùng `.hz-st` của review port). Animate nét i: set dasharray/offset = `getTotalLength()`, transition `stroke-dashoffset max(280, 720/speed)ms ease`, xong → `done`; playAll chạy chuỗi setTimeout, hết chữ → `onPlayEnd` (toast "Hoàn thành N nét"). `stepTo/stepBy` tĩnh (Nét trước/sau). Chế độ draw: toàn bộ nét ở trạng thái `done` làm mẫu tham chiếu dưới lớp ink |
 | `components/hanzi/studio/seg-control.tsx` | client | Segmented không-pill (rounded-12/16 như mock) cho mode-tabs, speed-seg, pane-tabs — KHÔNG dùng `SegmentedTabs` (rounded-full) cho 3 chỗ này để giữ đúng hình mock. API mirror `SegmentedTabs` (`tabs/value/onChange/label` + `radius`). Filterbar cấp độ vẫn dùng `SegmentedTabs` (mock `.seg` đúng rounded-full) |
 | `src/lib/hanzi/stroke-quiz.ts` | pure | Xem §3 |
 
-State pills (Tất cả/Đã thuộc nét/Cần luyện lại): button riêng theo mock (pill rounded-full, active = border accent + text accent + bg accent-soft) — **không** dùng `Chip` (tone `selected` là nền accent chữ trắng, khác hình mock).
+State pills (Tất cả/Đã thuộc nét/Cần luyện lại): button riêng theo mock (pill rounded-full, active = border accent + text accent + bg accent-soft) — **không** dùng `Chip` (tone `selected` là nền accent chữ trắng, khác hình mock). Ý nghĩa filter: "Tất cả" = mọi st; "Đã thuộc nét" = `st === "done"`; "Cần luyện lại" = `st !== "done"` (mid + new) — mock lọc `st === "todo"` là giá trị không tồn tại trong data (bug mock), port theo ý nghĩa nhãn.
 
 Chấm điểm draw (trong `studio-grid.tsx`, dùng `stroke-quiz`): pointerdown tạo `<polyline>`; pointermove cộng điểm (bỏ qua if `< 3px`); pointerup: `ok = pts.length ≥ 4 && matchStroke(pts, d[min(idx, d.length-1)])`, tô class `good` (fg) / `bad` (accent); khi bật hint → render nét mẫu kế tiếp; update meter; vẽ đủ `n` nét → toast khen/nhắc theo acc ≥ 80 (copy đúng mock).
 
