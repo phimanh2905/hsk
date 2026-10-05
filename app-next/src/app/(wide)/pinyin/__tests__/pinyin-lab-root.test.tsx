@@ -74,7 +74,7 @@ describe("PinyinLabRoot — quiz", () => {
   });
 
   it("trả lời → feedback; Enter sang câu 2 (Review Focus #2: trả lời 2 lần no-op)", () => {
-    const { container } = render(<PinyinLabRoot initialMode="quiz" initialDrill={null} />);
+    render(<PinyinLabRoot initialMode="quiz" initialDrill={null} />);
     act(() => { window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true })); });
     expect(document.body.textContent).toMatch(/Chính xác!|Chưa đúng\./);
     expect(document.body.textContent).toMatch(/Độ chính xác: \d+%/);

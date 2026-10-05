@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import { buildPool, pickTarget, distractors, type PinyinLabPoolItem } from "../quiz-engine";
-import { PINYIN_LAB_TONES } from "@/content/pinyin-lab";
 
 function seqRng(values: number[]) {
   let i = 0;
