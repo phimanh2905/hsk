@@ -9,12 +9,17 @@ vi.mock("@/lib/db", () => ({
   createDb: () => ({
     select: () => ({ from: () => ({ where: () => ({ orderBy: () => Promise.resolve(rows) }) }) }),
     insert: () => ({ values: (v: unknown) => ({ onConflictDoUpdate: () => Promise.resolve(undefined) }) }),
+    update: () => ({
+      set: (v: unknown) => ({ where: () => ({ returning: () => Promise.resolve([updatedRow]) }) }),
+    }),
+    delete: () => ({ where: () => ({ returning: () => Promise.resolve([updatedRow]) }) }),
   }),
 }));
 
 import { GET, POST, rowToApi } from "../entries/route";
+import { PATCH, DELETE } from "../entries/[id]/route";
 
-function req(method: "GET" | "POST", body?: unknown) {
+function req(method: "GET" | "POST" | "PATCH" | "DELETE", body?: unknown) {
   return new Request("http://localhost:3100/api/v1/notebook/entries", {
     method,
     headers: { "content-type": "application/json" },
@@ -74,5 +79,32 @@ describe("POST /api/v1/notebook/entries", () => {
 describe("rowToApi", () => {
   it("payload hỏng → null", () => {
     expect(rowToApi({ id: "x", kind: "personal", tag: "t", tagTone: "per", payload: "nope", saved: 0, hsk: null, source: "manual", createdAt: 0, updatedAt: 0 })).toBeNull();
+  });
+});
+
+const updatedRow = { id: "e1", kind: "wrong", tag: "t", tagTone: "red", payload: JSON.stringify(validBody.payload), saved: 1, hsk: null, source: "auto", createdAt: 1_700_000_000, updatedAt: 1_700_000_001 };
+
+describe("PATCH /api/v1/notebook/entries/[id]", () => {
+  it("401 chưa đăng nhập", async () => {
+    const res = await PATCH(req("PATCH", { saved: true }), { params: Promise.resolve({ id: "e1" }) });
+    expect(res.status).toBe(401);
+  });
+  it("400 body sai", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const res = await PATCH(req("PATCH", { saved: "yes" }), { params: Promise.resolve({ id: "e1" }) });
+    expect(res.status).toBe(400);
+  });
+  it("200 trả item saved=true", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const json = await (await PATCH(req("PATCH", { saved: true }), { params: Promise.resolve({ id: "e1" }) })).json();
+    expect(json.item.saved).toBe(true);
+  });
+});
+
+describe("DELETE /api/v1/notebook/entries/[id]", () => {
+  it("204 khi xóa", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const res = await DELETE(req("DELETE"), { params: Promise.resolve({ id: "e1" }) });
+    expect(res.status).toBe(204);
   });
 });
