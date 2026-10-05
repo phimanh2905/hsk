@@ -59,7 +59,7 @@ Hợp nhất: đi từng nguồn tạo entry theo `zh` (first-wins cho py/hv/vi/
 ### 2.2 `progressStore` mở rộng (pattern `markRoadmapSession` + `dispatchProgress`)
 
 ```ts
-getWordMeta(): Record<string, WordMeta>            // readJSON("bye.wordMeta", {})
+getWordMeta(): Record<string, WordMeta>            // readJSON("bye.wordMeta", {}); type WordMeta = { star?: 1; note?: string } định nghĩa + export tại progress-store.ts (lib/my-vocab re-export)
 toggleWordStar(hanzi: string): boolean             // set/xoá star, writeJSON + dispatchProgress, trả trạng thái mới
 setWordNote(hanzi: string, note: string): void     // ghi note (chuỗi rỗng → xoá field), dispatchProgress
 ```
