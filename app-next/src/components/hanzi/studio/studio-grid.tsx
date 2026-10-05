@@ -107,9 +107,12 @@ export function StudioGrid({
   }, [char]);
 
   /* Đổi mode (bỏ lần mount đầu — mock select() khởi tạo im lặng) */
-  const mountedRef = useRef(false);
+  /* Đổi mode — so sánh giá trị trước thay vì skip lần đầu (StrictMode dev chạy effect
+     đôi, skip-first làm tự phát animation khi mount) */
+  const prevModeRef = useRef(mode);
   useEffect(() => {
-    if (!mountedRef.current) { mountedRef.current = true; return; }
+    if (prevModeRef.current === mode) return;
+    prevModeRef.current = mode;
     api.stop();
     if (mode === "watch") {
       clearInk();
