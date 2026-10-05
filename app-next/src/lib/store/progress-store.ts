@@ -51,6 +51,8 @@ export interface ProgressStoreApi {
   countSrsNew(): number;
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null;
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
+  getPinyinLabBest(): number;
+  recordPinyinLabResult(correct: number): void;
   getRoadmapDone(): number[];
   markRoadmapSession(n: number): void;
   getRoadmapLearnSeen(): number[];
@@ -336,6 +338,18 @@ export class ProgressStore implements ProgressStoreApi {
 
   getToday(): number {
     return readNum("bye.today", 0);
+  }
+
+  /* ---------- Pinyin Lab (spec 2026-10-05 §7) ---------- */
+
+  getPinyinLabBest(): number {
+    return readNum("bye.pinyin.lab.best");
+  }
+
+  recordPinyinLabResult(correct: number): void {
+    if (correct <= this.getPinyinLabBest()) return;
+    writeNum("bye.pinyin.lab.best", correct);
+    dispatchProgress();
   }
 
   /* ---------- roadmap ---------- */
