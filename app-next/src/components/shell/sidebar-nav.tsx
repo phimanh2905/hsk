@@ -1,187 +1,202 @@
 "use client";
 
-/* SidebarNav — port clone/js/shell.js renderSidebar (SPEC-10).
-   8 mục, dropdown con, active jade theo usePathname.
-   Mobile: drawer mở từ topbar Menu (event "nhai:open-nav") — không còn nút floating. */
+/* SidebarNav — port .sidebar của opendesign_hsk/app-shell.html (spec 2026-10-04 §4.2).
+   Desktop lg: fixed 256px; dưới lg: off-canvas drawer mở qua event "nhai:open-nav"
+   (hamburger ở topbar + nút More ở bottom-nav), đóng bằng scrim / Escape / click link.
+   Active: nền action-primary/10 + rail trái 3px — dùng aria-current="page" thay class .active. */
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import {
-  BookOpen,
-  FileText,
-  GraduationCap,
-  Headphones,
-  Home,
-  Printer,
-  Search,
-  Target,
-  X,
-  ICON_STROKE,
-  type LucideIcon,
+  BarChart3, BookmarkCheck, Brain, Compass, Home, Pencil, Printer, Settings,
+  Volume2, AudioLines, ICON_STROKE, type LucideIcon,
 } from "@/components/ui/icon";
+import { IconButton } from "@/components/ui/icon-button";
+import { useHomeSummary } from "@/lib/home-summary";
+import { useSession } from "@/lib/use-session";
+import { useLoginModal } from "./login-modal";
 
-type SubItem = { label: string; href: string };
-type NavItem = {
-  label: string;
-  Icon: LucideIcon;
-  href?: string;
-  sub?: SubItem[];
-};
+const OPEN_NAV_EVENT = "nhai:open-nav";
 
-const NAV: NavItem[] = [
-  { label: "Trang chủ", Icon: Home, href: "/" },
+const GROUPS: ReadonlyArray<{
+  title: string;
+  items: ReadonlyArray<{ href: string; label: string; Icon: LucideIcon; badge?: "srs" }>;
+}> = [
   {
-    label: "Nền tảng",
-    Icon: GraduationCap,
-    sub: [
-      { label: "Bảng Pinyin", href: "/pinyin" },
-      { label: "Luyện Pinyin", href: "/pinyin/practice" },
-      { label: "214 Bộ Thủ", href: "/radicals" },
-      { label: "Quy tắc chuyển âm", href: "/sound-rules" },
+    title: "HỌC TẬP CỐT LÕI",
+    items: [
+      { href: "/", label: "Trang chủ", Icon: Home },
+      { href: "/roadmap", label: "Lộ trình HSK", Icon: Compass },
+      { href: "/review", label: "Ôn tập SRS", Icon: Brain, badge: "srs" },
     ],
   },
   {
-    label: "Cá nhân hoá",
-    Icon: Target,
-    sub: [
-      { label: "Ôn tập", href: "/review" },
-      { label: "Tiến độ học", href: "/progress" },
-      { label: "Sổ tay từ vựng", href: "/my-vocab" },
+    title: "KỸ NĂNG & LUYỆN TẬP",
+    items: [
+      { href: "/hanzi", label: "Hanzi Studio", Icon: Pencil },
+      { href: "/shadowing", label: "Luyện nói & Đọc", Icon: AudioLines },
+      { href: "/pinyin", label: "Bảng âm Pinyin", Icon: Volume2 },
     ],
   },
   {
-    label: "Tra từ điển",
-    Icon: Search,
-    sub: [
-      { label: "Tra từ điển", href: "/dictionary" },
-      { label: "Phân tích Hán tự", href: "/hanzi" },
+    title: "CÁ NHÂN & CÔNG CỤ",
+    items: [
+      { href: "/my-vocab", label: "Sổ tay từ vựng", Icon: BookmarkCheck },
+      { href: "/progress", label: "Thống kê tiến độ", Icon: BarChart3 },
+      { href: "/create-file", label: "Tạo tập viết in", Icon: Printer },
     ],
   },
-  { label: "Shadowing", Icon: Headphones, href: "/shadowing" },
-  { label: "Bài khoá", Icon: BookOpen, href: "/course" },
-  { label: "Luyện thi chứng chỉ", Icon: FileText, href: "/certificate-test" },
-  { label: "Tạo file", Icon: Printer, href: "/create-file" },
-];
+] as const;
 
 export default function SidebarNav() {
   const pathname = usePathname();
-  const [openGroup, setOpenGroup] = useState<number | null>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { srsDue, mounted } = useHomeSummary();
+  const { loggedIn, name } = useSession();
+  const { openLogin } = useLoginModal();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const open = () => setMobileOpen(true);
-    window.addEventListener("nhai:open-nav", open);
-    return () => window.removeEventListener("nhai:open-nav", open);
+    const openNav = () => setOpen(true);
+    window.addEventListener(OPEN_NAV_EVENT, openNav);
+    return () => window.removeEventListener(OPEN_NAV_EVENT, openNav);
   }, []);
 
-  const isActive = (it: NavItem) => {
-    if (it.href) return pathname === it.href;
-    return (it.sub || []).some((s) => pathname === s.href || pathname.startsWith(s.href + "/"));
-  };
+  /* Escape đóng drawer + khoá scroll body khi mở.
+     F3 (final review): drawer khi mở là chủ nhân của Escape — capture + stopPropagation
+     để Escape không rò xuống listener document/window khác (hotkey lesson, palette...). */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      setOpen(false);
+    };
+    document.addEventListener("keydown", onKey, true);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey, true);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
-  const itemCls = (active: boolean) =>
-    "w-14 min-h-11 rounded-control border border-transparent flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[10px] font-semibold leading-tight text-center " +
-    (active
-      ? "bg-action-primary/10 text-action-primary"
-      : "text-text-secondary hover:text-action-primary");
+  /* Đóng drawer khi route đổi mà KHÔNG qua link sidebar (router.push từ topbar, redirect).
+     Gate bằng ref pathname trước đó: lần mount đầu prev === pathname → return sớm, không setState thừa. */
+  const prevPath = useRef(pathname);
+  useEffect(() => {
+    if (prevPath.current === pathname) return;
+    prevPath.current = pathname;
+    setOpen(false);
+  }, [pathname]);
 
-  const renderItems = () =>
-    NAV.map((it, i) => {
-      const active = isActive(it);
-      if (it.sub) {
-        return (
-          <div key={it.label} className="relative">
-            <button
-              type="button"
-              className={itemCls(active)}
-              aria-expanded={openGroup === i}
-              onClick={() => setOpenGroup(openGroup === i ? null : i)}
-            >
-              <it.Icon size={20} strokeWidth={ICON_STROKE} aria-hidden="true" />
-              <span>{it.label} ›</span>
-            </button>
-            {openGroup === i && (
-              <div className="bg-surface-elevated border border-border-default shadow-md rounded-card p-1 z-[500] fixed left-[76px] w-52">
-                {it.sub.map((s) => (
-                  <Link
-                    key={s.href}
-                    href={s.href}
-                    onClick={() => {
-                      setOpenGroup(null);
-                      setMobileOpen(false);
-                    }}
-                    className={
-                      "block px-3 py-2 rounded-control text-sm font-medium hover:bg-action-primary/10 whitespace-nowrap" +
-                      (pathname === s.href ? " bg-action-primary/10 text-action-primary" : "")
-                    }
-                  >
-                    {s.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      }
-      return (
-        <Link
-          key={it.label}
-          href={it.href as string}
-          className={itemCls(active)}
-          onClick={() => setMobileOpen(false)}
-          title={it.label}
-        >
-          <it.Icon size={20} strokeWidth={ICON_STROKE} aria-hidden="true" />
-          <span>{it.label}</span>
-        </Link>
-      );
-    });
+  const close = () => setOpen(false);
+  const initials = (name.trim() || "T").slice(0, 2).toUpperCase();
 
   return (
     <>
-      {/* desktop rail 72px */}
-      <aside
-        data-sidebar
-        className="hidden lg:flex fixed left-0 top-0 h-full w-[72px] z-[400] flex-col items-center gap-1 py-3 bg-surface-elevated border-r border-border-default overflow-y-auto"
+      {open && (
+        <button
+          type="button"
+          aria-label="Đóng menu"
+          onClick={close}
+          className="fixed inset-0 z-[425] bg-black/50 lg:hidden"
+        />
+      )}
+      <nav
+        aria-label="Điều hướng chính"
+        data-open={open ? "true" : "false"}
+        className={
+          "fixed inset-y-0 left-0 z-[430] flex w-64 flex-col border-r border-border-default " +
+          "bg-[color-mix(in_srgb,var(--surface-elevated)_95%,transparent)] backdrop-blur-xl " +
+          "transition-transform duration-300 lg:translate-x-0 " +
+          // Đóng/mở exclusive: closed = trượt ra ngoài, open = trượt vào.
+          (open ? "translate-x-0 shadow-md" : "-translate-x-full")
+        }
       >
-        <Link href="/" className="flex flex-col items-center gap-1 mb-2 shrink-0" title="Nhai HSK — Trang chủ">
-          <span className="w-9 h-9 rounded-md bg-action-primary text-white flex items-center justify-center text-lg font-extrabold zh">
+        {/* Brand — glyph 奈 của app (mock dùng 汉) */}
+        <Link href="/" className="flex items-center gap-2.5 px-4 pb-3.5 pt-4">
+          <span className="zh grid h-10 w-10 place-items-center rounded-control bg-text-primary text-[23px] font-extrabold leading-none text-surface-paper dark:bg-action-primary dark:text-white">
             奈
           </span>
-          <span className="text-[10px] font-extrabold tracking-tight">
-            Nhai<span className="text-action-primary">HSK</span>
+          <span className="leading-tight">
+            <b className="block text-[15px] font-bold">Nhai</b>
+            <small className="block text-[11px] tracking-[0.08em] text-text-secondary">HSK LEARNING</small>
           </span>
         </Link>
-        {renderItems()}
-      </aside>
 
-      {/* mobile drawer — mở từ topbar Menu (event "nhai:open-nav") */}
-      {mobileOpen && (
-        <div
-          data-mobile-nav
-          className="lg:hidden fixed inset-0 z-[440] bg-black/40"
-          onClick={() => setMobileOpen(false)}
-        >
-          <nav
-            className="absolute left-0 top-0 h-full w-60 bg-surface-elevated border-r border-border-default p-3 flex flex-col gap-1 overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-2 pr-1">
-              <span className="font-extrabold">Nhai HSK</span>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center min-h-11 min-w-11 text-text-secondary"
-                aria-label="Đóng menu"
-                onClick={() => setMobileOpen(false)}
-              >
-                <X size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
-              </button>
+        <div className="flex-1 overflow-y-auto px-3 pb-3">
+          {GROUPS.map((g) => (
+            <div key={g.title} className="mt-6 first:mt-0">
+              <h4 className="px-2.5 pb-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-text-secondary">
+                {g.title}
+              </h4>
+              <ul className="flex flex-col gap-0.5">
+                {g.items.map(({ href, label, Icon, badge }) => {
+                  const active = href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+                  return (
+                    <li key={href} className="relative">
+                      <Link
+                        href={href}
+                        aria-current={active ? "page" : undefined}
+                        onClick={close}
+                        className={
+                          "relative flex min-h-11 items-center gap-2.5 rounded-[12px] py-2 pl-3.5 pr-2.5 text-[13.5px] transition-colors " +
+                          (active
+                            ? "bg-action-primary/10 font-semibold text-action-primary"
+                            : "font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary")
+                        }
+                      >
+                        {active && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-action-primary"
+                          />
+                        )}
+                        <Icon size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                        {label}
+                        {badge === "srs" && mounted && srsDue > 0 && (
+                          <span className="ml-auto rounded-full bg-action-primary/10 px-2 py-0.5 text-[11px] font-bold text-action-primary">
+                            {srsDue}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-            {renderItems()}
-          </nav>
+          ))}
         </div>
-      )}
+
+        {/* Footer — user-card session-driven + settings (event đã có listener) */}
+        <div className="flex items-center gap-2.5 border-t border-border-default p-3">
+          {loggedIn ? (
+            <div className="flex min-w-0 flex-1 items-center gap-2.5">
+              <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full bg-learning-mastered text-[13px] font-bold text-white">
+                {initials}
+              </span>
+              <span className="min-w-0 leading-tight">
+                <b className="block truncate text-[13px] font-bold">{name}</b>
+                <small className="block truncate text-[11px] text-text-secondary">HSK 2 · Chặng 1/3</small>
+              </span>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={openLogin}
+              className="min-h-11 flex-1 rounded-control border border-border-default bg-surface-muted text-[13px] font-bold text-text-primary hover:bg-surface-elevated"
+            >
+              Đăng nhập
+            </button>
+          )}
+          <IconButton
+            label="Cài đặt"
+            onClick={() => window.dispatchEvent(new CustomEvent("nhai:open-settings"))}
+          >
+            <Settings size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
+          </IconButton>
+        </div>
+      </nav>
     </>
   );
 }

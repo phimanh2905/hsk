@@ -7,6 +7,8 @@
 
 import { useEffect, useState } from "react";
 
+import { applyGrade, type Grade } from "@/lib/stats/review";
+
 export type SrsStatus = "new" | "learning" | "learned" | "known";
 
 export type SrsItem = {
@@ -30,6 +32,8 @@ export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
 export type ProgressSnapshot = { xp: number };
 
+export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
+
 export interface ProgressStoreApi {
   getXp(): number;
   getToday(): number;
@@ -43,6 +47,7 @@ export interface ProgressStoreApi {
   getAllSrs(): SrsItem[];
   toggleSrs(key: string): boolean;
   addSrsBatch(keys: string[]): number;
+  recordReview(key: string, grade: Grade, now?: number): SrsItem | null;
   countSrsNew(): number;
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null;
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
@@ -50,6 +55,8 @@ export interface ProgressStoreApi {
   markRoadmapSession(n: number): void;
   getRoadmapLearnSeen(): number[];
   markRoadmapLearnSeen(n: number): void;
+  getStationProgress(levelId: string): Record<string, StationProgress>;
+  setStationProgress(levelId: string, stationId: string, rec: StationProgress): void;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -93,6 +100,9 @@ function writeNum(key: string, n: number): void {
    hoàn thành) nhưng CÙNG họ progress → phải nằm trong store để HybridStore
    (SP2) đồng bộ được, không đọc localStorage trực tiếp ở component. */
 const ROADMAP_LEARN_SEEN_KEY = "nhai.roadmap.learnSeen";
+
+/* Lộ trình serpentine (spec 2026-10-04): Record<levelId, Record<stationId, {pct, stars}>> */
+const ROADMAP_STATIONS_KEY = "nhai.roadmap.stations.v1";
 
 function readNumArray(key: string): number[] {
   const arr = readJSON<unknown>(key, []);
@@ -296,6 +306,17 @@ export class ProgressStore implements ProgressStoreApi {
     return added;
   }
 
+  /* Review redesign spec §2.2 — ghi grade ôn tập; key lạ → null, không ghi. */
+  recordReview(key: string, grade: Grade, now: number = Date.now()): SrsItem | null {
+    const items = this.readSrsItems();
+    const cur = items[key];
+    if (!cur) return null;
+    items[key] = applyGrade(cur, grade, now);
+    this.writeSrsItems(items);
+    dispatchProgress();
+    return items[key];
+  }
+
   countSrsNew(): number {
     return readNum(SRS_NEW_KEY);
   }
@@ -343,6 +364,26 @@ export class ProgressStore implements ProgressStoreApi {
     seen.add(n);
     writeNumArray(ROADMAP_LEARN_SEEN_KEY, [...seen].sort((a, b) => a - b));
     dispatchProgress();
+  }
+
+  getStationProgress(levelId: string): Record<string, StationProgress> {
+    try {
+      const all = readJSON<Record<string, Record<string, StationProgress>>>(ROADMAP_STATIONS_KEY, {});
+      return all[levelId] ?? {};
+    } catch {
+      return {};
+    }
+  }
+
+  setStationProgress(levelId: string, stationId: string, rec: StationProgress): void {
+    try {
+      const all = readJSON<Record<string, Record<string, StationProgress>>>(ROADMAP_STATIONS_KEY, {});
+      all[levelId] = { ...all[levelId], [stationId]: rec };
+      writeJSON(ROADMAP_STATIONS_KEY, all);
+      window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
+    } catch {
+      /* silent */
+    }
   }
 
   /* ---------- migration 3 format SRS cũ ---------- */

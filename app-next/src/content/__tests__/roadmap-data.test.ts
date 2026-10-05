@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { roadmapSessions, roadmapStages, roadmapCopy } from "../roadmap";
+import { roadmapSessions } from "../roadmap";
 import { roadmapPinyinSteps } from "../roadmapPinyin";
 
 type SrcTestItem = { prompt?: string; answer: string; q?: string; options?: string[]; explain?: string };
@@ -77,20 +77,5 @@ describe("roadmapPinyinSteps (6 bước)", () => {
   it("nội dung khớp nguồn clone/js/data/roadmapPinyin.js (trừ links bổ sung)", () => {
     const sourceSteps = loadSource("roadmapPinyin.js", (r) => r.NHAI_DATA.roadmapPinyin.steps);
     expect(roadmapPinyinSteps).toEqual(sourceSteps.map((s) => (s.key === "recap" ? { ...s, links: [{ label: "Làm bài tập pinyin", href: "/pinyin/practice" }, { label: "Xem lại bảng", href: "/pinyin" }] } : s)));
-  });
-});
-
-describe("roadmapStages + roadmapCopy (chặng E1)", () => {
-  it("6 chặng với desc + tags đúng SPEC-05 §1", () => {
-    expect(roadmapStages.map((s) => [s.marker, s.book])).toEqual([
-      ["拼音", "Pinyin"], ["1级", "HSK 1"], ["2级", "HSK 2"], ["3级", "HSK 3"], ["4–6级", "HSK 4–6"], ["7–9级", "HSK 7–9"],
-    ]);
-    expect(roadmapStages[1].desc).toBe("500 từ vựng đầu tiên, mẫu câu cơ bản, chào hỏi và giao tiếp đời thường.");
-    expect(roadmapStages[1].tags).toEqual(["Từ vựng", "Ngữ pháp"]);
-    expect(roadmapStages[5].tags).toEqual(["Từ vựng", "Nghe hiểu", "Luyện đề"]);
-  });
-  it("roadmapCopy đủ các chuỗi UI", () => {
-    expect(roadmapCopy.atNow).toBe("Bạn đang ở: 拼音 · Bảng chữ cái Pinyin");
-    expect(roadmapCopy.badge).toContain("Tính năng đang phát triển");
   });
 });

@@ -4,7 +4,7 @@
    (srsId/toggle) + clone/js/lesson.js:130-140. item_key chuẩn <book>.<page>.<index>
    (Task 6). Toast tự bọc ToastProvider để mount đơn lẻ (test) vẫn hiện toast. */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLesson } from "./lesson-provider";
 import { progressStore } from "@/lib/store/progress-store";
 import { pinyinLine } from "@/lib/pinyin-utils";
@@ -19,10 +19,19 @@ function WordListInner() {
   const { items } = useLesson();
   const { speak } = useTts();
   const toast = useToastSafe();
+  const readStarred = () =>
+    Object.fromEntries(items.map((it) => [it.itemKey, progressStore.getSrs(it.itemKey) !== null]));
   // trạng thái star khởi tạo 1 lần từ store, cập nhật khi bấm (như renderWordList của clone)
-  const [starred, setStarred] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(items.map((it) => [it.itemKey, progressStore.getSrs(it.itemKey) !== null]))
-  );
+  const [starred, setStarred] = useState<Record<string, boolean>>(readStarred);
+
+  /* recordReview/grade và AddAllButton bắn "nhai:progress" → đọc lại store để ngôi sao
+     không bị stale sau khi chấm điểm ở màn flash (trước: chỉ đọc 1 lần lúc mount). */
+  useEffect(() => {
+    const sync = () => setStarred(readStarred());
+    window.addEventListener("nhai:progress", sync);
+    return () => window.removeEventListener("nhai:progress", sync);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
 
   const toggleStar = (itemKey: string) => {
     const added = progressStore.toggleSrs(itemKey);

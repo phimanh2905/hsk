@@ -114,3 +114,6 @@ describe("getToday + roadmap learnSeen (fix wave 2026-10-01)", () => {
     window.removeEventListener("nhai:progress", () => events.push("evt"));
   });
 });
+
+/* recordReview của lesson giờ dùng mapping applyGrade của hệ review —
+   test mapping nằm ở __tests__/record-review.test.ts (review-redesign). */
