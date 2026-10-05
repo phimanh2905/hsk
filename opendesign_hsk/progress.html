@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — Tiến độ &amp; Thống kê</title>
+<style>
+:root{
+  --bg:#FAF9F5;
+  --elev:#ffffff;
+  --card:#ffffff;
+  --surface:#f1f3f2;
+  --cream:#F5F4F0;
+  --fg:#1f2a27;
+  --body:#66756f;
+  --faint:#8a9a94;
+  --border:#e8ecea;
+  --hairline:#e8ecea;
+  --jade:#2D7D5B;
+  --jade-ink:#144d38;
+  --jade-soft:#e7f2ec;
+  --jade-bd:#bcd9c9;
+  --amber:#E68A00;
+  --amber-ink:#92400e;
+  --amber-soft:#fffaeb;
+  --amber-bd:#f5d78a;
+  --vermilion:#C83C32;
+  --vermilion-hover:#a9342b;
+  --shadow:0 1px 2px rgba(31,42,39,.05);
+  --shadow-md:0 2px 6px rgba(31,42,39,.06),0 18px 40px rgba(31,42,39,.08);
+  --r:8px; --r-card:20px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;letter-spacing:-.01em;min-height:100vh;-webkit-font-smoothing:antialiased}
+.hanzi{font-family:var(--font-hanzi)}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px;border-radius:6px}
+
+/* ===== Shell: sidebar 256px ===== */
+.shell-side{display:none}
+@media(min-width:1024px){
+  body{padding-left:256px}
+  .shell-side{display:flex;position:fixed;left:0;top:0;bottom:0;width:256px;z-index:30;background:var(--elev);border-right:1px solid var(--border);flex-direction:column}
+}
+.shell-side .brand{display:flex;align-items:center;gap:10px;padding:18px 16px;text-decoration:none}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--jade);color:#fff;display:grid;place-items:center;font-family:var(--font-hanzi);font-size:21px;font-weight:800}
+.brand b{font-size:15px;display:block;line-height:1.2}
+.brand small{font-size:10px;letter-spacing:.14em;color:var(--body)}
+.shell-nav{flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:2px}
+.shell-nav h5{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--faint);padding:14px 10px 6px}
+.shell-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px;border-radius:10px;font-size:13.5px;color:var(--body);text-decoration:none;border:1px solid transparent}
+.shell-link .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.shell-link:hover{background:var(--cream);color:var(--fg)}
+.shell-link.active{background:var(--jade-soft);color:var(--jade-ink);font-weight:700;border-color:var(--jade-bd)}
+.shell-link.active .dot{background:var(--jade)}
+.shell-foot{border-top:1px solid var(--border);padding:12px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user b{font-size:13px;display:block}
+.user small{font-size:11px;color:var(--body)}
+
+/* ===== Topbar ===== */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(250,249,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1160px;margin:0 auto;min-height:64px;padding:10px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.crumb{font-size:13px;color:var(--body);white-space:nowrap}
+.crumb a{color:var(--fg);font-weight:700;text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill-filter{display:flex;background:var(--cream);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px}
+.pill-filter button{border:1px solid transparent;background:transparent;border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:40px;white-space:nowrap}
+.pill-filter button:hover{color:var(--fg)}
+.pill-filter button[aria-pressed="true"]{background:var(--elev);color:var(--fg);border-color:var(--border);box-shadow:var(--shadow)}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);flex-shrink:0}
+.icon-btn:hover{color:var(--fg);border-color:var(--faint)}
+
+/* ===== Page ===== */
+.page{max-width:1160px;margin:0 auto;padding:20px 24px 90px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--r-card);box-shadow:var(--shadow);padding:22px}
+.card h2{font-size:14px;letter-spacing:-.01em}
+.card .sub{font-size:12.5px;color:var(--body);font-weight:400;margin:3px 0 14px}
+
+/* Tier 1 hero */
+.hero{background:var(--card);border:1px solid var(--hairline);border-radius:24px;box-shadow:var(--shadow-md);padding:24px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+@media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center;justify-items:center}}
+.ring{position:relative;width:140px;height:140px;flex-shrink:0}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .pct b{font-size:28px;display:block;line-height:1;letter-spacing:-.02em}
+.ring .pct span.lbl{font-size:10.5px;color:var(--body);font-weight:700;letter-spacing:.1em;margin-top:4px;display:block}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--jade-ink)}
+.hero h1{font-size:21px;line-height:1.35;margin-top:4px}
+.hero p{font-size:13.5px;color:var(--body);margin-top:6px;font-weight:400}
+.hpills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:860px){.hpills{justify-content:center}}
+.hpill{font-size:12.5px;font-weight:700;border:1px solid var(--border);background:var(--cream);border-radius:999px;padding:7px 14px;color:var(--fg)}
+.hpill .num-amber{color:var(--amber-ink)}
+.hpill .dot-amber{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);margin-right:2px;vertical-align:baseline}
+/* The one and only primary CTA on screen */
+.btn-vermilion{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--vermilion);color:#fff;border:1px solid var(--vermilion);border-radius:14px;min-height:52px;padding:0 26px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 14px rgba(200,60,50,.28);white-space:nowrap;text-decoration:none;max-width:300px;line-height:1.4;text-align:center}
+.btn-vermilion:hover{background:var(--vermilion-hover);border-color:var(--vermilion-hover);box-shadow:0 6px 20px rgba(200,60,50,.36)}
+
+/* Tier 2 pillars */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1023px) and (min-width:641px){.pillars{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.pillars{grid-template-columns:1fr}}
+.pillar{background:var(--card);border:1px solid var(--hairline);border-radius:var(--r-card);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column}
+.pillar:hover{transform:translateY(-2px);transition:transform .18s}
+.pillar .pic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--cream);border:1px solid var(--border);margin-bottom:10px;font-size:19px}
+.pillar h3{font-size:13.5px}
+.pillar .big{font-size:18px;margin-top:6px;letter-spacing:-.01em}
+.pillar .meta{font-size:12px;color:var(--body);font-weight:400;margin-top:2px}
+.pbadge{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid;margin-left:4px;white-space:nowrap;vertical-align:middle}
+.pbadge.ok{background:var(--jade-soft);border-color:var(--jade-bd);color:var(--jade-ink)}
+.pbadge.warn{background:var(--amber-soft);border-color:var(--amber);color:var(--amber-ink)}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;min-height:44px;padding:0 16px;border-radius:11px;background:var(--cream);border:1px solid var(--border);font-size:12.5px;font-weight:700;cursor:pointer;color:var(--fg);width:100%;text-decoration:none}
+.btn-secondary:hover{border-color:var(--faint);background:#efede8}
+
+/* Tier 3 rhythm 50/50 */
+.rhythm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){.rhythm{grid-template-columns:1fr}}
+.bars{display:flex;align-items:flex-end;gap:8px;min-height:168px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;background:none;border:0;cursor:pointer;padding:0;min-width:0;border-radius:8px}
+.barcol .val{font-size:11px;font-weight:700;color:var(--body)}
+.barcol.today .val{color:var(--jade-ink)}
+.barcol i{width:100%;max-width:36px;border-radius:9px 9px 5px 5px;background:var(--jade);min-height:6px;display:block}
+.barcol.today i{box-shadow:inset 0 0 0 2px rgba(255,255,255,.55),0 2px 8px rgba(45,125,91,.35)}
+.barcol:hover i{filter:brightness(1.08)}
+.barcol span.day{font-size:11px;color:var(--body);font-weight:700}
+.barcol.today span.day{color:var(--fg)}
+.heat-wrap{overflow-x:auto;padding-bottom:4px}
+.heat{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:4px;min-width:520px}
+.heat i{width:14px;height:14px;border-radius:4px;background:var(--cream);border:1px solid var(--border)}
+.heat i.l1{background:#d9e9df}
+.heat i.l2{background:#a9cdb8}
+.heat i.l3{background:#5fa183}
+.heat i.l4{background:var(--jade);border-color:var(--jade)}
+.legend{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:12px;color:var(--body);margin-top:12px}
+.legend .sw{display:inline-flex;gap:3px;align-items:center}
+.legend .sw i{width:13px;height:13px;border-radius:4px;display:inline-block;border:1px solid var(--border)}
+
+/* Tier 4 HSK */
+.hskrow{display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.hskrow:last-child{border-bottom:0}
+.hskrow .lv{font-size:13px;font-weight:700}
+.track{height:12px;border-radius:999px;background:var(--cream);border:1px solid var(--hairline);overflow:hidden}
+.track i{display:block;height:100%;border-radius:999px;background:var(--jade)}
+.track i.cur{background:var(--amber)}
+.hskrow .st{font-size:12px;color:var(--body);text-align:right;white-space:nowrap;font-weight:400}
+.hskrow .st b{color:var(--fg)}
+.hbadge{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid;margin-left:6px;white-space:nowrap}
+.hbadge.done{background:var(--jade-soft);border-color:var(--jade-bd);color:var(--jade-ink)}
+.hbadge.cont{background:var(--jade-soft);border-color:transparent;color:var(--jade-ink)}
+.hbadge.todo{background:var(--cream);border-color:var(--border);color:var(--body)}
+.hbadge.live{background:var(--amber-soft);border-color:var(--amber);color:var(--amber-ink)}
+.hskrow.hl{background:var(--amber-soft);margin:0 -22px;padding-left:22px;padding-right:22px;border-bottom-color:transparent}
+@media(max-width:640px){.hskrow{grid-template-columns:56px 1fr;}.hskrow .st{grid-column:2;text-align:left}}
+
+/* mobile nav */
+.bottomnav{display:none}
+@media(max-width:1023px){
+  .bottomnav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border)}
+  .bottomnav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 8px calc(8px + env(safe-area-inset-bottom))}
+  .bnav{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:54px;justify-content:center;border-radius:10px}
+  .bnav.active{color:var(--jade-ink)}
+  .page{padding:16px 16px 130px}
+}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:90;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<aside class="shell-side" aria-label="Điều hướng chính" data-od-id="app-sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark hanzi">汉</span><span><b>Hanzi</b><small>HSK LEARNING</small></span></a>
+  <nav class="shell-nav">
+    <h5>NỀN TẢNG · CORE SHELL</h5>
+    <a class="shell-link" href="index.html"><span class="dot"></span>Trang chủ</a>
+    <a class="shell-link" href="roadmap.html"><span class="dot"></span>Lộ trình HSK</a>
+    <a class="shell-link" href="review.html"><span class="dot"></span>Ôn tập SRS</a>
+    <h5>LUYỆN TẬP &amp; KỸ NĂNG</h5>
+    <a class="shell-link" href="hanzi.html"><span class="dot"></span>Hanzi Studio</a>
+    <a class="shell-link" href="shadowing.html"><span class="dot"></span>Luyện nói &amp; Đọc</a>
+    <a class="shell-link" href="pinyin.html"><span class="dot"></span>Bảng âm Pinyin</a>
+    <h5>CÁ NHÂN &amp; CÔNG CỤ</h5>
+    <a class="shell-link" href="my-vocab.html"><span class="dot"></span>Sổ tay từ vựng</a>
+    <a class="shell-link active" href="progress.html" aria-current="page"><span class="dot"></span>Tiến độ</a>
+  </nav>
+  <div class="shell-foot"><div class="user"><span class="avatar">M</span><span><b>Minh</b><small>HSK 2 · Chặng 1/3</small></span></div></div>
+</aside>
+
+<header class="topbar" data-od-id="progress-topbar"><div class="topbar-inner">
+  <span class="crumb"><a href="index.html">Trang chủ</a> / Tiến độ &amp; Thống kê</span>
+  <div class="topbar-right">
+    <div class="pill-filter" role="group" aria-label="Bộ lọc thời gian" data-od-id="time-filter">
+      <button data-h="7" aria-pressed="false">7 ngày qua</button>
+      <button data-h="30" aria-pressed="true">30 ngày qua</button>
+      <button data-h="all" aria-pressed="false">Toàn thời gian</button>
+    </div>
+    <button class="icon-btn" id="settingsBtn" data-od-id="settings-btn" aria-label="Cài đặt thống kê"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </div>
+</div></header>
+
+<main class="page">
+  <!-- TIER 1 -->
+  <section class="hero" data-od-id="mastery-hero" aria-label="Bàn chỉ huy mục tiêu kỳ thi">
+    <div class="ring" role="img" aria-label="Độ sẵn sàng thi 74 phần trăm"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="58" fill="none" stroke="#e8ecea" stroke-width="14"/><circle cx="70" cy="70" r="58" fill="none" stroke="#2D7D5B" stroke-width="14" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="94.7"/></svg><span class="pct"><span><b>74%</b><span class="lbl">SẴN SÀNG</span></span></span></div>
+    <div>
+      <div class="hero-eyebrow">MỤC TIÊU: CHINH PHỤC HSK 4 · THÁNG 11/2026</div>
+      <h1>Chỉ còn 68 từ vựng và 12 mẫu câu để sẵn sàng làm đề thi thử.</h1>
+      <p>Nhịp hiện tại của bạn đang bám sát kế hoạch — giữ chuỗi để về đích đúng hạn.</p>
+      <div class="hpills">
+        <span class="hpill">🔥 Streak: <span class="num-amber">18 ngày</span></span>
+        <span class="hpill">💎 890 từ Master</span>
+        <span class="hpill">⏳ Còn 24 ngày</span>
+      </div>
+    </div>
+    <a class="btn-vermilion" href="hanzi.html" data-od-id="weakness-cta">🎯 Bù đắp kỹ năng yếu: Luyện viết Hán tự</a>
+  </section>
+
+  <!-- TIER 2 -->
+  <section class="pillars" data-od-id="pillars-grid" aria-label="Ma trận 4 trụ cột thông thạo">
+    <article class="pillar" data-od-id="pillar-vocab">
+      <div class="pic" aria-hidden="true">📖</div>
+      <h3>TỪ VỰNG SRS</h3>
+      <div class="big">1,240 từ đã học</div>
+      <div class="meta">Độ bền trí nhớ <span class="pbadge ok">82% Vững</span></div>
+      <a class="btn-secondary" href="review.html">Ôn từ vựng</a>
+    </article>
+    <article class="pillar" data-od-id="pillar-hanzi">
+      <div class="pic" aria-hidden="true">✍️</div>
+      <h3>HÁN TỰ VIẾT NÉT</h3>
+      <div class="big">420 chữ thuộc nét</div>
+      <div class="meta">Điểm viết 68/100 <span class="pbadge warn">Cần chú ý</span></div>
+      <a class="btn-secondary" href="hanzi.html">Luyện viết nét</a>
+    </article>
+    <article class="pillar" data-od-id="pillar-shadow">
+      <div class="pic" aria-hidden="true">🗣️</div>
+      <h3>LUYỆN NÓI SHADOW</h3>
+      <div class="big">85 phút luyện nhại</div>
+      <div class="meta">140 từ/phút <span class="pbadge ok">Ổn định</span></div>
+      <a class="btn-secondary" href="shadowing.html">Vào phòng thu</a>
+    </article>
+    <article class="pillar" data-od-id="pillar-pinyin">
+      <div class="pic" aria-hidden="true">🎵</div>
+      <h3>NGỮ ÂM PINYIN</h3>
+      <div class="big">96% chuẩn thanh</div>
+      <div class="meta">Phản xạ 1.2s <span class="pbadge ok">Tốt</span></div>
+      <a class="btn-secondary" href="pinyin.html">Luyện phản xạ</a>
+    </article>
+  </section>
+
+  <!-- TIER 3 -->
+  <section class="rhythm" aria-label="Nhịp sinh học và ma trận nhiệt">
+    <div class="card" data-od-id="week-chart">
+      <h2>Nhịp học 7 ngày</h2>
+      <div class="sub">TB: 38 phút/ngày · Cột xanh ngọc bích · chạm cột để xem chi tiết</div>
+      <div class="bars" id="bars" role="group" aria-label="Biểu đồ 7 ngày"></div>
+    </div>
+    <div class="card" data-od-id="heatmap-card">
+      <h2>Ma trận nhiệt hoạt động</h2>
+      <div class="sub">Chuỗi dài nhất: 28 ngày · 142 phiên học · 52 tuần × 7 ngày</div>
+      <div class="heat-wrap"><div class="heat" id="heat" role="img" aria-label="Heatmap mật độ học 52 tuần"></div></div>
+      <div class="legend"><span>Ít</span><span class="sw"><i style="background:#F5F4F0"></i><i style="background:#d9e9df;border-color:#d9e9df"></i><i style="background:#5fa183;border-color:#5fa183"></i><i style="background:#2D7D5B;border-color:#2D7D5B"></i></span><span>Nhiều</span></div>
+    </div>
+  </section>
+
+  <!-- TIER 4 -->
+  <section class="card" data-od-id="hsk-matrix" aria-label="Tiến trình 6 cấp bậc HSK">
+    <h2>Tiến trình 6 cấp bậc HSK · HSK 3.0</h2>
+    <div class="sub">Tổng 1,850 / 9,350 từ · hover từng hàng để xem số từ còn lại</div>
+    <div id="hskRows"></div>
+  </section>
+</main>
+
+<nav class="bottomnav" aria-label="Điều hướng di động" data-od-id="bottom-nav"><div class="bottomnav-inner">
+  <button class="bnav" data-go="index.html">Trang chủ</button>
+  <button class="bnav" data-go="roadmap.html">Lộ trình</button>
+  <button class="bnav" data-go="review.html">Ôn tập</button>
+  <button class="bnav" data-go="hanzi.html">Hanzi</button>
+  <button class="bnav active" aria-current="page">Tôi</button>
+</div></nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+  function rnd(seed){var x=Math.sin(seed*127.1)*43758.5453;return x-Math.floor(x);}
+
+  // Tier 3 left: fixed 7-day rhythm per spec
+  var WEEK=[['T2',30],['T3',45],['T4',20],['T5',60],['T6',40],['T7',15],['CN',50]];
+  var max=Math.max.apply(null,WEEK.map(function(d){return d[1];}));
+  document.getElementById('bars').innerHTML=WEEK.map(function(d){
+    var today=d[0]==='CN'?' today':'';
+    var h=Math.max(5,Math.round(d[1]/max*118));
+    return '<button class="barcol'+today+'" data-tip="'+d[0]+': '+d[1]+' phút học" aria-label="'+d[0]+' học '+d[1]+' phút"><span class="val">'+d[1]+'m</span><i style="height:'+h+'px"></i><span class="day">'+d[0]+'</span></button>';
+  }).join('');
+  document.getElementById('bars').addEventListener('click',function(e){
+    var b=e.target.closest('[data-tip]');if(b)say(b.getAttribute('data-tip'));
+  });
+
+  // Tier 3 right: 52 weeks x 7 heatmap, 4 jade shades
+  var heat=document.getElementById('heat'),cells='';
+  var today=new Date();
+  for(var d=363;d>=0;d--){
+    var dte=new Date(today.getTime()-d*864e5);
+    var r=rnd(d*3.7+1);
+    var lv=r<0.18?0:r<0.45?1:r<0.7?2:r<0.9?3:4;
+    var mins=lv===0?0:Math.round(5+r*70);
+    var label=dte.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})+': '+(mins?mins+' phút':'nghỉ');
+    cells+='<i class="'+(lv?'l'+lv:'')+'" title="'+label+'"></i>';
+  }
+  heat.innerHTML=cells;
+
+  // Tier 4 HSK
+  var HSK=[
+    ['HSK 1',150,150,'Hoàn thành 🏅','done'],
+    ['HSK 2',300,300,'Hoàn thành 🏅','done'],
+    ['HSK 3',560,600,'Đang củng cố','cont'],
+    ['HSK 4',720,1200,'Mục tiêu 🔥','live'],
+    ['HSK 5',120,2500,'Sắp mở','todo'],
+    ['HSK 6',0,5000,'Chưa mở','todo']
+  ];
+  document.getElementById('hskRows').innerHTML=HSK.map(function(r){
+    var pct=Math.round(r[1]/r[2]*100);
+    var left=r[2]-r[1];
+    return '<div class="hskrow'+(r[3].indexOf('Mục tiêu')===0?' hl':'')+'" title="'+r[0]+': còn '+left+' từ để xong cấp độ"><span class="lv">'+r[0]+'</span><span class="track"><i class="'+(r[3].indexOf('Mục tiêu')===0?'cur':'')+'" style="width:'+pct+'%"></i></span><span class="st"><b>'+r[1]+'/'+r[2]+' từ ('+pct+'%)</b><span class="hbadge '+r[4]+'">'+r[3]+'</span></span></div>';
+  }).join('');
+
+  // Topbar filter: 30d default per spec; toast only (rhythm card stays 7-day per layout spec)
+  document.querySelectorAll('.pill-filter button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.pill-filter button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      say('Phạm vi: '+b.textContent+' · nhịp 7 ngày giữ nguyên');
+    });
+  });
+  document.getElementById('settingsBtn').addEventListener('click',function(){say('Cài đặt thống kê: mục tiêu HSK 4 · nhắc ôn lúc 20:00');});
+  document.querySelectorAll('.bnav[data-go]').forEach(function(b){
+    b.addEventListener('click',function(){location.href=b.getAttribute('data-go');});
+  });
+})();
+</script>
+</body>
+</html>

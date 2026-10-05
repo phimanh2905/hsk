@@ -89,6 +89,8 @@ html.dark {
   --color-surface-muted: var(--surface-muted);
   --color-amber-wash: var(--hz-amber-wash);
   --color-amber-ink: var(--hz-amber-ink);
+  /* port opendesign_hsk/pinyin.html: viền pill streak */
+  --color-amber-line: var(--hz-amber);
   --color-rose-wash: var(--hz-rose-wash);
   --color-rose-line: var(--hz-rose-line);
   --color-rose-ink: var(--hz-rose-ink);
@@ -151,6 +153,12 @@ body {
   body { background: #fff; color: #000; }
   .print-area { box-shadow: none !important; }
   .print-page, .sheet { background: #fff; box-shadow: none; }
+}
+
+/* Pinyin Lab (port .spk.playing/.opt.bad của opendesign pinyin.html) */
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[pop_0\.5s_ease\], .animate-\[shake_0\.35s_ease\] { animation: none; }
 }
 
 /* rung khi trả lời sai (mode quiz, port class .shake của clone/js/lesson-quiz.js) */

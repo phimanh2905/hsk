@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — Sổ tay ngữ pháp</title>
+<style>
+:root{
+  --bg:#FAF9F5;
+  --elev:#ffffff;
+  --card:rgba(255,255,255,.85);
+  --cream:#F5F4F0;
+  --fg:#1f2a27;
+  --body:#66756f;
+  --faint:#8a9a94;
+  --border:#E7E5E4;
+  --jade:#2D7D5B;
+  --jade-ink:#144d38;
+  --jade-soft:#D1FAE5;
+  --jade-bg:#e7f2ec;
+  --jade-bd:#bcd9c9;
+  --amber:#E68A00;
+  --amber-ink:#92400e;
+  --amber-soft:#FEF3C7;
+  --amber-bg:#fffaeb;
+  --vermilion:#C83C32;
+  --vermilion-hover:#B33229;
+  --shadow:0 1px 2px rgba(31,42,39,.05);
+  --shadow-md:0 2px 6px rgba(31,42,39,.06),0 18px 40px rgba(31,42,39,.08);
+  --r:8px; --r-card:20px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;letter-spacing:-.01em;min-height:100vh;-webkit-font-smoothing:antialiased}
+.hanzi{font-family:var(--font-hanzi)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px;border-radius:6px}
+
+/* Shell */
+.shell-side{display:none}
+@media(min-width:1024px){
+  body{padding-left:256px}
+  .shell-side{display:flex;position:fixed;left:0;top:0;bottom:0;width:256px;z-index:30;background:var(--elev);border-right:1px solid var(--border);flex-direction:column}
+}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 16px;text-decoration:none;color:var(--fg)}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--jade);color:#fff;display:grid;place-items:center;font-family:var(--font-hanzi);font-size:21px;font-weight:800}
+.brand b{font-size:15px;display:block;line-height:1.2}
+.brand small{font-size:10px;letter-spacing:.14em;color:var(--body)}
+.shell-nav{flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:2px}
+.shell-nav h5{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--faint);padding:14px 10px 6px}
+.shell-link{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px;border-radius:10px;font-size:13.5px;color:var(--body);text-decoration:none;border:1px solid transparent}
+.shell-link .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.shell-link:hover{background:var(--cream);color:var(--fg)}
+.shell-link.active{background:var(--jade-bg);color:var(--jade-ink);font-weight:700;border-color:var(--jade-bd)}
+.shell-link.active .dot{background:var(--jade)}
+.shell-foot{border-top:1px solid var(--border);padding:12px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.user b{font-size:13px;display:block}
+.user small{font-size:11px;color:var(--body)}
+
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(250,249,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1160px;margin:0 auto;min-height:64px;padding:10px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.crumb{font-size:13px;color:var(--body);white-space:nowrap}
+.crumb a{color:var(--fg);font-weight:700;text-decoration:none}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.search{display:flex;align-items:center;gap:8px;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:0 6px 0 14px;min-height:44px;min-width:280px}
+.search input{border:0;background:transparent;outline:none;font:inherit;font-size:13px;color:var(--fg);flex:1;min-width:0}
+.search input::placeholder{color:var(--faint)}
+.search kbd{font-family:var(--font-ui);font-size:11px;font-weight:700;color:var(--body);background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:2px 8px;margin-right:4px}
+.icon-btn{width:44px;height:44px;border-radius:10px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);flex-shrink:0}
+.icon-btn:hover{color:var(--fg);border-color:var(--faint)}
+
+/* Page */
+.page{max-width:1160px;margin:0 auto;padding:20px 24px 90px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:22px}
+
+/* Tier 1 hero */
+.hero{background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-md);padding:24px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+@media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center;justify-items:center}}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--jade-ink)}
+.hero h1{font-size:21px;line-height:1.35;margin-top:4px}
+.hero p{font-size:13.5px;color:var(--body);margin-top:6px}
+.hpills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:860px){.hpills{justify-content:center}}
+.hpill{font-size:12.5px;font-weight:700;border:1px solid var(--border);border-radius:999px;padding:7px 14px}
+.hpill.p1{background:var(--cream);color:var(--fg)}
+.hpill.p2{background:var(--amber-soft);border-color:#f5d78a;color:var(--amber-ink)}
+.hpill.p3{background:var(--jade-soft);border-color:var(--jade-bd);color:var(--jade-ink)}
+.btn-vermilion{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--vermilion);color:#fff;border:1px solid var(--vermilion);border-radius:14px;min-height:52px;padding:0 26px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 14px rgba(200,60,50,.28);white-space:nowrap;text-decoration:none;max-width:300px;line-height:1.4;text-align:center}
+.btn-vermilion:hover{background:var(--vermilion-hover);border-color:var(--vermilion-hover)}
+
+/* Tier 2 filters */
+.filters{display:flex;flex-direction:column;gap:10px}
+.frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.flabel{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--faint);min-width:64px}
+.chip{border:1px solid var(--border);background:var(--elev);border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:40px;white-space:nowrap}
+.chip:hover{color:var(--fg);border-color:var(--faint)}
+.chip[aria-pressed="true"]{background:var(--elev);color:var(--vermilion);border-color:var(--vermilion);box-shadow:0 0 0 3px rgba(200,60,50,.12)}
+.btn-add{margin-left:auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border-radius:999px;background:var(--cream);border:1px solid var(--border);font-size:12.5px;font-weight:700;cursor:pointer;color:var(--fg)}
+.btn-add:hover{border-color:var(--faint);background:#efede8}
+.result-line{font-size:12.5px;color:var(--body)}
+
+/* Tier 3 grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.gcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;gap:12px}
+.gcard:hover{transform:translateY(-2px);transition:transform .18s}
+.ghead{display:flex;align-items:flex-start;gap:10px}
+.gtitle{font-size:15px;font-weight:700;line-height:1.4}
+.gtitle .hz{font-family:var(--font-hanzi);font-size:17px}
+.lvl{flex-shrink:0;font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--jade-bg);border:1px solid var(--jade-bd);color:var(--jade-ink);margin-top:2px}
+.gactions{margin-left:auto;display:flex;gap:6px;flex-shrink:0}
+.mini{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);font-size:15px}
+.mini:hover{color:var(--fg);border-color:var(--faint)}
+.mini.saved{color:var(--amber-ink);border-color:#f5d78a;background:var(--amber-bg)}
+.gdef{font-size:13px;color:var(--body)}
+.formula{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:10px 12px}
+.fblock{font-size:12.5px;font-weight:700;border-radius:8px;padding:5px 11px;background:var(--cream);border:1px solid var(--border);color:var(--fg);white-space:nowrap}
+.fblock.key{background:var(--jade-bg);border-color:var(--jade);color:var(--jade-ink);font-family:var(--font-hanzi);font-size:14px}
+.fplus{color:var(--faint);font-weight:700;font-size:12px}
+.pitfall{display:flex;gap:9px;background:var(--amber-bg);border:1px solid var(--amber-soft);border-left:3px solid var(--amber);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--fg)}
+.pitfall b{color:var(--amber-ink)}
+.examples{border-top:1px solid var(--border);padding-top:10px;display:flex;flex-direction:column;gap:10px}
+.ex{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:start}
+.ex .hz{font-family:var(--font-hanzi);font-size:19px;line-height:1.6;color:var(--fg)}
+.ex .py{font-size:12.5px;color:var(--body)}
+.ex .vi{font-size:13px;color:var(--fg)}
+.speak{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--elev);cursor:pointer;color:var(--jade-ink);font-size:16px;grid-row:span 3;align-self:center}
+.speak:hover{border-color:var(--jade);background:var(--jade-bg)}
+.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:2px;min-height:44px;padding:0 16px;border-radius:11px;background:var(--cream);border:1px solid var(--border);font-size:12.5px;font-weight:700;cursor:pointer;color:var(--fg);width:100%;text-decoration:none}
+.btn-secondary:hover{border-color:var(--faint);background:#efede8}
+.empty{display:none;text-align:center;padding:36px 20px;color:var(--body);font-size:13.5px}
+.empty.show{display:block}
+
+.bottomnav{display:none}
+@media(max-width:1023px){
+  .bottomnav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border)}
+  .bottomnav-inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 8px calc(8px + env(safe-area-inset-bottom))}
+  .bnav{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:54px;justify-content:center;border-radius:10px}
+  .bnav.active{color:var(--jade-ink)}
+  .page{padding:16px 16px 130px}
+  .search{min-width:0;flex:1}
+}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:90;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<aside class="shell-side" aria-label="Điều hướng chính" data-od-id="app-sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark hanzi">汉</span><span><b>Hanzi</b><small>HSK LEARNING</small></span></a>
+  <nav class="shell-nav">
+    <h5>NỀN TẢNG · CORE SHELL</h5>
+    <a class="shell-link" href="index.html"><span class="dot"></span>Trang chủ</a>
+    <a class="shell-link" href="roadmap.html"><span class="dot"></span>Lộ trình HSK</a>
+    <a class="shell-link" href="review.html"><span class="dot"></span>Ôn tập SRS</a>
+    <h5>LUYỆN TẬP &amp; KỸ NĂNG</h5>
+    <a class="shell-link" href="hanzi.html"><span class="dot"></span>Hanzi Studio</a>
+    <a class="shell-link" href="shadowing.html"><span class="dot"></span>Luyện nói &amp; Đọc</a>
+    <a class="shell-link" href="pinyin.html"><span class="dot"></span>Bảng âm Pinyin</a>
+    <h5>CÁ NHÂN &amp; CÔNG CỤ</h5>
+    <a class="shell-link" href="my-vocab.html"><span class="dot"></span>Sổ tay từ vựng</a>
+    <a class="shell-link active" href="my-grammar.html" aria-current="page"><span class="dot"></span>Sổ tay ngữ pháp</a>
+    <a class="shell-link" href="progress.html"><span class="dot"></span>Tiến độ</a>
+  </nav>
+  <div class="shell-foot"><div class="user"><span class="avatar">M</span><span><b>Minh</b><small>HSK 2 · Chặng 1/3</small></span></div></div>
+</aside>
+
+<header class="topbar" data-od-id="grammar-topbar"><div class="topbar-inner">
+  <span class="crumb"><a href="index.html">Trang chủ</a> / Sổ tay ngữ pháp</span>
+  <div class="topbar-right">
+    <label class="search" data-od-id="grammar-search">🔍<input id="q" type="search" placeholder="Tìm kiếm cấu trúc, ví dụ..." aria-label="Tìm kiếm cấu trúc ngữ pháp" /><kbd>/</kbd></label>
+    <button class="icon-btn" id="settingsBtn" data-od-id="settings-btn" aria-label="Cài đặt sổ tay"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </div>
+</div></header>
+
+<main class="page">
+  <!-- TIER 1 -->
+  <section class="hero" data-od-id="grammar-hero" aria-label="Tổng quan sổ tay ngữ pháp">
+    <div>
+      <div class="hero-eyebrow">SỔ TAY CẤU TRÚC NGỮ PHÁP HSK</div>
+      <h1>Đã lưu 42 cấu trúc · 8 cấu trúc cần củng cố phản xạ trước kỳ thi</h1>
+      <p>Ôn theo phản xạ: nhận diện cấu trúc trong 3 giây, đặt câu đúng trong 10 giây.</p>
+      <div class="hpills">
+        <span class="hpill p1">📘 HSK 4: 18 mẫu</span>
+        <span class="hpill p2">⭐ 12 yêu thích</span>
+        <span class="hpill p3">⚡ Độ vững: 72%</span>
+      </div>
+    </div>
+    <a class="btn-vermilion" href="review.html" data-od-id="grammar-cta">🎯 Luyện phản xạ cấu trúc hôm nay</a>
+  </section>
+
+  <!-- TIER 2 -->
+  <section class="filters" aria-label="Bộ lọc ngữ pháp" data-od-id="grammar-filters">
+    <div class="frow" role="group" aria-label="Lọc theo cấp độ HSK" data-od-id="level-ribbon">
+      <span class="flabel">Cấp độ</span>
+      <button class="chip" data-level="all" aria-pressed="false">Tất cả</button>
+      <button class="chip" data-level="HSK 1" aria-pressed="false">HSK 1</button>
+      <button class="chip" data-level="HSK 2" aria-pressed="false">HSK 2</button>
+      <button class="chip" data-level="HSK 3" aria-pressed="false">HSK 3</button>
+      <button class="chip" data-level="HSK 4" aria-pressed="true">HSK 4</button>
+      <button class="chip" data-level="HSK 5" aria-pressed="false">HSK 5</button>
+      <button class="chip" data-level="HSK 6" aria-pressed="false">HSK 6</button>
+      <button class="btn-add" id="addBtn" data-od-id="add-grammar">+ Thêm cấu trúc mới</button>
+    </div>
+    <div class="frow" role="group" aria-label="Lọc theo chủ điểm" data-od-id="topic-ribbon">
+      <span class="flabel">Chủ điểm</span>
+      <button class="chip" data-topic="all" aria-pressed="true">Tất cả</button>
+      <button class="chip" data-topic="ba" aria-pressed="false">Câu chữ 把 / 被</button>
+      <button class="chip" data-topic="bi" aria-pressed="false">Câu so sánh 比</button>
+      <button class="chip" data-topic="bongu" aria-pressed="false">Bổ ngữ kết quả / khả năng</button>
+      <button class="chip" data-topic="hutu" aria-pressed="false">Hư từ &amp; Liên từ</button>
+      <button class="chip" data-topic="saved" aria-pressed="false">⭐ Đã lưu</button>
+    </div>
+    <div class="result-line" id="resultLine" aria-live="polite"></div>
+  </section>
+
+  <!-- TIER 3 -->
+  <section class="grid" id="grid" aria-label="Lưới thẻ điểm ngữ pháp" data-od-id="grammar-grid"></section>
+  <div class="card empty" id="empty">Không tìm thấy cấu trúc phù hợp. Thử từ khóa khác hoặc bấm “Tất cả”.</div>
+</main>
+
+<nav class="bottomnav" aria-label="Điều hướng di động" data-od-id="bottom-nav"><div class="bottomnav-inner">
+  <button class="bnav" data-go="index.html">Trang chủ</button>
+  <button class="bnav" data-go="roadmap.html">Lộ trình</button>
+  <button class="bnav" data-go="review.html">Ôn tập</button>
+  <button class="bnav" data-go="hanzi.html">Hanzi</button>
+  <button class="bnav active" aria-current="page">Tôi</button>
+</div></nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+
+  var DATA=[
+    {id:'ba',title:'CÂU CHỮ 把',hz:'把字句',level:'HSK 3',topic:'ba',saved:true,
+     def:'Xử lý tân ngữ và kết quả hành động — nhấn mạnh cách xử lý sự vật.',
+     formula:[['S',''],['把','key'],['Tân ngữ',''],['Động từ',''],['Thành phần khác','']],
+     pit:'Động từ <b>không được đứng đơn độc</b> sau tân ngữ — phải có bổ ngữ, 了, hoặc thành phần khác.',
+     ex:[{hz:'请把书打开。',py:'Qǐng bǎ shū dǎkāi.',vi:'Xin hãy mở sách ra.'},{hz:'把门关上吧。',py:'Bǎ mén guānshang ba.',vi:'Hãy đóng cửa lại đi.'}]},
+    {id:'bi',title:'CÂU SO SÁNH 比',hz:'比字句',level:'HSK 2',topic:'bi',saved:true,
+     def:'So sánh mức độ / tính chất giữa hai đối tượng.',
+     formula:[['A',''],['比','key'],['B',''],['Tính từ',''],['Số lượng cụ thể','']],
+     pit:'<b>Không thêm 很 / 非常</b> trước tính từ trong câu 比 — mức độ nằm ở phần số lượng.',
+     ex:[{hz:'他比我高五厘米。',py:'Tā bǐ wǒ gāo wǔ límǐ.',vi:'Anh ấy cao hơn tôi 5 cm.'}]},
+    {id:'lian',title:'LIÊN TỪ 连…也 / 都…',hz:'连字句',level:'HSK 4',topic:'hutu',saved:false,
+     def:'Nhấn mạnh trường hợp cực đoan — “đến cả… cũng…”/“ngay cả…”.',
+     formula:[['连','key'],['Trường hợp cực đoan',''],['也 / 都','key'],['Vị ngữ','']],
+     pit:'连 phải đi với 也 hoặc 都 — <b>thiếu là sai cấu trúc</b>, người Việt hay bỏ quên.',
+     ex:[{hz:'他连一杯水也不喝。',py:'Tā lián yì bēi shuǐ yě bù hē.',vi:'Anh ấy đến một ngụm nước cũng không uống.'}]},
+    {id:'bongu',title:'BỔ NGỮ KẾT QUẢ',hz:'到 / 见 / 完',level:'HSK 3',topic:'bongu',saved:true,
+     def:'Biểu thị hành động đạt được kết quả cụ thể.',
+     formula:[['Động từ',''],['到 / 见 / 完','key'],['Tân ngữ','']],
+     pit:'Bổ ngữ kết quả <b>đứng sát động từ</b> — không chèn tân ngữ vào giữa như tiếng Việt.',
+     ex:[{hz:'我听见了。',py:'Wǒ tīngjiàn le.',vi:'Tôi nghe thấy rồi.'},{hz:'作业做完了。',py:'Zuòyè zuò wán le.',vi:'Bài tập làm xong rồi.'}]},
+    {id:'bei',title:'CÂU CHỮ 被',hz:'被字句',level:'HSK 3',topic:'ba',saved:false,
+     def:'Câu bị động — chủ ngữ chịu tác động của hành động.',
+     formula:[['S (chịu tác động)',''],['被','key'],['Tác nhân',''],['Động từ',''],['Thành phần khác','']],
+     pit:'Sau 被 thường <b>không dùng động từ đơn độc</b> — cần bổ ngữ hoặc trợ từ đi kèm.',
+     ex:[{hz:'我的手机被他拿走了。',py:'Wǒ de shǒujī bèi tā ná zǒu le.',vi:'Điện thoại của tôi bị anh ấy cầm đi mất rồi.'}]},
+    {id:'yue',title:'CÀNG… CÀNG…',hz:'越…越…',level:'HSK 4',topic:'hutu',saved:false,
+     def:'Diễn tả hai sự việc cùng tăng tiến theo nhau.',
+     formula:[['越','key'],['Điều kiện',''],['越','key'],['Kết quả','']],
+     pit:'Hai vế 越 <b>phải song hành cùng chủ ngữ logic</b> — không đổi chủ ngữ giữa chừng.',
+     ex:[{hz:'越学越有意思。',py:'Yuè xué yuè yǒu yìsi.',vi:'Càng học càng thấy thú vị.'}]}
+  ];
+
+  var level='HSK 4', topic='all', q='';
+  var grid=document.getElementById('grid');
+
+  function formulaHTML(f){
+    return f.map(function(b,i){
+      var s='<span class="fblock'+(b[1]==='key'?' key':'')+'">'+b[0]+'</span>';
+      return i<f.length-1?s+'<span class="fplus">+</span>':s;
+    }).join('');
+  }
+  function paint(){
+    var list=DATA.filter(function(d){
+      var okL=level==='all'||d.level===level;
+      var okT=topic==='all'||d.topic===topic||(topic==='saved'&&d.saved);
+      var okQ=!q||(d.title+d.hz+d.def+d.ex.map(function(e){return e.hz+e.py+e.vi;}).join('')).toLowerCase().indexOf(q)>-1;
+      return okL&&okT&&okQ;
+    });
+    grid.innerHTML=list.map(function(d){
+      return '<article class="gcard" data-od-id="grammar-'+d.id+'">'
+      +'<div class="ghead"><span class="lvl">'+d.level+'</span><div class="gtitle">📌 '+d.title+' <span class="hz">('+d.hz+')</span></div>'
+      +'<div class="gactions"><button class="mini'+(d.saved?' saved':'')+'" data-save="'+d.id+'" aria-pressed="'+d.saved+'" aria-label="Lưu cấu trúc">★</button><button class="mini" data-menu="'+d.id+'" aria-label="Tùy chọn">⋮</button></div></div>'
+      +'<div class="gdef">'+d.def+'</div>'
+      +'<div class="formula" aria-label="Công thức cấu trúc">'+formulaHTML(d.formula)+'</div>'
+      +'<div class="pitfall"><span>⚠️</span><span><b>Bẫy người Việt:</b> '+d.pit+'</span></div>'
+      +'<div class="examples"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--faint)">VÍ DỤ NGỮ CẢNH</span>'
+      +d.ex.map(function(e,i){return '<div class="ex"><div><div class="hz">'+e.hz+'</div><div class="py">'+e.py+'</div><div class="vi">'+e.vi+'</div></div><button class="speak" data-say="'+i+'" data-card="'+d.id+'" aria-label="Nghe phát âm">🔊</button></div>';}).join('')
+      +'</div>'
+      +'<a class="btn-secondary" href="review.html">Luyện tập cấu trúc này</a></article>';
+    }).join('');
+    document.getElementById('empty').classList.toggle('show',!list.length);
+    document.getElementById('resultLine').textContent=list.length+' cấu trúc · '+level+' · '+(topic==='all'?'mọi chủ điểm':topic);
+  }
+
+  grid.addEventListener('click',function(e){
+    var sv=e.target.closest('[data-save]');
+    if(sv){var d=DATA.filter(function(x){return x.id===sv.getAttribute('data-save');})[0];d.saved=!d.saved;paint();say(d.saved?'Đã lưu ★ '+d.title:'Đã bỏ lưu '+d.title);return;}
+    var mn=e.target.closest('[data-menu]');
+    if(mn){say('Tùy chọn: ghim · ẩn ví dụ · báo lỗi công thức');return;}
+    var sp=e.target.closest('[data-say]');
+    if(sp){
+      var card=DATA.filter(function(x){return x.id===sp.getAttribute('data-card');})[0];
+      var sent=card.ex[+sp.getAttribute('data-say')].hz;
+      try{var u=new SpeechSynthesisUtterance(sent);u.lang='zh-CN';speechSynthesis.cancel();speechSynthesis.speak(u);say('Đang phát âm: '+sent);}catch(err){say(sent);}
+      return;
+    }
+  });
+
+  document.querySelectorAll('[data-level]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-level]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');level=b.getAttribute('data-level');paint();
+    });
+  });
+  document.querySelectorAll('[data-topic]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-topic]').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');topic=b.getAttribute('data-topic');paint();
+    });
+  });
+  document.getElementById('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();paint();});
+  document.addEventListener('keydown',function(e){
+    var tag=(e.target.tagName||'').toUpperCase();
+    if(e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA'){e.preventDefault();document.getElementById('q').focus();}
+  });
+  document.getElementById('addBtn').addEventListener('click',function(){say('Tạo cấu trúc mới: nhập tên + công thức + 1 ví dụ để lưu');});
+  document.getElementById('settingsBtn').addEventListener('click',function(){say('Cài đặt sổ tay: nhắc ôn 8 cấu trúc yếu lúc 20:00');});
+  document.querySelectorAll('.bnav[data-go]').forEach(function(b){
+    b.addEventListener('click',function(){location.href=b.getAttribute('data-go');});
+  });
+  paint();
+})();
+</script>
+</body>
+</html>
