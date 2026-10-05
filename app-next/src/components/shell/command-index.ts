@@ -4,6 +4,9 @@ export type CommandItem = { label: string; href: string; group: string };
 
 const PAGES: ReadonlyArray<CommandItem> = [
   { label: "Trang chủ", href: "/", group: "Trang" },
+  /* Final review F4: trang chủ mới bỏ grid khóa học → /course chỉ còn tới được qua
+     palette (sidebar/bottom-nav không có mục này — quyết định sản phẩm, chưa thêm). */
+  { label: "Khoá học", href: "/course", group: "Trang" },
   { label: "Lộ trình HSK", href: "/roadmap", group: "Trang" },
   { label: "Ôn tập SRS", href: "/review", group: "Trang" },
   { label: "Hanzi Studio", href: "/hanzi", group: "Luyện tập" },

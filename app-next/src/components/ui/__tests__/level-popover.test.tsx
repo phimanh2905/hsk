@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LevelPopover } from "../level-popover";
@@ -54,7 +54,30 @@ describe("LevelPopover", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" }).textContent).toContain("HSK 4"));
   });
 
-  /* F1: Escape đóng popover → focus phải quay về trigger, không rơi xuống <body>. */
+  /* F3: Escape khi popover mở KHÔNG được rò xuống listener document/window khác
+     (hotkey lesson qua useKeyboard trên window, exit modal...) — popover là chủ nhân
+     duy nhất của Escape khi đang mở. Mutation-verify: bỏ stopPropagation → test fail. */
+  it("Escape xử lý bởi popover → listener document/window khác không nhận Escape (F3)", async () => {
+    const docSpy = vi.fn();
+    const winSpy = vi.fn();
+    const docListener = (e: KeyboardEvent) => e.key === "Escape" && docSpy();
+    const winListener = (e: KeyboardEvent) => e.key === "Escape" && winSpy();
+    document.addEventListener("keydown", docListener);
+    window.addEventListener("keydown", winListener);
+    try {
+      render(<LevelPopover />);
+      await userEvent.click(screen.getByRole("button", { name: "Đổi cấp độ HSK" }));
+      await userEvent.keyboard("{Escape}");
+      expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+      expect(docSpy).not.toHaveBeenCalled();
+      expect(winSpy).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener("keydown", docListener);
+      window.removeEventListener("keydown", winListener);
+    }
+  });
+
+  /* F1: Escape đóng popover → focus trả về trigger, không rơi xuống <body>. */
   it("Escape đóng popover → focus trả về trigger (F1)", async () => {
     render(<LevelPopover />);
     const trigger = screen.getByRole("button", { name: "Đổi cấp độ HSK" });

@@ -62,14 +62,20 @@ export default function SidebarNav() {
     return () => window.removeEventListener(OPEN_NAV_EVENT, openNav);
   }, []);
 
-  /* Escape đóng drawer + khoá scroll body khi mở. */
+  /* Escape đóng drawer + khoá scroll body khi mở.
+     F3 (final review): drawer khi mở là chủ nhân của Escape — capture + stopPropagation
+     để Escape không rò xuống listener document/window khác (hotkey lesson, palette...). */
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("keydown", onKey);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      setOpen(false);
+    };
+    document.addEventListener("keydown", onKey, true);
     document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
       document.body.style.overflow = "";
     };
   }, [open]);

@@ -36,17 +36,22 @@ export function LevelPopover({ className }: { className?: string }) {
       if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
     };
     /* F1: Escape đóng popover → trả focus về trigger, không rơi xuống <body>
-       (cùng ý với focus restore của command-palette.tsx). */
+       (cùng ý với focus restore của command-palette.tsx).
+       F3 (final review): popover khi mở là chủ nhân duy nhất của Escape — đăng ký
+       capture + stopPropagation để Escape không rò xuống các listener document/window
+       khác (hotkey lesson qua useKeyboard trên window, exit modal, palette), tránh
+       "bấm Escape vừa đóng popover vừa mở exit modal" trên /lesson flash mode. */
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
+      e.stopPropagation();
       setOpen(false);
       triggerRef.current?.focus();
     };
     document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     return () => {
       document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
     };
   }, [open]);
 

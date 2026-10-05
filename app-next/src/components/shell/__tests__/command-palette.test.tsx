@@ -111,6 +111,17 @@ describe("CommandPalette", () => {
     expect(push).toHaveBeenCalledWith("/");
   });
 
+  it("lọc 'khoá'/'course' hiện link Khoá học → /course (F4: /course còn đường tới qua palette)", async () => {
+    const input = renderOpen().getByLabelText("Tìm kiếm") as HTMLInputElement;
+
+    await userEvent.type(input, "khoá");
+    expect(screen.getByRole("link", { name: /Khoá học/ })).toHaveAttribute("href", "/course");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "course");
+    expect(screen.getByRole("link", { name: /Khoá học/ })).toHaveAttribute("href", "/course");
+  });
+
   it("lọc rộng vẫn chỉ hiện tối đa 8 kết quả (A3)", async () => {
     renderOpen();
     await userEvent.type(screen.getByLabelText("Tìm kiếm"), "a");
