@@ -8,6 +8,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import type { ReactNode } from "react";
 import type { VocabWord } from "@/content/vocab";
 import { progressStore } from "@/lib/store/progress-store";
+import type { Grade } from "@/lib/stats/review";
 import { useToastSafe } from "@/components/shell/toast-provider";
 
 export type LessonMode = "flash" | "quiz" | "typing" | "reading" | "listen" | "dance" | "battle";
@@ -25,6 +26,9 @@ const GRADE_TOAST: Record<GradeLevel, string> = {
   2: "Mơ hồ — ôn lại sau 5 phút",
   3: "Đã thuộc — tuyệt vời!",
 };
+
+/* 1/2/3 của mockup → Grade của hệ review (applyGrade: forgot 60s · hard 5 phút · good 3/7 ngày) */
+const GRADE_LABEL: Record<GradeLevel, Grade> = { 1: "forgot", 2: "hard", 3: "good" };
 
 type LessonCtx = {
   items: LessonItem[];
@@ -113,7 +117,10 @@ export function LessonProvider({
     if (!revealed || done) return;
     const item = items[index];
     if (!item) return;
-    progressStore.recordReview(item.itemKey, level);
+    // recordReview của review-redesign bỏ qua key chưa có trong SRS — từ học mới
+    // trong bài phải được enroll trước (addSrsBatch idempotent) rồi mới chấm.
+    if (!progressStore.getSrs(item.itemKey)) progressStore.addSrsBatch([item.itemKey]);
+    progressStore.recordReview(item.itemKey, GRADE_LABEL[level]);
     toast(GRADE_TOAST[level]);
     setRevealed(false);
     if (index >= items.length - 1) setDone(true);

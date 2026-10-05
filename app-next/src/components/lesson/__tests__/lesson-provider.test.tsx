@@ -84,7 +84,7 @@ describe("Flash SRS state (port opendesign lesson.html)", () => {
     expect(spy).not.toHaveBeenCalled(); // chưa revealed
     act(() => screen.getByText("reveal").click());
     act(() => screen.getByText("g1").click());
-    expect(spy).toHaveBeenCalledWith("hsk1.lesson-1.0", 1);
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-1.0", "forgot");
     expect(container.querySelector("[data-revealed='false']")).toBeTruthy();
     expect(container.querySelector("[data-index='1']")).toBeTruthy();
     spy.mockRestore();

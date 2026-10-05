@@ -57,7 +57,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
     act(() => {
       fireEvent.keyDown(window, { key: "1" });
     }); // grade 1 → recordReview + từ tiếp
-    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", 1);
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", "forgot");
     expect(screen.getByText("THẺ 2 / 2")).toBeInTheDocument(); // đã sang từ tiếp
     spy.mockRestore();
   });
@@ -104,7 +104,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
       fireEvent.keyDown(window, { key: "3" });
     });
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", 3);
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", "good");
     expect(screen.getByText("HOÀN THÀNH")).toBeInTheDocument();
     spy.mockClear();
     // trước fix: Space set revealed=true rồi "1" grade lại chính từ vừa chấm

@@ -40,7 +40,11 @@ describe("WordList + SRS (C9)", () => {
     render(<LessonProvider items={[word]} book="hsk1" page="lesson-1"><WordList /></LessonProvider>);
     const star = screen.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" });
     expect(star.querySelector(".text-learning-streak")).toBeNull();
-    act(() => progressStore.recordReview("hsk1.lesson-1.0", 3));
+    // grade ở màn flash: provider enroll từ (addSrsBatch) rồi recordReview — cả hai bắn nhai:progress
+    act(() => {
+      progressStore.addSrsBatch(["hsk1.lesson-1.0"]);
+      progressStore.recordReview("hsk1.lesson-1.0", "good");
+    });
     expect(star.querySelector(".text-learning-streak")).not.toBeNull();
   });
   it("bỏ listener nhai:progress khi unmount", () => {

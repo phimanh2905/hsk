@@ -62,7 +62,7 @@ describe("SrsDeck (port [data-od-id=srs-deck] của opendesign lesson.html)", ()
     mount();
     act(() => screen.getByText("toggle").click());
     await userEvent.click(screen.getByRole("button", { name: /Chưa thuộc/ }));
-    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", 1);
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", "forgot");
     spy.mockRestore();
   });
 });
