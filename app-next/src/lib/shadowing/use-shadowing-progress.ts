@@ -6,6 +6,8 @@ import { readLocalProgress, writeLocalProgress, clearLocalProgress, computeMetri
 
 export type PracticePatch = { status?: ProgressStatus; score?: number; secondsDelta?: number; linesDoneDelta?: number };
 
+const SYNC_FAIL_MSG = "Chưa đồng bộ được tiến độ — sẽ thử lại ở lần luyện sau";
+
 export function useShadowingProgress() {
   const { loggedIn, isPending } = useSession();
   const toast = useToastSafe();
@@ -13,6 +15,12 @@ export function useShadowingProgress() {
   const [ready, setReady] = useState(loggedIn ? false : true);
   const mapRef = useRef(progressMap);
   mapRef.current = progressMap;
+
+  // Merge guest chạy đúng 1 lần per phiên đăng nhập: promise được cache ở ref nên
+  // StrictMode double-mount (mount → cleanup → remount trên cùng instance) không
+  // phát sinh PUT thứ hai — run sau chỉ chờ promise đã có và cập nhật state.
+  const mergePromiseRef = useRef<Promise<ProgressMap> | null>(null);
+  const runIdRef = useRef(0);
 
   const applyLocal = useCallback((videoId: string, patch: PracticePatch) => {
     const prev = mapRef.current[videoId];
@@ -31,35 +39,40 @@ export function useShadowingProgress() {
   // mount: user → GET + merge guest một lần; guest → đọc localStorage
   useEffect(() => {
     if (isPending) return;
-    if (!loggedIn) { setProgressMap(readLocalProgress()); setReady(true); return; }
-    let alive = true;
-    (async () => {
-      try {
-        const res = await fetch("/api/v1/shadowing/progress", { method: "GET" });
-        const server: ProgressMap = {};
-        if (res.ok) {
-          const { items } = (await res.json()) as {
-            items: Array<{ videoId: string; status: ProgressStatus; score: number | null; seconds: number; linesDone: number; updatedAt: string }>;
-          };
-          for (const it of items) server[it.videoId] = { status: it.status, score: it.score, seconds: it.seconds, linesDone: it.linesDone, updatedAt: it.updatedAt };
-        }
-        const guest = readLocalProgress();
-        const guestIds = Object.keys(guest).filter((id) => !server[id]);
-        // merge một lần: guest record thiếu trên server → PUT lên rồi clear key guest
-        await Promise.all(guestIds.map((id) =>
-          fetch(`/api/v1/shadowing/progress/${id}`, {
-            method: "PUT",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ status: guest[id].status, score: guest[id].score ?? undefined, secondsDelta: guest[id].seconds, linesDoneDelta: guest[id].linesDone }),
-          })
-        ));
-        if (guestIds.length) clearLocalProgress();
-        if (alive) { setProgressMap({ ...guest, ...server }); setReady(true); }
-      } catch {
-        if (alive) { setProgressMap(readLocalProgress()); setReady(true); } // server hỏng → fallback local
+    if (!loggedIn) {
+      mergePromiseRef.current = null; // đăng xuất → phiên sau được merge lại (key guest đã cleared)
+      setProgressMap(readLocalProgress());
+      setReady(true);
+      return;
+    }
+    const runId = ++runIdRef.current;
+    const isLatest = () => runIdRef.current === runId;
+    mergePromiseRef.current ??= (async (): Promise<ProgressMap> => {
+      const res = await fetch("/api/v1/shadowing/progress", { method: "GET" });
+      const server: ProgressMap = {};
+      if (res.ok) {
+        const { items } = (await res.json()) as {
+          items: Array<{ videoId: string; status: ProgressStatus; score: number | null; seconds: number; linesDone: number; updatedAt: string }>;
+        };
+        for (const it of items) server[it.videoId] = { status: it.status, score: it.score, seconds: it.seconds, linesDone: it.linesDone, updatedAt: it.updatedAt };
       }
+      const guest = readLocalProgress();
+      const guestIds = Object.keys(guest).filter((id) => !server[id]);
+      // merge một lần: guest record thiếu trên server → PUT lên rồi clear key guest
+      await Promise.all(guestIds.map((id) =>
+        fetch(`/api/v1/shadowing/progress/${id}`, {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ status: guest[id].status, score: guest[id].score ?? undefined, secondsDelta: guest[id].seconds, linesDoneDelta: guest[id].linesDone }),
+        })
+      ));
+      if (guestIds.length) clearLocalProgress();
+      return { ...guest, ...server };
     })();
-    return () => { alive = false; };
+    mergePromiseRef.current.then(
+      (merged) => { if (isLatest()) { setProgressMap(merged); setReady(true); } },
+      () => { if (isLatest()) { setProgressMap(readLocalProgress()); setReady(true); } } // server hỏng → fallback local
+    );
   }, [loggedIn, isPending]);
 
   const recordPractice = useCallback((videoId: string, patch: PracticePatch) => {
@@ -69,7 +82,9 @@ export function useShadowingProgress() {
       method: "PUT",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(patch),
-    }).catch(() => toast?.("Chưa đồng bộ được tiến độ — sẽ thử lại ở lần luyện sau"));
+    })
+      .then((res) => { if (!res.ok) toast?.(SYNC_FAIL_MSG); })
+      .catch(() => toast?.(SYNC_FAIL_MSG));
   }, [loggedIn, applyLocal, toast]);
 
   return { progressMap, metrics: computeMetrics(progressMap), recordPractice, ready };
