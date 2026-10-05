@@ -204,3 +204,10 @@ body {
   margin-right: calc(50% - 50vw);
   width: 100vw;
 }
+
+/* Câu transcript đang phát — viền vermilion + wash (spec §3, mock .sent.cur).
+   Dùng CSS thuần với token theme (không @apply) để an toàn với cả 2 mode sáng/tối. */
+.sent-active {
+  border-color: var(--action-primary);
+  background: var(--hz-rose-wash);
+}

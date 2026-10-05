@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ShadowingStudio from "../shadowing-studio";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 
@@ -36,5 +36,35 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
     expect(screen.getByRole("button", { name: /Lặp câu/ })).toBeInTheDocument();
     for (const s of ["0.75x", "0.85x", "1.0x"]) expect(screen.getByRole("button", { name: s })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CC" })).toBeInTheDocument();
+  });
+});
+
+describe("transcript + dictation (port script-tabs/transcript-stream/dictation-box)", () => {
+  it("mỗi câu render data-sent, câu active có sent-active, click câu gọi seekTo", () => {
+    const postSink = vi.fn();
+    render(<ShadowingStudio video={video} subtitles={subs} enginePostSink={postSink} />);
+    const s0 = document.querySelector('[data-sent="0"]')!;
+    const s1 = document.querySelector('[data-sent="1"]')!;
+    expect(s0).toHaveClass("sent-active");
+    expect(s1).not.toHaveClass("sent-active");
+    fireEvent.click(s1);
+    expect(postSink).toHaveBeenCalledWith(expect.stringContaining('"seekTo"'));
+  });
+  it("tab Chép chính tả → hiện dictation box, ẩn stream; check đúng → điểm ghi nhận", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByRole("button", { name: "Chép chính tả" }));
+    expect(screen.getByTestId("dict-box")).toBeVisible();
+    expect(screen.getByTestId("transcript-stream")).not.toBeVisible();
+    fireEvent.change(screen.getByTestId("dict-input"), { target: { value: "你好" } });
+    fireEvent.click(screen.getByTestId("dict-check"));
+    expect(screen.getByTestId("dict-result")).toHaveTextContent(/Chính xác/);
+  });
+  it("ô trống chips: mask ? rồi mở dần khi bấm Gợi ý", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByRole("button", { name: "Chép chính tả" }));
+    const masked = screen.getAllByText("?").length;
+    expect(masked).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole("button", { name: "Gợi ý 1 chữ" }));
+    expect(screen.getAllByText("?").length).toBe(masked - 1);
   });
 });
