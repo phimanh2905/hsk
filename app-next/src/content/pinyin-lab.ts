@@ -135,7 +135,7 @@ export const PINYIN_LAB_GROUP_OF: Record<string, string> = {
 
 export const PINYIN_LAB_SANDHI: PinyinLabSandhi[] = [
   { t: "一 yī — biến điệu theo thanh sau nó",
-    d: "Đứng trước thanh 4 đọc yì (thanh 4); trước thanh 1/2/3 đọc yí (thanh 2); đếm số thứ tự giữ nguyên yī.",
+    d: "Đứng trước thanh 4 đọc yí (thanh 2); trước thanh 1/2/3 đọc yì (thanh 4); đếm số thứ tự giữ nguyên yī.",
     ex: [["yídìng", "一定", "nhất định"], ["yìqǐ", "一起", "cùng nhau"], ["dìyī", "第一", "thứ nhất"]] },
   { t: "不 bù — đứng trước thanh 4 đọc bú",
     d: "不 + thanh 4 → bú (thanh 2). Các trường hợp còn lại giữ bù.",
