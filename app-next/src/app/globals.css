@@ -196,3 +196,11 @@ body {
 .hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
 /* row nét đang chọn — gạch dọc action-primary bên trái (thay shadow-[inset_...] trong TSX) */
 .hz-row-cur { box-shadow: inset 3px 0 0 var(--action-primary); }
+
+/* Studio shadowing thoát max-w-5xl của (app)/layout — full-bleed, tự giới hạn 1280px.
+   Chỉ dùng page-local (spec §3). */
+.hz-breakout {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+}
