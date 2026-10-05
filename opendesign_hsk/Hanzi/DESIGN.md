@@ -5,7 +5,7 @@ name: "Hanzi"
 category: Brands
 surface: web
 colors:
-  paper: "#fafbfa"
+  paper: "#faf9f5"
   elevated: "#ffffff"
   ink: "#1f2a27"
   slate: "#66756f"
@@ -22,13 +22,13 @@ colors:
 
 *Know what to learn. Practice it. See progress.*
 
-Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: Ink + Vermilion + Jade — Ink carries knowledge and typography, Vermilion is the primary action color (vermilion 600 #d24b3f for focus rings), Jade signals secondary progress and success accents. Amber owns streaks; purple marks AI features. Small error text uses vermilion 700 #A9342B to stay distinct from the primary action. Amber owns streaks; purple marks AI features. v1.1 keeps the seven core brand colors fixed and expresses new UI meaning through semantic and state tokens (surface/text/border/action/feedback/learning/feature). Calm-first layout where Chinese content is the hero and chrome stays quiet. Product promise: Know what to learn. Practice it. See progress. One primary action per learning screen; progress before decoration; feedback is specific and actionable; gamification motivates without visual noise; every HSK level feels like a destination.
+Hanzi is a modern Chinese-learning webapp for HSK progression. Visual metaphor: Ink + Vermilion + Jade — Ink carries knowledge and typography, Vermilion is the primary action color (vermilion 600 #d24b3f for focus rings), Jade signals secondary progress and success accents. Amber owns streaks; purple marks AI features. Small error text uses vermilion 700 #A9342B to stay distinct from the primary action. v1.1 keeps the seven core brand colors fixed and expresses new UI meaning through semantic and state tokens (surface/text/border/action/feedback/learning/feature). Calm-first layout where Chinese content is the hero and chrome stays quiet. Product promise: Know what to learn. Practice it. See progress. One primary action per learning screen; progress before decoration; feedback is specific and actionable; gamification motivates without visual noise; every HSK level feels like a destination.
 
 ## Color Palette
 
 | Role | Name | Hex | Usage |
 | --- | --- | --- | --- |
-| background | Paper | `#fafbfa` | page canvas (semantic background default) |
+| background | Paper | `#faf9f5` | page canvas (semantic background default) |
 | surface | Elevated | `#ffffff` | cards, panels and elevated surfaces |
 | foreground | Ink | `#1f2a27` | body text and headings (ink 900 / textPrimary) |
 | muted | Slate | `#66756f` | secondary text and metadata (ink 500 / textSecondary) |
