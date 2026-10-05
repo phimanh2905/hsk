@@ -98,7 +98,7 @@ Hành vi: luôn ghi vào localStorage `bye.notebookEntries` (id UUID, `kind="wro
 
 1. **Quiz bài học** (`src/components/lesson/modes/quiz.tsx`): nhánh chọn sai (`showWrong`) → `q` = "Từ „{item.hanzi}‟ đọc thế nào?", `wrong` = { zh: picked (pinyin đã chọn) }, `right` = { zh: item.pinyin }, `cause` = "Pinyin đúng của {hanzi} ({meaning}) là {pinyin}.", `hsk` từ book id của lesson.
 2. **Mini-test lộ trình** (`src/components/roadmap/session-client.tsx`, 2 chỗ state `"wrong"` ở L323-326 và L380-383): `q` = đề câu hỏi, `wrong` = option đã chọn, `right` = option đúng, `cause` = trường giải thích của câu hỏi nếu có, không có → "Xem lại câu này trong bài học của trạm.", `hsk` từ level hiện hành.
-3. **Review SRS** (`src/lib/store/progress-store.ts` — hàm `recordReview`, duy nhất nơi ghi grade): grade `"forgot"` → `q` = "{zh} nghĩa là gì?", `wrong` = null, `right` = { zh: word.zh, py: word.pinyin }, `cause` = "Quên khi ôn SRS — từ sẽ quay lại sớm."; word resolve được thì dùng, không resolve được (key hỏng) → **bỏ qua, không crash**.
+3. **Review SRS** (`src/app/(app)/review/review-dashboard.tsx` — ngay sau lệnh `progressStore.recordReview(key, grade)`, khi `grade === "forgot"`): `q` = "{zh} nghĩa là gì?", `wrong` = null, `right` = { zh: word.zh, py: word.pinyin }, `cause` = "Quên khi ôn SRS — từ sẽ quay lại sớm."; word resolve được (qua `resolveWord` sẵn có) thì capture, **không resolve được (key hỏng) thì bỏ qua, không crash**. Đặt hook ở đây chứ không trong `progress-store.ts` để tránh import vòng (`progress-store` ↔ `srs-session`).
 
 Chống spam: dedupe theo khóa `q + right.zh` trong 24h (kiểm tra trong `capture.ts` trước khi ghi — cùng key tồn tại trong localStorage → bỏ qua).
 
@@ -135,7 +135,7 @@ src/app/api/v1/notebook/entries/route.ts               (GET, POST)
 src/app/api/v1/notebook/entries/[id]/route.ts          (PATCH, DELETE)
 ```
 
-Sửa nhỏ: `src/components/lesson/modes/quiz.tsx`, `src/components/roadmap/session-client.tsx`, `src/lib/store/progress-store.ts` (chỉ thêm 1 dòng `captureWrong` tại đúng nhánh), `sidebar-nav.tsx`, `command-index.ts`, `src/lib/db/schema.ts`, `hydration.spec.ts`.
+Sửa nhỏ: `src/components/lesson/modes/quiz.tsx`, `src/components/roadmap/session-client.tsx`, `src/app/(app)/review/review-dashboard.tsx`, `sidebar-nav.tsx`, `command-index.ts`, `src/lib/db/schema.ts`, `e2e/hydration.spec.ts`. **Không sửa `progress-store.ts`.**
 
 Quy ước giữ nguyên: `cn()`, Button/Chip/Card/Dialog/IconButton, token semantic (cấm hex — tone `lav` dùng token `feature-ai` wash có sẵn), focus ring chuẩn, copy tiếng Việt giọng study coach.
 
@@ -157,6 +157,6 @@ Quy ước giữ nguyên: `cn()`, Button/Chip/Card/Dialog/IconButton, token sema
 
 ## 9. Rủi ro & quyết định mở (đã chốt trong brainstorm)
 
-- **recordReview là nơi duy nhất ghi grade** (spec review-redesign) — hook capture đặt tại đây phải không đổi logic SRS, chỉ thêm side-effect fire-and-forget.
+- `recordReview` là nơi duy nhất ghi grade — hook capture đặt ở `review-dashboard` (người gọi) để không đụng logic SRS và không gây import vòng; hệ quả: nếu sau này có nơi khác gọi `recordReview(..., "forgot")` thì phải thêm capture ở đó (ghi chú trong code).
 - **"Tạo sổ mới" trở thành "tạo ghi chú cá nhân"** — lệch chữ với mock nhưng cần đường tạo dữ liệu thật; visual giữ nguyên nút mock.
 - Route CRUD đầu tiên ngoài auth trong project — đặt tiền lệ error-shape (`{ error: string }` + status code) sẽ dùng chung về sau.
