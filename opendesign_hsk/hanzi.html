@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hanzi — 汉字工坊 Hanzi Studio</title>
+<script>try{var t=localStorage.getItem('hanzi:theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+:root{
+  --bg:#FAF9F5;--surface:#f1f3f2;--elev:#ffffff;--card:#ffffff;
+  --fg:#1C1917;--body:#57534E;--faint:#A8A29E;
+  --border:#e8ecea;
+  --accent:#C83C32;--accent-hover:#B33229;--accent-ink:#ffffff;
+  --accent-soft:#FEF2F2;
+  --jade:#2D7D5B;--amber:#E68A00;
+  --amber-soft:#FFFBEB;
+  --shadow:0 1px 2px rgba(28,25,23,.05);
+  --shadow-hover:0 2px 4px rgba(28,25,23,.06),0 10px 24px rgba(28,25,23,.08);
+  --r:8px;--r-card:16px;
+  --font-ui:SFMono,system-ui,-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --font-hanzi:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif;
+}
+html[data-theme="dark"]{
+  --bg:#111318;--surface:#1a1d24;--elev:#1c2029;--card:#1A1D24;
+  --fg:#eceeed;--body:#b6b0aa;--faint:#6b7280;
+  --border:#2a2f37;
+  --accent:#E05349;--accent-hover:#c7453c;
+  --accent-soft:rgba(127,29,29,.3);
+  --jade:#4caf8a;
+  --amber-soft:rgba(120,53,15,.28);
+  --shadow:none;--shadow-hover:none;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.hanzi{font-family:var(--font-hanzi);font-weight:700}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* slim shell topbar */
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--elev) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1280px;margin:0 auto;height:60px;padding:0 24px;display:flex;align-items:center;gap:12px}
+.back{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px 0 10px;border:1px solid var(--border);background:var(--elev);border-radius:var(--r);font-size:13px;font-weight:700;text-decoration:none;color:var(--fg)}
+.crumb{font-size:14px;font-weight:800}.crumb small{font-weight:400;color:var(--body);font-size:12px}
+.streak{margin-left:auto;display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;background:var(--amber-soft);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);font-size:12.5px;font-weight:800;color:var(--amber);white-space:nowrap}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--elev);display:grid;place-items:center;cursor:pointer;color:var(--body);flex-shrink:0}
+
+.page{max-width:1280px;margin:0 auto;padding:20px 24px 90px;display:flex;flex-direction:column;gap:16px}
+.head h1{font-size:22px;letter-spacing:-.01em}.head h1 .hanzi{color:var(--accent)}
+.head p{font-size:13px;color:var(--body);margin-top:2px}
+.filterbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:12px 14px}
+.seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;overflow-x:auto;max-width:100%}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:36px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--elev);color:var(--fg);box-shadow:var(--shadow);border:1px solid var(--border)}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:0 14px;height:40px;min-width:200px}
+.search input{border:0;background:transparent;outline:none;font:inherit;font-size:13px;color:var(--fg);width:100%}
+.search input::placeholder{color:var(--faint)}
+.state-pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--body);cursor:pointer;min-height:36px}
+.pill[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+/* dual pane */
+.split{display:grid;grid-template-columns:5fr 7fr;gap:16px;align-items:start}
+@media(max-width:1023px){.split{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow);padding:18px}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.panel-head h2{font-size:14.5px}
+.panel-head span{font-size:12px;color:var(--body)}
+
+/* catalog */
+.cat-scroll{max-height:680px;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:var(--faint) transparent}
+.cat-scroll::-webkit-scrollbar{width:6px}
+.cat-scroll::-webkit-scrollbar-thumb{background:var(--faint);border-radius:999px}
+.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start}
+@media(min-width:1400px){.catalog{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:480px){.catalog{grid-template-columns:repeat(3,1fr)}}
+.zcard{position:relative;border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:12px 8px 10px;text-align:center;cursor:pointer;transition:all .18s;min-height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%}
+.zcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.zcard.active{border:2px solid var(--accent);background:var(--accent-soft);padding:11px 7px 9px;box-shadow:var(--shadow)}
+.zbadge{position:absolute;top:7px;right:7px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center}
+.zbadge.ok{background:var(--jade);color:#fff}
+.zbadge.mid{background:var(--amber);color:#fff}
+.zbadge.new{border:1.5px dashed var(--faint)}
+.zcard .g{font-size:36px;line-height:1.3;color:var(--fg)}
+.zcard .p{font-size:12px;color:var(--body)}
+.spill{font-size:10.5px;font-weight:800;padding:2px 10px;border-radius:999px;border:1px solid;white-space:nowrap}
+.spill.done{color:var(--jade);border-color:var(--jade)}
+.spill.mid{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 45%,transparent);background:var(--amber-soft)}
+.spill.new{color:var(--body);border-color:var(--border);background:var(--surface)}
+.pager{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;font-size:12.5px;color:var(--body);font-weight:700}
+.pager button{min-width:40px;min-height:40px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:800;color:var(--fg)}
+.pager button:disabled{opacity:.4;cursor:default}
+
+/* workbench */
+.wb-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.wb-glyph{font-size:44px;line-height:1.2}
+.py-pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:6px 8px 6px 16px}
+.py-pill button{width:32px;height:32px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--body)}
+.py-pill button:hover{background:var(--card);color:var(--fg)}
+.wb-mean{font-size:13px;color:var(--body)}
+.mode-tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3px;gap:2px;margin:12px 0}
+.mode-tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:10px;font-size:13px;font-weight:700;color:var(--body);cursor:pointer;min-height:44px}
+.mode-tabs button[aria-pressed="true"]{background:var(--card);color:var(--fg);box-shadow:var(--shadow);border:1px solid var(--border)}
+.grid-box{position:relative;width:min(340px,100%);aspect-ratio:1;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+@media(max-width:480px){.grid-box{width:min(280px,100%)}}
+.grid-box svg{position:absolute;inset:0;width:100%;height:100%}
+.st{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:13}
+.st.todo{stroke:var(--fg);opacity:.13}
+.st.done{stroke:var(--fg);opacity:1}
+.st.now{stroke:var(--accent);opacity:1}
+.st.hint{stroke:var(--accent);opacity:.3;stroke-dasharray:6 8}
+.ink-path{fill:none;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.ink-path.good{stroke:var(--fg)}
+.ink-path.bad{stroke:var(--accent)}
+.toolbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.toolbar[hidden]{display:none}
+.tool-btn{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 14px;border-radius:16px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:700;cursor:pointer}
+.tool-btn:hover{border-color:var(--body)}
+.tool-btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tool-btn.accent:hover{background:var(--accent-hover)}
+.tool-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.speed-seg{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:3px;gap:2px}
+.speed-seg button{border:0;background:transparent;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;color:var(--body);cursor:pointer;min-height:38px}
+.speed-seg button[aria-pressed="true"]{background:var(--card);color:var(--fg)}
+.meter{display:none;text-align:center;font-size:13px;font-weight:800;margin-top:10px}
+.meter.show{display:block}
+.meter small{display:block;font-weight:400;color:var(--body);font-size:12px}
+.meter .bar{height:6px;border-radius:999px;background:var(--border);overflow:hidden;margin-top:6px;max-width:280px;margin-left:auto;margin-right:auto}
+.meter .bar i{display:block;height:100%;background:var(--jade);border-radius:999px;transition:width .3s}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mchip{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:9px 12px;font-size:12.5px}
+.mchip small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.07em;color:var(--faint)}
+.mchip b{font-size:13px}
+.mchip b .hanzi{color:var(--jade)}
+.tip{margin-top:10px;background:var(--amber-soft);border:1px solid color-mix(in srgb,var(--amber) 35%,transparent);border-radius:12px;padding:11px 14px;font-size:12.5px;color:var(--body)}
+.tip b{color:var(--fg)}
+/* mobile pane switcher */
+.pane-tabs{display:none;position:sticky;top:60px;z-index:15;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3px;gap:2px}
+.pane-tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:10px;font-size:13px;font-weight:700;color:var(--body);cursor:pointer;min-height:44px}
+.pane-tabs button[aria-pressed="true"]{background:var(--card);color:var(--fg);box-shadow:var(--shadow)}
+@media(max-width:1023px){
+  .pane-tabs{display:flex}
+  .split.stack-catalog #paneWork,.split.stack-work #paneCatalog{display:none}
+  .page{padding:16px 16px 90px}
+}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(10px);background:var(--fg);color:var(--bg);font-size:13px;font-weight:700;padding:11px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:90;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<header class="topbar" data-od-id="studio-topbar"><div class="topbar-inner">
+  <a class="back" href="index.html" data-od-id="back-home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Trang chủ</a>
+  <div class="crumb" data-od-id="studio-crumb">Hanzi Studio &nbsp;•&nbsp; <small>Luyện viết &amp; chiết tự</small></div>
+  <span class="streak" data-od-id="streak-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>12</span>
+  <button class="icon-btn" id="themeBtn" data-od-id="theme-toggle" aria-label="Chế độ sáng tối"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+</div></header>
+
+<main class="page">
+  <div class="head" data-od-id="studio-header">
+    <h1><span class="hanzi">汉字工坊</span> · Hanzi Studio</h1>
+    <p>Khám phá kết cấu, thứ tự nét và rèn luyện trí nhớ cơ bắp</p>
+  </div>
+
+  <div class="filterbar" data-od-id="studio-filters">
+    <div class="seg" id="levelSeg" role="group" aria-label="Lọc cấp độ">
+      <button data-lv="all" aria-pressed="false">Tất cả</button>
+      <button data-lv="HSK 1" aria-pressed="false">HSK 1</button>
+      <button data-lv="HSK 2" aria-pressed="true">HSK 2</button>
+      <button data-lv="HSK 3" aria-pressed="false">HSK 3</button>
+      <button data-lv="HSK 4-6" aria-pressed="false">HSK 4-6</button>
+    </div>
+    <label class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="q" type="search" placeholder="Lọc chữ, pinyin, Hán-Việt…" aria-label="Lọc chữ Hán" /></label>
+  </div>
+  <div class="state-pills" data-od-id="state-pills" role="group" aria-label="Lọc trạng thái">
+    <button class="pill" data-st="all" aria-pressed="true">Tất cả (300)</button>
+    <button class="pill" data-st="done" aria-pressed="false">Đã thuộc nét (48)</button>
+    <button class="pill" data-st="todo" aria-pressed="false">Cần luyện lại (12)</button>
+  </div>
+
+  <div class="pane-tabs" data-od-id="pane-switcher" role="group" aria-label="Chuyển khung">
+    <button id="tabCatalog" aria-pressed="true">Danh sách chữ</button>
+    <button id="tabWork" aria-pressed="false">Bàn luyện viết</button>
+  </div>
+
+  <div class="split stack-catalog" id="split">
+    <section class="panel" id="paneCatalog" data-od-id="char-catalog" aria-label="Kho Hán tự">
+      <div class="panel-head"><h2>Kho Hán tự</h2><span id="catCount">12 chữ mẫu · HSK 2</span></div>
+      <div class="cat-scroll"><div class="catalog" id="catalog"></div></div>
+      <div class="pager" data-od-id="catalog-pager">
+        <button id="pgPrev" aria-label="Trang trước">◀</button>
+        <span id="pgLabel">Trang 1 / 1 · 12 chữ mẫu</span>
+        <button id="pgNext" aria-label="Trang sau">▶</button>
+      </div>
+    </section>
+
+    <section class="panel" id="paneWork" data-od-id="workbench" aria-label="Bàn luyện chữ">
+      <div class="wb-head">
+        <span class="wb-glyph hanzi" id="wbGlyph">爱</span>
+        <span class="py-pill"><span id="wbPy">ài</span><button id="wbAudio" aria-label="Phát âm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button></span>
+        <span class="wb-mean" id="wbMean">Yêu, thích, quý trọng</span>
+      </div>
+      <div class="mode-tabs" role="group" aria-label="Chế độ luyện" data-od-id="mode-tabs">
+        <button id="modeWatch" aria-pressed="true">Xem mẫu bút thuận</button>
+        <button id="modeDraw" aria-pressed="false">Tự luyện viết (chấm điểm)</button>
+      </div>
+      <div class="grid-box" data-od-id="tianzi-grid">
+        <svg viewBox="0 0 300 300" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%">
+          <rect x="4" y="4" width="292" height="292" fill="none" stroke="var(--faint)" stroke-width="1.5" rx="4"/>
+          <line x1="150" y1="4" x2="150" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="7 6"/>
+          <line x1="4" y1="150" x2="296" y2="150" stroke="var(--faint)" stroke-width="1" stroke-dasharray="7 6"/>
+          <line x1="4" y1="4" x2="296" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="5 7" opacity=".7"/>
+          <line x1="296" y1="4" x2="4" y2="296" stroke="var(--faint)" stroke-width="1" stroke-dasharray="5 7" opacity=".7"/>
+        </svg>
+        <svg id="strokeSvg" viewBox="0 0 300 300" role="img" aria-label="Hoạt họa bút thuận" style="position:absolute;inset:0;width:100%;height:100%"></svg>
+        <svg id="inkSvg" viewBox="0 0 300 300" style="position:absolute;inset:0;width:100%;height:100%;display:none;touch-action:none" aria-label="Bảng tự luyện viết"></svg>
+      </div>
+      <div class="toolbar" id="watchBar" data-od-id="watch-controls">
+        <button class="tool-btn" id="btnPrev">Nét trước</button>
+        <button class="tool-btn accent" id="btnReplay">Phát lại</button>
+        <button class="tool-btn" id="btnNext">Nét sau</button>
+        <div class="speed-seg" role="group" aria-label="Tốc độ">
+          <button data-speed="0.75" aria-pressed="false">0.75x</button>
+          <button data-speed="1" aria-pressed="true">1.0x</button>
+          <button data-speed="1.5" aria-pressed="false">1.5x</button>
+        </div>
+      </div>
+      <div class="toolbar" id="drawBar" data-od-id="draw-controls" hidden>
+        <button class="tool-btn" id="btnClear">Xóa bảng</button>
+        <button class="tool-btn" id="btnUndo">Hoàn tác</button>
+        <button class="tool-btn" id="btnHint" aria-pressed="false">Gợi ý nét mờ</button>
+      </div>
+      <div class="meter" id="meter" data-od-id="accuracy-meter"><span id="meterText">Độ chuẩn xác: — · Nét 0/10</span><small>So hướng vẽ với bút thuận mẫu theo từng nét</small><div class="bar"><i id="meterFill" style="width:0%"></i></div></div>
+      <div class="chips" data-od-id="char-meta">
+        <div class="mchip"><small>BỘ THỦ</small><b id="mRad">爫 (Trảo)</b></div>
+        <div class="mchip"><small>CẤU TRÚC</small><b id="mStruct">Trên – Giữa – Dưới</b></div>
+        <div class="mchip"><small>ÂM HÁN-VIỆT</small><b id="mHv">ÁI</b></div>
+      </div>
+      <div class="tip" data-od-id="mnemonic"><b>Mẹo nhớ:</b> <span id="mTip"></span></div>
+    </section>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<span class="sr" id="srLive" aria-live="polite"></span>
+
+<script>
+(function(){
+  var toast=document.getElementById('toast'),t=null;
+  function say(m){toast.textContent=m;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},2200);document.getElementById('srLive').textContent=m;}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var r=document.documentElement,n=r.getAttribute('data-theme')==='dark'?'light':'dark';
+    r.setAttribute('data-theme',n);try{localStorage.setItem('hanzi:theme',n)}catch(e){}
+    say(n==='dark'?'Đã chuyển chế độ tối':'Đã chuyển chế độ sáng');
+  });
+  function speak(x){try{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(x);u.lang='zh-CN';u.rate=.85;speechSynthesis.speak(u);}catch(e){}}
+
+  // dirs: E east, S south, SW, SE, T turn/zhe (direction-agnostic)
+  var CHARS=[
+    {ch:'爱',py:'ài',hv:'ÁI',mean:'Yêu, thích, quý trọng',n:10,hsk:'HSK 2',st:'new',rad:'爫 (Trảo)',struct:'Trên – Giữa – Dưới',tip:'Trên là móng vuốt (爫), dưới là bạn bè (友) che chở — yêu là nâng niu, che chở.',
+     o:[['Phẩy','piě'],['Chấm','diǎn'],['Chấm','diǎn'],['Phẩy','piě'],['Chấm','diǎn'],['Phẩy ngang','héngpiě'],['Ngang','héng'],['Phẩy','piě'],['Phẩy ngang','héngpiě'],['Mác','nà']],d:['SW','SE','SE','SW','SE','E','E','SW','E','SE'],
+     p:['M156,32 C140,58 124,76 108,92','M188,58 C190,66 191,74 192,82','M132,96 C134,102 135,108 136,114','M92,130 C140,128 185,124 216,102','M150,148 C151,154 152,160 153,166','M120,176 C150,174 180,174 200,170','M100,196 C135,195 170,195 205,193','M150,206 C136,226 123,242 111,256','M102,262 C142,260 184,255 216,240','M152,212 C172,230 192,246 212,258']},
+    {ch:'好',py:'hǎo · hào',hv:'HẢO · HIẾU',mean:'Tốt đẹp; yêu thích',n:6,hsk:'HSK 2',st:'mid',rad:'女 (Nữ)',struct:'Trái – Phải',tip:'Người phụ nữ (女) bên đứa trẻ (子) — điều tốt đẹp. Trong 爱好 đọc là hào.',
+     o:[['Gập phẩy','zhépiě'],['Phẩy','piě'],['Ngang','héng'],['Phẩy ngang','héngpiě'],['Sổ móc','shùgōu'],['Ngang','héng']],d:['T','SW','E','E','S','E'],
+     p:['M118,66 C104,116 92,158 76,202','M148,84 C134,122 120,156 104,190','M70,205 C100,203 125,203 150,201','M168,112 C200,110 228,106 248,96','M208,116 C208,160 208,200 206,232 C205,242 197,246 190,242','M165,248 C195,246 222,246 250,244']},
+    {ch:'人',py:'rén',hv:'NHÂN',mean:'Người',n:2,hsk:'HSK 1',st:'done',rad:'人 (Nhân)',struct:'Độc thể',tip:'Một nét phẩy, một nét mác — hình người đang bước.',
+     o:[['Phẩy','piě'],['Mác','nà']],d:['SW','SE'],p:['M150,60 C135,110 115,155 90,200','M150,60 C165,110 185,155 210,200']},
+    {ch:'大',py:'dà',hv:'ĐẠI',mean:'Lớn, to',n:3,hsk:'HSK 1',st:'done',rad:'大 (Đại)',struct:'Độc thể',tip:'Người (人) dang tay rộng — to lớn.',
+     o:[['Ngang','héng'],['Phẩy','piě'],['Mác','nà']],d:['E','SW','SE'],p:['M80,90 C120,89 180,89 220,88','M150,90 C135,135 115,175 95,215','M150,90 C165,135 185,175 205,215']},
+    {ch:'国',py:'guó',hv:'QUỐC',mean:'Đất nước',n:8,hsk:'HSK 2',st:'new',rad:'囗 (Vi)',struct:'Bao quanh',tip:'Khung bao (囗) ôm viên ngọc (玉) — đất nước giữ báu vật.',
+     o:[['Sổ','shù'],['Gập ngang','héngzhé'],['Ngang','héng'],['Ngang','héng'],['Ngang','héng'],['Sổ','shù'],['Ngang','héng'],['Sổ','shù']],d:['S','T','E','E','E','S','E','S'],
+     p:['M85,85 C85,128 85,172 85,215','M85,85 C128,85 172,85 215,85 C215,128 215,172 215,215','M85,215 C128,215 172,215 215,215','M120,125 C140,125 160,125 180,125','M120,148 C140,148 160,148 180,148','M150,125 C150,145 150,165 150,185','M120,185 C140,185 160,185 180,185','M168,148 C168,164 168,180 168,196']},
+    {ch:'汉',py:'hàn',hv:'HÁN',mean:'Dân tộc Hán; Trung Quốc',n:5,hsk:'HSK 2',st:'mid',rad:'氵 (Thủy)',struct:'Trái – Phải',tip:'Ba chấm nước (氵) bên chữ viết tắt của “người” — tên dân tộc.',
+     o:[['Chấm','diǎn'],['Chấm','diǎn'],['Hất','tí'],['Phẩy ngang','héngpiě'],['Mác','nà']],d:['SE','SE','E','E','SE'],
+     p:['M115,78 C116,84 117,90 118,96','M135,112 C136,118 137,124 138,130','M118,152 C132,148 146,142 158,134','M170,120 C200,118 225,114 245,104','M190,150 C205,170 220,188 238,202']},
+    {ch:'书',py:'shū',hv:'THƯ',mean:'Sách; viết',n:4,hsk:'HSK 2',st:'new',rad:'乙 (Ất)',struct:'Độc thể',tip:'Nét折叠层 như trang sách gấp — viết thành sách.',
+     o:[['Gập ngang','héngzhé'],['Gập ngang móc','héngzhégōu'],['Sổ','shù'],['Chấm','diǎn']],d:['T','T','S','SE'],
+     p:['M100,80 C133,80 166,80 200,80 C200,100 200,120 200,140','M100,140 C133,140 166,140 195,140 C195,165 195,190 192,212 C191,221 183,224 175,220','M150,140 C150,170 150,200 150,230','M150,248 C151,252 152,256 153,260']},
+    {ch:'口',py:'kǒu',hv:'KHẨU',mean:'Miệng',n:3,hsk:'HSK 1',st:'done',rad:'口 (Khẩu)',struct:'Độc thể',tip:'Khung vuông mở — cái miệng đang nói.',
+     o:[['Sổ','shù'],['Gập ngang','héngzhé'],['Ngang','héng']],d:['S','T','E'],p:['M100,90 C100,130 100,170 100,210','M100,90 C133,90 166,90 200,90 C200,130 200,170 200,210','M100,210 C133,210 166,210 200,210']},
+    {ch:'日',py:'rì',hv:'NHẬT',mean:'Ngày; mặt trời',n:4,hsk:'HSK 1',st:'done',rad:'日 (Nhật)',struct:'Độc thể',tip:'Ô vuông thêm nét ngang giữa — mặt trời lên.',
+     o:[['Sổ','shù'],['Gập ngang','héngzhé'],['Ngang','héng'],['Ngang','héng']],d:['S','T','E','E'],
+     p:['M110,80 C110,127 110,173 110,220','M110,80 C137,80 163,80 190,80 C190,127 190,173 190,220','M110,150 C137,150 163,150 190,150','M110,220 C137,220 163,220 190,220']},
+    {ch:'木',py:'mù',hv:'MỘC',mean:'Gỗ, cây',n:4,hsk:'HSK 2',st:'mid',rad:'木 (Mộc)',struct:'Độc thể',tip:'Cây có cành phẩy – mác hai bên thân sổ.',
+     o:[['Ngang','héng'],['Sổ','shù'],['Phẩy','piě'],['Mác','nà']],d:['E','S','SW','SE'],
+     p:['M80,110 C120,109 180,109 220,108','M150,70 C150,123 150,177 150,230','M150,110 C130,140 110,170 95,200','M150,110 C170,140 190,170 205,200']},
+    {ch:'水',py:'shuǐ',hv:'THỦY',mean:'Nước',n:4,hsk:'HSK 2',st:'mid',rad:'水 (Thủy)',struct:'Độc thể',tip:'Dòng sổ móc giữa, hai bên phẩy – mác như nước bắn.',
+     o:[['Sổ móc','shùgōu'],['Phẩy ngang','héngpiě'],['Phẩy','piě'],['Mác','nà']],d:['S','E','SW','SE'],
+     p:['M150,60 C150,110 150,150 150,185 C150,195 142,198 134,194','M110,112 C150,110 190,108 222,98','M150,122 C130,152 115,182 105,212','M150,122 C170,152 190,182 206,210']},
+    {ch:'心',py:'xīn',hv:'TÂM',mean:'Trái tim; tâm trí',n:4,hsk:'HSK 2',st:'done',rad:'心 (Tâm)',struct:'Độc thể',tip:'Nét卧钩 ôm hai chấm — trái tim包容.',
+     o:[['Chấm','diǎn'],['Nét nằm móc','wògōu'],['Chấm','diǎn'],['Chấm','diǎn']],d:['SE','T','SE','SE'],
+     p:['M95,148 C96,154 97,160 98,166','M95,150 C115,205 150,228 200,224 C214,223 221,216 222,206','M168,148 C169,154 170,160 171,166','M196,162 C197,168 198,174 199,180']}
+  ];
+  var level='HSK 2',state='all',q='',cur=null,mode='watch',speed=1,timer=null,step=-1,hintOn=false;
+  var inkPaths=[],drawing=null;
+
+  var catalog=document.getElementById('catalog'),sSvg=document.getElementById('strokeSvg'),inkSvg=document.getElementById('inkSvg');
+  function filtered(){
+    return CHARS.filter(function(c){
+      if(level!=='all'&&c.hsk!==level)return false;
+      if(state!=='all'&&c.st!==state)return false;
+      if(q){var s=(c.ch+c.py+c.hv).toLowerCase();if(s.indexOf(q)<0)return false;}
+      return true;
+    });
+  }
+  function badge(st){
+    if(st==='done')return '<span class="zbadge ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>';
+    if(st==='mid')return '<span class="zbadge mid"></span>';
+    return '<span class="zbadge new"></span>';
+  }
+  function renderCatalog(){
+    var list=filtered();
+    document.getElementById('catCount').textContent=list.length+' chữ mẫu'+(level==='all'?'':' · '+level);
+    catalog.innerHTML=list.map(function(c){
+      return '<button class="zcard'+(cur===c.ch?' active':'')+'" data-ch="'+c.ch+'" data-od-id="zcard-'+c.ch+'">'+badge(c.st)+'<span class="g hanzi">'+c.ch+'</span><span class="p">'+c.py+' · '+c.n+' nét</span><span class="spill '+c.st+'">'+(c.st==='done'?'Đã thuộc':c.st==='mid'?'Đang luyện':'Mới')+'</span></button>';
+    }).join('')||'<div style="grid-column:1/-1;text-align:center;color:var(--body);font-size:13px;padding:20px">Không có chữ nào khớp bộ lọc.</div>';
+  }
+  function find(ch){return CHARS.filter(function(c){return c.ch===ch;})[0];}
+
+  // ---- workbench ----
+  function select(ch,autoplay){
+    cur=ch;stopAnim();setMode(mode,true);inkPaths=[];step=-1;
+    var c=find(ch);
+    document.getElementById('wbGlyph').textContent=c.ch;
+    document.getElementById('wbPy').textContent=c.py;
+    document.getElementById('wbMean').textContent=c.mean;
+    document.getElementById('mRad').innerHTML='<span class="hanzi">'+c.rad.split(' ')[0]+'</span> '+c.rad.slice(2);
+    document.getElementById('mStruct').textContent=c.struct;
+    document.getElementById('mHv').textContent=c.hv;
+    document.getElementById('mTip').textContent=c.tip.replace(/<[^>]+>/g,'');
+    renderCatalog();buildGrid();
+    document.getElementById('meterText').textContent='Độ chuẩn xác: — · Nét 0/'+c.n;
+    document.getElementById('meterFill').style.width='0%';
+    if(autoplay!==false&&mode==='watch')playAll();
+    if(window.innerWidth<1024)showPane('work');
+  }
+  function buildGrid(){
+    var c=find(cur);sSvg.innerHTML='';inkSvg.innerHTML='';
+    c.p.forEach(function(p,i){
+      var el=document.createElementNS('http://www.w3.org/2000/svg','path');
+      el.setAttribute('d',p);el.setAttribute('class','st '+(i<=step?'done':'todo'));sSvg.appendChild(el);
+    });
+    if(hintOn&&mode==='draw')showHint();
+  }
+  function paintIdle(){
+    sSvg.querySelectorAll('.st').forEach(function(el,i){
+      el.style.transition='';el.style.strokeDasharray='';el.style.strokeDashoffset='';
+      el.setAttribute('class','st '+(i<=step?'done':'todo'));
+    });
+  }
+  function stopAnim(){timer=null;}
+  function animate(i,done){
+    var el=sSvg.querySelectorAll('.st')[i];if(!el){done&&done();return;}
+    step=i;
+    var len=el.getTotalLength();
+    el.setAttribute('class','st now');
+    el.style.transition='none';el.style.strokeDasharray=String(len);el.style.strokeDashoffset=String(len);
+    void el.getBoundingClientRect();
+    var dur=Math.max(280,720/speed);
+    el.style.transition='stroke-dashoffset '+dur+'ms ease';
+    el.style.strokeDashoffset='0';
+    timer=setTimeout(function(){
+      el.setAttribute('class','st done');el.style.transition='';el.style.strokeDasharray='';el.style.strokeDashoffset='';
+      timer=null;done&&done();
+    },dur+60);
+  }
+  function playAll(){
+    if(mode!=='watch'||timer)return;
+    step=-1;paintIdle();
+    var c=find(cur),i=0;
+    (function next(){
+      if(i>=c.p.length){step=c.p.length-1;paintIdle();say('Hoàn thành '+c.n+' nét chữ “'+cur+'”');return;}
+      animate(i,function(){i++;next();});
+    })();
+  }
+  function setMode(m,silent){
+    mode=m;stopAnim();
+    document.getElementById('modeWatch').setAttribute('aria-pressed',m==='watch');
+    document.getElementById('modeDraw').setAttribute('aria-pressed',m==='draw');
+    document.getElementById('watchBar').hidden=m!=='watch';
+    document.getElementById('drawBar').hidden=m!=='draw';
+    inkSvg.style.display=m==='draw'?'block':'none';
+    document.getElementById('meter').classList.toggle('show',m==='draw');
+    if(m==='watch'){inkPaths=[];step=-1;buildGrid();if(!silent)playAll();}
+    else{step=find(cur).p.length-1;buildGrid();updateMeter();}
+  }
+  document.getElementById('modeWatch').addEventListener('click',function(){setMode('watch');});
+  document.getElementById('modeDraw').addEventListener('click',function(){setMode('draw');say('Chế độ tự luyện: vẽ từng nét lên ô chữ');});
+  document.getElementById('btnReplay').addEventListener('click',function(){stopAnim();step=-1;playAll();});
+  document.getElementById('btnPrev').addEventListener('click',function(){stopAnim();step=Math.max(-1,step-1);paintIdle();});
+  document.getElementById('btnNext').addEventListener('click',function(){stopAnim();step=Math.min(find(cur).p.length-1,step+1);paintIdle();});
+  document.querySelectorAll('.speed-seg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.speed-seg button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');speed=parseFloat(b.getAttribute('data-speed'));
+    });
+  });
+  document.getElementById('wbAudio').addEventListener('click',function(){speak(cur+cur);});
+
+  // ---- draw scoring ----
+  function bucket(dx,dy){
+    var len=Math.hypot(dx,dy);
+    if(len<14)return 'DOT';
+    var a=Math.atan2(dy,dx)*180/Math.PI;
+    if(a>=-22.5&&a<22.5)return 'E';
+    if(a>=22.5&&a<67.5)return 'SE';
+    if(a>=67.5&&a<112.5)return 'S';
+    if(a>=112.5&&a<157.5||a<-157.5&&a>=-180)return 'SW';
+    if(a>=-157.5&&a<-112.5)return 'W';
+    if(a>=-67.5&&a<-22.5)return 'NE';
+    return 'N';
+  }
+  function matchStroke(pts,exp){
+    if(exp==='T')return pts.length>4;
+    var f=pts[0],l=pts[pts.length-1];
+    var b=bucket(l.x-f.x,l.y-f.y);
+    if(b==='DOT')return exp==='SE'||exp==='S';
+    return b===exp;
+  }
+  function updateMeter(){
+    var c=find(cur),n=inkPaths.length,ok=0;
+    inkPaths.forEach(function(p,i){if(i<c.d.length&&p.ok)ok++;});
+    var acc=n?Math.round(ok/n*100):null;
+    document.getElementById('meterText').textContent='Độ chuẩn xác: '+(acc===null?'—':acc+'%')+' · Nét '+n+'/'+c.n;
+    document.getElementById('meterFill').style.width=(acc||0)+'%';
+    if(n===c.n)say(acc>=80?'Xuất sắc: '+acc+'% — đúng thứ tự và hướng nét':'Xong '+c.n+' nét — chuẩn xác '+acc+'%, xem lại gợi ý nhé');
+  }
+  function svgPoint(e){
+    var r=inkSvg.getBoundingClientRect();
+    return {x:(e.clientX-r.left)/r.width*300,y:(e.clientY-r.top)/r.height*300};
+  }
+  inkSvg.addEventListener('pointerdown',function(e){
+    if(mode!=='draw')return;
+    inkSvg.setPointerCapture(e.pointerId);
+    var pt=svgPoint(e);
+    drawing=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    drawing.setAttribute('class','ink-path good');
+    drawing.setAttribute('points',pt.x.toFixed(1)+','+pt.y.toFixed(1));
+    inkSvg.appendChild(drawing);drawing._pts=[pt];
+  });
+  inkSvg.addEventListener('pointermove',function(e){
+    if(!drawing)return;
+    var pt=svgPoint(e),last=drawing._pts[drawing._pts.length-1];
+    if(Math.hypot(pt.x-last.x,pt.y-last.y)<3)return;
+    drawing._pts.push(pt);
+    drawing.setAttribute('points',drawing.getAttribute('points')+' '+pt.x.toFixed(1)+','+pt.y.toFixed(1));
+  });
+  inkSvg.addEventListener('pointerup',function(){
+    if(!drawing)return;
+    var c=find(cur),idx=inkPaths.length;
+    var ok=drawing._pts.length>=4&&matchStroke(drawing._pts,c.d[Math.min(idx,c.d.length-1)]);
+    drawing.setAttribute('class','ink-path '+(ok?'good':'bad'));
+    drawing._pts.ok=ok;inkPaths.push(drawing);drawing=null;
+    if(hintOn)showHint();
+    updateMeter();
+  });
+  function showHint(){
+    sSvg.querySelectorAll('.st.hint').forEach(function(e){e.remove();});
+    var c=find(cur),i=Math.min(inkPaths.length,c.p.length-1);
+    if(inkPaths.length>=c.p.length)return;
+    var el=document.createElementNS('http://www.w3.org/2000/svg','path');
+    el.setAttribute('d',c.p[i]);el.setAttribute('class','st hint');sSvg.appendChild(el);
+  }
+  document.getElementById('btnClear').addEventListener('click',function(){inkPaths=[];inkSvg.innerHTML='';if(hintOn)showHint();updateMeter();});
+  document.getElementById('btnUndo').addEventListener('click',function(){var l=inkPaths.pop();if(l)l.remove();if(hintOn)showHint();updateMeter();});
+  document.getElementById('btnHint').addEventListener('click',function(){
+    hintOn=!hintOn;this.setAttribute('aria-pressed',hintOn);
+    if(!hintOn)sSvg.querySelectorAll('.st.hint').forEach(function(e){e.remove();});else showHint();
+  });
+
+  // ---- filters / panes / pager ----
+  catalog.addEventListener('click',function(e){
+    var b=e.target.closest('[data-ch]');if(b)select(b.getAttribute('data-ch'));
+  });
+  document.querySelectorAll('#levelSeg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#levelSeg button').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');level=b.getAttribute('data-lv');renderCatalog();
+    });
+  });
+  document.querySelectorAll('.state-pills .pill').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.state-pills .pill').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');state=b.getAttribute('data-st');renderCatalog();
+    });
+  });
+  document.getElementById('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();renderCatalog();});
+  function showPane(w){
+    document.getElementById('split').className='split '+(w==='work'?'stack-work':'stack-catalog');
+    document.getElementById('tabCatalog').setAttribute('aria-pressed',w!=='work');
+    document.getElementById('tabWork').setAttribute('aria-pressed',w==='work');
+  }
+  document.getElementById('tabCatalog').addEventListener('click',function(){showPane('catalog');});
+  document.getElementById('tabWork').addEventListener('click',function(){showPane('work');});
+  document.getElementById('pgPrev').addEventListener('click',function(){say('Danh sách mẫu 12 chữ — hết trang');});
+  document.getElementById('pgNext').addEventListener('click',function(){say('Danh sách mẫu 12 chữ — hết trang');});
+
+  cur='爱';renderCatalog();select('爱',false);
+})();
+</script>
+</body>
+</html>
