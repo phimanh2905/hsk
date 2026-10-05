@@ -11,9 +11,10 @@ import { Progress } from "@/components/ui/progress";
 import { SegmentedTabs } from "@/components/ui/segmented-tabs";
 import { useHomeSummary } from "@/lib/home-summary";
 
-/* CTA là <Link> (mock dùng điều hướng) — 2 hằng class thay cho Button size lg. */
-const btnPrimary = "inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-transparent bg-action-primary px-6 text-[15px] font-semibold text-white hover:bg-action-primary-hover active:bg-action-primary-active focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
-const btnGhost = "inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-border-default bg-surface-muted px-6 text-[15px] font-semibold text-text-primary hover:bg-surface-elevated hover:border-border-strong focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2";
+/* CTA là <Link> (mock dùng điều hướng) — 2 hằng class thay cho Button size lg.
+   w-full sm:w-auto: ≤640px CTA full-width như mock (@media max-width:640px .btn-primary/.btn-ghost width:100%). */
+const btnPrimary = "inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-control border border-transparent bg-action-primary px-6 text-[15px] font-semibold text-white hover:bg-action-primary-hover active:bg-action-primary-active focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 sm:w-auto";
+const btnGhost = "inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-control border border-border-default bg-surface-muted px-6 text-[15px] font-semibold text-text-primary hover:bg-surface-elevated hover:border-border-strong focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 sm:w-auto";
 
 type HeroTab = "lesson" | "srs";
 
