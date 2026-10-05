@@ -10,6 +10,16 @@ export type ShadowingPlaylist = {
   desc: string;
   channel: string;
 };
+
+export type ShadowingTopic = "life" | "food" | "travel" | "film";
+
+export const topicVi: Record<ShadowingTopic, string> = {
+  life: "Đời sống thường nhật",
+  food: "Mua sắm & Ăn uống",
+  travel: "Đi lại & Du lịch",
+  film: "Trích đoạn phim",
+};
+
 export type ShadowingVideo = {
   id: string;
   title: string;
@@ -20,6 +30,8 @@ export type ShadowingVideo = {
   duration: string;
   durSec: number;
   plays: number;
+  topic: ShadowingTopic;
+  spd: number;
 };
 export type SubtitleSentence = {
   n: number;
@@ -87,6 +99,8 @@ export const shadowingVideos: ShadowingVideo[] = [
     duration: "2:46",
     durSec: 166,
     plays: 366,
+    topic: "film",
+    spd: 0.9,
   },
   {
     id: "sXo-yHFkAio",
@@ -97,8 +111,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:06",
     durSec: 66,
-    plays: 74,
+    plays: 74,  topic: "film",
+  spd: 0.9,
   },
+
   {
     id: "NkYwdZhkHF0",
     title: "又要漲工資？！#呆話西遊 #daihuaxiyou #搞笑",
@@ -108,8 +124,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "2:21",
     durSec: 141,
-    plays: 25,
+    plays: 25,  topic: "film",
+  spd: 1.0,
   },
+
   {
     id: "FuIOkW6eaRA",
     title: "Why does he always drive me crazy?! 😡😂 #daihoo #plush #animation #dubbing",
@@ -119,8 +137,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:01",
     durSec: 61,
-    plays: 11,
+    plays: 11,  topic: "film",
+  spd: 1.0,
   },
+
   // long-baba (cat2)
   {
     id: "J0P6fPl6cho",
@@ -131,8 +151,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:18",
     durSec: 78,
-    plays: 44,
+    plays: 44,  topic: "film",
+  spd: 1.0,
   },
+
   {
     id: "FxpyzLt3wRQ",
     title: "【我的爸爸是條龍】孩子：爸媽總在我面前秀恩愛？！Being PDA in front of our SON…",
@@ -142,8 +164,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "3:04",
     durSec: 184,
-    plays: 12,
+    plays: 12,  topic: "film",
+  spd: 1.0,
   },
+
   {
     id: "09kHjxsFUA4",
     title: "誰動了我的遊戲機？",
@@ -153,8 +177,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:44",
     durSec: 104,
-    plays: 10,
+    plays: 10,  topic: "film",
+  spd: 1.0,
   },
+
   {
     id: "z1v9d303Xm0",
     title: "戀愛中的爸爸",
@@ -164,8 +190,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "2:08",
     durSec: 128,
-    plays: 5,
+    plays: 5,  topic: "film",
+  spd: 0.9,
   },
+
   // so-cap (cat3)
   {
     id: "6YGJswSorYw",
@@ -176,8 +204,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "5:00",
     durSec: 300,
-    plays: 3100,
+    plays: 3100,  topic: "life",
+  spd: 0.75,
   },
+
   {
     id: "83THdBdTy7U",
     title: "Podcast 12: Mua sắm ở chợ 逛市場",
@@ -187,8 +217,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:52",
     durSec: 292,
-    plays: 235,
+    plays: 235,  topic: "food",
+  spd: 0.75,
   },
+
   {
     id: "o6ilprwO6w0",
     title: "Podcast 07: Một ngày của tôi 我的一天",
@@ -198,8 +230,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "7:05",
     durSec: 425,
-    plays: 114,
+    plays: 114,  topic: "life",
+  spd: 0.75,
   },
+
   {
     id: "QwlhcsAMhT0",
     title: "Podcast 03: Gia đình tôi 我的家庭",
@@ -209,8 +243,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:42",
     durSec: 282,
-    plays: 215,
+    plays: 215,  topic: "life",
+  spd: 0.75,
   },
+
   // an-kha-hy (cat4)
   {
     id: "H3aRI3ypx_0",
@@ -221,8 +257,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:29",
     durSec: 269,
-    plays: 80,
+    plays: 80,  topic: "life",
+  spd: 0.75,
   },
+
   {
     id: "3p9uGOLgVds",
     title: "Bài 2: Con số & tuổi 數字",
@@ -232,8 +270,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:29",
     durSec: 269,
-    plays: 7,
+    plays: 7,  topic: "life",
+  spd: 0.85,
   },
+
   {
     id: "2pCgqjBBgGU",
     title: "Bài 3: Gia đình 家人",
@@ -243,8 +283,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:35",
     durSec: 275,
-    plays: 8,
+    plays: 8,  topic: "life",
+  spd: 0.85,
   },
+
   {
     id: "BLEN82k2vDE",
     title: "Bài 4: Đồ ăn & gọi món 點菜",
@@ -254,8 +296,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:28",
     durSec: 268,
-    plays: 10,
+    plays: 10,  topic: "food",
+  spd: 0.85,
   },
+
   // simple-days (cat5)
   {
     id: "DQBzSl3OM1I",
@@ -266,8 +310,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "15:48",
     durSec: 948,
-    plays: 16,
+    plays: 16,  topic: "life",
+  spd: 1.0,
   },
+
   {
     id: "tQKsIFE-Y0g",
     title: "Ep.08: Đi chợ sáng 逛早市",
@@ -277,8 +323,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "16:19",
     durSec: 979,
-    plays: 3,
+    plays: 3,  topic: "food",
+  spd: 1.0,
   },
+
   {
     id: "wZDej3Logc4",
     title: "Ep.21: Cà phê và cuộc sống 咖啡與生活",
@@ -288,8 +336,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "14:27",
     durSec: 867,
-    plays: 1,
+    plays: 1,  topic: "life",
+  spd: 1.0,
   },
+
   {
     id: "XDpsIrpLEOQ",
     title: "Ep.05: Thời tiết hôm nay 今天的天氣",
@@ -299,8 +349,10 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "14:19",
     durSec: 859,
-    plays: 8,
+    plays: 8,  topic: "life",
+  spd: 0.85,
   },
+
 ];
 
 /* Phụ đề: port nguyên object subtitles (KHÔNG dịch lại, KHÔNG rút gọn).
