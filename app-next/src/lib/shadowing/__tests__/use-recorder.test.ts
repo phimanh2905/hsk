@@ -20,4 +20,15 @@ describe("useRecorder — jsdom không có mediaDevices → simMode", () => {
     const { result } = renderHook(() => useRecorder());
     expect(result.current.stop()).toBeNull();
   });
+  it("start() liên tiếp nhiều lần (race guard) → stop vẫn trả đúng 1 kết quả", () => {
+    const { result } = renderHook(() => useRecorder());
+    act(() => { result.current.start(); result.current.start(); result.current.start(); });
+    expect(result.current.recording).toBe(true);
+    let rec: { blob: Blob; secs: number } | null = null;
+    act(() => { rec = result.current.stop(); });
+    expect(result.current.recording).toBe(false);
+    expect(rec).not.toBeNull();
+    // stop lần nữa → null (không kẹt trạng thái recording)
+    expect(result.current.stop()).toBeNull();
+  });
 });
