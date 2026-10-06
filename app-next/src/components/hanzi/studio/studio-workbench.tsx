@@ -27,8 +27,17 @@ const SPEED_TABS = [
 const TOOL_BTN = "rounded-2xl text-[12.5px] font-bold";
 
 /* decomp lọc bỏ chính glyph của bộ (cả dạng từ điển 水 lẫn biến bộ 氵 đã khớp ở rad.char) */
+/* Variant radical → dictionary form (mirror of ALIAS in scripts/build-hanzi-studio-data.mts).
+   MMC decomp dùng dạng biến thể (氵) còn RADICAL_INDEX.char là dạng từ điển (水). */
+const BASE_FORM: Record<string, string> = {
+  氵: "水", 氺: "水", 扌: "手", 讠: "言", 忄: "心", 犭: "犬", 饣: "食",
+  纟: "糸", 钅: "金", 辶: "辵", 阝: "阜", 亻: "人", 艹: "艸", 灬: "火",
+  刂: "刀", 厶: "厶", 宀: "宀", 彳: "行", 攵: "攴", 爫: "爪", 疒: "疒",
+};
+const norm = (c: string) => BASE_FORM[c] ?? c;
+
 function decompParts(meta: StudioCharMeta, rad: StudioRadical): string[] {
-  return meta.decomp.filter((c) => c !== rad.char);
+  return meta.decomp.filter((c) => c !== rad.char && norm(c) !== rad.char);
 }
 
 export function StudioWorkbench({

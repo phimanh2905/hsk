@@ -53,11 +53,10 @@ describe("StudioWorkbench", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("char: hiện hộp bóc tách (chứa glyph bộ) + chip active", () => {
+  it("char: hộp bóc tách lọc bộ dạng biến thể (氵→水) + chip active", () => {
     const { getByODId } = setup({ data: { kind: "char", meta: mei, rad } });
-    const decomp = getByODId("decomp")!;
-    expect(decomp.textContent).toContain("氵");
-    expect(decomp.textContent).toContain("殳");
+    /* 没 decomp [氵, 殳] — 氵 là biến thể của 水 → bị lọc, rest chỉ còn 殳 */
+    expect(getByODId("decomp")!.textContent).toBe("Bóc tách: Bộ 水 + 殳");
     const chip = document.querySelector('[data-od-id="char-tray"] [data-tray="没"]') as HTMLElement;
     expect(chip).toBeTruthy();
     expect(chip.className).toContain("border-action-primary");
@@ -70,6 +69,14 @@ describe("StudioWorkbench", () => {
     const decomp = getByODId("decomp")!;
     /* rest không chứa 水 (glyph bộ bị lọc khỏi decomp), chỉ còn 冫 */
     expect(decomp.textContent).toBe("Bóc tách: Bộ 水 + 冫");
+  });
+
+  it("decomp giữ nguyên các thành phần khi chữ không chứa bộ", () => {
+    /* 买 decomp [乛, 头] (bộ 大) — không có thành phần khớp bộ → rest giữ đầy đủ */
+    const mai = CHAR_META["买"];
+    const dai = RADICAL_INDEX.find((r) => r.char === "大")!;
+    const { getByODId } = setup({ data: { kind: "char", meta: mai, rad: dai } });
+    expect(getByODId("decomp")!.textContent).toBe("Bóc tách: Bộ 大 + 乛 + 头");
   });
 
   it("click tray chip → onSelectTray với chữ", async () => {
