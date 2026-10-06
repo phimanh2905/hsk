@@ -6,7 +6,6 @@
 
 import { useRef } from "react";
 import { Pause, Play, RotateCcw, ICON_STROKE } from "@/components/ui/icon";
-import { sentenceAtRatio } from "@/lib/reading/karaoke";
 import { cn } from "@/lib/cn";
 
 function fmt(sec: number): string {
@@ -43,8 +42,10 @@ export function AudioBar({
     const rect = el.getBoundingClientRect();
     const ratio = (clientX - rect.left) / Math.max(1, rect.width);
     const safe = Number.isFinite(ratio) ? Math.min(1, Math.max(0, ratio)) : 0;
-    // sentenceAtRatio cần mảng câu — bar chỉ biết total, dựng mảng rỗng dài total (pure fn chỉ dùng length).
-    onSeek(sentenceAtRatio(Array.from({ length: total }) as never[], safe));
+    // Map ratio → index câu (cùng công thức với sentenceAtRatio của lib, vốn cần
+    // mảng câu — bar chỉ biết total nên tính local, tránh dựng mảng giả).
+    const i = Math.min(total - 1, Math.max(0, Math.floor(safe * total)));
+    onSeek(i);
   };
 
   const elapsed = Math.round(durationSec * ((index + 0.5) / Math.max(1, total)));

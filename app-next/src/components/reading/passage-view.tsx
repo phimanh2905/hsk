@@ -32,7 +32,7 @@ export function PassageView({
         <p
           key={i}
           className={cn(
-            "zh rounded-[10px] border-l-[3px] border-transparent px-3 py-1.5 word-spacing-[2px]",
+            "sent zh rounded-[10px] border-l-[3px] border-transparent px-3 py-1.5 [word-spacing:2px]",
             playingIndex === i && "playing border-l-[color:var(--hz-jade)] bg-jade-wash text-jade",
           )}
         >

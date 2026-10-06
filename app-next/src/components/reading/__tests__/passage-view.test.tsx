@@ -12,10 +12,7 @@ describe("PassageView", () => {
       <PassageView article={tea} scaf="hanzi" fontSize={22} playingIndex={null} onWordClick={vi.fn()} />,
     );
     const sents = container.querySelectorAll(".sent");
-    // không có class .sent theo nghĩa DOM thuần — đếm qua thẻ <p> trong canvas
-    const ps = container.querySelectorAll<HTMLParagraphElement>("[data-od-id='reading-canvas'] p");
-    expect(ps.length).toBe(tea.sentences.length);
-    expect(sents.length).toBe(0); // class "playing" mới là hook chính
+    expect(sents.length).toBe(tea.sentences.length);
     const words = container.querySelectorAll(".w");
     expect(words.length).toBe(tea.sentences.reduce((n, s) => n + s.length, 0));
   });
