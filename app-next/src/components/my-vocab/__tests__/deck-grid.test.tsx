@@ -24,13 +24,11 @@ describe("DeckGrid", () => {
     const onStudy = vi.fn();
     const onMenu = vi.fn();
     render(<DeckGrid decks={decks} onStudy={onStudy} onMenu={onMenu} />);
-    act(() => getByOD("deck-nb-1").querySelector("button:last-of-type")!.click());
+    act(() => (getByOD("deck-nb-1").querySelector("button:last-of-type") as HTMLElement).click());
     expect(onStudy).toHaveBeenCalledWith("nb-1");
     act(
       () =>
-        getByOD("deck-due")
-          .querySelector('button[aria-label="Thao tác deck"]')!
-          .click(),
+        (getByOD("deck-due").querySelector('button[aria-label="Thao tác deck"]') as HTMLElement).click(),
     );
     expect(onMenu).toHaveBeenCalledWith("due");
   });

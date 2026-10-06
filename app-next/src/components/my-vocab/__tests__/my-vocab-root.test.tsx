@@ -90,9 +90,9 @@ describe("MyVocabRoot", () => {
 
   it("onStudy: deck user → /lesson/custom/<id>; deck due → /review", () => {
     render(<MyVocabRoot />);
-    act(() => getByOD("deck-nb-1").querySelector("button:last-of-type")!.click());
+    act(() => (getByOD("deck-nb-1").querySelector("button:last-of-type") as HTMLElement).click());
     expect(pushMock).toHaveBeenCalledWith("/lesson/custom/nb-1");
-    act(() => getByOD("deck-due").querySelector("button:last-of-type")!.click());
+    act(() => (getByOD("deck-due").querySelector("button:last-of-type") as HTMLElement).click());
     expect(pushMock).toHaveBeenCalledWith("/review");
   });
 
