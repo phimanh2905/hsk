@@ -5,7 +5,7 @@ import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
 import { shadowingProgress } from "@/lib/db/schema";
-import { shadowingVideoById } from "@/content/shadowing";
+import { getShadowingVideoById } from "@/lib/content/shadowing";
 
 const bodySchema = z.object({
   status: z.enum(["new", "mid", "done"]).optional(),
@@ -18,7 +18,7 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ videoId: st
   const session = await getAuth().api.getSession({ headers: req.headers });
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { videoId } = await ctx.params;
-  if (!shadowingVideoById(videoId)) return NextResponse.json({ error: "unknown videoId" }, { status: 400 });
+  if (!(await getShadowingVideoById(videoId))) return NextResponse.json({ error: "unknown videoId" }, { status: 400 });
 
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "invalid body" }, { status: 400 });

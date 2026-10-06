@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { shadowingVideos, shadowingSubtitles } from "@/content/shadowing";
+import { getShadowingSubtitles, getShadowingVideos } from "@/lib/content/shadowing";
 import ShadowingLibrary from "./shadowing-library";
 
 export const metadata: Metadata = {
@@ -7,11 +7,15 @@ export const metadata: Metadata = {
   description: "Chọn video để luyện nghe, bắt chước phát âm hoặc viết chính tả.",
 };
 
-//SSG thật: page serialize videos + subtitles vào client island (lọc/TTS/toast chạy client).
-export default function ShadowingPage() {
+/* Content đọc D1 qua content layer → page luôn dynamic (không query lúc build).
+   Page serialize videos + subtitles vào client island (lọc/TTS/toast chạy client). */
+export const dynamic = "force-dynamic";
+
+export default async function ShadowingPage() {
+  const [videos, subtitlesByVideo] = await Promise.all([getShadowingVideos(), getShadowingSubtitles()]);
   return (
     <main>
-      <ShadowingLibrary videos={shadowingVideos} subtitlesByVideo={shadowingSubtitles} />
+      <ShadowingLibrary videos={videos} subtitlesByVideo={subtitlesByVideo} />
     </main>
   );
 }
