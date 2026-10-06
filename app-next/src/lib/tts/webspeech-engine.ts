@@ -42,7 +42,7 @@ export function createWebspeechEngine(
   cache();
   synth().addEventListener?.("voiceschanged", cache);
 
-  const pickVoice = (lang: string): SpeechSynthesisVoice | null => {
+  const pickVoice = (): SpeechSynthesisVoice | null => {
     let pref: string | null = null;
     try {
       pref = localStorage.getItem("bye.voice");
@@ -61,7 +61,7 @@ export function createWebspeechEngine(
     speak(text, opts) {
       const lang = opts?.lang ?? "zh-CN";
       const rate = opts?.rate ?? 1;
-      const voice = pickVoice(lang);
+      const voice = pickVoice();
       const chunks = chunkText(text);
       /* Chỉ cancel khi thật sự đang phát — iOS Safari nuốt utterance nếu cancel()
          gọi liền speak() trong cùng một tick. */
