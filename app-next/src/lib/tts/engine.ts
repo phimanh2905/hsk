@@ -1,5 +1,6 @@
 "use client";
-/* Orchestrator 3 tầng (spec §4): WebGPU fp16 -> WASM q8 -> webspeech.
+/* Orchestrator 2 tầng (spec §4 sửa: fp16 WebGPU rè do bug onnxruntime #29807,
+   bỏ tier wasm): WebGPU fp32 -> webspeech.
    Singleton vì nhiều component dùng song song; state phát qua subscribe cho
    dialog consent + settings modal. */
 import { detectCapability, type TtsCapability } from "./capability";
@@ -53,17 +54,13 @@ function setState(s: TtsOrchestratorState) {
 }
 
 function loadEngine(onProgress?: (p: DownloadProgress) => void): Promise<KokoroEngine> {
-  /* tách khỏi ensureEngine để có thể retry tier: fp16 fail (thiếu shader-f16,
-     driver lỗi) -> thử q8-wasm đúng 1 lần (spec §8) trước khi báo lỗi */
+  /* Tách khỏi ensureEngine để message lỗi không nuốt bởi chain. Chỉ có một
+     tier Kokoro (webgpu-fp32): không hỗ trợ hoặc nạp fail -> webspeech qua
+     onFallback ở caller. */
   return (async () => {
     const tier = await detectCapability();
     if (tier === "webspeech") throw new Error("Thiết bị không hỗ trợ Kokoro");
-    try {
-      return await createKokoroEngine(tier as TtsTier, onProgress);
-    } catch (err) {
-      if (tier === "webgpu-fp16") return await createKokoroEngine("wasm-q8", onProgress);
-      throw err;
-    }
+    return await createKokoroEngine(tier, onProgress);
   })();
 }
 

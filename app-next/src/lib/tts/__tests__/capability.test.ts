@@ -17,31 +17,31 @@ describe("detectCapability", () => {
     await expect(detectCapability()).resolves.toBe("webspeech");
   });
 
-  it("không có navigator.gpu (Firefox) -> wasm-q8", async () => {
+  it("không có navigator.gpu (Firefox) -> webspeech", async () => {
     setUa("Mozilla/5.0 (X11; Linux x86_64) Firefox/128.0");
     setGpu(undefined);
-    await expect(detectCapability()).resolves.toBe("wasm-q8");
+    await expect(detectCapability()).resolves.toBe("webspeech");
   });
 
-  it("có adapter -> webgpu-fp16", async () => {
+  it("có adapter -> webgpu-fp32", async () => {
     setUa("Mozilla/5.0 Chrome/126.0");
     setGpu({ requestAdapter: async () => ({ features: [] }) });
-    await expect(detectCapability()).resolves.toBe("webgpu-fp16");
+    await expect(detectCapability()).resolves.toBe("webgpu-fp32");
   });
 
-  it("requestAdapter return null (cắm cờ nhưng driver lỗi) -> wasm-q8", async () => {
+  it("requestAdapter return null (cắm cờ nhưng driver lỗi) -> webspeech", async () => {
     setUa("Mozilla/5.0 Chrome/126.0");
     setGpu({ requestAdapter: async () => null });
-    await expect(detectCapability()).resolves.toBe("wasm-q8");
+    await expect(detectCapability()).resolves.toBe("webspeech");
   });
 
-  it("requestAdapter throw -> wasm-q8, không nổ", async () => {
+  it("requestAdapter throw -> webspeech, không nổ", async () => {
     setUa("Mozilla/5.0 Chrome/126.0");
     setGpu({
       requestAdapter: async () => {
         throw new Error("GPU crash");
       },
     });
-    await expect(detectCapability()).resolves.toBe("wasm-q8");
+    await expect(detectCapability()).resolves.toBe("webspeech");
   });
 });

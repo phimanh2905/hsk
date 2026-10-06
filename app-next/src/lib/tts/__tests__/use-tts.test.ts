@@ -277,7 +277,7 @@ describe("useTts", () => {
         shouldUseKokoro: () => true,
         speak: kokoroSpeak,
         cancel: vi.fn(),
-        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp32" as const }),
       };
       vi.doMock("../engine", () => ({
         getTtsOrchestrator: () => fakeOrch,
@@ -307,7 +307,7 @@ describe("useTts", () => {
         shouldUseKokoro: () => true,
         speak: vi.fn(async () => {}),
         cancel: vi.fn(),
-        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp32" as const }),
       };
       vi.doMock("../engine", () => ({ getTtsOrchestrator: () => fakeOrch }));
       vi.resetModules();
@@ -324,7 +324,7 @@ describe("useTts", () => {
         shouldUseKokoro: () => true,
         speak: vi.fn(async () => {}), // không bao giờ gọi onEnd
         cancel: vi.fn(),
-        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp32" as const }),
       };
       vi.doMock("../engine", () => ({ getTtsOrchestrator: () => fakeOrch }));
       vi.resetModules();

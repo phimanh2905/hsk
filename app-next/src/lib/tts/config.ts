@@ -2,7 +2,7 @@
    Model không bundle: fetch runtime từ HuggingFace, browser tự cache (Cache API). */
 
 export const TTS_ENGINE_KEY = "bye.tts.engine";
-export type TtsTier = "webgpu-fp16" | "wasm-q8";
+export type TtsTier = "webgpu-fp32";
 
 export const KOKORO_MODEL_ID = "onnx-community/Kokoro-82M-v1.1-zh-ONNX";
 /* Voice .bin (512KB/voice) tự host trong public/ để không phụ thuộc resolve URL của HF.
@@ -11,10 +11,13 @@ export const KOKORO_VOICE_PATH = "/kokoro/voices";
 
 export const TIER_CONFIG: Record<
   TtsTier,
-  { dtype: "fp16" | "q8"; device: "webgpu" | "wasm"; label: string }
+  { dtype: "fp32"; device: "webgpu"; label: string }
 > = {
-  "webgpu-fp16": { dtype: "fp16", device: "webgpu", label: "WebGPU" },
-  "wasm-q8": { dtype: "q8", device: "wasm", label: "WASM/CPU" },
+  /* fp16 trên WebGPU EP của onnxruntime bị hỏng audio (rè) — onnxruntime
+     issue #29807; fp32 là đường an toàn duy nhất trên WebGPU. Không có tier
+     wasm: chậm và q8 không được khuyến nghị cho model này — fallback là
+     Web Speech API. */
+  "webgpu-fp32": { dtype: "fp32", device: "webgpu", label: "WebGPU" },
 };
 
 /* Voice mặc định theo pref female/male hiện có. zf_/zm_ là voice zh của

@@ -45,15 +45,10 @@ const fakeTts = () => {
 describe("createKokoroEngine", () => {
   it("load đúng model, dtype/device theo tier, voicePath tự host", async () => {
     fakeTts();
-    await createKokoroEngine("webgpu-fp16");
+    await createKokoroEngine("webgpu-fp32");
     expect(fromPretrained).toHaveBeenCalledWith(
       "onnx-community/Kokoro-82M-v1.1-zh-ONNX",
-      expect.objectContaining({ dtype: "fp16", device: "webgpu", voicePath: "/kokoro/voices" })
-    );
-    await createKokoroEngine("wasm-q8");
-    expect(fromPretrained).toHaveBeenLastCalledWith(
-      "onnx-community/Kokoro-82M-v1.1-zh-ONNX",
-      expect.objectContaining({ dtype: "q8", device: "wasm" })
+      expect.objectContaining({ dtype: "fp32", device: "webgpu", voicePath: "/kokoro/voices" })
     );
   });
 
@@ -64,13 +59,13 @@ describe("createKokoroEngine", () => {
       opts.progress_callback?.({ status: "progress", loaded: 50, total: 100 });
       return { generate };
     });
-    await createKokoroEngine("webgpu-fp16", onProgress);
+    await createKokoroEngine("webgpu-fp32", onProgress);
     expect(onProgress).toHaveBeenCalledWith({ received: 50, total: 100 });
   });
 
   it("speak gọi generate với voice theo bye.voice + speed theo rate", async () => {
     fakeTts();
-    const engine = await createKokoroEngine("webgpu-fp16");
+    const engine = await createKokoroEngine("webgpu-fp32");
     localStorage.setItem("bye.voice", "male");
     await engine.speak("你好", { rate: 0.8 });
     expect(generate).toHaveBeenCalledWith(
@@ -82,7 +77,7 @@ describe("createKokoroEngine", () => {
 
   it("speak chunk dài -> generate từng chunk tuần tự", async () => {
     fakeTts();
-    const engine = await createKokoroEngine("webgpu-fp16");
+    const engine = await createKokoroEngine("webgpu-fp32");
     await engine.speak("好".repeat(150) + "。" + "你".repeat(150));
     expect(generate).toHaveBeenCalledTimes(2);
     expect(playMock).toHaveBeenCalledTimes(2);
@@ -90,7 +85,7 @@ describe("createKokoroEngine", () => {
 
   it("speak xong gọi opts.onEnd", async () => {
     fakeTts();
-    const engine = await createKokoroEngine("webgpu-fp16");
+    const engine = await createKokoroEngine("webgpu-fp32");
     const onEnd = vi.fn();
     await engine.speak("你好", { onEnd });
     expect(onEnd).toHaveBeenCalledTimes(1);
@@ -102,7 +97,7 @@ describe("createKokoroEngine", () => {
     generate.mockImplementationOnce(
       () => new Promise((res) => (resolveFirst = res))
     );
-    const engine = await createKokoroEngine("webgpu-fp16");
+    const engine = await createKokoroEngine("webgpu-fp32");
     const pending = engine.speak("好".repeat(150) + "。" + "你".repeat(150));
     engine.cancel();
     resolveFirst(undefined);
@@ -113,6 +108,6 @@ describe("createKokoroEngine", () => {
 
   it("load lỗi (HF chặn/network) -> createKokoroEngine reject", async () => {
     fromPretrained.mockRejectedValue(new Error("offline"));
-    await expect(createKokoroEngine("webgpu-fp16")).rejects.toThrow("offline");
+    await expect(createKokoroEngine("webgpu-fp32")).rejects.toThrow("offline");
   });
 });

@@ -24,6 +24,14 @@ function createAuth() {
     socialProviders: {
       google: { clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET },
     },
+    /* Workers không có socket IP: mặc định chỉ đọc x-forwarded-for nên không
+       resolve được client IP (rate limit rơi vào bucket chung). Header
+       cf-connecting-ip do edge Cloudflare gắn, đáng tin trên runtime này. */
+    advanced: {
+      ipAddress: {
+        ipAddressHeaders: ["cf-connecting-ip"],
+      },
+    },
   });
 }
 

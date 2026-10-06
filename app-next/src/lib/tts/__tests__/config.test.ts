@@ -73,9 +73,9 @@ describe("config", () => {
     });
   });
 
-  it("tier config khớp spec: webgpu-fp16 = fp16/webgpu, wasm-q8 = q8/wasm", () => {
-    expect(TIER_CONFIG["webgpu-fp16"]).toMatchObject({ dtype: "fp16", device: "webgpu" });
-    expect(TIER_CONFIG["wasm-q8"]).toMatchObject({ dtype: "q8", device: "wasm" });
+  it("tier config khớp: webgpu-fp32 = fp32/webgpu, duy nhất 1 tier", () => {
+    expect(Object.keys(TIER_CONFIG)).toEqual(["webgpu-fp32"]);
+    expect(TIER_CONFIG["webgpu-fp32"]).toMatchObject({ dtype: "fp32", device: "webgpu" });
   });
 
   it("voice map: female -> zf_*, male -> zm_*", () => {

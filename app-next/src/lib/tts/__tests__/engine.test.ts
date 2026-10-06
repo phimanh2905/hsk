@@ -23,9 +23,9 @@ async function freshOrchestrator() {
 }
 
 const fakeKokoro = () => {
-  detectCapability.mockResolvedValue("webgpu-fp16");
+  detectCapability.mockResolvedValue("webgpu-fp32");
   createKokoroEngine.mockResolvedValue({
-    tier: "webgpu-fp16",
+    tier: "webgpu-fp32",
     speak: vi.fn(async (_t: string, opts?: { onEnd?: () => void }) => opts?.onEnd?.()),
     cancel: vi.fn(),
   });
@@ -72,7 +72,7 @@ describe("TtsOrchestrator", () => {
       expect(engine.speak).toHaveBeenCalledWith("你好", expect.anything())
     );
     expect(onFallback).not.toHaveBeenCalled();
-    expect(orch.getState()).toMatchObject({ kind: "ready", tier: "webgpu-fp16" });
+    expect(orch.getState()).toMatchObject({ kind: "ready", tier: "webgpu-fp32" });
   });
 
   it("choice=kokoro nhưng engine chưa nạp: khởi động nạp ngầm + onFallback cho lần này", async () => {
@@ -90,7 +90,7 @@ describe("TtsOrchestrator", () => {
     const orch = await freshOrchestrator();
     orch.acceptConsent(true);
     await vi.waitFor(() =>
-      expect(orch.getState()).toMatchObject({ kind: "ready", tier: "webgpu-fp16" })
+      expect(orch.getState()).toMatchObject({ kind: "ready", tier: "webgpu-fp32" })
     );
     expect(localStorage.getItem("bye.tts.engine")).toBe("kokoro");
   });
@@ -134,26 +134,8 @@ describe("TtsOrchestrator", () => {
     vi.unstubAllGlobals();
   });
 
-  it("fp16 nạp fail (thiếu shader-f16) -> tự thử lại q8-wasm đúng 1 lần (spec §8)", async () => {
-    detectCapability.mockResolvedValue("webgpu-fp16");
-    createKokoroEngine
-      .mockRejectedValueOnce(new Error("no shader-f16"))
-      .mockResolvedValueOnce({
-        tier: "wasm-q8",
-        speak: vi.fn(async (_t: string, opts?: { onEnd?: () => void }) => opts?.onEnd?.()),
-        cancel: vi.fn(),
-      });
-    localStorage.setItem("bye.tts.engine", "kokoro");
-    const orch = await freshOrchestrator();
-    await orch.preload();
-    expect(createKokoroEngine).toHaveBeenCalledTimes(2);
-    expect(createKokoroEngine.mock.calls[0][0]).toBe("webgpu-fp16");
-    expect(createKokoroEngine.mock.calls[1][0]).toBe("wasm-q8");
-    expect(orch.getState()).toMatchObject({ kind: "ready", tier: "wasm-q8" });
-  });
-
   it("lỗi nạp engine (HF offline) -> state error, các speak sau fallback webspeech cả session", async () => {
-    detectCapability.mockResolvedValue("wasm-q8");
+    detectCapability.mockResolvedValue("webgpu-fp32");
     createKokoroEngine.mockRejectedValue(new Error("offline"));
     localStorage.setItem("bye.tts.engine", "kokoro");
     const orch = await freshOrchestrator();

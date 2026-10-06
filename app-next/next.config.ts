@@ -12,7 +12,17 @@ if (process.env.NODE_ENV === "development") {
 }
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Referrer-Policy same-origin: request cross-site (vd fetch model Kokoro từ
+     HuggingFace) không gửi Referer — HF trả 404 không-CORS cho mọi Referer
+     *.workers.dev; request same-origin vẫn giữ hành vi cũ. */
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "Referrer-Policy", value: "same-origin" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
