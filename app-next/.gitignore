@@ -53,3 +53,6 @@ playwright-report/
 
 # Kokoro TTS bundle vendored từ node_modules lúc build (scripts/vendor-kokoro.mjs)
 public/kokoro/vendor/
+
+# Make Me a Hanzi vendor data (luc build) — khong commit
+scripts/vendor/mmc/*.txt
