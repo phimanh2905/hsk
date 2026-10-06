@@ -82,7 +82,7 @@ export function VocabControls({ view, onView, hsk, onHsk, q, onQ, onNewDeck, sea
         <span className="min-w-[74px] text-[11px] font-extrabold tracking-[0.07em] text-text-secondary/70">CẤP ĐỘ</span>
         <VocabSeg label="Lọc HSK" options={HSK_OPTS} value={hsk} onChange={onHsk} />
       </div>
-      <label className="flex h-10 min-w-[200px] flex-[0_1_280px] items-center gap-2 rounded-full border border-border-subtle bg-surface-muted pl-3.5 pr-3">
+      <label className="flex h-10 w-full items-center gap-2 rounded-full border border-border-subtle bg-surface-muted pl-3.5 pr-3">
         <Search size={15} strokeWidth={2} aria-hidden="true" className="shrink-0 text-text-secondary" />
         <input
           ref={searchRef}
