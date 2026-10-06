@@ -2,12 +2,19 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HanziStudio, { clampPage } from "../hanzi-studio";
+import type { WorkbenchData } from "@/components/hanzi/studio/studio-workbench";
 
 vi.mock("@/components/hanzi/studio/studio-grid", () => ({
   StudioGrid: () => <div data-od-id="tianzi-grid" />,
 }));
 vi.mock("@/components/hanzi/studio/studio-workbench", () => ({
-  StudioWorkbench: ({ data, onSelectTray }: any) => {
+  StudioWorkbench: ({
+    data,
+    onSelectTray,
+  }: {
+    data: WorkbenchData | null;
+    onSelectTray: (ch: string) => void;
+  }) => {
     const glyph = data ? (data.kind === "rad" ? data.rad.char : data.meta.ch) : "null";
     return (
       <div>
@@ -16,7 +23,7 @@ vi.mock("@/components/hanzi/studio/studio-workbench", () => ({
         </div>
         {data?.kind === "rad" && (
           <div>
-            {data.rad.chars.map((c: any) => (
+            {data.rad.chars.map((c) => (
               <button key={c.ch} onClick={() => onSelectTray(c.ch)} data-tray={c.ch}>
                 {c.ch}
               </button>

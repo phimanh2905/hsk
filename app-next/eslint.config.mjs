@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     ".open-next/**",
     ".wrangler/**",
     "next-env.d.ts",
+    // File vendor sinh tự động bởi `pnpm vendor:kokoro` (untracked, bundle minified
+    // — không phải source). Lint toàn lỗi từ code bundle nên bỏ qua.
+    "public/kokoro/vendor/**",
   ]),
   {
     // Quy ước dự án (xem SDD ledger: ruling mount-gate): mọi trang đọc

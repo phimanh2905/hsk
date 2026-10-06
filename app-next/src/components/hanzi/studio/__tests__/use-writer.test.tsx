@@ -1,12 +1,31 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, type Mock } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useWriter } from "../use-writer";
 import { loadWriterCharData } from "../writer-data";
 
+/* Mock writer instance — đúng shape mà useWriter/hook test dùng, thay cho `any`.
+   Chỉ gồm member lib thật: animateCharacter/animateStroke/show·hide·update·
+   quiz/cancelQuiz/setCharacter. */
+type MockWriter = {
+  char: string;
+  opts: Record<string, unknown>;
+  target: { innerHTML: string };
+  animateCharacter: Mock;
+  animateStroke: Mock;
+  showCharacter: Mock;
+  hideCharacter: Mock;
+  showOutline: Mock;
+  hideOutline: Mock;
+  updateColor: Mock;
+  quiz: Mock;
+  cancelQuiz: Mock;
+  setCharacter: Mock;
+};
+
 vi.mock("hanzi-writer", () => {
-  const create = vi.fn((_el: any, char: string, opts: any) => ({
+  const create = vi.fn((_el: string | HTMLElement, char: string): MockWriter => ({
     char,
-    opts,
+    opts: {},
     target: { innerHTML: "" },
     animateCharacter: vi.fn(),
     animateStroke: vi.fn(),
@@ -19,7 +38,7 @@ vi.mock("hanzi-writer", () => {
     cancelQuiz: vi.fn(),
     setCharacter: vi.fn(() => Promise.resolve()),
   }));
-  return { default: { create } };
+  return { default: { create } as unknown as typeof import("hanzi-writer").default };
 });
 vi.mock("../writer-data", () => ({
   loadWriterCharData: vi.fn(),
@@ -32,18 +51,18 @@ const DATA = { strokes: ["M1", "M2", "M3"], medians: [[[0, 0]]] };
 
 function setup() {
   const ref = { current: document.createElement("div") };
-  const { result } = renderHook(() => useWriter(ref as any));
+  const { result } = renderHook(() => useWriter(ref));
   return { result, ref };
 }
 
-function lastInstance() {
-  const calls = (HanziWriter.create as any).mock.results;
-  return calls[calls.length - 1].value;
+function lastInstance(): MockWriter {
+  const results = vi.mocked(HanziWriter.create).mock.results;
+  return results[results.length - 1].value as unknown as MockWriter;
 }
 
 beforeEach(() => {
   vi.mocked(loadWriterCharData).mockReset();
-  (HanziWriter.create as any).mockClear();
+  vi.mocked(HanziWriter.create).mockClear();
 });
 
 describe("useWriter", () => {
@@ -62,10 +81,10 @@ describe("useWriter", () => {
     await act(async () => { await result.current.load("口"); });
     result.current.startQuiz();
     expect(HanziWriter.create).toHaveBeenCalledTimes(1);
-    const opts = (HanziWriter.create as any).mock.calls[0][2];
+    const opts = vi.mocked(HanziWriter.create).mock.calls[0][2]!;
     expect(opts.showCharacter).toBe(false);
     expect(opts.showOutline).toBe(false);
-    expect(opts.charDataLoader()).toBe(DATA);
+    expect(opts.charDataLoader?.("口", () => {}, () => {})).toBe(DATA);
   });
 
   it("startQuiz lần 2 (cùng chữ): không create lại", async () => {
@@ -208,7 +227,7 @@ describe("useWriter", () => {
   it("reset: cancelQuiz + drop instance — startQuiz sau đó create lại", async () => {
     vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
     const { result } = renderHook(() =>
-      useWriter({ current: document.createElement("div") } as any),
+      useWriter({ current: document.createElement("div") }),
     );
     await act(async () => { await result.current.load("口"); });
     result.current.startQuiz();
@@ -224,7 +243,7 @@ describe("useWriter", () => {
 
   it("unmount: cancelQuiz + drop instance", async () => {    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
     const { result, unmount } = renderHook(() =>
-      useWriter({ current: document.createElement("div") } as any),
+      useWriter({ current: document.createElement("div") }),
     );
     await act(async () => { await result.current.load("口"); });
     result.current.startQuiz();
