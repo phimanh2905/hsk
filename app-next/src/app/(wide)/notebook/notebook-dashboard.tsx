@@ -31,7 +31,7 @@ const FILTERS: { key: Filter; label: string }[] = [
 export default function NotebookDashboard({ now }: { now?: Date }) {
   const { entries, ready, create, setSaved } = useNotebookEntries();
   const toast = useToast();
-  const [filter, setFilter] = useState<Filter>("all"); // stream hiển thị mọi kind mặc định
+  const [filter, setFilter] = useState<Filter>("wrong"); // mock mặc định "Câu sai chưa sửa"
   const [q, setQ] = useState("");
   const [mounted, setMounted] = useState(false);
   const searchRef = useRef<HTMLInputElement | null>(null);

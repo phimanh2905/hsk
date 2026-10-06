@@ -97,6 +97,8 @@ describe("stream cards (port mistake-stream)", () => {
       wrongEntry({ id: "p1", kind: "personal", tagTone: "per", tag: "📝 Ghi chú cá nhân", payload: { note: "Khi từ chối…" }, source: "manual" }),
     ] });
     render(<NotebookDashboard now={NOW} />);
+    // filter mặc định "wrong" (spec §2.4) — bấm "Tất cả mục" để thấy chars/personal
+    fireEvent.click(screen.getByRole("button", { name: "Tất cả mục" }));
     const c = screen.getByTestId("note-c1");
     expect(within(c).getByText("vs")).toBeInTheDocument();
     expect(within(c).getByRole("link", { name: "Xem bút thuận nét viết" })).toHaveAttribute("href", "/hanzi");
