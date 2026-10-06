@@ -17,6 +17,11 @@ vi.mock("@/lib/db", () => ({
     update: () => ({ set: vi.fn().mockReturnThis(), where: vi.fn().mockResolvedValue(undefined) }),
   }),
 }));
+vi.mock("@/lib/content/shadowing", () => ({
+  getShadowingVideoById: vi.fn(async (id: string) =>
+    id === "EA3rwvr99Q0" ? { id, title: "Demo", topic: "life" } : null
+  ),
+}));
 
 import { GET } from "../progress/route";
 import { PUT } from "../progress/[videoId]/route";
