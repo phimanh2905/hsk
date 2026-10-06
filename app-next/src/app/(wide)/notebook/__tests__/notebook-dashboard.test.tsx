@@ -127,3 +127,34 @@ describe("stream cards (port mistake-stream)", () => {
     expect(toastMock).toHaveBeenCalledWith(expect.stringContaining("Tùy chọn"));
   });
 });
+
+describe("dialog tạo ghi chú (spec §2.5)", () => {
+  it("mở từ '+ Tạo sổ mới', lưu → create personal + toast + filter personal", () => {
+    const create = vi.fn(() => wrongEntry({ id: "new", kind: "personal", tagTone: "per", payload: { note: "abc" } }));
+    useNotebookEntries.mockReturnValue({ ...emptyApi, create, entries: [] });
+    render(<NotebookDashboard now={NOW} />);
+    fireEvent.click(screen.getByTestId("add-note"));
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveTextContent("Ghi chú cá nhân");
+    fireEvent.change(within(dialog).getByLabelText("Nội dung ghi chú"), { target: { value: "abc" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Lưu ghi chú" }));
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ kind: "personal", tag: "📝 Ghi chú cá nhân", tagTone: "per", source: "manual" }));
+    expect(toastMock).toHaveBeenCalledWith("Đã lưu ghi chú");
+    expect(screen.getByRole("button", { name: "Ghi chú cá nhân" })).toHaveAttribute("aria-pressed", "true");
+  });
+  it("nút Lưu disabled khi <2 ký tự", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, entries: [] });
+    render(<NotebookDashboard now={NOW} />);
+    fireEvent.click(screen.getByTestId("add-note"));
+    expect(screen.getByRole("button", { name: "Lưu ghi chú" })).toBeDisabled();
+  });
+  it("Hủy đóng dialog không tạo entry", () => {
+    const create = vi.fn();
+    useNotebookEntries.mockReturnValue({ ...emptyApi, create, entries: [] });
+    render(<NotebookDashboard now={NOW} />);
+    fireEvent.click(screen.getByTestId("add-note"));
+    fireEvent.click(screen.getByRole("button", { name: "Hủy" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(create).not.toHaveBeenCalled();
+  });
+});

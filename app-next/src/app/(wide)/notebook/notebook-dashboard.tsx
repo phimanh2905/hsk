@@ -11,6 +11,8 @@ import { safeParsePayload } from "@/lib/notebook/payload";
 import { fmtRelativeDate } from "@/components/notebook/notebook-list";
 import { useToast } from "@/components/shell/toast-provider";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { Search, NotebookPen, Target } from "@/components/ui/icon";
 
 type Filter = "all" | "wrong" | "chars" | "personal";
@@ -36,8 +38,9 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
   const [mounted, setMounted] = useState(false);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const streamRef = useRef<HTMLDivElement | null>(null);
-  const [addOpen, setAddOpen] = useState(false); // Task 11 dùng
-  void ready; void create; // Task 11 sẽ dùng
+  const [addOpen, setAddOpen] = useState(false);
+  const [noteDraft, setNoteDraft] = useState("");
+  void ready;
 
   useEffect(() => setMounted(true), []);
   // phím "/" focus search (mock notebook.html) — bỏ qua khi đang gõ
@@ -139,7 +142,7 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
             {f.label}
           </button>
         ))}
-        <Button variant="secondary" size="sm" className="ml-auto rounded-full" data-od-id="add-note" onClick={() => setAddOpen(true)}>
+        <Button variant="secondary" size="sm" className="ml-auto rounded-full" data-od-id="add-note" data-testid="add-note" onClick={() => setAddOpen(true)}>
           <NotebookPen size={14} strokeWidth={1.5} aria-hidden="true" /> + Tạo sổ mới
         </Button>
       </div>
@@ -212,7 +215,21 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
         )}
       </div>
 
-      {/* SLOT-ADD: Task 11 — Dialog tạo ghi chú cá nhân (addOpen) */}
+      {/* Dialog tạo ghi chú cá nhân (spec §2.5) */}
+      <Dialog open={addOpen} onClose={() => setAddOpen(false)} labelledBy="dlg-note-title" className="max-w-md p-6">
+        <h2 id="dlg-note-title" className="text-lg font-extrabold">Ghi chú cá nhân</h2>
+        <p className="mt-1 text-[13px] text-text-secondary">Sổ chuyên đề tự gom từ luyện tập — ghi chú tự do của bạn lưu ở đây.</p>
+        <Textarea aria-label="Nội dung ghi chú" value={noteDraft} onChange={(e) => setNoteDraft(e.target.value)}
+          placeholder="Ví dụ: Khi từ chối lịch sự, dùng “恐怕不太方便” mềm hơn “不行”…"
+          className="mt-3 min-h-24 zh" />
+        <div className="mt-4 flex justify-end gap-2">
+          <Button variant="secondary" onClick={() => setAddOpen(false)}>Hủy</Button>
+          <Button disabled={noteDraft.trim().length < 2} onClick={() => {
+            create({ kind: "personal", tag: "📝 Ghi chú cá nhân", tagTone: "per", payload: { note: noteDraft.trim() }, source: "manual" });
+            setNoteDraft(""); setAddOpen(false); setFilter("personal"); toast("Đã lưu ghi chú");
+          }}>Lưu ghi chú</Button>
+        </div>
+      </Dialog>
     </div>
   );
 }
