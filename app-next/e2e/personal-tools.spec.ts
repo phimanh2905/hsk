@@ -80,11 +80,13 @@ test.describe("gated routes (session thật qua better-auth)", () => {
     await fakeLogin(page);
     await page.goto("/progress");
     await expect(page.getByText("Điểm của bạn")).toBeVisible();
+    await expect(page.getByText("12 tháng gần đây")).toBeVisible();
     await page.goto("/my-vocab");
     await expect(page.getByText("THE MEMORY COMMAND")).toBeVisible();
     await expect(page.getByText("Từ cần ôn ngay")).toBeVisible();
     await page.goto("/notebook/vocab/vocab-hsk30"); // notebook detail giữ nguyên
     await expect(page.getByText("Từ vực HSK 3.0")).toBeVisible();
+    await expect(page.getByText("时间").first()).toBeVisible();
   });
 
   test("luồng tạo deck → học deck qua lesson custom", async ({ page }) => {

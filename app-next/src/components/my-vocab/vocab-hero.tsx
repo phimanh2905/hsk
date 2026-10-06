@@ -39,7 +39,7 @@ export function VocabHero({
       </div>
       <Button
         onClick={onReview}
-        className="min-h-[52px] rounded-[14px] px-[30px] text-[14.5px] shadow-[0_4px_14px_rgba(200,60,50,.25)]"
+        className="min-h-[52px] rounded-[14px] px-[30px] text-[14.5px] shadow-cta"
       >
         Luyện tập ngay
       </Button>

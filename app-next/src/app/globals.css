@@ -44,6 +44,8 @@
   --radius-control: 8px;
   --shadow-xs: 0 1px 2px rgba(31, 42, 39, .05);
   --shadow-md: 0 2px 4px rgba(31, 42, 39, .06), 0 10px 24px rgba(31, 42, 39, .08);
+  --shadow-cta: 0 4px 14px rgba(200, 60, 50, .25);
+  --scrim: rgba(17, 19, 24, .5);
 }
 html.dark {
   --hz-paper: #111318;   --hz-elevated: #1c2029;
@@ -123,6 +125,8 @@ html.dark {
   --radius-control: var(--radius-control);
   --shadow-xs: var(--shadow-xs);
   --shadow-md: var(--shadow-md);
+  --shadow-cta: var(--shadow-cta);
+  --color-scrim: var(--scrim);
   --font-sans: var(--font-be-vietnam-pro), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 

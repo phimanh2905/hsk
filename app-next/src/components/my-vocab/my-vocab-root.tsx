@@ -175,7 +175,7 @@ export default function MyVocabRoot() {
           <div
             aria-hidden="true"
             onClick={() => setDrawerZh(null)}
-            className="fixed inset-0 z-50 bg-[rgba(17,19,24,.5)] transition-opacity"
+            className="fixed inset-0 z-50 bg-scrim transition-opacity"
           />
           <WordDrawer
             row={drawerRow}
