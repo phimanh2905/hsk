@@ -76,7 +76,7 @@ function loadHskChars(): Map<string, "HSK 1" | "HSK 2" | "HSK 3"> {
 const mmc = loadMmc();
 const dictPy = loadDictPinyin();
 const hskChars = loadHskChars();
-const cats = JSON.parse(readFileSync("scripts/vendor/radical-cats.json", "utf8")) as Record<string, string>;
+const cats = JSON.parse(readFileSync("scripts/vendor/radical-cats.json", "utf8")) as Record<string, "human" | "nature" | "animal" | "other">;
 
 /* corpus: mọi chữ HSK 1–3 có trong MMC (bỏ chữ chưa có data nét) */
 const corpus = [...hskChars.keys()].filter((ch) => mmc.has(ch)).sort();
@@ -123,7 +123,7 @@ const OUT: z.infer<typeof radicalOutSchema>[] = radicals.map((r) => {
   return {
     char: r.char, hanViet: r.hanViet, meaning: r.meaning, strokes: r.strokes,
     core: false, // gán sau khi đếm
-    cat: (cats[r.char] as string) ?? "other",
+    cat: cats[r.char] ?? "other",
     strokeChar,
     chars: members.map((ch) => {
       const m = mmc.get(ch)!;
@@ -164,6 +164,7 @@ const charMeta = Object.fromEntries(parsed.flatMap((r) => r.chars.map((c) => [c.
 writeFileSync("src/content/hanzi-studio/char-meta.ts", `\
 /* GENERATED bởi scripts/build-hanzi-studio-data.mts — đừng sửa tay, chạy lại script. */
 import type { StudioCharMeta } from "./radical-index";
+export type { StudioCharMeta };
 
 export const CHAR_META: Record<string, StudioCharMeta> = ${JSON.stringify(charMeta, null, 1)};
 `);

@@ -1,5 +1,6 @@
 /* GENERATED bởi scripts/build-hanzi-studio-data.mts — đừng sửa tay, chạy lại script. */
 import type { StudioCharMeta } from "./radical-index";
+export type { StudioCharMeta };
 
 export const CHAR_META: Record<string, StudioCharMeta> = {
  "一": {

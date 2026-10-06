@@ -17,7 +17,8 @@ export async function loadWriterCharData(ch: string): Promise<WriterCharData | n
       manifest = {};
     }
   }
-  const chunk = manifest[ch];
+  const m: Record<string, string> = manifest ?? {};
+  const chunk = m[ch];
   if (!chunk) return null;
   let store = chunkCache.get(chunk);
   if (!store) {
