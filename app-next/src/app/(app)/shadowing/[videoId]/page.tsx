@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { shadowingVideoById, shadowingSubtitles, shadowingVideos } from "@/content/shadowing";
+import { getShadowingSubtitlesByVideo, getShadowingVideoById } from "@/lib/content/shadowing";
 import type { SubtitleSentence } from "@/content/shadowing";
 import ShadowingStudio from "./shadowing-studio";
 
-export function generateStaticParams() {
-  return shadowingVideos.map((v) => ({ videoId: v.id }));
-}
+/* Content đọc D1 qua content layer → page luôn dynamic (không query lúc build,
+   generateStaticParams đã bỏ). */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ videoId: string }> }): Promise<Metadata> {
   const { videoId } = await params;
-  const video = shadowingVideoById(videoId);
+  const video = await getShadowingVideoById(videoId);
   return { title: video ? `${video.title} | Shadowing | Bye HSK` : "Shadowing | Bye HSK" };
 }
 const FALLBACK_SUBS = (durSec: number): SubtitleSentence[] => [
@@ -18,9 +19,9 @@ const FALLBACK_SUBS = (durSec: number): SubtitleSentence[] => [
 
 export default async function ShadowingVideoPage({ params }: { params: Promise<{ videoId: string }> }) {
   const { videoId } = await params;
-  const video = shadowingVideoById(videoId);
+  const video = await getShadowingVideoById(videoId);
   if (!video) notFound();
-  const subs = shadowingSubtitles[video.id] ?? FALLBACK_SUBS(video.durSec);
+  const subs = (await getShadowingSubtitlesByVideo(video.id)) ?? FALLBACK_SUBS(video.durSec);
   return (
     <div className="hz-breakout pb-28 lg:pb-6">
       <div className="mx-auto max-w-[1280px] px-4 lg:px-6 py-4">

@@ -5,6 +5,11 @@ import { CommandPalette } from "../command-palette";
 
 const push = vi.fn();
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+vi.mock("@/lib/content/vocab-client", () => ({
+  loadVocabMeta: vi.fn().mockResolvedValue([
+    { book: "hsk1", lessons: [{ pageId: "lesson-2", title: "Gia đình", wordCount: 9, firstHanzi: "爸爸" }] },
+  ]),
+}));
 
 beforeEach(() => {
   push.mockClear();
@@ -129,13 +134,13 @@ describe("CommandPalette", () => {
     expect(screen.getAllByRole("link")).toHaveLength(8);
   });
 
-  it("kết quả gồm tiêu đề bài học thật từ content/vocab (A4 — nhánh vocab)", async () => {
+  it("kết quả gồm tiêu đề bài học từ API vocab-meta (A4 — nhánh vocab)", async () => {
     renderOpen();
     await userEvent.type(screen.getByLabelText("Tìm kiếm"), "gia đình");
-    const link = screen.getByRole("link", { name: /Gia đình/ });
+    const link = await screen.findByRole("link", { name: /Gia đình/ });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/dictionary");
-    // Label = `${title} · ${hanzi từ đầu tiên}` — lấy thật từ content/vocab hsk1/lesson-2.
+    // Label = `${title} · ${firstHanzi}` — meta trả về từ loader vocab-client.
     expect(link).toHaveTextContent("Gia đình · 爸爸");
   });
 });

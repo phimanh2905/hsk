@@ -30,6 +30,26 @@ pnpm preview      # build rồi chạy worker bằng workerd ở :8787
 pnpm run deploy   # build rồi deploy lên Cloudflare Workers
 ```
 
+## Seed content D1
+
+Content từ vựng + shadowing nằm trong D1 (bảng `content_*`, spec dehardcode 2026-10-06).
+Sau khi pull migration mới, chạy từ `app-next/` để DB có data (bắt buộc trước khi chạy app):
+
+```bash
+pnpm dlx tsx scripts/seed/gen-vocab-seed.mts        # sinh SQL từ src/content/vocab.ts
+pnpm dlx tsx scripts/seed/gen-shadowing-seed.mts    # sinh SQL từ src/content/shadowing.ts
+pnpm wrangler d1 migrations apply hsk --local                                       # DB local
+pnpm wrangler d1 execute hsk --local --file drizzle/seeds/content-vocabs.sql
+pnpm wrangler d1 execute hsk --local --file drizzle/seeds/content-shadowing.sql
+pnpm wrangler d1 migrations apply hsk-dev --remote --config wrangler.dev.jsonc      # DB dev remote (next dev đọc DB này)
+pnpm wrangler d1 execute hsk-dev --remote --config wrangler.dev.jsonc --file drizzle/seeds/content-vocabs.sql
+pnpm wrangler d1 execute hsk-dev --remote --config wrangler.dev.jsonc --file drizzle/seeds/content-shadowing.sql
+```
+
+Seed idempotent (`INSERT OR REPLACE`) — chạy lại an toàn. File SQL trong `drizzle/seeds/`
+là sản phẩm của script generator, **không sửa tay**. DB production `hsk --remote` chỉ áp
+thủ công lúc deploy.
+
 ## Deploy
 
 **Qua CI (đang dùng):** push lên `main` → GitHub Actions chạy

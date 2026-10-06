@@ -1,9 +1,23 @@
 /* SRS session data (spec 2026-10-04 §2.2, §2.4). Thuần function — memoryStrength
    từ lib/stats/review, đọc decks qua progressStore (client singleton, jsdom OK). */
 
-import { vocab } from "@/content/vocab";
 import { progressStore, type SrsItem } from "@/lib/store/progress-store";
 import { memoryStrength } from "@/lib/stats/review";
+import type { VocabData } from "@/lib/content/vocab";
+
+/* Nguồn vocab client-side: inject 1 lần qua setVocabData (ContentBridge →
+   vocab-client loader), thay import trực tiếp content/vocab — dataset lên D1
+   thì client không đọc được. Module singleton giống progressStore;
+   resolveWord trả null cho key vocab khi chưa inject (deck keys vẫn OK). */
+let vocabData: VocabData | null = null;
+
+export function setVocabData(d: VocabData | null): void {
+  vocabData = d;
+}
+
+export function getVocabData(): VocabData | null {
+  return vocabData;
+}
 
 const DAY = 86_400_000;
 
@@ -43,7 +57,7 @@ export function resolveWord(key: string): { zh: string; pinyin: string; meaning:
   }
   const m = /^([^.]+)\.([^.]+)\.(\d+)$/.exec(key);
   if (!m) return null;
-  const word = vocab[m[1]]?.[m[2]]?.words[Number(m[3])];
+  const word = vocabData?.[m[1]]?.[m[2]]?.words[Number(m[3])];
   return word ? { zh: word.hanzi, pinyin: word.pinyin, meaning: word.meaning } : null;
 }
 

@@ -1,12 +1,16 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { buildQueue, srsLevelFromKey, formatLastLabel, resolveWord } from "../srs-session";
+import { buildQueue, srsLevelFromKey, formatLastLabel, resolveWord, setVocabData } from "../srs-session";
 import { progressStore, type SrsItem } from "@/lib/store/progress-store";
 import { vocab } from "@/content/vocab";
 
 const NOW = 1_800_000_000_000;
 const DAY = 86_400_000;
 
-beforeEach(() => localStorage.clear());
+/* resolve SRS key vocab đọc từ nguồn inject (runtime: ContentBridge → API) */
+beforeEach(() => {
+  localStorage.clear();
+  setVocabData(vocab);
+});
 
 function item(key: string, over: Partial<SrsItem> = {}): SrsItem {
   return { key, status: "new", dueAt: NOW, reviewCount: 0, lastReviewedAt: null, updatedAt: NOW, ...over };

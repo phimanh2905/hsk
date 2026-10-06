@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, act, cleanup, fireEvent } from "@testing-library/react";
 import ReviewDashboard from "../review-dashboard";
 import { progressStore } from "@/lib/store/progress-store";
+import { setVocabData } from "@/lib/srs-session";
+import { vocab } from "@/content/vocab";
 
 vi.mock("@/lib/notebook/capture", () => ({ captureWrong: vi.fn() }));
 import { captureWrong } from "@/lib/notebook/capture";
@@ -10,6 +12,7 @@ afterEach(cleanup);
 
 beforeEach(() => {
   localStorage.clear();
+  setVocabData(vocab); // resolve SRS key vocab đọc nguồn inject (runtime: ContentBridge)
   Object.defineProperty(window, "speechSynthesis", {
     configurable: true,
     value: { cancel: vi.fn(), speak: vi.fn(), getVoices: () => [], speaking: false, pending: false },

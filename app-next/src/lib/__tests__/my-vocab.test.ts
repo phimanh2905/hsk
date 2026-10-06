@@ -1,7 +1,9 @@
 // app-next/src/lib/__tests__/my-vocab.test.ts
 import { describe, it, expect, beforeEach } from "vitest";
 import { buildVocabIndex } from "../my-vocab";
+import { setVocabData } from "../srs-session";
 import type { SrsItem, DeckItem, VocabBookEntry } from "@/lib/store/progress-store";
+import { vocab } from "@/content/vocab";
 
 const NOW = 1_700_000_000_000;
 const DAY = 86_400_000;
@@ -11,9 +13,11 @@ function srs(key: string, status: SrsItem["status"], lastReviewedAt: number | nu
 }
 const deck = (id: string, rows: DeckItem["rows"]): DeckItem => ({ id, name: "Deck " + id, rows, updatedAt: new Date(NOW).toISOString() });
 
-/* seed deck cho SRS key deck.nb-1.0 (resolveWord đọc progressStore) */
+/* seed deck cho SRS key deck.nb-1.0 (resolveWord đọc progressStore) +
+   inject nguồn vocab cho SRS key dạng book.page.idx (runtime: ContentBridge) */
 beforeEach(() => {
   localStorage.clear();
+  setVocabData(vocab);
   localStorage.setItem("bye.decks", JSON.stringify([deck("nb-1", [
     { hanzi: "时间", pinyin: "shíjiān", hanviet: "THỜI GIAN", meaning: "thời gian" },
   ])]));
