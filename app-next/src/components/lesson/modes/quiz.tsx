@@ -11,6 +11,7 @@ import { useLesson, type LessonItem } from "../lesson-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import { shuffle } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
+import { captureWrong } from "@/lib/notebook/capture";
 import { useToast } from "@/components/shell/toast-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -57,7 +58,7 @@ function answerState(showCorrect: boolean, showWrong: boolean): { cls: string; i
 }
 
 export default function QuizMode() {
-  const { items, index, setIndex } = useLesson();
+  const { items, index, setIndex, book } = useLesson();
   const { speak } = useTts();
   const toast = useToast();
 
@@ -102,6 +103,15 @@ export default function QuizMode() {
       setScore((s) => s + 1);
       progressStore.addXp(1);
       toast("+1 XP");
+    } else {
+      // auto-capture câu sai vào sổ tay (spec §3.4.1) — fire-and-forget
+      captureWrong({
+        q: `Từ „${item.hanzi}‟ đọc thế nào?`,
+        wrong: { zh: p },
+        right: { zh: item.pinyin },
+        cause: `Pinyin đúng của ${item.hanzi} (${item.meaning}) là ${item.pinyin}.`,
+        hsk: /^hsk(\d+)$/.test(book ?? "") ? `HSK${book!.replace(/^hsk/, "")}` : undefined,
+      });
     }
     timerRef.current = setTimeout(advance, NEXT_DELAY_MS);
   };

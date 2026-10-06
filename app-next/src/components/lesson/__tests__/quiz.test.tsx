@@ -5,6 +5,9 @@ import QuizMode, { pickDistractors } from "../modes/quiz";
 import { progressStore } from "@/lib/store/progress-store";
 import { ToastProvider } from "@/components/shell/toast-provider";
 
+vi.mock("@/lib/notebook/capture", () => ({ captureWrong: vi.fn() }));
+import { captureWrong } from "@/lib/notebook/capture";
+
 const mk = (i: number): LessonItem => ({
   hanzi: `词${i}`, pinyin: `cí${i}`, hanViet: "TỪ", meaning: `nghĩa ${i}`, pos: "Danh từ",
   example: { zh: "例", pinyinPerChar: [], vi: "ví dụ" }, index: i, itemKey: `hsk1.lesson-1.${i}`,
@@ -54,6 +57,29 @@ describe("QuizMode", () => {
     act(() => screen.getByRole("button", { name: /Không biết/ }).click());
     expect(progressStore.getXp()).toBe(xpBefore + 1);
   });
+  it("chọn đúng -> KHÔNG captureWrong (spec §3.4)", () => {
+    render(<Harness />);
+    act(() => screen.getByRole("button", { name: `cí0` }).click());
+    expect(vi.mocked(captureWrong)).not.toHaveBeenCalled();
+  });
+
+  it("chọn sai -> captureWrong ghi nguyên nhân gốc (spec §3.4.1)", () => {
+    render(<Harness />);
+    const item = words[0];
+    const wrong = screen.getAllByRole("button").find((b) => b.textContent === "cí1")!;
+    act(() => wrong.click());
+    expect(vi.mocked(captureWrong)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(captureWrong)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        q: `Từ „${item.hanzi}‟ đọc thế nào?`,
+        wrong: { zh: "cí1" },
+        right: { zh: item.pinyin },
+        cause: expect.stringContaining(item.pinyin),
+        hsk: "HSK1",
+      })
+    );
+  });
+
   it("chọn sai -> viền đỏ, tự sang câu kế sau 800ms", () => {
     vi.useFakeTimers();
     render(<Harness />);

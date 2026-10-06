@@ -3,6 +3,9 @@ import { render, screen, act, cleanup, fireEvent } from "@testing-library/react"
 import ReviewDashboard from "../review-dashboard";
 import { progressStore } from "@/lib/store/progress-store";
 
+vi.mock("@/lib/notebook/capture", () => ({ captureWrong: vi.fn() }));
+import { captureWrong } from "@/lib/notebook/capture";
+
 afterEach(cleanup);
 
 beforeEach(() => {
@@ -46,6 +49,37 @@ describe("ReviewDashboard (redesign 2026-10-04)", () => {
     expect(progressStore.getSrs("hsk1.lesson-1.0")!.reviewCount).toBe(1);
     expect(progressStore.getSrs("hsk1.lesson-1.0")!.status).toBe("learning");
   });
+  it("grade forgot -> captureWrong với resolveWord (spec §3.4.3)", () => {
+    progressStore.toggleSrs("hsk1.lesson-1.0"); // resolveWord -> 你好 / nǐ hǎo
+    const { container } = render(<ReviewDashboard />);
+    fireEvent.click(screen.getByText("HSK 1"));
+    fireEvent.click(container.querySelector('[data-testid="start-session"]')!);
+    const sess = container.querySelector('[role="dialog"][aria-label="Phiên ôn tập"]')!;
+    fireEvent.click(sess.querySelector("[data-testid='sess-card']")!);
+    act(() => { fireEvent.keyDown(window, { key: "1" }); }); // forgot
+    expect(vi.mocked(captureWrong)).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(captureWrong)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        q: "你好 nghĩa là gì?",
+        wrong: null,
+        right: { zh: "你好", py: expect.any(String) },
+        cause: expect.stringContaining("Quên khi ôn SRS"),
+        hsk: "HSK1",
+      })
+    );
+  });
+
+  it("grade good -> KHÔNG captureWrong (spec §3.4.3)", () => {
+    progressStore.toggleSrs("hsk1.lesson-1.0");
+    const { container } = render(<ReviewDashboard />);
+    fireEvent.click(screen.getByText("HSK 1"));
+    fireEvent.click(container.querySelector('[data-testid="start-session"]')!);
+    const sess = container.querySelector('[role="dialog"][aria-label="Phiên ôn tập"]')!;
+    fireEvent.click(sess.querySelector("[data-testid='sess-card']")!);
+    act(() => { fireEvent.keyDown(window, { key: "3" }); }); // good
+    expect(vi.mocked(captureWrong)).not.toHaveBeenCalled();
+  });
+
   it("nút nét chữ mở StrokeStudio", () => {
     progressStore.toggleSrs("hsk1.lesson-1.0");
     const { container } = render(<ReviewDashboard />);

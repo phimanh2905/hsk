@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { progressStore } from "@/lib/store/progress-store";
-import { buildQueue, srsLevelFromKey, type ReviewableWord } from "@/lib/srs-session";
+import { buildQueue, srsLevelFromKey, resolveWord, type ReviewableWord } from "@/lib/srs-session";
+import { captureWrong } from "@/lib/notebook/capture";
 import { memTone } from "@/lib/stats/review";
 import type { BucketData } from "@/components/review/srs-buckets";
 import { MemoryHero } from "@/components/review/memory-hero";
@@ -112,7 +113,22 @@ export default function ReviewDashboard() {
       {sessionOpen && (
         <SrsSession
           words={queue}
-          onGrade={(key, grade) => progressStore.recordReview(key, grade)}
+          onGrade={(key, grade) => {
+            progressStore.recordReview(key, grade);
+            // auto-capture từ quên khi ôn SRS (spec §3.4.3) — resolve word tại chỗ gọi
+            if (grade === "forgot") {
+              const word = resolveWord(key);
+              if (word) {
+                captureWrong({
+                  q: `${word.zh} nghĩa là gì?`,
+                  wrong: null,
+                  right: { zh: word.zh, py: word.pinyin },
+                  cause: "Quên khi ôn SRS — từ sẽ quay lại sớm.",
+                  hsk: /^hsk(\d+)\./.test(key) ? `HSK${key.match(/^hsk(\d+)\./)![1]}` : undefined,
+                });
+              }
+            }
+          }}
           onExit={(score, total) => {
             setSessionOpen(false);
             toast(`Xong phiên ôn: ${score}/${total} từ nhớ tốt`);

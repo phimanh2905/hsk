@@ -12,6 +12,7 @@ import { roadmapSessions } from "@/content/roadmap";
 import { progressStore } from "@/lib/store/progress-store";
 import { sessionStatus } from "@/lib/roadmap-status";
 import { checkTyped } from "@/components/lesson/modes/typing";
+import { captureWrong } from "@/lib/notebook/capture";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import { Clock, Lock, Volume2, ICON_STROKE } from "@/components/ui/icon";
@@ -337,6 +338,15 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
                         )}
                         disabled={a !== null}
                         onClick={() => {
+                          // auto-capture câu sai (spec §3.4.2) — chỉ lần chọn đầu, chỉ khi sai
+                          if (oi !== q.answer) {
+                            captureWrong({
+                              q: q.q,
+                              wrong: { zh: opt },
+                              right: { zh: q.options[q.answer] },
+                              cause: q.explain || "Xem lại câu này trong bài học của trạm.",
+                            });
+                          }
                           const next = [...quizAnswers];
                           next[qi] = oi;
                           setQuizAnswers(next);
@@ -393,7 +403,18 @@ export default function SessionClient({ n }: { n: number }): React.JSX.Element {
                         answerCls(state),
                       )}
                       disabled={writtenGraded}
-                      onClick={() => setTestPick(oi)}
+                      onClick={() => {
+                        // auto-capture câu sai (spec §3.4.2) — chỉ lần chọn đầu, chỉ khi sai
+                        if (testPick === null && oi !== mcItem.answer) {
+                          captureWrong({
+                            q: mcItem.q,
+                            wrong: { zh: opt },
+                            right: { zh: mcItem.options[mcItem.answer] },
+                            cause: mcItem.explain || "Xem lại câu này trong bài học của trạm.",
+                          });
+                        }
+                        setTestPick(oi);
+                      }}
                     >
                       {opt}
                     </button>

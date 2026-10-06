@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3, BookmarkCheck, Brain, Compass, Home, Pencil, Printer, Settings,
+  BarChart3, BookmarkCheck, Brain, Compass, Home, NotebookPen, Pencil, Printer, Settings,
   Volume2, AudioLines, ICON_STROKE, type LucideIcon,
 } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
@@ -43,6 +43,7 @@ const GROUPS: ReadonlyArray<{
     title: "CÁ NHÂN & CÔNG CỤ",
     items: [
       { href: "/my-vocab", label: "Sổ tay từ vựng", Icon: BookmarkCheck },
+      { href: "/notebook", label: "Sổ tay", Icon: NotebookPen },
       { href: "/progress", label: "Thống kê tiến độ", Icon: BarChart3 },
       { href: "/create-file", label: "Tạo tập viết in", Icon: Printer },
     ],
