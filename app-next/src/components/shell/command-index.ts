@@ -15,6 +15,7 @@ const PAGES: ReadonlyArray<CommandItem> = [
   { label: "Luyện nói", href: "/shadowing", group: "Luyện tập" },
   { label: "Từ điển", href: "/dictionary", group: "Tra cứu" },
   { label: "Sổ tay từ vựng", href: "/my-vocab", group: "Cá nhân" },
+  { label: "Sổ tay & Ghi chép", href: "/notebook", group: "Cá nhân" },
   { label: "Thống kê tiến độ", href: "/progress", group: "Cá nhân" }
 ];
 

@@ -9,7 +9,7 @@ const ROUTES = [
   "/radicals", "/pinyin", "/pinyin/practice", "/sound-rules",
   "/roadmap", "/roadmap/pinyin", "/roadmap/pinyin/session/1",
   "/shadowing", "/shadowing/EA3rwvr99Q0", "/create-file", "/create-file/stroke-order",
-  "/dictionary", "/hanzi", "/hanzi/你", "/reading",
+  "/dictionary", "/hanzi", "/hanzi/你", "/reading", "/notebook",
   "/leaderboard", "/feedback", "/terms", "/privacy", "/delete-account",
 ];
 
