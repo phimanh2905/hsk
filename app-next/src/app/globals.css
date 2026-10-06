@@ -12,7 +12,7 @@
   --hz-vermilion: #c83c32;  --hz-vermilion-600: #d24b3f;  --hz-vermilion-700: #a9342b;
   --hz-amber: #e68a00;   --hz-amber-wash: #fdf3e2;  --hz-amber-ink: #5c3600;
   --hz-rose-wash: #fef2f2;  --hz-rose-line: #fecaca;  --hz-rose-ink: #b91c1c;
-  --hz-jade-wash: #ecfdf5;
+  --hz-jade-wash: #ecfdf5;  --hz-jade-ink: #144d38;
   --hz-purple: #722ed1;
   --hz-ring-track: #e8ecea;
   /* lớp 2 — semantic */
@@ -54,7 +54,7 @@ html.dark {
   --hz-vermilion: #e05349;  --hz-vermilion-600: #e05349;  --hz-vermilion-700: #e08a84;
   --hz-amber: #dcaa37;   --hz-amber-wash: #312512;  --hz-amber-ink: #f5d98b;
   --hz-rose-wash: rgba(127,29,29,.25);  --hz-rose-line: rgba(127,29,29,.5);  --hz-rose-ink: #fca5a5;
-  --hz-jade-wash: rgba(6,95,70,.25);
+  --hz-jade-wash: rgba(6,95,70,.25);  --hz-jade-ink: #9fe8cd;
   --hz-ring-track: #3e3e3e;
   --surface-paper: var(--hz-paper);
   --surface-elevated: var(--hz-elevated);
@@ -95,6 +95,8 @@ html.dark {
   --color-rose-line: var(--hz-rose-line);
   --color-rose-ink: var(--hz-rose-ink);
   --color-jade-wash: var(--hz-jade-wash);
+  --color-jade-ink: var(--hz-jade-ink);
+  --color-jade-line: var(--hz-jade);
   --color-ring-track: var(--hz-ring-track);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
