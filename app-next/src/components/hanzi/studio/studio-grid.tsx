@@ -94,6 +94,7 @@ export function StudioGrid({ sel, mode, apiRef }: {
     prevModeRef.current = mode;
     if (!charData) return;
     if (mode === "draw") {
+      strokes.stepTo(-1); // reset nét mẫu (sau playback mọi path đang .done — quiz cần nền todo)
       writer.startQuiz();
       writer.showOutline(hintRef.current, { instant: true });
     } else {

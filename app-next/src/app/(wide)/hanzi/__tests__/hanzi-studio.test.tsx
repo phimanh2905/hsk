@@ -92,8 +92,18 @@ describe("HanziStudio (radical-first)", () => {
     expect(count).toMatch(/^\d+ bộ thủ/);
   });
 
+  it("filter 'Số nét' chỉ ở rad mode — ẩn ở HSK mode", async () => {
+    render(<HanziStudio />);
+    expect(screen.getByText("Số nét")).toBeTruthy();
+    await userEvent.click(screen.getByRole("button", { name: /Theo cấp độ HSK/ }));
+    await waitFor(() => expect(screen.queryByText("Số nét")).toBeNull());
+    expect(screen.getByLabelText("Tìm bộ thủ")).toBeTruthy();
+    expect(screen.getByLabelText("Tìm bộ thủ").getAttribute("placeholder")).toBe("Tìm chữ, pinyin…");
+  });
+
   it("search 'khau' → 口 trong kết quả", async () => {
     render(<HanziStudio />);
+    expect(screen.getByLabelText("Tìm bộ thủ").getAttribute("placeholder")).toBe("Tìm bộ thủ, nghĩa…");
     await userEvent.type(screen.getByLabelText("Tìm bộ thủ"), "khau");
     await waitFor(() =>
       expect(screen.getAllByRole("button", { name: /口/ }).length).toBeGreaterThan(0),

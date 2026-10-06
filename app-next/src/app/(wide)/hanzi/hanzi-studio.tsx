@@ -138,21 +138,25 @@ export default function HanziStudio() {
         className="flex flex-col gap-2.5 rounded-card border border-border-subtle bg-surface-elevated px-3.5 py-3 shadow-xs"
       >
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="text-[12.5px] font-bold text-text-secondary">Số nét</span>
-          <SegmentedTabs
-            label="Lọc số nét"
-            tabs={STROKE_FILTERS.map((f) => ({ key: f.key, label: f.label }))}
-            value={stroke}
-            onChange={setStroke}
-            className="max-w-full overflow-x-auto"
-          />
-          <label className="ml-auto flex h-10 min-w-[200px] items-center gap-2 rounded-full border border-border-subtle bg-surface-muted px-3.5">
+          {isRadMode && (
+            <>
+              <span className="text-[12.5px] font-bold text-text-secondary">Số nét</span>
+              <SegmentedTabs
+                label="Lọc số nét"
+                tabs={STROKE_FILTERS.map((f) => ({ key: f.key, label: f.label }))}
+                value={stroke}
+                onChange={setStroke}
+                className="max-w-full overflow-x-auto"
+              />
+            </>
+          )}
+          <label className={cn("flex h-10 min-w-[200px] items-center gap-2 rounded-full border border-border-subtle bg-surface-muted px-3.5", isRadMode && "ml-auto")}>
             <Search size={15} strokeWidth={2} aria-hidden="true" className="shrink-0 text-text-secondary" />
             <input
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Tìm bộ thủ, nghĩa…"
+              placeholder={isRadMode ? "Tìm bộ thủ, nghĩa…" : "Tìm chữ, pinyin…"}
               aria-label="Tìm bộ thủ"
               className="w-full border-0 bg-transparent text-[13px] text-text-primary outline-none placeholder:text-text-secondary/60"
             />

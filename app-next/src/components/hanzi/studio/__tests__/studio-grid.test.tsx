@@ -121,6 +121,23 @@ describe("StudioGrid — mode switch (draw qua useWriter)", () => {
     expect(writerFns.cancelQuiz).toHaveBeenCalledTimes(1);
   });
 
+  it("watch→draw sau playback xong: reset nét mẫu (không còn .done) + vẫn startQuiz", async () => {
+    const { container, apiRef, rerender } = await setup({ mode: "watch" });
+    act(() => { vi.advanceTimersByTime(780 * 3 + 200); }); // playback xong: cả 3 nét .done
+    const strokeSvg = container.querySelector('svg[role="img"]')!;
+    expect(strokeSvg.querySelectorAll("path.done").length).toBe(3);
+    rerender(<StudioGrid sel={{ kind: "rad", g: "水" }} mode="draw" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(writerFns.startQuiz).toHaveBeenCalledTimes(1);
+    expect(writerFns.showOutline).toHaveBeenCalledWith(false, { instant: true });
+    const paths = strokeSvg.querySelectorAll("path");
+    expect(paths.length).toBe(3);
+    paths.forEach((p) => {
+      expect(classes(p)).not.toContain("done");
+      expect(classes(p)).toBe("hz-st todo"); // reset về nền mờ
+    });
+  });
+
   it("setHint(false) ở draw → showOutline(false); setSpeed đẩy cả 2 renderer", async () => {
     const { apiRef } = await setup({ mode: "draw" });
     await act(async () => {}); // ready effect: startQuiz + showOutline(false)
