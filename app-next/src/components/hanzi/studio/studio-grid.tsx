@@ -1,190 +1,129 @@
 // app-next/src/components/hanzi/studio/studio-grid.tsx
 "use client";
 
-/* Ô thiên tự — port .grid-box + khối vẽ/chấm điểm của opendesign_hsk/hanzi.html.
-   Nét mẫu (watch) qua useStudioStrokes; mực vẽ imperative như mock (polyline append).
-   Scoring qua lib/hanzi/stroke-quiz (pure); thống kê đẩy lên workbench qua onStats. */
-import { useCallback, useEffect, useImperativeHandle, useRef } from "react";
+/* Ô thiên tự — port .grid-box của opendesign_hsk/hanzi.html (radical-first redesign).
+   Watch: nét mẫu thực từ loadWriterCharData (path MMC 1024×1024) qua useStudioStrokes
+   — KHÔNG dùng hanzi-writer (ruling controller 2026-10-07).
+   Draw: hanzi-writer quiz + outline hint qua useWriter (bỏ engine tự viết + scoring).
+   Ký tự/bộ không có data nét → ready=false; khi load fail hẳn → return null (cha hiện fallback). */
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { StudioChar } from "@/content/hanzi-studio";
-import { matchStroke, type InkPoint } from "@/lib/hanzi/stroke-quiz";
+import type { StudioSelection } from "./studio-model";
+import { loadWriterCharData, type WriterCharData } from "./writer-data";
 import { useStudioStrokes } from "./use-studio-strokes";
-
-const NS = "http://www.w3.org/2000/svg";
-
-export type GridStats = { done: number; ok: number; total: number };
+import { useWriter } from "./use-writer";
 
 export type StudioGridApi = {
   play: () => void;
   stepPrev: () => void;
   stepNext: () => void;
   setSpeed: (m: number) => void;
-  clearInk: () => void;
-  undoInk: () => void;
   setHint: (on: boolean) => void;
+  readonly ready: boolean; // false khi ký tự chưa load xong / không có data nét
 };
 
-export function StudioGrid({
-  char,
-  mode,
-  apiRef,
-  onStats,
-}: {
-  char: StudioChar;
+/* MMC path nằm trong khung 1024×1024 — stroke-width scale từ 13 (khung 300) lên 1024/300×13 ≈ 44 */
+const MMC_BOX = 1024;
+const STROKE_WIDTH_300 = 13;
+const STROKE_WIDTH_MMC = Math.round((13 * MMC_BOX) / 300);
+
+export function StudioGrid({ sel, mode, apiRef }: {
+  sel: StudioSelection;
   mode: "watch" | "draw";
   apiRef?: React.Ref<StudioGridApi>;
-  onStats?: (s: GridStats) => void;
 }) {
   const strokeSvgRef = useRef<SVGSVGElement | null>(null);
-  const inkSvgRef = useRef<SVGSVGElement | null>(null);
-  const strokesRef = useRef<{ el: SVGPolylineElement; ok: boolean }[]>([]);
-  const drawingRef = useRef<{ el: SVGPolylineElement; pts: InkPoint[] } | null>(null);
-  const hintOnRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const writer = useWriter(containerRef);
+  const [charData, setCharData] = useState<WriterCharData | null>(null);
+  const [failed, setFailed] = useState(false);
+  const hintRef = useRef(false);
   const modeRef = useRef(mode);
   modeRef.current = mode;
-  const charRef = useRef(char);
-  charRef.current = char;
-  const onStatsRef = useRef(onStats);
-  onStatsRef.current = onStats;
 
-  const api = useStudioStrokes(strokeSvgRef, char);
+  /* Adapter tối thiểu cho useStudioStrokes (chỉ đọc .p) — path MMC 1024.
+     Cast hẹp: hook chỉ truy cập .p, các field meta khác không dùng. */
+  const EMPTY_CHAR = useMemo(() => ({ p: [] }) as unknown as StudioChar, []);
+  const sampleChar: StudioChar = useMemo(
+    () => (charData ? ({ p: charData.strokes } as unknown as StudioChar) : EMPTY_CHAR),
+    [charData, EMPTY_CHAR],
+  );
+  const strokes = useStudioStrokes(strokeSvgRef, sampleChar, { strokeWidth: STROKE_WIDTH_MMC });
 
-  const emitStats = useCallback(() => {
-    const done = strokesRef.current.length;
-    const ok = strokesRef.current.filter((s) => s.ok).length;
-    onStatsRef.current?.({ done, ok, total: charRef.current.n });
-  }, []);
-
-  const showHint = useCallback(() => {
-    // hint chỉ tồn tại ở draw mode (mock buildGrid: if(hintOn&&mode==='draw'))
-    if (!hintOnRef.current || modeRef.current !== "draw") return;
-    const total = charRef.current.p.length;
-    const n = strokesRef.current.length;
-    if (n >= total) { api.clearHint(); return; } // mock: đủ nét thì không hint
-    api.showHint(Math.min(n, total - 1));
-  }, [api]);
-
-  const clearInk = useCallback(() => {
-    if (inkSvgRef.current) inkSvgRef.current.innerHTML = "";
-    strokesRef.current = [];
-    drawingRef.current = null;
-    showHint();
-    emitStats();
-  }, [showHint, emitStats]);
-
-  const undoInk = useCallback(() => {
-    strokesRef.current.pop()?.el.remove();
-    showHint();
-    emitStats();
-  }, [showHint, emitStats]);
-
-  useImperativeHandle(apiRef, () => ({
-    play: () => { if (modeRef.current === "watch") api.playAll(); },
-    stepPrev: () => api.stepBy(-1),
-    stepNext: () => api.stepBy(1),
-    setSpeed: api.setSpeed,
-    clearInk,
-    undoInk,
-    setHint: (on: boolean) => {
-      hintOnRef.current = on;
-      if (on) showHint();
-      else api.clearHint();
-    },
-  }), [api, clearInk, undoInk, showHint]);
-
-  /* Đổi chữ: dựng lại nét mẫu, xoá mực; draw mode hiện cả chữ làm mẫu + hint nếu bật */
+  /* Đổi sel: nạp data cho cả renderer lẫn writer; fail → null (cha tự hiện fallback) */
   useEffect(() => {
-    api.build();
-    if (inkSvgRef.current) inkSvgRef.current.innerHTML = "";
-    strokesRef.current = [];
-    drawingRef.current = null;
-    emitStats();
-    if (modeRef.current === "draw") {
-      // stepTo(i) reveal 0..i-1 — dùng n để hiện đủ n nét mẫu
-      api.stepTo(char.p.length);
-      showHint();
+    let cancelled = false;
+    setCharData(null);
+    setFailed(false);
+    void (async () => {
+      const [data, ok] = await Promise.all([loadWriterCharData(sel.g), writer.load(sel.g)]);
+      if (cancelled) return;
+      if (data && data.strokes.length > 0 && ok) setCharData(data);
+      else setFailed(true);
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sel.g]);
+
+  /* Ready lần đầu cho mỗi ký tự: watch tự phát (mock select → playAll);
+     draw khởi động quiz + outline hint (startQuiz TRƯỚC showOutline — writer lazy-create) */
+  const playedForRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!charData || playedForRef.current === sel.g) return;
+    playedForRef.current = sel.g;
+    if (modeRef.current === "watch") {
+      strokes.stepTo(-1);
+      strokes.playAll();
+    } else {
+      writer.startQuiz();
+      writer.showOutline(hintRef.current, { instant: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [char]);
+  }, [charData, sel.g]);
 
-  /* Đổi mode (bỏ lần mount đầu — mock select() khởi tạo im lặng) */
-  /* Đổi mode — so sánh giá trị trước thay vì skip lần đầu (StrictMode dev chạy effect
-     đôi, skip-first làm tự phát animation khi mount) */
+  /* Đổi mode (bỏ lần mount đầu): watch→draw startQuiz + outline;
+     draw→watch cancelQuiz + reset renderer + playAll (khớp mock "đổi mode") */
   const prevModeRef = useRef(mode);
   useEffect(() => {
     if (prevModeRef.current === mode) return;
     prevModeRef.current = mode;
-    api.stop();
-    if (mode === "watch") {
-      clearInk();
-      api.stepTo(-1);
-      api.playAll();
+    if (!charData) return;
+    if (mode === "draw") {
+      writer.startQuiz();
+      writer.showOutline(hintRef.current, { instant: true });
     } else {
-      api.stepTo(char.p.length);
-      showHint();
+      writer.cancelQuiz();
+      strokes.stepTo(-1);
+      strokes.playAll();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
-  /* --- vẽ tay (port pointer handlers của mock) --- */
-  const svgPoint = (e: MouseEvent): InkPoint => {
-    const r = inkSvgRef.current!.getBoundingClientRect();
-    return { x: ((e.clientX - r.left) / r.width) * 300, y: ((e.clientY - r.top) / r.height) * 300 };
-  };
+  const play = useCallback(() => {
+    strokes.stepTo(-1);
+    strokes.playAll();
+  }, [strokes]);
 
-  const onPointerDown = useCallback((e: Event) => {
-    if (modeRef.current !== "draw") return;
-    const ev = e as PointerEvent;
-    try { inkSvgRef.current?.setPointerCapture(ev.pointerId); } catch { /* jsdom */ }
-    const pt = svgPoint(ev);
-    const el = document.createElementNS(NS, "polyline") as SVGPolylineElement;
-    el.setAttribute("class", "hz-ink-path good"); // đổi thành bad khi nhả nếu lệch hướng
-    el.setAttribute("points", `${pt.x.toFixed(1)},${pt.y.toFixed(1)}`);
-    inkSvgRef.current?.appendChild(el);
-    drawingRef.current = { el, pts: [pt] };
-  }, []);
+  const setHint = useCallback((on: boolean) => {
+    hintRef.current = on;
+    if (modeRef.current === "draw") writer.showOutline(on, { instant: on });
+  }, [writer]);
 
-  const onPointerMove = useCallback((e: Event) => {
-    const drawing = drawingRef.current;
-    if (!drawing) return;
-    const pt = svgPoint(e as PointerEvent);
-    const last = drawing.pts[drawing.pts.length - 1];
-    if (Math.hypot(pt.x - last.x, pt.y - last.y) < 3) return; // mock: lọc rung
-    drawing.pts.push(pt);
-    drawing.el.setAttribute("points", drawing.el.getAttribute("points") + " " + `${pt.x.toFixed(1)},${pt.y.toFixed(1)}`);
-  }, []);
+  useImperativeHandle(apiRef, () => ({
+    play,
+    stepPrev: () => strokes.stepBy(-1),
+    stepNext: () => strokes.stepBy(1),
+    setSpeed: (m: number) => { strokes.setSpeed(m); writer.setSpeed(m); },
+    setHint,
+    get ready() { return charData !== null; },
+  }), [play, setHint, strokes, writer, charData]);
 
-  const finishStroke = useCallback(() => {
-    const drawing = drawingRef.current;
-    if (!drawing) return;
-    drawingRef.current = null;
-    const c = charRef.current;
-    const idx = strokesRef.current.length;
-    const ok = drawing.pts.length >= 4 && matchStroke(drawing.pts, c.d[Math.min(idx, c.d.length - 1)]);
-    drawing.el.setAttribute("class", "hz-ink-path " + (ok ? "good" : "bad"));
-    strokesRef.current.push({ el: drawing.el, ok });
-    showHint();
-    emitStats();
-  }, [showHint, emitStats]);
-
-  useEffect(() => {
-    const ink = inkSvgRef.current;
-    if (!ink) return;
-    ink.addEventListener("pointerdown", onPointerDown);
-    ink.addEventListener("pointermove", onPointerMove);
-    ink.addEventListener("pointerup", finishStroke);
-    ink.addEventListener("pointercancel", finishStroke);
-    return () => {
-      ink.removeEventListener("pointerdown", onPointerDown);
-      ink.removeEventListener("pointermove", onPointerMove);
-      ink.removeEventListener("pointerup", finishStroke);
-      ink.removeEventListener("pointercancel", finishStroke);
-    };
-  }, [onPointerDown, onPointerMove, finishStroke]);
+  if (failed) return null;
 
   return (
     <div
       data-od-id="tianzi-grid"
-      className="relative mx-auto aspect-square w-full max-w-[340px] overflow-hidden rounded-2xl border border-border-subtle bg-surface-elevated max-[480px]:max-w-[280px]"
+      className="relative mx-auto aspect-square w-full max-w-[300px] overflow-hidden rounded-2xl border border-border-subtle bg-surface-elevated max-[480px]:max-w-[280px]"
     >
       <svg viewBox="0 0 300 300" aria-hidden="true" className="absolute inset-0 h-full w-full">
         <rect x="4" y="4" width="292" height="292" fill="none" stroke="var(--text-secondary)" strokeOpacity="0.45" strokeWidth="1.5" rx="4" />
@@ -195,17 +134,17 @@ export function StudioGrid({
       </svg>
       <svg
         ref={strokeSvgRef}
-        viewBox="0 0 300 300"
+        viewBox={`0 0 ${MMC_BOX} ${MMC_BOX}`}
         role="img"
-        aria-label={`Hoạt họa bút thuận chữ ${char.ch}`}
+        aria-label={sel.kind === "rad" ? `Hoạt họa bút thuận bộ ${sel.g}` : `Hoạt họa bút thuận chữ ${sel.g}`}
         className="absolute inset-0 h-full w-full"
       />
-      <svg
-        ref={inkSvgRef}
-        viewBox="0 0 300 300"
-        aria-label="Bảng tự luyện viết"
-        className={`absolute inset-0 h-full w-full ${mode === "draw" ? "" : "hidden"}`}
-        style={{ touchAction: "none" }}
+      {/* Writer tự tạo SVG của nó — ẩn hoàn toàn ở watch mode để outline/quiz không lóe */}
+      <div
+        ref={containerRef}
+        aria-label={sel.kind === "rad" ? `Bảng tự luyện viết bộ ${sel.g}` : `Bảng tự luyện viết chữ ${sel.g}`}
+        className="absolute inset-0 grid place-items-center [&_svg]:relative [&_svg]:inset-auto"
+        style={{ visibility: mode === "draw" ? "visible" : "hidden", touchAction: "none" }}
       />
     </div>
   );

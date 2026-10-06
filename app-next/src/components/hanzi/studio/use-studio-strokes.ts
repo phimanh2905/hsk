@@ -12,7 +12,7 @@ const NS = "http://www.w3.org/2000/svg";
 export function useStudioStrokes(
   svgRef: React.RefObject<SVGSVGElement | null>,
   char: StudioChar,
-  opts?: { onPlayEnd?: () => void },
+  opts?: { onPlayEnd?: () => void; strokeWidth?: number },
 ) {
   const pathsRef = useRef<SVGPathElement[]>([]);
   const hintRef = useRef<SVGPathElement | null>(null);
@@ -23,6 +23,8 @@ export function useStudioStrokes(
   charRef.current = char;
   const onPlayEndRef = useRef(opts?.onPlayEnd);
   onPlayEndRef.current = opts?.onPlayEnd;
+  const strokeWidthRef = useRef(opts?.strokeWidth);
+  strokeWidthRef.current = opts?.strokeWidth;
 
   const stop = useCallback(() => {
     if (timerRef.current !== null) {
@@ -56,6 +58,7 @@ export function useStudioStrokes(
     pathsRef.current = charRef.current.p.map((d) => {
       const el = document.createElementNS(NS, "path") as SVGPathElement;
       el.setAttribute("d", d);
+      el.setAttribute("stroke-width", String(strokeWidthRef.current ?? 13));
       svg.appendChild(el);
       return el;
     });

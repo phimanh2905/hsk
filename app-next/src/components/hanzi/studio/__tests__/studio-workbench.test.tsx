@@ -10,6 +10,11 @@ const speakMock = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/tts/use-tts", () => ({
   useTts: () => ({ speak: speakMock, cancel: () => {}, speaking: false }),
 }));
+/* grid tự load data nét (async) — mock để không fetch thật trong test workbench */
+vi.mock("../writer-data", () => ({
+  loadWriterCharData: vi.fn(async () => null),
+  clearWriterDataCache: vi.fn(),
+}));
 
 function getByODId(id: string) {
   return document.querySelector(`[data-od-id="${id}"]`) as HTMLElement;
@@ -34,23 +39,23 @@ describe("StudioWorkbench", () => {
     expect(speakMock).toHaveBeenCalledWith("爱爱", { rate: 0.85 });
   });
 
-  it("watch mode: watchBar hiện, drawBar ẩn, meter ẩn", () => {
+  it("watch mode: watchBar hiện, drawBar ẩn", () => {
     const { getByODId } = setup({ mode: "watch" });
     expect(getByODId("watch-controls").className).not.toContain("hidden");
     expect(getByODId("draw-controls").className).toContain("hidden");
-    expect(document.querySelector('[data-od-id="accuracy-meter"]')).toBeNull();
   });
 
-  it("draw mode: drawBar hiện + meter hiện 'Độ chuẩn xác: — · Nét 0/10'", () => {
-    const { getByODId } = setup({ mode: "draw" });
+  it("draw mode: drawBar hiện, chỉ còn hint (scoring đã bỏ)", () => {
+    const { getByODId, getByText } = setup({ mode: "draw" });
     expect(getByODId("draw-controls").className).not.toContain("hidden");
-    expect(getByODId("accuracy-meter").textContent).toContain("Độ chuẩn xác: — · Nét 0/10");
+    expect(getByText("Gợi ý nét mờ")).toBeTruthy();
+    expect(document.querySelector('[data-od-id="accuracy-meter"]')).toBeNull();
   });
 
   it("mode tabs: click 'Tự luyện viết' → onMode('draw')", () => {
     const onMode = vi.fn();
     const { getByText } = setup({ onMode });
-    act(() => getByText("Tự luyện viết (chấm điểm)").click());
+    act(() => getByText("Tự luyện viết").click());
     expect(onMode).toHaveBeenCalledWith("draw");
   });
 

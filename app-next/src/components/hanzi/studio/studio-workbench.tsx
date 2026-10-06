@@ -4,15 +4,14 @@
    wb-head + mode-tabs + 2 toolbar (watch/draw) + meter + chips + tip.
    Animation/thiên tự/mực nằm ở StudioGrid; workbench lo UI + stats hiển thị. */
 import { useEffect, useState } from "react";
-import { Lightbulb, Undo2, Volume2 } from "@/components/ui/icon";
+import { Lightbulb, Volume2 } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
-import { useToastSafe } from "@/components/shell/toast-provider";
 import { useTts } from "@/lib/tts/use-tts";
 import type { StudioChar } from "@/content/hanzi-studio";
 import { cn } from "@/lib/cn";
 import { SegControl } from "./seg-control";
-import { StudioGrid, type GridStats, type StudioGridApi } from "./studio-grid";
+import { StudioGrid, type StudioGridApi } from "./studio-grid";
 
 export type { StudioGridApi };
 
@@ -32,30 +31,15 @@ export function StudioWorkbench({
   onMode: (m: "watch" | "draw") => void;
   apiRef: React.RefObject<StudioGridApi | null>;
 }) {
-  const toast = useToastSafe();
   const { speak } = useTts();
   const [speed, setSpeed] = useState<"0.75" | "1" | "1.5">("1");
   const [hintOn, setHintOn] = useState(false);
-  const [stats, setStats] = useState<GridStats>({ done: 0, ok: 0, total: char.n });
 
   useEffect(() => {
     setSpeed("1");
     setHintOn(false);
-    setStats({ done: 0, ok: 0, total: char.n });
     apiRef.current?.setHint(false); // grid không rebuild theo state workbench — bảo nó tắt hint
   }, [char]);
-
-  /* Toast hoàn thành — port say() trong updateMeter của mock */
-  useEffect(() => {
-    if (stats.total > 0 && stats.done === stats.total) {
-      const acc = Math.round((stats.ok / stats.done) * 100);
-      toast(acc >= 80
-        ? `Xuất sắc: ${acc}% — đúng thứ tự và hướng nét`
-        : `Xong ${stats.total} nét — chuẩn xác ${acc}%, xem lại gợi ý nhé`);
-    }
-  }, [stats, toast]);
-
-  const acc = stats.done > 0 ? Math.round((stats.ok / stats.done) * 100) : null;
   const [radCh, ...radRest] = char.rad.split(" ");
 
   return (
@@ -85,14 +69,14 @@ export function StudioWorkbench({
           label="Chế độ luyện"
           tabs={[
             { key: "watch" as const, label: "Xem mẫu bút thuận" },
-            { key: "draw" as const, label: "Tự luyện viết (chấm điểm)" },
+            { key: "draw" as const, label: "Tự luyện viết" },
           ]}
           value={mode}
           onChange={onMode}
         />
       </div>
 
-      <StudioGrid char={char} mode={mode} apiRef={apiRef} onStats={setStats} />
+      <StudioGrid sel={{ kind: "char", g: char.ch }} mode={mode} apiRef={apiRef} />
 
       <div data-od-id="watch-controls" className={cn("mt-3 flex flex-wrap items-center justify-center gap-2", mode !== "watch" && "hidden")}>
           <Button type="button" variant="secondary" className={TOOL_BTN} onClick={() => apiRef.current?.stepPrev?.()}>
@@ -114,12 +98,6 @@ export function StudioWorkbench({
       </div>
 
       <div data-od-id="draw-controls" className={cn("mt-3 flex flex-wrap items-center justify-center gap-2", mode !== "draw" && "hidden")}>
-          <Button type="button" variant="secondary" className={TOOL_BTN} onClick={() => apiRef.current?.clearInk()}>
-            Xóa bảng
-          </Button>
-          <Button type="button" variant="secondary" className={TOOL_BTN} onClick={() => apiRef.current?.undoInk()}>
-            <Undo2 size={14} strokeWidth={1.5} aria-hidden="true" /> Hoàn tác
-          </Button>
           <Button
             type="button"
             variant="secondary"
@@ -134,20 +112,6 @@ export function StudioWorkbench({
             <Lightbulb size={14} strokeWidth={1.5} aria-hidden="true" /> Gợi ý nét mờ
           </Button>
       </div>
-
-      {mode === "draw" && (
-        <div data-od-id="accuracy-meter" className="mt-2.5 text-center">
-          <span className="text-[13px] font-extrabold">
-            Độ chuẩn xác: {acc === null ? "—" : acc + "%"} · Nét {stats.done}/{stats.total}
-          </span>
-          <small className="block text-xs font-normal text-text-secondary">
-            So hướng vẽ với bút thuận mẫu theo từng nét
-          </small>
-          <div className="mx-auto mt-1.5 h-1.5 max-w-[280px] overflow-hidden rounded-full bg-surface-muted">
-            <i className="block h-full rounded-full bg-learning-mastered transition-[width] duration-300" style={{ width: `${acc ?? 0}%` }} />
-          </div>
-        </div>
-      )}
 
       <div data-od-id="char-meta" className="mt-3.5 flex flex-wrap gap-2">
         <div className="min-w-[150px] flex-1 rounded-xl border border-border-subtle bg-surface-muted px-3 py-2 text-[12.5px]">

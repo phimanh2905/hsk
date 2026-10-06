@@ -1,10 +1,25 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from "vitest";
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { createRef } from "react";
-import { StudioGrid, type StudioGridApi, type GridStats } from "../studio-grid";
-import { STUDIO_CHARS } from "@/content/hanzi-studio";
+import { StudioGrid, type StudioGridApi } from "../studio-grid";
+import { loadWriterCharData } from "../writer-data";
 
-const REN = STUDIO_CHARS.find((c) => c.ch === "人")!; // 2 nét: SW, SE — đơn giản để vẽ
+/* Revised design (ruling 2026-10-07): watch KHÔNG dùng hanzi-writer — nét mẫu thật từ
+   loadWriterCharData qua useStudioStrokes; draw dùng useWriter (quiz + outline hint). */
+const DATA = { strokes: ["M 100 100 L 200 200", "M 200 100 L 100 200", "M 100 500 L 900 500"], medians: [[[0, 0]]] };
+
+vi.mock("../writer-data", () => ({ loadWriterCharData: vi.fn(), clearWriterDataCache: vi.fn() }));
+
+const writerFns = vi.hoisted(() => ({
+  load: vi.fn(async () => true),
+  startQuiz: vi.fn(),
+  cancelQuiz: vi.fn(),
+  showOutline: vi.fn(),
+  setSpeed: vi.fn(),
+}));
+vi.mock("../use-writer", () => ({
+  useWriter: () => writerFns,
+}));
 
 beforeAll(() => {
   Object.defineProperty(SVGElement.prototype, "getTotalLength", {
@@ -12,107 +27,95 @@ beforeAll(() => {
   });
 });
 
-beforeEach(() => vi.useFakeTimers());
+beforeEach(() => {
+  vi.useFakeTimers();
+  vi.mocked(loadWriterCharData).mockReset();
+  vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+  writerFns.load.mockClear().mockResolvedValue(true);
+  writerFns.startQuiz.mockClear();
+  writerFns.cancelQuiz.mockClear();
+  writerFns.showOutline.mockClear();
+  writerFns.setSpeed.mockClear();
+});
 afterEach(() => { vi.useRealTimers(); cleanup(); });
 
-/* vẽ 1 nét trên ink svg: xuống ở (x0,y0), kéo tới (x1,y1) — toạ độ client 0..300 */
-function drawStroke(svg: SVGSVGElement, x0: number, y0: number, x1: number, y1: number) {
-  const fire = (type: string, x: number, y: number) =>
-    act(() => { svg.dispatchEvent(new MouseEvent(type, { bubbles: true, clientX: x, clientY: y })); });
-  fire("pointerdown", x0, y0);
-  // 5 điểm giữa để qua ngưỡng pts.length >= 4 và min-distance 3px
-  for (let i = 1; i <= 4; i++) fire("pointermove", x0 + ((x1 - x0) * i) / 5, y0 + ((y1 - y0) * i) / 5);
-  fire("pointerup", x1, y1);
-}
-
-function setup(props?: { mode?: "watch" | "draw"; onStats?: (s: GridStats) => void }) {
+async function setup(props?: { sel?: { kind: "rad" | "char"; g: string }; mode?: "watch" | "draw" }) {
   const apiRef = createRef<StudioGridApi>();
-  const stats: GridStats[] = [];
   const utils = render(
     <StudioGrid
-      char={REN}
+      sel={props?.sel ?? { kind: "rad", g: "水" }}
       mode={props?.mode ?? "watch"}
       apiRef={apiRef}
-      onStats={(s) => { stats.push(s); props?.onStats?.(s); }}
     />,
   );
-  const ink = utils.container.querySelector('svg[aria-label="Bảng tự luyện viết"]')!;
-  // jsdom getBoundingClientRect trả 0 — stub về hình vuông 300
-  ink.getBoundingClientRect = () =>
-    ({ left: 0, top: 0, width: 300, height: 300, x: 0, y: 0, right: 300, bottom: 300, toJSON: () => ({}) }) as DOMRect;
-  return { ...utils, apiRef, stats, ink: ink as SVGSVGElement };
+  await act(async () => {}); // flush load promise + ready effect
+  return { ...utils, apiRef };
 }
 
-describe("StudioGrid — watch", () => {
-  it("nét mẫu: đủ path class todo; hint mờ khi bật setHint", () => {
-    const { container, apiRef } = setup();
-    const strokeSvg = container.querySelector('svg[role="img"]')!;
-    expect(strokeSvg.querySelectorAll("path").length).toBe(2);
-    strokeSvg.querySelectorAll("path").forEach((p) =>
-      expect(p.getAttribute("class")).toBe("hz-st todo"));
-    // Ruling controller 2026-10-05: hint chỉ tồn tại ở draw mode — mock hanzi.html:343.
-    act(() => apiRef.current!.setHint(true));
-    expect(strokeSvg.querySelectorAll("path").length).toBe(2); // watch mode KHÔNG hint (mock buildGrid: hintOn&&mode==='draw')
+const classes = (el: Element) => el.getAttribute("class") ?? "";
+
+describe("StudioGrid — load", () => {
+  it("load fail → ready=false và render null (cha hiện fallback)", async () => {
+    vi.mocked(loadWriterCharData).mockResolvedValue(null);
+    const apiRef = createRef<StudioGridApi>();
+    const { container } = render(<StudioGrid sel={{ kind: "rad", g: "龤" }} mode="watch" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(apiRef.current?.ready).toBe(false);
+    expect(container.querySelector('[data-od-id="tianzi-grid"]')).toBeNull();
   });
 
-  it("api.play phát tuần tự; stepPrev/stepNext reveal tĩnh", () => {
-    const { container, apiRef } = setup();
-    const paths = container.querySelectorAll('svg[role="img"] > path');
-    act(() => apiRef.current!.play());
-    expect(paths[0].getAttribute("class")).toBe("hz-st now");
-    act(() => { vi.advanceTimersByTime(800); });
-    expect(paths[0].getAttribute("class")).toBe("hz-st done");
-    act(() => apiRef.current!.stepNext());
-    expect(paths[1].getAttribute("class")).toBe("hz-st done");
-    act(() => apiRef.current!.stepPrev());
-    expect(paths[1].getAttribute("class")).toBe("hz-st todo");
+  it("load xong: ready=true, sample svg 1024 chứa N path stroke-width 44; watch tự phát 1 lần", async () => {
+    const { container, apiRef } = await setup();
+    expect(apiRef.current?.ready).toBe(true);
+    const strokeSvg = container.querySelector('svg[role="img"]')!;
+    expect(strokeSvg.getAttribute("viewBox")).toBe("0 0 1024 1024");
+    const paths = strokeSvg.querySelectorAll("path");
+    expect(paths.length).toBe(3);
+    paths.forEach((p) => expect(p.getAttribute("stroke-width")).toBe("44"));
+    // auto-play đã khởi động: nét 0 đang animate, không cần gọi api.play
+    expect(classes(paths[0])).toBe("hz-st now");
+    act(() => { vi.advanceTimersByTime(780 * 3); });
+    const done = strokeSvg.querySelectorAll("path.done");
+    expect(done.length).toBe(3);
   });
 });
 
-describe("StudioGrid — draw", () => {
-  it("mode draw: nét mẫu thành done (mẫu tham chiếu); ink svg hiện", () => {
-    const { container, ink } = setup({ mode: "draw" });
-    container.querySelectorAll('svg[role="img"] > path').forEach((p) =>
-      expect(p.getAttribute("class")).toBe("hz-st done"));
-    expect((ink as SVGElement).classList.contains("hidden")).toBe(false);
+describe("StudioGrid — mode switch (draw qua useWriter)", () => {
+  it("watch→draw: startQuiz + showOutline(hint); draw→watch: cancelQuiz", async () => {
+    const { apiRef, rerender } = await setup({ mode: "watch" });
+    expect(writerFns.startQuiz).not.toHaveBeenCalled();
+    act(() => apiRef.current!.setHint(true)); // watch: chỉ nhớ flag
+    rerender(<StudioGrid sel={{ kind: "rad", g: "水" }} mode="draw" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(writerFns.startQuiz).toHaveBeenCalledTimes(1);
+    expect(writerFns.showOutline).toHaveBeenCalledWith(true, { instant: true });
+    rerender(<StudioGrid sel={{ kind: "rad", g: "水" }} mode="watch" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(writerFns.cancelQuiz).toHaveBeenCalledTimes(1);
   });
 
-  it("vẽ đúng hướng → good + stats ok; sai hướng → bad", () => {
-    const onStats = vi.fn();
-    const { ink, stats } = setup({ mode: "draw", onStats });
-    // nét 1 mong đợi SW: vẽ từ phải-trên xuống trái-dưới
-    drawStroke(ink, 200, 60, 100, 200);
-    const polylines = ink.querySelectorAll("polyline");
-    expect(polylines.length).toBe(1);
-    expect(polylines[0].getAttribute("class")).toBe("hz-ink-path good");
-    expect(stats.at(-1)).toEqual({ done: 1, ok: 1, total: 2 });
-    // nét 2 mong đợi SE: vẽ ngược (S→N) → bad
-    drawStroke(ink, 100, 200, 200, 60);
-    expect(ink.querySelectorAll("polyline")[1].getAttribute("class")).toBe("hz-ink-path bad");
-    expect(stats.at(-1)).toEqual({ done: 2, ok: 1, total: 2 });
+  it("setHint(false) ở draw → showOutline(false); setSpeed đẩy cả 2 renderer", async () => {
+    const { apiRef } = await setup({ mode: "draw" });
+    await act(async () => {}); // ready effect: startQuiz + showOutline(false)
+    expect(writerFns.startQuiz).toHaveBeenCalledTimes(1);
+    act(() => apiRef.current!.setHint(false));
+    expect(writerFns.showOutline).toHaveBeenCalledWith(false, { instant: false });
+    act(() => apiRef.current!.setSpeed(1.5));
+    expect(writerFns.setSpeed).toHaveBeenCalledWith(1.5);
   });
+});
 
-  it("vẽ quá số nét không crash, chấm theo hướng nét mẫu cuối", () => {
-    const { ink, stats } = setup({ mode: "draw" });
-    drawStroke(ink, 200, 60, 100, 200); // nét 1 SW ✓
-    drawStroke(ink, 100, 60, 200, 200); // nét 2 SE ✓ (vẽ đúng hết để idxNeo không can thiệp)
-    drawStroke(ink, 200, 60, 100, 200); // nét thừa — d[idx] neo về nét cuối (SE), nhưng vẽ SW → bad
-    expect(ink.querySelectorAll("polyline").length).toBe(3);
-    expect(stats.at(-1)!.done).toBe(3);
-    expect(stats.at(-1)!.ok).toBe(2);
-  });
-
-  it("undoInk/clearInk cập nhật stats; setHint hiện nét kế", () => {
-    const { ink, apiRef, container } = setup({ mode: "draw" });
-    drawStroke(ink, 200, 60, 100, 200);
-    act(() => apiRef.current!.undoInk());
-    expect(ink.querySelectorAll("polyline").length).toBe(0);
-    act(() => apiRef.current!.setHint(true));
-    const strokeSvg = container.querySelector('svg[role="img"]')!;
-    expect(strokeSvg.lastElementChild!.getAttribute("class")).toBe("hz-st hint"); // nét 0 mẫu
-    drawStroke(ink, 200, 60, 100, 200); // nét 0 đúng → hint chuyển sang nét 1
-    expect(strokeSvg.lastElementChild!.getAttribute("d")).toBe(REN.p[1]);
-    act(() => apiRef.current!.clearInk());
-    expect(ink.querySelectorAll("polyline").length).toBe(0);
+describe("StudioGrid — step (watch, useStudioStrokes)", () => {
+  it("stepNext reveal nét kế; stepPrev ẩn lại", async () => {
+    const { container, apiRef } = await setup();
+    const paths = container.querySelectorAll('svg[role="img"] > path');
+    // auto-play đang chạy: qua 780ms → nét 0 done, nét 1 "now" (stepRef=1)
+    act(() => { vi.advanceTimersByTime(780); });
+    expect(classes(paths[1])).toBe("hz-st now");
+    act(() => apiRef.current!.stepNext()); // stepRef=2
+    expect(classes(paths[2])).toBe("hz-st done");
+    act(() => apiRef.current!.stepPrev()); // stepRef=1 — nét 2 ẩn lại
+    expect(classes(paths[2])).toBe("hz-st todo");
+    expect(classes(paths[0])).toBe("hz-st done");
   });
 });
