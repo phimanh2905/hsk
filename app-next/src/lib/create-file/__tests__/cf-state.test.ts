@@ -1,6 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { cfReducer, cfDefaults, cfDefaultsFor, mergeCfState, parseLine, DEFAULT_CHARS } from "../types";
+import { setVocabData } from "@/lib/srs-session";
+import { vocab } from "@/content/vocab";
 import type { CfState } from "../types";
+
+/* template "vocab" đọc nguồn inject (runtime: ContentBridge → API) */
+beforeEach(() => setVocabData(vocab));
 
 describe("cfDefaults (bảng mặc định gốc clone)", () => {
   it("đúng 17 keys mặc định (brief ghi 18 nhưng CfState liệt kê 17, khớp clone cfDefaults): Điền tự, gray, 12/1/0, 3/12, Khải thư, CNstrokeorder, Tô mờ, 30%, 78%, Pinyin+Nghĩa", () => {

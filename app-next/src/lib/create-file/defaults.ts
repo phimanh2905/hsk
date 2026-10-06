@@ -2,7 +2,8 @@
    charInfo: clone đọc NHAI_DATA.hanzi trước, fallback sau; app-next không có window.NHAI_DATA
    nên trả CHAR_INFO_FALLBACK luôn (giữ chữ ký cho formatAiMock). */
 
-import { vocab, type VocabWord } from "@/content/vocab";
+import { getVocabData } from "@/lib/srs-session";
+import type { VocabData as VocabSource, VocabWord } from "@/lib/content/vocab";
 import type { CfChar, CfState } from "./types";
 
 export const CHAR_INFO_FALLBACK: Record<string, { pinyin: string; hanViet: string; meaning: string }> = {
@@ -61,9 +62,10 @@ function fallbackChars(): CfChar[] {
   }));
 }
 
-function vocabChars(): CfChar[] {
-  /* 4 từ mẫu đầu Bài 1 HSK1 (Task 11: đếm "4 từ sẽ có trong bản in") */
-  const words: VocabWord[] = vocab.hsk1["lesson-1"].words.slice(0, 4);
+/* 4 từ mẫu đầu Bài 1 HSK1 (đếm "4 từ sẽ có trong bản in") — data đọc từ nguồn
+   inject của srs-session (ContentBridge → API), thay import content/vocab trực tiếp. */
+export function vocabCharsFrom(data: VocabSource): CfChar[] {
+  const words: VocabWord[] = data.hsk1?.["lesson-1"]?.words.slice(0, 4) ?? [];
   return words.map((w) => ({ hanzi: w.hanzi, pinyin: w.pinyin, hv: w.hanViet, meaning: w.meaning }));
 }
 
@@ -72,7 +74,7 @@ export function cfDefaultsFor(tpl: string | null): CfState {
   const d = cfDefaults();
   d.tpl = tpl || null;
   if (tpl === "stroke-order" || tpl === "big-char") d.chars = fallbackChars();
-  else if (tpl === "vocab") d.chars = vocabChars();
+  else if (tpl === "vocab") d.chars = vocabCharsFrom(getVocabData() ?? {});
   return d;
 }
 

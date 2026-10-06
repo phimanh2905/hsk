@@ -15,6 +15,10 @@ export function setVocabData(d: VocabData | null): void {
   vocabData = d;
 }
 
+export function getVocabData(): VocabData | null {
+  return vocabData;
+}
+
 const DAY = 86_400_000;
 
 export type ReviewableWord = {

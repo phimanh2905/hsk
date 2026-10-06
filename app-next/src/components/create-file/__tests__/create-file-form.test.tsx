@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CreateFileClient from "../create-file-client";
+import { setVocabData } from "@/lib/srs-session";
+import { vocab } from "@/content/vocab";
 
 vi.mock("@/components/shell/toast-provider", () => ({
   useToast: () => (msg: string) => { (window as unknown as { __lastToast?: string }).__lastToast = msg; },
@@ -10,7 +12,10 @@ vi.mock("@/components/shell/toast-provider", () => ({
 function renderTpl(tpl: string) {
   return render(<CreateFileClient tplId={tpl} name="Giấy ô trống" desc="Chọn loại ô…" group="paper" />);
 }
-beforeEach(() => sessionStorage.clear());
+beforeEach(() => {
+  sessionStorage.clear();
+  setVocabData(vocab); // template "vocab" đọc nguồn inject (runtime: ContentBridge)
+});
 
 describe("CreateFileForm (G7 — 7 nhóm)", () => {
   it("đủ 7 nhóm heading với mặc định gốc checked: Điền tự, gray, 12, 1, 0, 3/12, Khải thư, CNstrokeorder, Tô mờ, Pinyin, Nghĩa", () => {
