@@ -1,101 +1,98 @@
 "use client";
 
-/* Bọc hanzi-writer cho StudioGrid. Mỗi container 1 instance; load(ch) tạo/tạo lại
-   writer với data từ writer-data (chunk local). Speed qua options lúc animate
-   (hanzi-writer không có setSpeed runtime). Màu qua CSS var để ăn dark mode. */
+/* Bọc hanzi-writer 3.7.3 cho StudioGrid — CHỈ dùng cho draw/quiz + outline hint
+   (API thật của lib: showCharacter/hideCharacter/animateCharacter/animateStroke/
+   showOutline/hideOutline/updateColor/quiz/cancelQuiz/setCharacter — KHÔNG có
+   setState/pauseQuiz/setSpeed). Watch mode dùng useStudioStrokes + SVG riêng,
+   không đi qua đây. Writer tạo LAZY trong startQuiz; load() chỉ nạp data vào ref.
+   Màu qua CSS var để ăn dark mode; speed chỉ áp cho create opts. */
 import { useCallback, useRef } from "react";
 import HanziWriter from "hanzi-writer";
 import { loadWriterCharData, type WriterCharData } from "./writer-data";
 
-type WriterInstance = ReturnType<typeof HanziWriter.create> & {
-  /* hanzi-writer 3.7.3 (bản mới nhất) chưa khai báo setState/pauseQuiz trong
-     d.ts — khai báo cấu trúc hẹp tại đây; gọi optional-chaining để an toàn runtime. */
-  setState?: (state: Record<string, unknown>) => void;
-  pauseQuiz?: () => void;
-};
+type WriterInstance = ReturnType<typeof HanziWriter.create>;
 
 export type WriterApi = {
+  /** Chỉ nạp data của chữ vào ref — không tạo writer. false nếu không có data. */
   load: (ch: string) => Promise<boolean>;
-  playAll: () => void;
-  animateStroke: (i: number) => void;
-  showStrokes: (n: number) => void;
-  startQuiz: () => void;
-  stopQuiz: () => void;
+  /** Tạo writer lần đầu nếu chưa có (showCharacter:false, showOutline:false), rồi quiz(). */
+  startQuiz: (onComplete?: () => void) => void;
+  /** cancelQuiz() passthrough — ở lại trạng thái watch. */
+  cancelQuiz: () => void;
+  /** Hint nét mờ (draw mode): showOutline/hideOutline của lib. */
+  showOutline: (on: boolean, opts?: { instant?: boolean }) => void;
+  /** Chỉ áp cho create opts (speed của watch renderer riêng, lib chỉ nhớ). */
   setSpeed: (x: number) => void;
-  setOutline: (on: boolean) => void;
 };
 
 export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>): WriterApi {
   const writerRef = useRef<WriterInstance | null>(null);
+  const createdCharRef = useRef<string | null>(null); // chữ mà writer instance đang giữ
   const charRef = useRef<string | null>(null);
   const dataRef = useRef<WriterCharData | null>(null);
   const speedRef = useRef(1);
 
-  const createWriter = useCallback((char: string, data: WriterCharData) => {
-    const el = containerRef.current;
-    if (!el) return;
-    el.innerHTML = "";
-    dataRef.current = data;
-    writerRef.current = HanziWriter.create(el, char, {
-      charDataLoader: () => data,
-      width: 300,
-      height: 300,
-      padding: 12,
-      strokeColor: "var(--text-primary)",
-      outlineColor: "var(--text-secondary)",
-      drawingColor: "var(--action-primary)",
-      showOutline: false,
-      showCharacter: true,
-      strokeAnimationSpeed: speedRef.current,
-      delayBetweenStrokes: 220,
-      highlightColor: "var(--action-focus)",
-    }) as WriterInstance;
-    charRef.current = char;
-  }, [containerRef]);
-
   const load = useCallback(async (ch: string) => {
-    if (charRef.current === ch && writerRef.current) return true;
+    if (charRef.current === ch && dataRef.current) return true;
     const data = await loadWriterCharData(ch);
-    if (!data || data.strokes.length === 0) return false;
-    createWriter(ch, data);
+    if (!data || data.strokes.length === 0) {
+      dataRef.current = null;
+      charRef.current = null;
+      return false;
+    }
+    dataRef.current = data;
+    charRef.current = ch;
     return true;
-  }, [createWriter]);
-
-  const playAll = useCallback(() => {
-    // lib types chỉ khai báo onComplete nhưng runtime nhận thêm speed opts (bị
-    // copy qua renderState ở bản sau); cast hẹp thay vì weaken public API.
-    writerRef.current?.animateCharacter({
-      strokeAnimationSpeed: speedRef.current,
-      delayBetweenStrokes: 220,
-    } as Parameters<WriterInstance["animateCharacter"]>[0]);
   }, []);
 
-  const animateStroke = useCallback((i: number) => {
-    writerRef.current?.animateStroke(i);
+  const startQuiz = useCallback(
+    (onComplete?: () => void) => {
+      const ch = charRef.current;
+      const data = dataRef.current;
+      if (!ch || !data) return;
+      const el = containerRef.current;
+      if (!el) return;
+      if (!writerRef.current) {
+        el.innerHTML = "";
+        writerRef.current = HanziWriter.create(el, ch, {
+          charDataLoader: () => data,
+          width: 300,
+          height: 300,
+          padding: 12,
+          strokeColor: "var(--text-primary)",
+          outlineColor: "var(--text-secondary)",
+          drawingColor: "var(--action-primary)",
+          showOutline: false,
+          showCharacter: false,
+          strokeAnimationSpeed: speedRef.current,
+          delayBetweenStrokes: 220,
+          highlightColor: "var(--action-focus)",
+        });
+        createdCharRef.current = ch;
+      } else if (createdCharRef.current !== ch) {
+        writerRef.current.setCharacter(ch);
+        createdCharRef.current = ch;
+      }
+      writerRef.current.quiz({ onComplete });
+    },
+    [containerRef],
+  );
+
+  const cancelQuiz = useCallback(() => {
+    writerRef.current?.cancelQuiz();
   }, []);
 
-  const showStrokes = useCallback((n: number) => {
-    const total = dataRef.current?.strokes.length ?? 0;
-    if (total === 0) return;
-    const k = Math.max(0, Math.min(total, n));
-    writerRef.current?.setState?.({
-      character: { strokes: Array.from({ length: total }, (_, i) => (i < k ? 1 : 0)) },
-    } as Record<string, unknown>);
+  const showOutline = useCallback((on: boolean, opts?: { instant?: boolean }) => {
+    const w = writerRef.current;
+    if (!w) return;
+    const o = { duration: opts?.instant ? 0 : undefined };
+    if (on) w.showOutline(o);
+    else w.hideOutline(o);
   }, []);
 
-  const startQuiz = useCallback(() => {
-    writerRef.current?.quiz({});
+  const setSpeed = useCallback((x: number) => {
+    speedRef.current = x > 0 ? x : 1;
   }, []);
 
-  const stopQuiz = useCallback(() => {
-    writerRef.current?.pauseQuiz?.();
-  }, []);
-
-  const setSpeed = useCallback((x: number) => { speedRef.current = x > 0 ? x : 1; }, []);
-
-  const setOutline = useCallback((on: boolean) => {
-    writerRef.current?.setState?.({ outline: { opacity: on ? 1 : 0 } } as Record<string, unknown>);
-  }, []);
-
-  return { load, playAll, animateStroke, showStrokes, startQuiz, stopQuiz, setSpeed, setOutline };
+  return { load, startQuiz, cancelQuiz, showOutline, setSpeed };
 }
