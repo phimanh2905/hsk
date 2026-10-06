@@ -17,7 +17,7 @@ vi.mock("hanzi-writer", () => {
     updateColor: vi.fn(),
     quiz: vi.fn(),
     cancelQuiz: vi.fn(),
-    setCharacter: vi.fn(),
+    setCharacter: vi.fn(() => Promise.resolve()),
   }));
   return { default: { create } };
 });
@@ -122,5 +122,61 @@ describe("useWriter", () => {
     expect(ok).toBe(false);
     result.current.startQuiz();
     expect(HanziWriter.create).not.toHaveBeenCalled();
+  });
+
+  it("đổi chữ: quiz chỉ chạy SAU KHI setCharacter resolve", async () => {
+    vi.mocked(loadWriterCharData)
+      .mockResolvedValueOnce(DATA)
+      .mockResolvedValueOnce(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    const quizCountAfterFirst = inst.quiz.mock.calls.length; // 1 (từ lần startQuiz đầu)
+    let resolveSwap: () => void;
+    inst.setCharacter.mockReturnValue(new Promise<void>((r) => { resolveSwap = r; }));
+    await act(async () => { await result.current.load("人"); });
+    const onComplete = vi.fn();
+    result.current.startQuiz(onComplete);
+    expect(inst.setCharacter).toHaveBeenCalledWith("人");
+    expect(inst.quiz.mock.calls.length).toBe(quizCountAfterFirst); // chưa swap xong → chưa quiz
+    await act(async () => { resolveSwap!(); });
+    expect(inst.quiz).toHaveBeenCalledWith({ onComplete });
+  });
+
+  it("setCharacter fail → reset createdChar, startQuiz sau thử swap lại", async () => {
+    vi.mocked(loadWriterCharData)
+      .mockResolvedValueOnce(DATA)
+      .mockResolvedValueOnce(DATA)
+      .mockResolvedValueOnce(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    const quizCountAfterFirst = inst.quiz.mock.calls.length;
+    inst.setCharacter.mockRejectedValueOnce(new Error("swap fail"));
+    await act(async () => { await result.current.load("人"); });
+    result.current.startQuiz();
+    await act(async () => {}); // flush rejection
+    expect(inst.setCharacter).toHaveBeenCalledTimes(1);
+    expect(inst.quiz.mock.calls.length).toBe(quizCountAfterFirst); // swap fail → không quiz
+    result.current.startQuiz(); // startQuiz sau → thử swap lại
+    await act(async () => {});
+    expect(inst.setCharacter).toHaveBeenCalledTimes(2);
+  });
+
+  it("unmount: cancelQuiz + drop instance", async () => {
+    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+    const { result, unmount } = renderHook(() =>
+      useWriter({ current: document.createElement("div") } as any),
+    );
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    unmount();
+    expect(inst.cancelQuiz).toHaveBeenCalledTimes(1);
+    // instance đã drop: startQuiz sau unmount không đụng instance cũ
+    result.current.startQuiz();
+    expect(inst.quiz).toHaveBeenCalledTimes(1); // không tăng
   });
 });

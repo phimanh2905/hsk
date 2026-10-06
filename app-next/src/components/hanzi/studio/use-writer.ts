@@ -6,7 +6,7 @@
    setState/pauseQuiz/setSpeed). Watch mode dùng useStudioStrokes + SVG riêng,
    không đi qua đây. Writer tạo LAZY trong startQuiz; load() chỉ nạp data vào ref.
    Màu qua CSS var để ăn dark mode; speed chỉ áp cho create opts. */
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import HanziWriter from "hanzi-writer";
 import { loadWriterCharData, type WriterCharData } from "./writer-data";
 
@@ -70,8 +70,14 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
         });
         createdCharRef.current = ch;
       } else if (createdCharRef.current !== ch) {
-        writerRef.current.setCharacter(ch);
-        createdCharRef.current = ch;
+        // setCharacter async: chỉ quiz SAU khi swap xong; fail → reset để startQuiz sau thử lại
+        void writerRef.current
+          .setCharacter(ch)
+          .then(() => writerRef.current?.quiz({ onComplete }))
+          .catch(() => {
+            createdCharRef.current = null;
+          });
+        return;
       }
       writerRef.current.quiz({ onComplete });
     },
@@ -93,6 +99,15 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
   const setSpeed = useCallback((x: number) => {
     speedRef.current = x > 0 ? x : 1;
   }, []);
+
+  // Unmount: dừng quiz + drop instance (tránh giữ DOM writer sau khi grid ẩn)
+  useEffect(
+    () => () => {
+      writerRef.current?.cancelQuiz?.();
+      writerRef.current = null;
+    },
+    [],
+  );
 
   return { load, startQuiz, cancelQuiz, showOutline, setSpeed };
 }
