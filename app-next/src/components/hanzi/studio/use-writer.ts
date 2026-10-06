@@ -73,7 +73,10 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
         // setCharacter async: chỉ quiz SAU khi swap xong; fail → reset để startQuiz sau thử lại
         void writerRef.current
           .setCharacter(ch)
-          .then(() => writerRef.current?.quiz({ onComplete }))
+          .then(() => {
+            createdCharRef.current = ch;
+            return writerRef.current?.quiz({ onComplete });
+          })
           .catch(() => {
             createdCharRef.current = null;
           });

@@ -165,8 +165,47 @@ describe("useWriter", () => {
     expect(inst.setCharacter).toHaveBeenCalledTimes(2);
   });
 
-  it("unmount: cancelQuiz + drop instance", async () => {
-    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+  it("swap A→B→A: setCharacter mỗi lần đổi chữ, quiz 3 lần đúng thứ tự", async () => {
+    vi.mocked(loadWriterCharData)
+      .mockResolvedValueOnce(DATA) // 口
+      .mockResolvedValueOnce(DATA) // 人
+      .mockResolvedValueOnce(DATA); // 口
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    expect(inst.setCharacter).not.toHaveBeenCalled();
+    await act(async () => { await result.current.load("人"); });
+    result.current.startQuiz();
+    await act(async () => {});
+    expect(inst.setCharacter).toHaveBeenCalledTimes(1);
+    expect(inst.setCharacter).toHaveBeenCalledWith("人");
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    await act(async () => {});
+    expect(inst.setCharacter).toHaveBeenCalledTimes(2); // B→A phải swap lại, không skip
+    expect(inst.setCharacter).toHaveBeenLastCalledWith("口");
+    expect(inst.quiz).toHaveBeenCalledTimes(3);
+  });
+
+  it("startQuiz lặp cùng chữ sau swap: không setCharacter lại", async () => {
+    vi.mocked(loadWriterCharData)
+      .mockResolvedValueOnce(DATA)
+      .mockResolvedValueOnce(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    await act(async () => { await result.current.load("人"); });
+    result.current.startQuiz();
+    await act(async () => {});
+    result.current.startQuiz(); // cùng chữ 人 → không swap lại
+    await act(async () => {});
+    expect(inst.setCharacter).toHaveBeenCalledTimes(1);
+    expect(inst.quiz).toHaveBeenCalledTimes(3); // create-path + post-swap + repeat
+  });
+
+  it("unmount: cancelQuiz + drop instance", async () => {    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
     const { result, unmount } = renderHook(() =>
       useWriter({ current: document.createElement("div") } as any),
     );
