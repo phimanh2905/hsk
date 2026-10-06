@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   index,
   integer,
+  primaryKey,
   sqliteTable,
   text,
   uniqueIndex,
@@ -125,3 +126,30 @@ export const notebookEntries = sqliteTable(
   },
   (t) => [index("notebook_entries_user_created_idx").on(t.userId, t.createdAt)]
 );
+/* ================= Content datasets (spec dehardcode §4.2) =================
+   Bảng content_* tách khỏi auth/user. Cấu trúc lồng (mảng words) lưu JSON —
+   đọc nhiều/ghi hiếm, giữ 1:1 với type bên app. `ord` giữ thứ tự lesson/row
+   vì SELECT từ D1 không bảo toàn thứ tự key của object gốc. */
+
+export const contentVocabs = sqliteTable(
+  "content_vocabs",
+  {
+    book: text("book").notNull(),
+    pageId: text("page_id").notNull(),
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    words: text("words", { mode: "json" }).$type<VocabWordRow[]>().notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.book, t.pageId] })]
+);
+
+/* Shape khớp VocabWord (src/content/vocab.ts) — khai báo structurally thay vì
+   import để schema.ts không phụ thuộc content module. */
+type VocabWordRow = {
+  hanzi: string;
+  pinyin: string;
+  hanViet: string;
+  meaning: string;
+  pos: string;
+  example: { zh: string; pinyinPerChar: { c: string; py: string }[]; vi: string };
+};
