@@ -3,6 +3,7 @@ import {
   shadowingPlaylists, shadowingVideos, shadowingSubtitles,
   shadowingVideoById, relatedVideos,
 } from "../shadowing";
+import { topicVi, type ShadowingTopic } from "@/content/shadowing";
 
 describe("shadowing content (SPEC-06 bộ DEMO + SPEC-19 tiêu đề song ngữ)", () => {
   it("đủ 5 playlist, slug + tổng số theo SPEC-06", () => {
@@ -35,5 +36,21 @@ describe("shadowing content (SPEC-06 bộ DEMO + SPEC-19 tiêu đề song ngữ)
     expect(rel).toHaveLength(3); // playlist daihuaxiyou chỉ còn 3 video khác
     expect(rel.some((v) => v.id === "EA3rwvr99Q0")).toBe(false);
     expect(relatedVideos("sXo-yHFkAio", 4)[0].playlistId).toBe("daihuaxiyou");
+  });
+});
+
+describe("shadowing content — topic/spd (spec §4)", () => {
+  it("mọi video đều có topic hợp lệ và spd trong [0.75, 1]", () => {
+    const topics: ShadowingTopic[] = ["life", "food", "travel", "film"];
+    for (const v of shadowingVideos) {
+      expect(topics, v.id).toContain(v.topic);
+      expect(v.spd, v.id).toBeGreaterThanOrEqual(0.75);
+      expect(v.spd, v.id).toBeLessThanOrEqual(1);
+    }
+  });
+  it("topicVi đủ 4 chủ đề", () => {
+    expect(Object.keys(topicVi).sort()).toEqual(["film", "food", "life", "travel"]);
+    expect(topicVi.life).toBe("Đời sống thường nhật");
+    expect(topicVi.film).toBe("Trích đoạn phim");
   });
 });

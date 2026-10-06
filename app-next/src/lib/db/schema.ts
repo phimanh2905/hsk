@@ -1,5 +1,11 @@
 import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  integer,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 
 /* Schema better-auth (bảng chuẩn, không tự định nghĩa lại — spec 00 §3.1).
    Sinh từ getAuthTables() của better-auth 1.7.7, chuyển sang Drizzle SQLite cho D1. */
@@ -80,4 +86,22 @@ export const verification = sqliteTable(
       .default(sql`(unixepoch())`),
   },
   (t) => [index("verification_identifier_idx").on(t.identifier)]
+);
+
+/* Tiến độ luyện shadowing theo user×video (spec §5.1). `linesDone` = số câu
+   đã được chấm (thu âm hoặc chép chính tả đúng) — dùng cho pill "Đang luyện · a/N câu". */
+export const shadowingProgress = sqliteTable(
+  "shadowing_progress",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    videoId: text("videoId").notNull(),
+    status: text("status", { enum: ["new", "mid", "done"] }).notNull().default("mid"),
+    score: integer("score"),
+    seconds: integer("seconds").notNull().default(0),
+    linesDone: integer("linesDone").notNull().default(0),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [uniqueIndex("shadowing_progress_user_video_uq").on(t.userId, t.videoId)]
 );
