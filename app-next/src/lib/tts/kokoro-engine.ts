@@ -2,7 +2,13 @@
 /* Engine Kokoro-82M-v1.1-zh qua fork @uzen/kokoro-js — G2P misaki zh bằng JS
    (tone sandhi 一/不/sandhi-3, đa âm tự, erhua). Model fetch từ HuggingFace,
    browser cache bằng Cache API; voice .bin tự host (public/kokoro/voices).
-   Toàn bộ lib ML nạp bằng dynamic import — không được vào bundle chính (spec §9). */
+
+   Lib ML nạp từ bundle kín vendored tại /kokoro/vendor/kokoro.web.js (2.1MB,
+   copy của node_modules/@uzen/kokoro-js/dist/kokoro.web.js — self-contained,
+   không có bare import). Import theo URL + turbopackIgnore để Next SSR /
+   OpenNext trace / esbuild KHÔNG nhìn thấy: nếu để bare specifier, entry Node
+   của @huggingface/transformers kéo sharp/onnxruntime-node vào server bundle
+   và opennextjs-cloudflare build vỡ ở CI. */
 import {
   KOKORO_MODEL_ID,
   KOKORO_VOICE_PATH,
@@ -11,6 +17,7 @@ import {
   getVoicePref,
   type TtsTier,
 } from "./config";
+import { loadKokoroBundle } from "./kokoro-loader";
 import { chunkText } from "./webspeech-engine";
 import { playSamples, stopPlayback } from "./playback";
 import type { TtsSpeakOptions } from "./types";
@@ -39,7 +46,7 @@ export async function createKokoroEngine(
   tier: TtsTier,
   onProgress?: (p: DownloadProgress) => void
 ): Promise<KokoroEngine> {
-  const { KokoroTTS } = await import("@uzen/kokoro-js");
+  const { KokoroTTS } = await loadKokoroBundle();
   const cfg = TIER_CONFIG[tier];
   const tts = (await KokoroTTS.from_pretrained(KOKORO_MODEL_ID, {
     dtype: cfg.dtype,

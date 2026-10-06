@@ -1,14 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createKokoroEngine } from "../kokoro-engine";
 
-/* Fake module @uzen/kokoro-js: from_pretrained ghi nhận opts, generate trả
-   RawAudio giả (100 samples, 24kHz). */
+/* Fake bundle qua loader seam: from_pretrained ghi nhận opts, generate trả
+   RawAudio giả (100 samples, 24kHz). loadKokoroBundle bị mock vì nó là dynamic
+   URL import chỉ chạy ở browser. */
 const fromPretrained = vi.fn();
 const generate = vi.fn();
-vi.mock("@uzen/kokoro-js", () => ({
-  KokoroTTS: {
-    from_pretrained: (...args: unknown[]) => fromPretrained(...args),
-  },
+vi.mock("../kokoro-loader", () => ({
+  loadKokoroBundle: async () => ({
+    KokoroTTS: {
+      from_pretrained: (...args: unknown[]) => fromPretrained(...args),
+    },
+  }),
 }));
 
 vi.mock("../playback", () => ({
