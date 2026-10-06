@@ -80,15 +80,11 @@ export function VocabTable({
                 </td>
               </tr>
             ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={6}>
-                  <div className="p-[30px] text-center text-[13.5px] text-text-secondary">Không có từ nào khớp bộ lọc.</div>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
+        {rows.length === 0 && (
+          <div className="p-[30px] text-center text-[13.5px] text-text-secondary">Không có từ nào khớp bộ lọc.</div>
+        )}
       </div>
 
       {/* mcards <720px — cùng map row */}

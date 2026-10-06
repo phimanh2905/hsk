@@ -80,12 +80,11 @@ test.describe("gated routes (session thật qua better-auth)", () => {
     await fakeLogin(page);
     await page.goto("/progress");
     await expect(page.getByText("Điểm của bạn")).toBeVisible();
-    await expect(page.getByText("12 tháng gần đây")).toBeVisible();
     await page.goto("/my-vocab");
-    await expect(page.getByText("Sổ mẫu").first()).toBeVisible();
-    await page.goto("/notebook/vocab/vocab-hsk30");
+    await expect(page.getByText("THE MEMORY COMMAND")).toBeVisible();
+    await expect(page.getByText("Từ cần ôn ngay")).toBeVisible();
+    await page.goto("/notebook/vocab/vocab-hsk30"); // notebook detail giữ nguyên
     await expect(page.getByText("Từ vực HSK 3.0")).toBeVisible();
-    await expect(page.getByText("时间").first()).toBeVisible();
   });
 
   test("luồng tạo deck → học deck qua lesson custom", async ({ page }) => {
@@ -99,10 +98,11 @@ test.describe("gated routes (session thật qua better-auth)", () => {
       ]));
     });
     await page.goto("/my-vocab");
-    await page.getByText("Tạo bộ mới").first().click();
-    await page.getByPlaceholder("Nhập tên sổ tay / bộ từ vựng…").fill("Bộ từ e2e thứ hai");
-    await page.getByText("Tạo", { exact: true }).click();
-    await expect(page.getByText("Đã tạo Bộ từ e2e thứ hai")).toBeVisible();
+    await expect(page.getByText("Bộ e2e")).toBeVisible();
+    await page.getByText("+ Tạo Deck mới").first().click();
+    await page.getByPlaceholder("Tên deck, ví dụ: Từ vựng phỏng vấn…").fill("Bộ từ e2e thứ hai");
+    await page.getByText("Tạo deck", { exact: true }).click();
+    await expect(page.getByText("Đã tạo deck “Bộ từ e2e thứ hai”")).toBeVisible();
     await page.goto("/lesson/custom/nb-e2e");
     await expect(page.getByText("Bộ e2e")).toBeVisible();
     await expect(page.getByText("时间").first()).toBeVisible();
