@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { getTtsOrchestrator } from "../engine";
 
 const detectCapability = vi.fn();
 const createKokoroEngine = vi.fn();
