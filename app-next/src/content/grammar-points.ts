@@ -1,6 +1,6 @@
 // app-next/src/content/grammar-points.ts
 /* Sổ tay ngữ pháp — 6 điểm port 1:1 opendesign_hsk/my-grammar.html DATA array
-   (spec 2026-10-05 §2.1). pitfall tách <b>…</b> của mock thành [bold, rest].
+   (spec 2026-10-05 §2.1). pitfall tách <b>…</b> của mock thành [lead, bold, rest].
    Content giáo dục tĩnh; trạng thái ★ "Đã lưu" là user data (bye.grammarMeta). */
 
 export type GrammarTopic = "ba" | "bi" | "bongu" | "hutu";

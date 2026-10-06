@@ -5,6 +5,7 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { useTts } from "@/lib/tts/use-tts";
+import { useToastSafe } from "@/components/shell/toast-provider";
 import type { GrammarPoint } from "@/content/grammar-points";
 import { cn } from "@/lib/cn";
 
@@ -17,6 +18,12 @@ export function GrammarCard({
   onMenu: (id: string) => void;
 }) {
   const { speak } = useTts();
+  const toast = useToastSafe();
+  const playExample = (hz: string) => {
+    // Mock hiển thị "Đang phát âm: {sent}" mỗi lần bấm 🔊
+    toast(`Đang phát âm: ${hz}`);
+    speak(hz, { rate: 0.95 });
+  };
 
   return (
     <article
@@ -100,7 +107,7 @@ export function GrammarCard({
             <button
               type="button"
               aria-label={`Nghe phát âm câu ${i + 1}`}
-              onClick={() => speak(e.hz, { rate: 0.95 })}
+              onClick={() => playExample(e.hz)}
               className="grid h-10 w-10 place-items-center self-center rounded-full border border-border-subtle bg-surface-elevated text-base text-[color:var(--hz-jade-ink,#144d38)] hover:border-learning-mastered hover:bg-jade-wash"
             >
               🔊

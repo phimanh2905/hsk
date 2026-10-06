@@ -3,6 +3,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { GRAMMAR_POINTS } from "@/content/grammar-points";
 import { GrammarCard } from "../grammar-card";
+import { ToastProvider } from "@/components/shell/toast-provider";
 
 const speakMock = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/tts/use-tts", () => ({
@@ -38,17 +39,21 @@ describe("GrammarCard", () => {
     const bold = document.querySelector("[data-pitfall] b")!;
     expect(bold.textContent).toBe("không được đứng đơn độc");
   });
-  it("ví dụ: đủ hz/py/vi + speak từng câu (rate 0.95) + toast copy ở root", () => {
+  it("ví dụ: đủ hz/py/vi + speak từng câu (rate 0.95) + toast 'Đang phát âm' mỗi lần 🔊", () => {
     const { getByLabelText } = render(
-      <GrammarCard point={ba} saved={false} onToggleSave={() => {}} onMenu={() => {}} />,
+      <ToastProvider>
+        <GrammarCard point={ba} saved={false} onToggleSave={() => {}} onMenu={() => {}} />
+      </ToastProvider>,
     );
     expect(document.body.textContent).toContain("VÍ DỤ NGỮ CẢNH");
     expect(document.body.textContent).toContain("请把书打开。");
     expect(document.body.textContent).toContain("Xin hãy mở sách ra.");
     act(() => getByLabelText("Nghe phát âm câu 1").click());
     expect(speakMock).toHaveBeenCalledWith("请把书打开。", { rate: 0.95 });
+    expect(document.querySelector('[role="status"]')!.textContent).toBe("Đang phát âm: 请把书打开。");
     act(() => getByLabelText("Nghe phát âm câu 2").click());
     expect(speakMock).toHaveBeenCalledWith("把门关上吧。", { rate: 0.95 });
+    expect(document.querySelector('[role="status"]')!.textContent).toBe("Đang phát âm: 把门关上吧。");
   });
   it("★ aria-pressed theo saved + onToggleSave(id); ⋮ → onMenu(id); footer link /review", () => {
     const onToggleSave = vi.fn();

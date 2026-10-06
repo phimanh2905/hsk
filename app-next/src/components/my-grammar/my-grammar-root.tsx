@@ -99,11 +99,11 @@ export default function MyGrammarRoot() {
             />
           ))}
         </section>
-      ) : (
+      ) : mounted ? (
         <div className="rounded-[20px] border border-border-subtle bg-surface-elevated/85 p-9 text-center text-[13.5px] text-text-secondary shadow-xs">
           Không tìm thấy cấu trúc phù hợp. Thử từ khóa khác hoặc bấm “Tất cả”.
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

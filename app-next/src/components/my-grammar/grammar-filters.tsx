@@ -65,7 +65,10 @@ export function GrammarFilters({
       <div role="group" aria-label="Lọc theo chủ điểm" data-od-id="topic-ribbon" className="flex flex-wrap items-center gap-2">
         <span className="min-w-[64px] text-[11px] font-bold tracking-[0.08em] text-text-secondary/70">Chủ điểm</span>
         {GRAMMAR_TOPICS.map(([key, label]) => (
-          <GrammarChip key={key} pressed={topic === key} onClick={() => onTopic(key)}>{label}</GrammarChip>
+          <GrammarChip key={key} pressed={topic === key} onClick={() => onTopic(key)}>
+            {/* Label trộn Việt+Hán — .zh chỉ set font-family Hán nên an toàn cho cả chuỗi (Global Constraint: Hán tự luôn kèm class zh) */}
+            <span className={/[\u4e00-\u9fff]/.test(label) ? "zh" : undefined}>{label}</span>
+          </GrammarChip>
         ))}
       </div>
       <div className="flex flex-wrap items-center gap-2.5">

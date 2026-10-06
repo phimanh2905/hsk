@@ -23,6 +23,8 @@ describe("GrammarFilters", () => {
     const { getByText } = render(<GrammarFilters {...base} onTopic={onTopic} onAdd={onAdd} />);
     expect(document.querySelectorAll('[role="group"][aria-label="Lọc theo chủ điểm"] button').length).toBe(6);
     expect(getByText("Câu chữ 把 / 被")).toBeTruthy();
+    // Global Constraint: Hán tự luôn kèm class zh — chip label chứa Hán phải có .zh
+    expect(getByText("Câu chữ 把 / 被").className).toContain("zh");
     expect(getByText("⭐ Đã lưu")).toBeTruthy();
     act(() => getByText("Câu chữ 把 / 被").click());
     expect(onTopic).toHaveBeenCalledWith("ba");
