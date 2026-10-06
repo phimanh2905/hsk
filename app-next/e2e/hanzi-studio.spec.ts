@@ -51,6 +51,9 @@ test.describe("Hanzi Studio radical-first", () => {
   });
 
   test("draw mode bật gợi ý nét mờ", async ({ page }) => {
+    // hanzi-writer create throw "Invalid color" khi nhận CSS var → pageerror
+    const pageErrors: string[] = [];
+    page.on("pageerror", (e) => pageErrors.push(String(e)));
     await page.goto("/hanzi", { waitUntil: "domcontentloaded" });
     await openRadical(page, "口");
 
@@ -59,5 +62,6 @@ test.describe("Hanzi Studio radical-first", () => {
     await expect(hint).toBeVisible();
     await hint.click();
     await expect(hint).toHaveAttribute("aria-pressed", "true");
+    expect(pageErrors.filter((m) => m.includes("Invalid color"))).toEqual([]);
   });
 });

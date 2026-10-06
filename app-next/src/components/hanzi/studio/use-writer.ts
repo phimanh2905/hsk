@@ -5,7 +5,8 @@
    showOutline/hideOutline/updateColor/quiz/cancelQuiz/setCharacter — KHÔNG có
    setState/pauseQuiz/setSpeed). Watch mode dùng useStudioStrokes + SVG riêng,
    không đi qua đây. Writer tạo LAZY trong startQuiz; load() chỉ nạp data vào ref.
-   Màu qua CSS var để ăn dark mode; speed chỉ áp cho create opts. */
+   Màu resolve từ CSS var token thành hex lúc create (lib parse hex/rgb-only);
+   speed chỉ áp cho create opts. */
 import { useCallback, useEffect, useRef } from "react";
 import HanziWriter from "hanzi-writer";
 import { loadWriterCharData, type WriterCharData } from "./writer-data";
@@ -57,20 +58,31 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
       if (!el) return;
       if (!writerRef.current) {
         el.innerHTML = "";
-        writerRef.current = HanziWriter.create(el, ch, {
-          charDataLoader: () => data,
-          width: 300,
-          height: 300,
-          padding: 12,
-          strokeColor: "var(--text-primary)",
-          outlineColor: "var(--text-secondary)",
-          drawingColor: "var(--action-primary)",
-          showOutline: false,
-          showCharacter: false,
-          strokeAnimationSpeed: speedRef.current,
-          delayBetweenStrokes: 220,
-          highlightColor: "var(--action-focus)",
-        });
+        // lib parse màu hex/rgb-only (colorStringToVals throw với var(...)) →
+        // resolve token CSS var thành hex lúc create; đổi theme giữa chừng hiếm,
+        // writer được tạo lại khi đổi chữ/mode.
+        const cs = getComputedStyle(el);
+        const v = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
+        try {
+          writerRef.current = HanziWriter.create(el, ch, {
+            charDataLoader: () => data,
+            width: 300,
+            height: 300,
+            padding: 12,
+            strokeColor: v("--text-primary", "#1f2a27"),
+            outlineColor: v("--text-secondary", "#66756f"),
+            drawingColor: v("--action-primary", "#c83c32"),
+            showOutline: false,
+            showCharacter: false,
+            strokeAnimationSpeed: speedRef.current,
+            delayBetweenStrokes: 220,
+            highlightColor: v("--action-focus", "#d24b3f"),
+          });
+        } catch (err) {
+          // create throw → bỏ qua quiz lần này (createdCharRef vẫn null) → startQuiz sau thử lại
+          console.warn("[use-writer] HanziWriter.create failed:", err);
+          return;
+        }
         createdCharRef.current = ch;
       } else if (createdCharRef.current !== ch) {
         // setCharacter async: chỉ quiz SAU khi swap xong; fail → reset để startQuiz sau thử lại

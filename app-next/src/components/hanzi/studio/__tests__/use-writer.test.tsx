@@ -96,6 +96,57 @@ describe("useWriter", () => {
     expect(HanziWriter.create).toHaveBeenCalledTimes(1);
   });
 
+  it("create: màu resolve từ CSS var thành hex (lib parse hex/rgb-only, throw với var(...))", async () => {
+    const tokens: Record<string, string> = {
+      "--text-primary": "#111111",
+      "--text-secondary": "#66756f",
+      "--action-primary": "#c83c32",
+      "--action-focus": "#d24b3f",
+    };
+    const spy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation(() => ({ getPropertyValue: (n: string) => tokens[n] ?? "" }) as unknown as CSSStyleDeclaration);
+    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    spy.mockRestore();
+    expect(HanziWriter.create).toHaveBeenCalledTimes(1);
+    const opts = vi.mocked(HanziWriter.create).mock.calls[0][2]!;
+    expect(opts.strokeColor).toBe("#111111");
+    expect(opts.outlineColor).toBe("#66756f");
+    expect(opts.drawingColor).toBe("#c83c32");
+    expect(opts.highlightColor).toBe("#d24b3f");
+  });
+
+  it("getComputedStyle rỗng (jsdom) → dùng fallback hex", async () => {
+    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const opts = vi.mocked(HanziWriter.create).mock.calls[0][2]!;
+    expect(opts.strokeColor).toBe("#1f2a27");
+    expect(opts.outlineColor).toBe("#66756f");
+    expect(opts.drawingColor).toBe("#c83c32");
+    expect(opts.highlightColor).toBe("#d24b3f");
+  });
+
+  it("create throw → startQuiz không reject, lần sau thử create lại", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.mocked(HanziWriter.create).mockImplementationOnce(() => {
+      throw new Error("Invalid color: var(--action-primary)");
+    });
+    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+    const { result } = setup();
+    await act(async () => { await result.current.load("口"); });
+    expect(() => result.current.startQuiz()).not.toThrow(); // no-op, không unhandled
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("create failed"), expect.any(Error));
+    // createdCharRef vẫn null → startQuiz sau thử create lại
+    result.current.startQuiz();
+    expect(HanziWriter.create).toHaveBeenCalledTimes(2);
+    warn.mockRestore();
+  });
+
   it("quiz passthrough + onComplete", async () => {
     vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
     const { result } = setup();
