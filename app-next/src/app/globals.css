@@ -209,6 +209,9 @@ body {
 .hz-st.done { opacity: 1; }
 .hz-st.now { stroke: var(--action-primary); opacity: 1; }
 .hz-ink-path { fill: none; stroke: var(--action-primary); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+.hz-st.hint { stroke: var(--action-primary); opacity: .3; stroke-dasharray: 6 8; }
+.hz-ink-path.good { stroke: var(--text-primary); }
+.hz-ink-path.bad { stroke: var(--action-primary); }
 /* row nét đang chọn — gạch dọc action-primary bên trái (thay shadow-[inset_...] trong TSX) */
 .hz-row-cur { box-shadow: inset 3px 0 0 var(--action-primary); }
 
