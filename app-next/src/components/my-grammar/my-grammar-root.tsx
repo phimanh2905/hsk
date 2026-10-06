@@ -58,6 +58,8 @@ export default function MyGrammarRoot() {
     "/": (e) => { e.preventDefault(); searchRef.current?.focus(); },
   });
 
+  // Level "all" là raw key — hiển thị label "Tất cả" (tương tự topicLabel)
+  const levelLabel = level === "all" ? "Tất cả" : level;
   const topicLabel = topic === "all" ? "mọi chủ điểm" : (GRAMMAR_TOPICS.find(([k]) => k === topic)?.[1] ?? topic);
 
   return (
@@ -78,7 +80,7 @@ export default function MyGrammarRoot() {
         q={q}
         onQ={setQ}
         onAdd={() => toast("Tạo cấu trúc mới: nhập tên + công thức + 1 ví dụ để lưu")}
-        result={`${filtered.length} cấu trúc · ${level} · ${topicLabel}`}
+        result={`${filtered.length} cấu trúc · ${levelLabel} · ${topicLabel}`}
         searchRef={searchRef}
       />
 

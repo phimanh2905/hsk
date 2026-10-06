@@ -31,6 +31,7 @@ describe("MyGrammarRoot", () => {
     const { getByText } = render(<MyGrammarRoot />);
     act(() => getByText("Tất cả", { selector: '[aria-label="Lọc theo cấp độ HSK"] button' }).click());
     expect(cardIds().length).toBe(6);
+    expect(document.querySelector('[data-testid="result-line"]')!.textContent).toBe("6 cấu trúc · Tất cả · mọi chủ điểm");
     act(() => getByText("Câu chữ 把 / 被").click());
     expect(cardIds()).toEqual(["grammar-ba", "grammar-bei"]);
     expect(document.querySelector('[data-testid="result-line"]')!.textContent).toContain("Câu chữ 把 / 被");
