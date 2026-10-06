@@ -20,6 +20,9 @@ export function useTts() {
     cancelRef.current = () => {
       ws.cancel();
       getTtsOrchestrator().cancel();
+      /* Kokoro path bị cancel thì onEnd không bao giờ fire (runId đã hủy) —
+         tự thoát trạng thái speaking ở đây. */
+      setSpeaking(false);
     };
     return () => ws.dispose();
   }, []);

@@ -118,6 +118,22 @@ describe("TtsOrchestrator", () => {
     vi.unstubAllGlobals();
   });
 
+  it("iOS Safari + auto chưa hỏi: KHÔNG phát consent (spec §8 — chặn đề nghị Kokoro)", async () => {
+    vi.stubGlobal(
+      "navigator",
+      { userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)" }
+    );
+    const orch = await freshOrchestrator();
+    const states: string[] = [];
+    orch.subscribe((s) => states.push(s.kind));
+    const onFallback = vi.fn();
+    orch.speak("你好", { onFallback });
+    expect(onFallback).toHaveBeenCalledTimes(1);
+    expect(states).toEqual([]); // không consent, vẫn webspeech
+    expect(orch.getState().kind).toBe("idle");
+    vi.unstubAllGlobals();
+  });
+
   it("fp16 nạp fail (thiếu shader-f16) -> tự thử lại q8-wasm đúng 1 lần (spec §8)", async () => {
     detectCapability.mockResolvedValue("webgpu-fp16");
     createKokoroEngine

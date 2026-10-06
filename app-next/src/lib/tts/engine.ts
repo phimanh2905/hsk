@@ -96,7 +96,8 @@ export function getTtsOrchestrator(): TtsOrchestrator {
     },
     speak(text, opts) {
       if (!this.shouldUseKokoro()) {
-        if (getEngineChoice() === null && !consentAsked) {
+        /* iOS Safari không bao giờ được đề nghị Kokoro (spec §8) — đừng hiện dialog. */
+        if (getEngineChoice() === null && !consentAsked && !isIosSafari()) {
           consentAsked = true;
           setState({ kind: "consent" });
         }

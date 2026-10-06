@@ -317,5 +317,23 @@ describe("useTts", () => {
       expect(fakeOrch.cancel).toHaveBeenCalled();
       expect(window.speechSynthesis.cancel).toHaveBeenCalled();
     });
+
+    it("cancel khi Kokoro đang phát -> speaking=false (onEnd không fire nữa)", async () => {
+      localStorage.setItem("bye.tts.engine", "kokoro");
+      const fakeOrch = {
+        shouldUseKokoro: () => true,
+        speak: vi.fn(async () => {}), // không bao giờ gọi onEnd
+        cancel: vi.fn(),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+      };
+      vi.doMock("../engine", () => ({ getTtsOrchestrator: () => fakeOrch }));
+      vi.resetModules();
+      const { useTts } = await import("../use-tts");
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(result.current.speaking).toBe(true);
+      act(() => result.current.cancel());
+      expect(result.current.speaking).toBe(false);
+    });
   });
 });
