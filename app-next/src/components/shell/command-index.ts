@@ -1,6 +1,5 @@
-import { vocab } from "@/content/vocab";
-
 export type CommandItem = { label: string; href: string; group: string };
+export type LessonIndexEntry = { title: string; first?: string };
 
 const PAGES: ReadonlyArray<CommandItem> = [
   { label: "Trang chủ", href: "/", group: "Trang" },
@@ -19,20 +18,13 @@ const PAGES: ReadonlyArray<CommandItem> = [
   { label: "Thống kê tiến độ", href: "/progress", group: "Cá nhân" }
 ];
 
-/* Gộp route tĩnh + tiêu đề bài học từ content/vocab (defensive — vocab có thể rỗng ở test).
-   Shape thật: Record<book, Record<pageId, { title?: string; words?: unknown[] }>> — `words`, không phải `rows`. */
-export function buildCommandIndex(): CommandItem[] {
+/* Gộp route tĩnh + tiêu đề bài học (meta nạp qua API content, xem command-palette).
+   Defensive: lessons rỗng (API lỗi/chưa load) → chỉ route tĩnh. */
+export function buildCommandIndex(lessons: LessonIndexEntry[]): CommandItem[] {
   const out: CommandItem[] = [...PAGES];
-  try {
-    for (const pages of Object.values(vocab ?? {}) as Array<Record<string, { title?: string; words?: Array<{ hanzi?: string }> }>>) {
-      for (const page of Object.values(pages ?? {})) {
-        const title = typeof page?.title === "string" ? page.title : "";
-        const first = Array.isArray(page?.words) ? page.words[0]?.hanzi : undefined;
-        if (title) out.push({ label: `${title}${first ? ` · ${first}` : ""}`, href: "/dictionary", group: "Từ vựng" });
-      }
-    }
-  } catch {
-    /* vocab hỏng/không có → chỉ dùng route tĩnh */
+  for (const l of lessons) {
+    if (!l.title) continue;
+    out.push({ label: `${l.title}${l.first ? ` · ${l.first}` : ""}`, href: "/dictionary", group: "Từ vựng" });
   }
   return out;
 }

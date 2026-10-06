@@ -7,7 +7,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { buildCommandIndex } from "./command-index";
+import { buildCommandIndex, type CommandItem, type LessonIndexEntry } from "./command-index";
+import { loadVocabMeta } from "@/lib/content/vocab-client";
 import { CornerDownLeft, Search, ICON_STROKE } from "@/components/ui/icon";
 
 const MAX_RESULTS = 8;
@@ -22,7 +23,24 @@ function Palette({ onClose }: { onClose: () => void }) {
   const [q, setQ] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const index = useMemo(() => buildCommandIndex(), []);
+  const [lessons, setLessons] = useState<LessonIndexEntry[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    loadVocabMeta()
+      .then((meta) => {
+        if (!alive) return;
+        setLessons(meta.flatMap((b) => b.lessons.map((l) => ({ title: l.title, first: l.firstHanzi || undefined }))));
+      })
+      .catch(() => {
+        /* API lỗi → giữ nguyên route tĩnh (defensive như behavior cũ) */
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const index = useMemo(() => buildCommandIndex(lessons), [lessons]);
 
   useEffect(() => {
     /* A1: lưu phần tử có focus trước khi palette cướp focus (thường là nút SearchTrigger
