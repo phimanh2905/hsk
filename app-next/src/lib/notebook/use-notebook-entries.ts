@@ -35,8 +35,10 @@ export function useNotebookEntries() {
     else {
       fetch("/api/v1/notebook/entries", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id: entry.id, kind: entry.kind, tag: entry.tag, tagTone: entry.tagTone, payload: entry.payload, hsk: entry.hsk, source: entry.source }),
-      }).catch(() => toast?.("Chưa đồng bộ được — sẽ thử lại sau"));
+        body: JSON.stringify({ id: entry.id, kind: entry.kind, tag: entry.tag, tagTone: entry.tagTone, payload: entry.payload, hsk: entry.hsk, source: entry.source, saved: entry.saved }),
+      })
+        .then((res) => { if (!res.ok) throw new Error(String(res.status)); })
+        .catch(() => toast?.("Chưa đồng bộ được — sẽ thử lại sau"));
     }
     return entry;
   }, [loggedIn, toast]);
@@ -51,7 +53,9 @@ export function useNotebookEntries() {
       fetch(`/api/v1/notebook/entries/${id}`, {
         method: "PATCH", headers: { "content-type": "application/json" },
         body: JSON.stringify({ saved }),
-      }).catch(() => toast?.("Chưa đồng bộ được — sẽ thử lại sau"));
+      })
+        .then((res) => { if (!res.ok) throw new Error(String(res.status)); })
+        .catch(() => toast?.("Chưa đồng bộ được — sẽ thử lại sau"));
     }
   }, [loggedIn, toast]);
 
@@ -63,6 +67,7 @@ export function useNotebookEntries() {
     });
     if (loggedIn) {
       fetch(`/api/v1/notebook/entries/${id}`, { method: "DELETE" })
+        .then((res) => { if (!res.ok) throw new Error(String(res.status)); })
         .catch(() => toast?.("Chưa đồng bộ được — sẽ thử lại sau"));
     }
   }, [loggedIn, toast]);
@@ -78,16 +83,21 @@ export function useNotebookEntries() {
         if (!res.ok) throw new Error(String(res.status));
         const { items } = (await res.json()) as { items: NotebookEntry[] };
         const local = readLocalEntries();
-        const missing = local.filter((l) => !items.some((s) => s.id === l.id));
-        await Promise.all(missing.map((m) =>
+        // Spec §3.5: push local entry khi chưa có trên server HOẶC updatedAt mới hơn server.
+        const push = local.filter((l) => {
+          const server = items.find((s) => s.id === l.id);
+          return !server || new Date(l.updatedAt) > new Date(server.updatedAt);
+        });
+        await Promise.all(push.map((m) =>
           fetch("/api/v1/notebook/entries", {
             method: "POST", headers: { "content-type": "application/json" },
-            body: JSON.stringify({ id: m.id, kind: m.kind, tag: m.tag, tagTone: m.tagTone, payload: m.payload, hsk: m.hsk, source: m.source }),
+            body: JSON.stringify({ id: m.id, kind: m.kind, tag: m.tag, tagTone: m.tagTone, payload: m.payload, hsk: m.hsk, source: m.source, saved: m.saved }),
           })
           .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r; })
         ));
-        if (missing.length) localStorage.removeItem(NOTEBOOK_KEY); // đã sync hết local → clear (Review Focus 3)
-        if (alive) { setEntries([...local.filter((l) => !missing.includes(l)), ...items].sort(byNewest)); setReady(true); }
+        // Đã sync hết local (mọi entry local đều có trên server) → clear (Review Focus 3)
+        localStorage.removeItem(NOTEBOOK_KEY);
+        if (alive) { setEntries([...local.filter((l) => !push.includes(l)), ...items].sort(byNewest)); setReady(true); }
       } catch {
         if (alive) { setEntries(readLocalEntries().sort(byNewest)); setReady(true); toast?.("Chưa đồng bộ được — sẽ thử lại sau"); }
       }

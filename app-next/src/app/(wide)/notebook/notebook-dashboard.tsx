@@ -135,10 +135,10 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
       </section>
 
       {/* filters */}
-      <div ref={streamRef} className="flex flex-wrap items-center gap-2" id="stream" role="group" aria-label="Bộ lọc dòng ghi chép" data-od-id="stream-filters" data-testid="stream-filters">
+      <div className="flex flex-wrap items-center gap-2" id="stream" role="group" aria-label="Bộ lọc dòng ghi chép" data-od-id="stream-filters" data-testid="stream-filters">
         {FILTERS.map((f) => (
           <button key={f.key} onClick={() => setFilter(f.key)} aria-pressed={filter === f.key}
-            className={"min-h-10 rounded-full border px-4 text-xs font-bold transition-colors focus-visible:ring-3 ring-action-focus ring-offset-2 " + (filter === f.key ? "border-action-primary bg-surface-elevated text-action-primary shadow-[0_0_0_3px] shadow-rose-wash" : "border-border-default bg-surface-elevated text-text-secondary hover:border-text-faint hover:text-text-primary")}>
+            className={"min-h-11 rounded-full border px-4 text-xs font-bold transition-colors focus-visible:ring-3 ring-action-focus ring-offset-2 " + (filter === f.key ? "border-action-primary bg-surface-elevated text-action-primary shadow-[0_0_0_3px] shadow-rose-wash" : "border-border-default bg-surface-elevated text-text-secondary hover:border-text-faint hover:text-text-primary")}>
             {f.label}
           </button>
         ))}

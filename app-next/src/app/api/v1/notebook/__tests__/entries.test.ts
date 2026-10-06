@@ -4,11 +4,17 @@ import type { NextRequest } from "next/server";
 
 const getSession = vi.fn();
 const rows: Record<string, unknown>[] = [];
+// POST returning: mặc định trả về [values] (insert thành công); postReturnEmpty → [] (conflict row của user khác)
+let postReturnEmpty = false;
 vi.mock("@/lib/auth", () => ({ getAuth: () => ({ api: { getSession } }) }));
 vi.mock("@/lib/db", () => ({
   createDb: () => ({
     select: () => ({ from: () => ({ where: () => ({ orderBy: () => Promise.resolve(rows) }) }) }),
-    insert: () => ({ values: (v: unknown) => ({ onConflictDoUpdate: () => Promise.resolve(undefined) }) }),
+    insert: () => ({
+      values: (v: Record<string, unknown>) => ({
+        onConflictDoUpdate: () => ({ returning: () => Promise.resolve(postReturnEmpty ? [] : [v]) }),
+      }),
+    }),
     update: () => ({
       set: (v: unknown) => ({ where: () => ({ returning: () => Promise.resolve([updatedRow]) }) }),
     }),
@@ -30,7 +36,7 @@ const validBody = {
   kind: "wrong", tag: "🛑 Lỗi sai", payload: { q: "q?", wrong: null, right: { zh: "居然" }, cause: "c" },
 };
 
-beforeEach(() => { vi.clearAllMocks(); rows.length = 0; getSession.mockResolvedValue(null); });
+beforeEach(() => { vi.clearAllMocks(); rows.length = 0; postReturnEmpty = false; getSession.mockResolvedValue(null); });
 
 describe("GET /api/v1/notebook/entries", () => {
   it("401 khi chưa đăng nhập", async () => {
@@ -73,6 +79,17 @@ describe("POST /api/v1/notebook/entries", () => {
     const r2 = await (await POST(req("POST", { ...validBody, id: "e9" }))).json();
     expect(r1.item.id).toBe("e9");
     expect(r2.item.id).toBe("e9");
+  });
+  it("saved từ body được lưu (mặc định false)", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const json = await (await POST(req("POST", { ...validBody, saved: true }))).json();
+    expect(json.item.saved).toBe(true);
+  });
+  it("404 khi conflict row thuộc user khác (returning rỗng → no-op)", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    postReturnEmpty = true;
+    const res = await POST(req("POST", { ...validBody, id: "e-khac" }));
+    expect(res.status).toBe(404);
   });
 });
 

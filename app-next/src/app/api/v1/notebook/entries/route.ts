@@ -37,6 +37,7 @@ const postBody = z.object({
   payload: z.unknown(),
   hsk: z.string().regex(/^HSK[1-6]$/).nullable().optional(),
   source: z.enum(["auto", "manual"]).default("manual"),
+  saved: z.boolean().default(false),
 });
 
 export async function GET(req: NextRequest) {
@@ -69,15 +70,22 @@ export async function POST(req: NextRequest) {
     tag: parsed.data.tag,
     tagTone: parsed.data.tagTone,
     payload: JSON.stringify(payload),
-    saved: false,
+    saved: parsed.data.saved,
     hsk: parsed.data.hsk ?? null,
     source: parsed.data.source,
     createdAt: now,
     updatedAt: now,
   };
-  await db.insert(notebookEntries).values(values).onConflictDoUpdate({
+  // F1: conflict row phải thuộc về user này — nếu không, where khiến update là no-op
+  // → returning rỗng → 404 (không cho overwrite entry của user khác).
+  const inserted = await db.insert(notebookEntries).values(values).onConflictDoUpdate({
     target: notebookEntries.id,
-    set: { tag: values.tag, tagTone: values.tagTone, payload: values.payload, hsk: values.hsk, updatedAt: now },
-  });
-  return NextResponse.json({ item: rowToApi({ ...values, saved: false }) }, { status: 201 });
+    set: {
+      tag: values.tag, tagTone: values.tagTone, payload: values.payload,
+      saved: values.saved, hsk: values.hsk, updatedAt: now,
+    },
+    where: eq(notebookEntries.userId, session.user.id),
+  }).returning();
+  if (inserted.length === 0) return NextResponse.json({ error: "not found" }, { status: 404 });
+  return NextResponse.json({ item: rowToApi(inserted[0]) }, { status: 201 });
 }
