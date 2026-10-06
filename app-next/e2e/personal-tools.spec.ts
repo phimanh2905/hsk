@@ -42,11 +42,17 @@ test.describe("public routes (không cần login)", () => {
     ["/review", "cần kích hoạt lại trí nhớ"],
     ["/dictionary", "Tra từ điển"],
     ["/hanzi", "Phân tích Hán tự"],
-    ["/reading", "Bài đọc"],
+    // Redesign 2026-10-05: /reading là thư viện — không có heading hiển thị,
+    // text nằm ở <title> (metadata) nên assert qua toHaveTitle.
+    ["/reading", "Thư viện bài đọc"],
   ] as const) {
     test(`render ${path}`, async ({ page }) => {
       await page.goto(path);
-      await expect(page.getByText(text).first()).toBeVisible();
+      if (path === "/reading") {
+        await expect(page).toHaveTitle(new RegExp(text));
+      } else {
+        await expect(page.getByText(text).first()).toBeVisible();
+      }
     });
   }
   test("/hanzi/你 render chi tiết 7 nét", async ({ page }) => {
