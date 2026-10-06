@@ -1,11 +1,13 @@
 import { ThemeProvider } from "@/components/shell/theme-provider";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
+import { ContentBridge } from "@/components/content/content-bridge";
 import SidebarNav from "@/components/shell/sidebar-nav";
 import Topbar from "@/components/shell/topbar";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
 import AiWidget from "@/components/social/ai-widget";
+import { SITE_URL } from "@/lib/config";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
@@ -24,7 +26,7 @@ const notoSansSC = Noto_Sans_SC({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://byehsk.example"),
+  metadataBase: new URL(SITE_URL),
   title: { default: "Bye HSK — Học tiếng Trung mỗi ngày", template: "%s · Bye HSK" },
   description: "Học từ vựng tiếng Trung theo HSK 3.0 — flashcard, trắc nghiệm, pinyin, bộ thủ.",
   openGraph: { images: ["/assets/vietnam-map.svg"], locale: "vi_VN", type: "website" },
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <ToastProvider>
             <LoginProvider>
+              <ContentBridge />
               <SidebarNav />
               <div className="flex min-h-screen flex-col lg:ml-64">
                 <Topbar />
