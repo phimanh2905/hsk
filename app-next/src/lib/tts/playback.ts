@@ -21,7 +21,9 @@ export function playSamples(
   stopPlayback();
   const context = getCtx();
   const buf = context.createBuffer(1, samples.length, sampleRate);
-  buf.copyToChannel(samples, 0);
+  /* copyToChannel ở một số tsconfig đòi Float32Array<ArrayBuffer> — samples từ
+     WASM/heaps có thể là ArrayBufferLike, sao chép một lớp cho chắc. */
+  buf.copyToChannel(new Float32Array(samples), 0);
   const src = context.createBufferSource();
   src.buffer = buf;
   src.onended = () => {
