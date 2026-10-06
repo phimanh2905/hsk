@@ -98,7 +98,10 @@ export default function ReadingReaderRoot({ article }: { article: ReadingArticle
     if (!touchedRef.current) return;
     progressStore.recordReadingProgress(
       article.id,
-      Math.round((maxIndexRef.current / Math.max(1, total)) * 100),
+      Math.min(
+        100,
+        Math.round(((maxIndexRef.current + 1) / Math.max(1, total)) * 100),
+      ),
     );
   }, [article.id, total]);
 
@@ -211,7 +214,7 @@ export default function ReadingReaderRoot({ article }: { article: ReadingArticle
     <div
       ref={rootRef}
       data-od-id="reader-root"
-      className="mx-auto flex w-full max-w-[820px] flex-col gap-5 p-4 pb-28 md:p-6"
+      className="mx-auto flex w-full max-w-[780px] flex-col gap-5 p-4 pb-28 md:p-6"
     >
       {/* Topbar row của app: back + A-/A+ + title */}
       <div className="flex items-center gap-3">

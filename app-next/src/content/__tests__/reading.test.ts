@@ -48,6 +48,16 @@ describe("READING_ARTICLES (data 100%)", () => {
     }
   });
 
+  it("mọi từ: h (Hán-Việt) viết hoa toàn bộ (kể cả dấu tiếng Việt)", () => {
+    for (const [id, article] of Object.entries(READING_ARTICLES)) {
+      for (const sentence of article.sentences) {
+        for (const w of sentence) {
+          expect(w.h, `${id}/${w.z}: h không viết hoa: "${w.h}"`).toMatch(/^[A-ZÀ-ỸĐ ]+$/u);
+        }
+      }
+    }
+  });
+
   it("mọi quiz: answer trong range, đủ explanation, options sạch prefix 'A. '", () => {
     for (const [id, article] of Object.entries(READING_ARTICLES)) {
       expect(article.quiz.length).toBeGreaterThanOrEqual(2);

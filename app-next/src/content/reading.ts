@@ -155,8 +155,8 @@ export const READING_ARTICLES: Record<string, ReadingArticle> = {
       ],
       [
         { z: "有的人", p: "yǒude rén", h: "HỮU ĐẾ NHÂN", m: "có người" },
-        { z: "还", p: "hái", h: "Hoàn", m: "còn" },
-        { z: "喝", p: "hē", h: "YẾT", m: "uống" },
+        { z: "还", p: "hái", h: "HOÀN", m: "còn" },
+        { z: "喝", p: "hē", h: "ẠT", m: "uống" },
         { z: "菊花酒", p: "júhuājiǔ", h: "CÚC HOA TỬU", m: "rượu hoa cúc" },
         { z: "吃重阳糕", p: "chī chóngyánggāo", h: "XÍ TRÙNG DƯƠNG CAO", m: "ăn bánh Trùng Cửu" },
       ],
@@ -476,7 +476,7 @@ export const READING_ARTICLES: Record<string, ReadingArticle> = {
       [
         { z: "我", p: "wǒ", h: "NGÃ", m: "tôi" },
         { z: "先", p: "xiān", h: "TIÊN", m: "trước tiên" },
-        { z: "喝", p: "hē", h: "YẾT", m: "uống" },
+        { z: "喝", p: "hē", h: "ẠT", m: "uống" },
         { z: "一杯", p: "yì bēi", h: "NHẤT BÔI", m: "một cốc" },
         { z: "温水", p: "wēn shuǐ", h: "ÔN THỦY", m: "nước ấm" },
         { z: "然后", p: "ránhòu", h: "NHIÊN HẬU", m: "sau đó" },

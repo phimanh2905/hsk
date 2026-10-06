@@ -89,18 +89,22 @@ describe("ReadingReaderRoot", () => {
     for (let i = 0; i < tea.sentences.length - 1; i++) {
       act(() => fireEvent.keyDown(slider, { key: "ArrowRight" }));
     }
+    // 5 câu → ArrowRight x4 → index 4 (câu cuối) → đọc xong = 100%
+    for (let i = 0; i < tea.sentences.length - 1; i++) {
+      act(() => fireEvent.keyDown(slider, { key: "ArrowRight" }));
+    }
     act(() => fireEvent.click(document.querySelector('[aria-label="Tạm dừng"]')!));
-    const pct = Math.round(((tea.sentences.length - 1) / tea.sentences.length) * 100); // 80
+    const pct = Math.round((tea.sentences.length / tea.sentences.length) * 100); // 100
     expect(progressStore.recordReadingProgress).toHaveBeenCalledWith("tea", pct);
     unmount();
   });
 
-  it("phát câu đầu rồi pause → ghi progress pct 0 (đã chạm ≥1 câu)", () => {
+  it("phát câu đầu rồi pause → ghi progress pct 20 (câu 1/5 đã đọc)", () => {
     render(<ReadingReaderRoot article={tea} />);
     act(() => fireEvent.click(document.querySelector('[aria-label="Phát"]')!)); // index 0
     act(() => fireEvent.click(document.querySelector('[aria-label="Tạm dừng"]')!));
     expect(progressStore.recordReadingProgress).toHaveBeenCalledTimes(1);
-    expect(progressStore.recordReadingProgress).toHaveBeenCalledWith("tea", 0);
+    expect(progressStore.recordReadingProgress).toHaveBeenCalledWith("tea", 20);
   });
 
   it("bấm từ → popup; Lưu từ → addToVocabBook + vocab book có từ", () => {

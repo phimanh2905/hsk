@@ -89,7 +89,7 @@ export function ReadingFilters({
             onChange={(e) => onChange({ ...filter, q: e.target.value })}
             placeholder="Tìm bài đọc…"
             aria-label="Tìm bài đọc"
-            className="zh-input min-h-11 w-full rounded-control border border-border-default bg-surface-elevated py-2 pl-9 pr-10 text-sm text-text-primary placeholder:text-text-secondary focus:border-action-primary focus:outline-none focus:ring-3 ring-action-focus ring-offset-2"
+            className="min-h-11 w-full rounded-control border border-border-default bg-surface-elevated py-2 pl-9 pr-10 text-sm text-text-primary placeholder:text-text-secondary focus:border-action-primary focus:outline-none focus:ring-3 ring-action-focus ring-offset-2"
           />
           <kbd className="absolute right-3 rounded border border-border-default bg-surface-muted px-1.5 py-0.5 text-[11px] font-semibold text-text-secondary">
             /
