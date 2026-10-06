@@ -23,6 +23,9 @@ export type WriterApi = {
   showOutline: (on: boolean, opts?: { instant?: boolean }) => void;
   /** Chỉ áp cho create opts (speed của watch renderer riêng, lib chỉ nhớ). */
   setSpeed: (x: number) => void;
+  /** Huỷ quiz + drop instance + xoá data nạp — dùng khi đổi chữ/load fail để
+      tránh writer cũ còn gắn vào container div đã detach (grid render null). */
+  reset: () => void;
 };
 
 export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>): WriterApi {
@@ -103,6 +106,14 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
     speedRef.current = x > 0 ? x : 1;
   }, []);
 
+  const reset = useCallback(() => {
+    writerRef.current?.cancelQuiz();
+    writerRef.current = null;
+    createdCharRef.current = null;
+    dataRef.current = null;
+    charRef.current = null;
+  }, []);
+
   // Unmount: dừng quiz + drop instance (tránh giữ DOM writer sau khi grid ẩn)
   useEffect(
     () => () => {
@@ -112,5 +123,5 @@ export function useWriter(containerRef: React.RefObject<HTMLDivElement | null>):
     [],
   );
 
-  return { load, startQuiz, cancelQuiz, showOutline, setSpeed };
+  return { load, startQuiz, cancelQuiz, showOutline, setSpeed, reset };
 }

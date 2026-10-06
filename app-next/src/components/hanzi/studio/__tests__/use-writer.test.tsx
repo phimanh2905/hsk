@@ -205,6 +205,23 @@ describe("useWriter", () => {
     expect(inst.quiz).toHaveBeenCalledTimes(3); // create-path + post-swap + repeat
   });
 
+  it("reset: cancelQuiz + drop instance — startQuiz sau đó create lại", async () => {
+    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
+    const { result } = renderHook(() =>
+      useWriter({ current: document.createElement("div") } as any),
+    );
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    const inst = lastInstance();
+    act(() => { result.current.reset(); });
+    expect(inst.cancelQuiz).toHaveBeenCalledTimes(1);
+    // data đã bị xoá — load lại rồi startQuiz sẽ create instance MỚI
+    await act(async () => { await result.current.load("口"); });
+    result.current.startQuiz();
+    expect(HanziWriter.create).toHaveBeenCalledTimes(2);
+    expect(lastInstance()).not.toBe(inst);
+  });
+
   it("unmount: cancelQuiz + drop instance", async () => {    vi.mocked(loadWriterCharData).mockResolvedValue(DATA);
     const { result, unmount } = renderHook(() =>
       useWriter({ current: document.createElement("div") } as any),

@@ -50,16 +50,22 @@ export function StudioGrid({ sel, mode, apiRef }: {
   );
   const strokes = useStudioStrokes(strokeSvgRef, sampleChar, { strokeWidth: STROKE_WIDTH_MMC });
 
-  /* Đổi sel: nạp data cho cả renderer lẫn writer; fail → null (cha tự hiện fallback) */
+  /* Đổi sel: drop writer cũ (instance của nó gắn vào container div có thể đã
+     detach khi grid render null) rồi nạp data cho cả renderer lẫn writer;
+     fail → null (cha tự hiện fallback). startQuiz sau đó luôn create lại. */
   useEffect(() => {
     let cancelled = false;
+    writer.reset();
     setCharData(null);
     setFailed(false);
     void (async () => {
       const [data, ok] = await Promise.all([loadWriterCharData(sel.g), writer.load(sel.g)]);
       if (cancelled) return;
       if (data && data.strokes.length > 0 && ok) setCharData(data);
-      else setFailed(true);
+      else {
+        writer.reset();
+        setFailed(true);
+      }
     })();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

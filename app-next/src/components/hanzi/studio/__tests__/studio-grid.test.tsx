@@ -16,6 +16,7 @@ const writerFns = vi.hoisted(() => ({
   cancelQuiz: vi.fn(),
   showOutline: vi.fn(),
   setSpeed: vi.fn(),
+  reset: vi.fn(),
 }));
 vi.mock("../use-writer", () => ({
   useWriter: () => writerFns,
@@ -36,6 +37,7 @@ beforeEach(() => {
   writerFns.cancelQuiz.mockClear();
   writerFns.showOutline.mockClear();
   writerFns.setSpeed.mockClear();
+  writerFns.reset.mockClear();
 });
 afterEach(() => { vi.useRealTimers(); cleanup(); });
 
@@ -62,6 +64,31 @@ describe("StudioGrid — load", () => {
     await act(async () => {});
     expect(apiRef.current?.ready).toBe(false);
     expect(container.querySelector('[data-od-id="tianzi-grid"]')).toBeNull();
+    expect(writerFns.reset).toHaveBeenCalled(); // drop writer cũ gắn node detached
+  });
+
+  it("đổi chữ hợp lệ → invalid → hợp lệ: reset mỗi lần đổi, draw vẫn startQuiz sau", async () => {
+    vi.mocked(loadWriterCharData)
+      .mockResolvedValueOnce(DATA)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(DATA);
+    const apiRef = createRef<StudioGridApi>();
+    const { rerender } = render(<StudioGrid sel={{ kind: "rad", g: "水" }} mode="watch" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(apiRef.current?.ready).toBe(true);
+    const resetsAfterFirst = writerFns.reset.mock.calls.length; // 1 (lần đổi sel đầu)
+    rerender(<StudioGrid sel={{ kind: "rad", g: "龤" }} mode="watch" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(apiRef.current?.ready).toBe(false);
+    expect(writerFns.reset.mock.calls.length).toBeGreaterThanOrEqual(resetsAfterFirst + 1); // invalid → reset (effect đầu + nhánh fail)
+    rerender(<StudioGrid sel={{ kind: "char", g: "没" }} mode="watch" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(apiRef.current?.ready).toBe(true);
+    expect(writerFns.reset.mock.calls.length).toBeGreaterThan(resetsAfterFirst + 1); // valid → reset lại
+    // quay lại draw: writer đã reset → startQuiz vẫn được gọi (create lại)
+    rerender(<StudioGrid sel={{ kind: "char", g: "没" }} mode="draw" apiRef={apiRef} />);
+    await act(async () => {});
+    expect(writerFns.startQuiz).toHaveBeenCalledTimes(1);
   });
 
   it("load xong: ready=true, sample svg 1024 chứa N path stroke-width 44; watch tự phát 1 lần", async () => {
