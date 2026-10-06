@@ -8,9 +8,12 @@ import { Moon, Settings as SettingsIcon, Sun, User, X, ICON_STROKE } from "@/com
 import { IconButton } from "@/components/ui/icon-button";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { getTtsOrchestrator, type TtsOrchestratorState } from "@/lib/tts/engine";
+import { getEngineChoice, setEngineChoice, TIER_CONFIG } from "@/lib/tts/config";
 import { useTheme } from "./theme-provider";
 
 type Voice = "female" | "male";
+type EnginePick = "auto" | "kokoro" | "system";
 
 export default function SettingsModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +21,12 @@ export default function SettingsModal() {
   const [voice, setVoice] = useState<Voice>("female");
   const [chatBubble, setChatBubble] = useState(true);
   const [selectionLookup, setSelectionLookup] = useState(true);
+  const [engine, setEngine] = useState<EnginePick>("auto");
+  const [ttsState, setTtsState] = useState<TtsOrchestratorState>(() =>
+    getTtsOrchestrator().getState()
+  );
+
+  useEffect(() => getTtsOrchestrator().subscribe(setTtsState), []);
 
   useEffect(() => {
     const open = () => setIsOpen(true);
@@ -31,12 +40,36 @@ export default function SettingsModal() {
       setVoice(localStorage.getItem("bye.voice") === "male" ? "male" : "female");
       setChatBubble(localStorage.getItem("bye.chatBubble") !== "0");
       setSelectionLookup(localStorage.getItem("bye.selectionLookup") !== "0");
+      setEngine(getEngineChoice() ?? "auto");
     } catch {
       /* silent */
     }
   }, [isOpen]);
 
   const on = (v: boolean) => (v ? "primary" : "secondary");
+
+  const pickEngine = (pick: EnginePick) => {
+    setEngine(pick);
+    if (pick === "auto") {
+      setEngineChoice(null);
+      return;
+    }
+    setEngineChoice(pick === "kokoro" ? "kokoro" : "system");
+    if (pick === "kokoro") void getTtsOrchestrator().preload();
+  };
+
+  const clearModelCache = async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((k) => /transformers|kokoro/i.test(k))
+          .map((k) => caches.delete(k))
+      );
+    } catch {
+      /* silent */
+    }
+  };
 
   const pickTheme = (t: "light" | "dark") => {
     setTheme(t); // ghi localStorage + toggle html.dark ngay
@@ -115,6 +148,57 @@ export default function SettingsModal() {
           >
             <User size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> Nam
           </Button>
+        </div>
+      </div>
+      <div className="mb-5">
+        <p className="text-sm font-bold mb-2">Engine đọc tiếng Trung</p>
+        <div className="grid grid-cols-3 gap-2">
+          <Button type="button" variant={on(engine === "auto")} onClick={() => pickEngine("auto")}>
+            Tự động
+          </Button>
+          <Button type="button" variant={on(engine === "kokoro")} onClick={() => pickEngine("kokoro")}>
+            Bye HSK
+          </Button>
+          <Button type="button" variant={on(engine === "system")} onClick={() => pickEngine("system")}>
+            Hệ thống
+          </Button>
+        </div>
+        <div className="mt-2 text-xs text-text-secondary flex items-center gap-2">
+          {ttsState.kind === "downloading" && (
+            <span>
+              Đang tải… {Math.round((ttsState.received / ttsState.total) * 100)}%
+            </span>
+          )}
+          {ttsState.kind === "ready" && (
+            <span>
+              Đã sẵn sàng (
+              {TIER_CONFIG[ttsState.tier as keyof typeof TIER_CONFIG]?.label ?? ttsState.tier})
+              <button type="button" className="underline ml-1" onClick={() => void clearModelCache()}>
+                Xóa model đã tải
+              </button>
+            </span>
+          )}
+          {ttsState.kind === "error" && (
+            <span>
+              Lỗi: {ttsState.message}
+              <button
+                type="button"
+                className="underline ml-1"
+                onClick={() => void getTtsOrchestrator().retryAfterError()}
+              >
+                Thử lại
+              </button>
+            </span>
+          )}
+          {engine === "kokoro" && ttsState.kind === "idle" && (
+            <button
+              type="button"
+              className="underline"
+              onClick={() => void getTtsOrchestrator().preload()}
+            >
+              Tải giọng đọc (156 MB)
+            </button>
+          )}
         </div>
       </div>
       <div className="space-y-2">

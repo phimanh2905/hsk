@@ -263,4 +263,77 @@ describe("useTts", () => {
       expect((window.speechSynthesis.speak as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
     });
   });
+
+  describe("routing kokoro qua orchestrator", () => {
+    afterEach(() => {
+      localStorage.removeItem("bye.tts.engine");
+      vi.doUnmock("../engine");
+    });
+
+    it("engine choice=kokoro + orchestrator sẵn sàng -> phát qua Kokoro (không speechSynthesis)", async () => {
+      localStorage.setItem("bye.tts.engine", "kokoro");
+      const kokoroSpeak = vi.fn(async () => {});
+      const fakeOrch = {
+        shouldUseKokoro: () => true,
+        speak: kokoroSpeak,
+        cancel: vi.fn(),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+      };
+      vi.doMock("../engine", () => ({
+        getTtsOrchestrator: () => fakeOrch,
+      }));
+      vi.resetModules();
+      const { useTts } = await import("../use-tts");
+      const { result } = renderHook(() => useTts());
+      const onEnd = vi.fn();
+      act(() => result.current.speak("你好", { onEnd }));
+      // hook bọc onEnd để tự quản speaking — chỉ assert callback được truyền qua
+      expect(kokoroSpeak).toHaveBeenCalledWith(
+        "你好",
+        expect.objectContaining({ onEnd: expect.any(Function) })
+      );
+      expect(window.speechSynthesis.speak).not.toHaveBeenCalled();
+    });
+
+    it("auto chưa hỏi -> vẫn phát webspeech ngay (consent do orchestrator phát)", () => {
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1);
+    });
+
+    it("cancel -> hủy cả webspeech lẫn orchestrator", async () => {
+      localStorage.setItem("bye.tts.engine", "kokoro");
+      const fakeOrch = {
+        shouldUseKokoro: () => true,
+        speak: vi.fn(async () => {}),
+        cancel: vi.fn(),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+      };
+      vi.doMock("../engine", () => ({ getTtsOrchestrator: () => fakeOrch }));
+      vi.resetModules();
+      const { useTts } = await import("../use-tts");
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.cancel());
+      expect(fakeOrch.cancel).toHaveBeenCalled();
+      expect(window.speechSynthesis.cancel).toHaveBeenCalled();
+    });
+
+    it("cancel khi Kokoro đang phát -> speaking=false (onEnd không fire nữa)", async () => {
+      localStorage.setItem("bye.tts.engine", "kokoro");
+      const fakeOrch = {
+        shouldUseKokoro: () => true,
+        speak: vi.fn(async () => {}), // không bao giờ gọi onEnd
+        cancel: vi.fn(),
+        getState: () => ({ kind: "ready" as const, tier: "webgpu-fp16" as const }),
+      };
+      vi.doMock("../engine", () => ({ getTtsOrchestrator: () => fakeOrch }));
+      vi.resetModules();
+      const { useTts } = await import("../use-tts");
+      const { result } = renderHook(() => useTts());
+      act(() => result.current.speak("你好"));
+      expect(result.current.speaking).toBe(true);
+      act(() => result.current.cancel());
+      expect(result.current.speaking).toBe(false);
+    });
+  });
 });

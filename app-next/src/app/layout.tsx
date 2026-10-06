@@ -6,6 +6,7 @@ import SidebarNav from "@/components/shell/sidebar-nav";
 import Topbar from "@/components/shell/topbar";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
+import TtsConsentDialog from "@/components/shell/tts-consent-dialog";
 import AiWidget from "@/components/social/ai-widget";
 import { SITE_URL } from "@/lib/config";
 import type { Metadata } from "next";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <BottomNav />
               <SettingsModal />
+              <TtsConsentDialog />
               <LoginModal />
               <AiWidget />
             </LoginProvider>

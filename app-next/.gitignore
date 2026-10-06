@@ -50,3 +50,6 @@ next-env.d.ts
 # playwright
 test-results/
 playwright-report/
+
+# Kokoro TTS bundle vendored từ node_modules lúc build (scripts/vendor-kokoro.mjs)
+public/kokoro/vendor/
