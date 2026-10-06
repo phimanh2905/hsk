@@ -5,6 +5,7 @@ import SidebarNav from "@/components/shell/sidebar-nav";
 import Topbar from "@/components/shell/topbar";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
+import TtsConsentDialog from "@/components/shell/tts-consent-dialog";
 import AiWidget from "@/components/social/ai-widget";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Noto_Sans_SC } from "next/font/google";
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <BottomNav />
               <SettingsModal />
+              <TtsConsentDialog />
               <LoginModal />
               <AiWidget />
             </LoginProvider>
