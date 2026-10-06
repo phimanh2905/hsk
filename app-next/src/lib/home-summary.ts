@@ -6,8 +6,9 @@
 
 import { useEffect, useState } from "react";
 import { courses } from "@/content/courses";
-import { vocab } from "@/content/vocab";
 import { progressStore, type SrsItem } from "@/lib/store/progress-store";
+import { loadVocabMeta } from "@/lib/content/vocab-client";
+import type { VocabMeta } from "@/lib/content/vocab";
 
 export type HomeLesson = { book: string; pageId: string; title: string; pct: number };
 
@@ -26,9 +27,12 @@ export type HomeSummary = {
 
 export const DAILY_GOAL_XP = 20; // mục tiêu mỗi ngày (mock: 20 phút → quy đổi XP)
 
-/* Bài vocab CHƯA done kế tiếp cùng book (port logic ContinueCard B1). */
-function findNextLesson(): HomeLesson | null {
+/* Bài vocab CHƯA done kế tiếp cùng book (port logic ContinueCard B1).
+   Title ưu tiên từ vocabMeta (content D1 qua API) — fallback title của courses. */
+function findNextLesson(vocabMeta: VocabMeta | null): HomeLesson | null {
   try {
+    const titleOf = (book: string, pageId: string): string | undefined =>
+      vocabMeta?.find((b) => b.book === book)?.lessons.find((l) => l.pageId === pageId)?.title;
     const done = progressStore.listPageDone();
     if (done.length === 0) return null;
     const byBook = new Map<string, Set<string>>();
@@ -44,7 +48,7 @@ function findNextLesson(): HomeLesson | null {
       const vocabPages = courses[book].pages.filter((p) => p.skill === "vocab");
       const nextLesson = vocabPages.find((p) => !donePages.has(p.pageId));
       if (!nextLesson) continue;
-      const title = vocab[book]?.[nextLesson.pageId]?.title ?? nextLesson.title;
+      const title = titleOf(book, nextLesson.pageId) ?? nextLesson.title;
       const pct = vocabPages.length > 0 ? Math.round(((vocabPages.length - vocabPages.filter((p) => !donePages.has(p.pageId)).length) / vocabPages.length) * 100) : 0;
       return { book, pageId: nextLesson.pageId, title, pct };
     }
@@ -54,26 +58,15 @@ function findNextLesson(): HomeLesson | null {
   }
 }
 
-function countVocabTotal(): number {
-  try {
-    let n = 0;
-    // Shape thật của @/content/vocab: Record<book, Record<pageId, VocabLesson>> với `words` (không phải `rows` như brief giả định).
-    for (const pages of Object.values(vocab)) {
-      for (const page of Object.values(pages as Record<string, { words?: unknown[] }>)) {
-        n += Array.isArray(page?.words) ? page.words.length : 0;
-      }
-    }
-    return n;
-  } catch {
-    return 0;
-  }
+function countVocabTotal(vocabMeta: VocabMeta | null): number {
+  return vocabMeta?.reduce((n, b) => n + b.lessons.reduce((m, l) => m + l.wordCount, 0), 0) ?? 0;
 }
 
 function isDue(it: SrsItem): boolean {
   return it.status !== "known" && it.dueAt != null && it.dueAt <= Date.now();
 }
 
-export function readHomeSummary(): HomeSummary {
+export function readHomeSummary(vocabMeta: VocabMeta | null = null): HomeSummary {
   let srs: SrsItem[] = [];
   try {
     srs = progressStore.getAllSrs();
@@ -83,7 +76,7 @@ export function readHomeSummary(): HomeSummary {
   const reviewed = srs.filter((it) => it.reviewCount > 0);
   const good = reviewed.filter((it) => it.status === "learned" || it.status === "known");
   return {
-    lesson: findNextLesson(),
+    lesson: findNextLesson(vocabMeta),
     srsDue: srs.filter(isDue).length,
     srsTotal: srs.length,
     recallPct: reviewed.length > 0 ? Math.round((good.length / reviewed.length) * 100) : 0,
@@ -92,7 +85,7 @@ export function readHomeSummary(): HomeSummary {
     lessonsDone: progressStore.listPageDone().length,
     lessonsTotal: Object.values(courses).reduce((n, c) => n + c.pages.length, 0),
     vocabMastered: srs.filter((it) => it.status === "learned" || it.status === "known").length,
-    vocabTotal: countVocabTotal(),
+    vocabTotal: countVocabTotal(vocabMeta),
   };
 }
 
@@ -101,16 +94,25 @@ const EMPTY: HomeSummary = {
   lessonsDone: 0, lessonsTotal: 0, vocabMastered: 0, vocabTotal: 0,
 };
 
-/* mounted=false trước effect → component return null khi SSR (Review Focus #3). */
+/* mounted=false trước effect → component return null khi SSR (Review Focus #3).
+   vocabMeta nạp 1 lần qua API; đến sau → sync() chạy lại với meta. */
 export function useHomeSummary(): HomeSummary & { mounted: boolean } {
   const [s, setS] = useState<HomeSummary>(EMPTY);
   const [mounted, setMounted] = useState(false);
+  const [vocabMeta, setVocabMeta] = useState<VocabMeta | null>(null);
   useEffect(() => {
-    const sync = () => setS(readHomeSummary());
+    loadVocabMeta()
+      .then(setVocabMeta)
+      .catch(() => {
+        /* giữ null — số liệu vocab hiển thị 0 thay vì lỗi */
+      });
+  }, []);
+  useEffect(() => {
+    const sync = () => setS(readHomeSummary(vocabMeta));
     sync();
     setMounted(true);
     window.addEventListener("bye:progress", sync);
     return () => window.removeEventListener("bye:progress", sync);
-  }, []);
+  }, [vocabMeta]);
   return { ...s, mounted };
 }
