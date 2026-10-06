@@ -30,6 +30,8 @@ export type NotebookKind = "vocab" | "grammar";
 
 export type VocabBookEntry = { hanzi: string; pinyin: string; vi: string };
 
+export type GrammarMeta = { saved?: 1 };
+
 /* Meta theo từng Hán tự (Sổ tay từ vựng — spec 2026-10-05 §2.2), key bye.wordMeta */
 export type WordMeta = { star?: 1; note?: string };
 
@@ -72,6 +74,8 @@ export interface ProgressStoreApi {
   deleteDeck(kind: NotebookKind, id: string): void;
   getVocabBook(): VocabBookEntry[];
   addToVocabBook(entry: VocabBookEntry): boolean;
+  getGrammarMeta(): Record<string, GrammarMeta>;
+  toggleGrammarSaved(id: string): boolean;
   getWordMeta(): Record<string, WordMeta>;
   toggleWordStar(hanzi: string): boolean;
   setWordNote(hanzi: string, note: string): void;
@@ -535,6 +539,23 @@ export class ProgressStore implements ProgressStoreApi {
     writeJSON("bye.vocabBook", [...this.getVocabBook(), entry]);
     dispatchProgress();
     return true;
+  }
+
+  /* ---------- grammar meta (bye.grammarMeta — spec 2026-10-05 §2.2) ---------- */
+
+  getGrammarMeta(): Record<string, GrammarMeta> {
+    return readJSON<Record<string, GrammarMeta>>("bye.grammarMeta", {});
+  }
+
+  toggleGrammarSaved(id: string): boolean {
+    const all = this.getGrammarMeta();
+    const saved = all[id]?.saved ? undefined : (1 as const);
+    const next: GrammarMeta = { saved };
+    if (!saved) delete all[id];
+    else all[id] = next;
+    writeJSON("bye.grammarMeta", all);
+    dispatchProgress();
+    return !!saved;
   }
 
   /* ---------- word meta (bye.wordMeta — spec 2026-10-05 §2.2) ---------- */
