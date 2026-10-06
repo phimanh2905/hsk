@@ -17,10 +17,10 @@ export const soundRulesData: {
  "note": "Tỉ lệ tính trên 9721 chữ Hán có đủ pinyin và âm Hán Việt — quy tắc là xu hướng, không đúng 100%",
  "toneTotal": 9721,
  "toneColors": {
-  "1": "#2563eb",
-  "2": "#16a34a",
-  "3": "#f5b301",
-  "4": "#dc2626"
+  "1": "var(--hz-tone-1)",
+  "2": "var(--hz-tone-2)",
+  "3": "var(--hz-tone-3)",
+  "4": "var(--hz-tone-4)"
  },
  "toneRows": [
   {
