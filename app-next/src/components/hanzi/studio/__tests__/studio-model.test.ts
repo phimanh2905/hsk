@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  filterRadicals, filterChars, radicalOf, charOf, fold,
+  filterRadicals, filterChars, radicalOf, charOf, radicalOfChar, fold,
 } from "../studio-model";
 
 describe("fold", () => {
@@ -43,5 +43,12 @@ describe("radicalOf/charOf", () => {
     expect(radicalOf("水")?.hanViet).toBeTruthy();
     expect(charOf("没")?.level).toBeTruthy();
     expect(radicalOf("龤")).toBeUndefined();
+  });
+});
+
+describe("radicalOfChar", () => {
+  it("tra ngược bộ thủ chứa chữ", () => {
+    expect(radicalOfChar("没")?.char).toBe("水");
+    expect(radicalOfChar("龤")).toBeUndefined();
   });
 });

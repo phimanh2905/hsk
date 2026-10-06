@@ -59,3 +59,5 @@ export function filterChars(opts: { level: HskLevel | "all"; q: string }): Studi
 
 export const radicalOf = (g: string) => RADICAL_INDEX.find((r) => r.char === g);
 export const charOf = (g: string) => CHAR_META[g];
+/* Bộ thủ chứa chữ này (tra ngược RADICAL_INDEX.chars) — dùng để hiển thị "Bộ X" cho kind "char". */
+export const radicalOfChar = (ch: string) => RADICAL_INDEX.find((r) => r.chars.some((c) => c.ch === ch));
