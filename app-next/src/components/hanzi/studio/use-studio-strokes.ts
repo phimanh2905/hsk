@@ -5,13 +5,15 @@
    (.hz-st todo), trạng thái per-nét qua class, hint là path append cuối svg.
    setTimeout chain giữ đúng mock để fake timers test được (rAF khó advance). */
 import { useCallback, useEffect, useRef } from "react";
-import type { StudioChar } from "@/content/hanzi-studio";
+
+/* Nguồn nét tối thiểu hook đọc (chỉ .p) — tách khỏi data demo cũ hanzi-studio.ts */
+export type StrokeSource = { p: string[] };
 
 const NS = "http://www.w3.org/2000/svg";
 
 export function useStudioStrokes(
   svgRef: React.RefObject<SVGSVGElement | null>,
-  char: StudioChar,
+  char: StrokeSource,
   opts?: { onPlayEnd?: () => void; strokeWidth?: number },
 ) {
   const pathsRef = useRef<SVGPathElement[]>([]);

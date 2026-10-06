@@ -1,10 +1,23 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act } from "@testing-library/react";
 import { useRef } from "react";
-import { useStudioStrokes } from "../use-studio-strokes";
-import { STUDIO_CHARS } from "@/content/hanzi-studio";
+import { useStudioStrokes, type StrokeSource } from "../use-studio-strokes";
 
-const AI = STUDIO_CHARS.find((c) => c.ch === "爱")!; // 10 nét
+/* 10 nét chữ 爱 (path lấy từ data cũ trước khi xoá hanzi-studio.ts) */
+const AI: StrokeSource = {
+  p: [
+    "M156,32 C140,58 124,76 108,92",
+    "M188,58 C190,66 191,74 192,82",
+    "M132,96 C134,102 135,108 136,114",
+    "M92,130 C140,128 185,124 216,102",
+    "M150,148 C151,154 152,160 153,166",
+    "M120,176 C150,174 180,174 200,170",
+    "M100,196 C135,195 170,195 205,193",
+    "M150,206 C136,226 123,242 111,256",
+    "M102,262 C142,260 184,255 216,240",
+    "M152,212 C172,230 192,246 212,258",
+  ],
+};
 
 /* jsdom không có getTotalLength — hook dùng nó để set dasharray/offset */
 beforeAll(() => {

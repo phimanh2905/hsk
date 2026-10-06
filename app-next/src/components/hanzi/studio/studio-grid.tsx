@@ -7,10 +7,9 @@
    Draw: hanzi-writer quiz + outline hint qua useWriter (bỏ engine tự viết + scoring).
    Ký tự/bộ không có data nét → ready=false; khi load fail hẳn → return null (cha hiện fallback). */
 import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import type { StudioChar } from "@/content/hanzi-studio";
 import type { StudioSelection } from "./studio-model";
 import { loadWriterCharData, type WriterCharData } from "./writer-data";
-import { useStudioStrokes } from "./use-studio-strokes";
+import { useStudioStrokes, type StrokeSource } from "./use-studio-strokes";
 import { useWriter } from "./use-writer";
 
 export type StudioGridApi = {
@@ -43,9 +42,9 @@ export function StudioGrid({ sel, mode, apiRef }: {
 
   /* Adapter tối thiểu cho useStudioStrokes (chỉ đọc .p) — path MMC 1024.
      Cast hẹp: hook chỉ truy cập .p, các field meta khác không dùng. */
-  const EMPTY_CHAR = useMemo(() => ({ p: [] }) as unknown as StudioChar, []);
-  const sampleChar: StudioChar = useMemo(
-    () => (charData ? ({ p: charData.strokes } as unknown as StudioChar) : EMPTY_CHAR),
+  const EMPTY_CHAR = useMemo<StrokeSource>(() => ({ p: [] }), []);
+  const sampleChar: StrokeSource = useMemo(
+    () => (charData ? { p: charData.strokes } : EMPTY_CHAR),
     [charData, EMPTY_CHAR],
   );
   const strokes = useStudioStrokes(strokeSvgRef, sampleChar, { strokeWidth: STROKE_WIDTH_MMC });
