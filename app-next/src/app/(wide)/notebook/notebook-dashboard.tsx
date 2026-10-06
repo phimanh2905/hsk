@@ -5,13 +5,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useNotebookEntries } from "@/lib/notebook/use-notebook-entries";
-import { notebookStats, type NotebookEntry } from "@/lib/notebook/entries";
+import { notebookStats } from "@/lib/notebook/entries";
 import { notebookBooks } from "@/content/notebook-books";
+import { safeParsePayload } from "@/lib/notebook/payload";
+import { fmtRelativeDate } from "@/components/notebook/notebook-list";
 import { useToast } from "@/components/shell/toast-provider";
 import { Button } from "@/components/ui/button";
 import { Search, NotebookPen, Target } from "@/components/ui/icon";
 
 type Filter = "all" | "wrong" | "chars" | "personal";
+
+/* Tone badge theo kind (port notebook.html .tag) */
+const TAG_TONE_CLS = {
+  red: "border-feedback-error/40 bg-rose-wash/50 text-feedback-error-text",
+  lav: "border-feature-ai bg-feature-ai/10 text-feature-ai",
+  per: "border-jade-wash bg-jade-wash text-feedback-success",
+} as const;
 const FILTERS: { key: Filter; label: string }[] = [
   { key: "all", label: "Tất cả mục" },
   { key: "wrong", label: "Câu sai chưa sửa" },
@@ -20,15 +29,15 @@ const FILTERS: { key: Filter; label: string }[] = [
 ];
 
 export default function NotebookDashboard({ now }: { now?: Date }) {
-  const { entries, ready, create } = useNotebookEntries();
+  const { entries, ready, create, setSaved } = useNotebookEntries();
   const toast = useToast();
-  const [filter, setFilter] = useState<Filter>("wrong"); // mock mặc định "Câu sai chưa sửa"
+  const [filter, setFilter] = useState<Filter>("all"); // stream hiển thị mọi kind mặc định
   const [q, setQ] = useState("");
   const [mounted, setMounted] = useState(false);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const streamRef = useRef<HTMLDivElement | null>(null);
   const [addOpen, setAddOpen] = useState(false); // Task 11 dùng
-  void ready; void create; // Task 10/11 sẽ dùng
+  void ready; void create; // Task 11 sẽ dùng
 
   useEffect(() => setMounted(true), []);
   // phím "/" focus search (mock notebook.html) — bỏ qua khi đang gõ
@@ -49,6 +58,7 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
     if (!mounted) return [];
     const needle = q.trim().toLowerCase();
     return entries.filter((e) => {
+      if (!safeParsePayload(e.kind, e.payload)) return false; // payload hỏng → bỏ qua
       const okF = filter === "all" || e.kind === filter;
       const okQ = !needle || JSON.stringify({ tag: e.tag, ...e.payload }).toLowerCase().includes(needle);
       return okF && okQ;
@@ -134,25 +144,75 @@ export default function NotebookDashboard({ now }: { now?: Date }) {
         </Button>
       </div>
 
-      {/* stream — placeholder tối thiểu để search/filter quan sát được; Task 10 thay bằng
-          section data-od-id="mistake-stream" + card đầy đủ (giữ data-od-id={`note-${id}`}). */}
-      <div className="flex flex-col gap-3">
-        {shown.map((e) => <MinimalNote key={e.id} entry={e} />)}
+      {/* stream — card theo kind (port notebook.html mistake-stream) */}
+      <div ref={streamRef} className="flex flex-col gap-4" aria-label="Dòng ghi chép gần đây" data-od-id="mistake-stream" data-testid="mistake-stream">
+        {shown.map((e) => {
+          const p = safeParsePayload(e.kind, e.payload);
+          if (!p) return null;
+          return (
+            <article key={e.id} className="flex flex-col gap-3 rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-xs" data-od-id={`note-${e.id}`} data-testid={`note-${e.id}`}>
+              {/* mhead: tag + time + ghim/tùy chọn */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className={"rounded-full border px-3 py-1 text-[11px] font-bold " + TAG_TONE_CLS[e.tagTone]}>{e.tag}</span>
+                <span className="text-xs text-text-secondary">{fmtRelativeDate(e.createdAt)}</span>
+                <span className="ml-auto flex gap-1.5">
+                  <button onClick={() => { setSaved(e.id, !e.saved); toast(e.saved ? "Đã bỏ ghim ghi chú" : "Đã ghim ★ ghi chú"); }}
+                    aria-pressed={e.saved} aria-label="Yêu thích"
+                    className={"grid h-9 w-9 place-items-center rounded-[9px] border text-[15px] focus-visible:ring-3 ring-action-focus ring-offset-2 " + (e.saved ? "border-amber-wash bg-amber-wash text-amber-ink" : "border-border-default bg-surface-elevated text-text-secondary hover:border-text-faint")}>★</button>
+                  <button onClick={() => toast("Tùy chọn: ghim · chuyển sổ · báo lỗi nội dung")} aria-label="Tùy chọn"
+                    className="grid h-9 w-9 place-items-center rounded-[9px] border border-border-default bg-surface-elevated text-[15px] text-text-secondary hover:border-text-faint focus-visible:ring-3 ring-action-focus ring-offset-2">⋮</button>
+                </span>
+              </div>
+              {/* body theo kind */}
+              {e.kind === "wrong" && p && "q" in p && (
+                <>
+                  <p className="hanzi text-lg leading-relaxed">{p.q}</p>
+                  <div className="grid gap-2">
+                    <div className="flex items-start gap-2.5 rounded-[10px] border border-feedback-error/40 bg-rose-wash/40 px-3 py-2.5 text-[13.5px]">
+                      <span aria-hidden="true">❌</span>
+                      <span>{p.wrong ? <>Bạn đã chọn: <b className="text-feedback-error-text line-through">{p.wrong.zh}</b>{p.wrong.py ? ` (${p.wrong.py})` : null}</> : "Bạn chưa nhớ:"}</span>
+                    </div>
+                    <div className="flex items-start gap-2.5 rounded-[10px] border border-jade-wash bg-jade-wash px-3 py-2.5 text-[13.5px]">
+                      <span aria-hidden="true">✅</span>
+                      <span>Đáp án đúng: <b className="text-feedback-success">{p.right.zh}</b>{p.right.py ? ` (${p.right.py})` : null}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2.5 rounded-[10px] border border-border-default bg-surface-muted px-3 py-2.5 text-xs">
+                    <span aria-hidden="true">💡</span>
+                    <span><b>Điểm mấu chốt:</b> {p.cause}</span>
+                  </div>
+                </>
+              )}
+              {e.kind === "chars" && p && "chars" in p && (
+                <>
+                  <div className="flex flex-wrap items-center gap-3.5 rounded-xl border border-dashed border-border-default bg-surface-paper p-3.5">
+                    {p.chars.map((c, i) => (
+                      <span key={i} className="flex items-center gap-3.5">
+                        {i > 0 && <b className="text-text-faint">vs</b>}
+                        <span className="text-center"><b className="hanzi block text-[28px] leading-tight">{c.zh}</b><span className="text-[11.5px] text-text-secondary">{c.py}</span></span>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2.5 rounded-[10px] border border-border-default bg-surface-muted px-3 py-2.5 text-xs"><span aria-hidden="true">💡</span><span>{p.tip}</span></div>
+                </>
+              )}
+              {e.kind === "personal" && p && "note" in p && (
+                <div className="rounded-[10px] border border-border-default bg-surface-paper px-3 py-2.5 text-[13px]">{p.note}</div>
+              )}
+              {/* footer CTA */}
+              {e.kind === "wrong" && <Link href="/review" className="mt-1 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-border-default bg-surface-muted px-4 text-xs font-bold hover:border-text-faint focus-visible:ring-3 ring-action-focus ring-offset-2">Thử thách lại câu này</Link>}
+              {e.kind === "chars" && <Link href="/hanzi" className="mt-1 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-border-default bg-surface-muted px-4 text-xs font-bold hover:border-text-faint focus-visible:ring-3 ring-action-focus ring-offset-2">Xem bút thuận nét viết</Link>}
+            </article>
+          );
+        })}
+        {mounted && shown.length === 0 && (
+          <p className="rounded-card border border-border-subtle bg-surface-elevated p-[30px] text-center text-[13.5px] text-text-secondary" data-od-id="stream-empty" data-testid="stream-empty">
+            Không có mục nào khớp bộ lọc. Thử từ khóa khác.
+          </p>
+        )}
       </div>
 
-      {/* SLOT-STREAM: Task 10 — section data-od-id="mistake-stream" + empty state */}
       {/* SLOT-ADD: Task 11 — Dialog tạo ghi chú cá nhân (addOpen) */}
     </div>
-  );
-}
-
-/* Placeholder card tối thiểu — chỉ để test search/filter thấy kết quả qua
-   data-od-id="note-{id}". Task 10 thay toàn bộ bằng card đầy đủ. */
-function MinimalNote({ entry }: { entry: NotebookEntry }) {
-  return (
-    <article data-od-id={`note-${entry.id}`} data-testid={`note-${entry.id}`} className="rounded-card border border-border-subtle bg-surface-elevated p-4 text-sm text-text-secondary">
-      <span className="mr-2">{entry.tag}</span>
-      <span className="zh">{JSON.stringify(entry.payload)}</span>
-    </article>
   );
 }

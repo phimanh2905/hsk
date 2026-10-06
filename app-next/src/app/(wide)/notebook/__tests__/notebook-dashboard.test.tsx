@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import NotebookDashboard from "../notebook-dashboard";
 
 const useNotebookEntries = vi.fn();
@@ -70,5 +70,58 @@ describe("search + filters (port notebook-search stream-filters)", () => {
     render(<NotebookDashboard now={NOW} />);
     fireEvent.change(screen.getByLabelText("Tìm kiếm trong tất cả sổ tay"), { target: { value: "khaled" } });
     expect(screen.getAllByTestId(/^note-/)).toHaveLength(1);
+  });
+});
+
+describe("stream cards (port mistake-stream)", () => {
+  const setSaved = vi.fn();
+  beforeEach(() => setSaved.mockClear());
+  it("card wrong: q + 2 dòng contrast + cause + CTA /review + time", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, setSaved, entries: [wrongEntry()] });
+    render(<NotebookDashboard now={NOW} />);
+    const card = screen.getByTestId("note-w1");
+    expect(within(card).getByText("昨天太累了…")).toBeInTheDocument();
+    expect(within(card).getByText(/Bạn đã chọn:/)).toBeInTheDocument();
+    expect(within(card).getByText(/Đáp án đúng:/)).toBeInTheDocument();
+    expect(within(card).getByText(/Điểm mấu chốt:/)).toBeInTheDocument();
+    expect(within(card).getByRole("link", { name: "Thử thách lại câu này" })).toHaveAttribute("href", "/review");
+  });
+  it("card wrong null → 'Bạn chưa nhớ:' thay dòng sai", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, entries: [wrongEntry({ payload: { q: "q", wrong: null, right: { zh: "x" }, cause: "c" } })] });
+    render(<NotebookDashboard now={NOW} />);
+    expect(screen.getByText(/Bạn chưa nhớ:/)).toBeInTheDocument();
+  });
+  it("card chars: bigchars + tip + CTA /hanzi; card personal: note, không CTA", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, entries: [
+      wrongEntry({ id: "c1", kind: "chars", tagTone: "lav", tag: "🔍 Cặp chữ dễ nhầm", payload: { chars: [{ zh: "已", py: "yǐ" }, { zh: "己", py: "jǐ" }], tip: "Mẹo nhớ…" }, source: "manual" }),
+      wrongEntry({ id: "p1", kind: "personal", tagTone: "per", tag: "📝 Ghi chú cá nhân", payload: { note: "Khi từ chối…" }, source: "manual" }),
+    ] });
+    render(<NotebookDashboard now={NOW} />);
+    const c = screen.getByTestId("note-c1");
+    expect(within(c).getByText("vs")).toBeInTheDocument();
+    expect(within(c).getByRole("link", { name: "Xem bút thuận nét viết" })).toHaveAttribute("href", "/hanzi");
+    const p = screen.getByTestId("note-p1");
+    expect(within(p).getByText("Khi từ chối…")).toBeInTheDocument();
+    expect(within(p).queryByRole("link")).toBeNull();
+  });
+  it("★ ghim: aria-pressed + gọi setSaved + toast", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, setSaved, entries: [wrongEntry()] });
+    render(<NotebookDashboard now={NOW} />);
+    const star = screen.getByRole("button", { name: "Yêu thích" });
+    expect(star).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(star);
+    expect(setSaved).toHaveBeenCalledWith("w1", true);
+    expect(toastMock).toHaveBeenCalledWith("Đã ghim ★ ghi chú");
+  });
+  it("payload hỏng → card bị bỏ qua; filter rỗng → empty state", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, entries: [{ ...wrongEntry(), payload: "x" as unknown as NotebookEntry["payload"] }] });
+    render(<NotebookDashboard now={NOW} />);
+    expect(screen.getByTestId("stream-empty")).toHaveTextContent(/Không có mục nào khớp/);
+  });
+  it("⋮ mở menu tùy chọn → toast demo", () => {
+    useNotebookEntries.mockReturnValue({ ...emptyApi, entries: [wrongEntry()] });
+    render(<NotebookDashboard now={NOW} />);
+    fireEvent.click(screen.getByRole("button", { name: "Tùy chọn" }));
+    expect(toastMock).toHaveBeenCalledWith(expect.stringContaining("Tùy chọn"));
   });
 });
