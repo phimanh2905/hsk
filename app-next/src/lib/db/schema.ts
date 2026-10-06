@@ -153,3 +153,39 @@ type VocabWordRow = {
   pos: string;
   example: { zh: string; pinyinPerChar: { c: string; py: string }[]; vi: string };
 };
+
+export const contentShadowingPlaylists = sqliteTable("content_shadowing_playlists", {
+  id: text("id").primaryKey(),
+  ord: integer("ord").notNull(),
+  slug: text("slug").notNull(),
+  name: text("name").notNull(),
+  total: integer("total").notNull(),
+  desc: text("desc").notNull(),
+  channel: text("channel").notNull(),
+});
+
+export const contentShadowingVideos = sqliteTable(
+  "content_shadowing_videos",
+  {
+    id: text("id").primaryKey(),
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    playlistId: text("playlist_id").notNull(),
+    hsk: text("hsk").notNull(),
+    views: integer("views").notNull(),
+    viewsSuffix: text("views_suffix").notNull(),
+    duration: text("duration").notNull(),
+    durSec: integer("dur_sec").notNull(),
+    plays: integer("plays").notNull(),
+    topic: text("topic").notNull(),
+    spd: integer("spd").notNull(),
+  },
+  (t) => [index("csv_playlist_idx").on(t.playlistId)]
+);
+
+export const contentShadowingSubtitles = sqliteTable("content_shadowing_subtitles", {
+  videoId: text("video_id").primaryKey(),
+  sentences: text("sentences", { mode: "json" })
+    .$type<{ n: number; start: number; end: number; parts: { zh: string }[]; pinyin: string; vi: string }[]>()
+    .notNull(),
+});
