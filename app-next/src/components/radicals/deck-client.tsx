@@ -200,10 +200,16 @@ export default function RadicalsClient() {
         <Button type="button" data-shuffle variant="secondary" size="sm" onClick={doShuffle}>
           <Shuffle size={16} strokeWidth={1.5} aria-hidden="true" /> Xáo trộn
         </Button>
+        {/* Link chéo sang Hanzi Studio luyện viết bộ hiện tại (TASK-11) */}
+        <Link
+          href={`/hanzi?rad=${encodeURIComponent(r.char)}`}
+          className="ml-auto inline-flex min-h-9 items-center rounded-control border border-border-subtle bg-surface-elevated px-3 text-[12.5px] font-bold text-text-secondary hover:border-action-primary hover:text-action-primary"
+        >
+          Luyện viết bộ này
+        </Link>
         <IconButton
           label="Phát âm chữ Hán"
           variant="ghost"
-          className="ml-auto"
           onClick={speakCur}
         >
           <Volume2 size={20} strokeWidth={1.5} aria-hidden="true" />

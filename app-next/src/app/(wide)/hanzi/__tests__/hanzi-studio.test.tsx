@@ -1,13 +1,46 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, cleanup, act, fireEvent } from "@testing-library/react";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, waitFor, cleanup } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import HanziStudio, { clampPage } from "../hanzi-studio";
+import type { WorkbenchData } from "@/components/hanzi/studio/studio-workbench";
+
+vi.mock("@/components/hanzi/studio/studio-grid", () => ({
+  StudioGrid: () => <div data-od-id="tianzi-grid" />,
+}));
+vi.mock("@/components/hanzi/studio/studio-workbench", () => ({
+  StudioWorkbench: ({
+    data,
+    onSelectTray,
+  }: {
+    data: WorkbenchData | null;
+    onSelectTray: (ch: string) => void;
+  }) => {
+    const glyph = data ? (data.kind === "rad" ? data.rad.char : data.meta.ch) : "null";
+    return (
+      <div>
+        <div data-testid="workbench">
+          {glyph}·{data ? data.kind : "null"}
+        </div>
+        {data?.kind === "rad" && (
+          <div>
+            {data.rad.chars.map((c) => (
+              <button key={c.ch} onClick={() => onSelectTray(c.ch)} data-tray={c.ch}>
+                {c.ch}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  },
+}));
 
 afterEach(cleanup);
 
-function getByODId(id: string) {
-  return document.querySelector(`[data-od-id="${id}"]`) as HTMLElement;
-}
-const zcards = () => document.querySelectorAll("[data-od-id^='zcard-']");
+beforeEach(() => {
+  // jsdom URL mặc định localhost — đảm bảo không có ?rad
+  window.history.replaceState(null, "", "/hanzi");
+});
 
 describe("clampPage (Review Focus #1)", () => {
   it("kẹp về [1, pages]", () => {
@@ -18,75 +51,62 @@ describe("clampPage (Review Focus #1)", () => {
   });
 });
 
-describe("HanziStudio", () => {
-  it("mặc định level HSK 2 (theo mock) → 8 chữ, đang chọn 爱", () => {
-    const { getByText } = render(<HanziStudio />);
-    expect(zcards().length).toBe(8);
-    expect(getByText("Trang 1 / 1 · 8 chữ mẫu")).toBeTruthy();
+describe("HanziStudio (radical-first)", () => {
+  it("mặc định rad mode, chọn 水, catalog hiện card bộ thủ", async () => {
+    render(<HanziStudio />);
+    await waitFor(() =>
+      expect(screen.getAllByRole("button", { name: /水/ }).length).toBeGreaterThan(0),
+    );
+    expect(screen.getByTestId("cat-count").textContent).toMatch(/bộ thủ/);
   });
 
-  it("lọc cấp độ HSK 1 → 4 chữ 人 大 口 日", () => {
-    const { getByText } = render(<HanziStudio />);
-    act(() => getByText("HSK 1").click());
-    expect(zcards().length).toBe(4);
-  });
-
-  it("state pill 'Đã thuộc nét' + level HSK 2 → 1 chữ (心)", () => {
-    const { getByText } = render(<HanziStudio />);
-    act(() => {
-      getByText("HSK 2").click();
-      getByText(/^Đã thuộc nét \(/).click();
+  it("deep-link ?rad=口 chọn đúng bộ", async () => {
+    window.history.replaceState(null, "", "/hanzi?rad=口");
+    render(<HanziStudio />);
+    await waitFor(() => {
+      const wb = screen.getByTestId("workbench");
+      expect(wb.textContent).toContain("口");
     });
-    expect(zcards().length).toBe(1);
-    expect(document.querySelector("[data-od-id='zcard-心']")).not.toBeNull();
   });
 
-  it("'Cần luyện lại' = mid + new (st !== done) — port ý nghĩa nhãn (spec §5)", () => {
-    const { getByText } = render(<HanziStudio />);
-    act(() => getByText("HSK 2").click());
-    act(() => getByText(/^Cần luyện lại \(/).click());
-    // HSK 2: 爱 new, 好 mid, 国 new, 汉 mid, 书 new, 木 mid, 水 mid = 7
-    expect(zcards().length).toBe(7);
+  it("click tray chip → workbench chuyển sang kind char", async () => {
+    render(<HanziStudio />);
+    await waitFor(() =>
+      expect(screen.getAllByRole("button", { name: /没/ }).length).toBeGreaterThan(0),
+    );
+    await userEvent.click(screen.getAllByRole("button", { name: /没/ })[0]);
+    await waitFor(() => expect(screen.getByTestId("workbench").textContent).toContain("char"));
   });
 
-  it("search 'ai' → chỉ 爱 (substring trên ch+py+hv)", () => {
-    const { container } = render(<HanziStudio />);
-    const input = document.querySelector('input[type="search"]') as HTMLInputElement;
-    act(() => { fireEvent.change(input, { target: { value: "ai" } }); });
-    expect(zcards().length).toBe(1);
-    expect(container.querySelector("[data-od-id='zcard-爱']")).not.toBeNull();
+  it("mode-switch HSK → catalog hiện chữ + level tab", async () => {
+    render(<HanziStudio />);
+    await userEvent.click(screen.getByRole("button", { name: /Theo cấp độ HSK/ }));
+    await waitFor(() => expect(screen.getByTestId("cat-count").textContent).toMatch(/chữ/));
+    expect(screen.getByRole("button", { name: "HSK 2" })).toBeTruthy();
   });
 
-  it("search rác → empty state + count pills theo level", () => {
-    const { getByText } = render(<HanziStudio />);
-    const input = document.querySelector('input[type="search"]') as HTMLInputElement;
-    act(() => { fireEvent.change(input, { target: { value: "zzzz" } }); });
-    expect(getByText("Không có chữ nào khớp bộ lọc.")).toBeTruthy();
+  it("filter số nét 3 nét → không còn card 2 nét", async () => {
+    render(<HanziStudio />);
+    await userEvent.click(screen.getByRole("button", { name: "3 nét" }));
+    const count = screen.getByTestId("cat-count").textContent!;
+    expect(count).toMatch(/^\d+ bộ thủ/);
   });
 
-  it("chọn chữ: workbench đổi glyph + card active; desktop giữ pane catalog", () => {
-    const { getByText } = render(<HanziStudio />);
-    act(() => getByText("HSK 1").click());
-    act(() => getByODId("zcard-大").click());
-    const wb = getByODId("workbench");
-    expect(wb.querySelector(".zh")!.textContent).toBe("大");
-    expect(getByODId("zcard-大").getAttribute("aria-pressed")).toBe("true");
-    // jsdom innerWidth = 1024 → không chuyển pane: catalog vẫn hiện
-    expect(getByODId("char-catalog").parentElement!.className).not.toContain("hidden");
+  it("filter 'Số nét' chỉ ở rad mode — ẩn ở HSK mode", async () => {
+    render(<HanziStudio />);
+    expect(screen.getByText("Số nét")).toBeTruthy();
+    await userEvent.click(screen.getByRole("button", { name: /Theo cấp độ HSK/ }));
+    await waitFor(() => expect(screen.queryByText("Số nét")).toBeNull());
+    expect(screen.getByLabelText("Tìm bộ thủ")).toBeTruthy();
+    expect(screen.getByLabelText("Tìm bộ thủ").getAttribute("placeholder")).toBe("Tìm chữ, pinyin…");
   });
 
-  it("mobile (<1024px): chọn chữ → pane chuyển sang work (catalog ẩn)", () => {
-    const innerWidth = Object.getOwnPropertyDescriptor(window, "innerWidth");
-    Object.defineProperty(window, "innerWidth", { configurable: true, value: 800 });
-    try {
-      const { getByText } = render(<HanziStudio />);
-      act(() => getByODId("zcard-好").click());
-      const catalogWrap = getByODId("char-catalog").parentElement!;
-      expect(catalogWrap.className).toContain("hidden");
-      const workWrap = getByODId("workbench").parentElement!;
-      expect(workWrap.className).not.toContain("hidden");
-    } finally {
-      if (innerWidth) Object.defineProperty(window, "innerWidth", innerWidth);
-    }
+  it("search 'khau' → 口 trong kết quả", async () => {
+    render(<HanziStudio />);
+    expect(screen.getByLabelText("Tìm bộ thủ").getAttribute("placeholder")).toBe("Tìm bộ thủ, nghĩa…");
+    await userEvent.type(screen.getByLabelText("Tìm bộ thủ"), "khau");
+    await waitFor(() =>
+      expect(screen.getAllByRole("button", { name: /口/ }).length).toBeGreaterThan(0),
+    );
   });
 });

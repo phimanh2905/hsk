@@ -41,7 +41,7 @@ test.describe("public routes (không cần login)", () => {
   for (const [path, text] of [
     ["/review", "cần kích hoạt lại trí nhớ"],
     ["/dictionary", "Tra từ điển"],
-    ["/hanzi", "Phân tích Hán tự"],
+    ["/hanzi", "Hanzi Studio"], // radical-first redesign (2026-10-07): h1 mới thay "Phân tích Hán tự"
     ["/reading", "Bài đọc"],
   ] as const) {
     test(`render ${path}`, async ({ page }) => {

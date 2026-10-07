@@ -29,6 +29,7 @@ describe("SidebarNav (app-shell.html)", () => {
       [/Luyện nói & Đọc/, "/shadowing"],
       [/Bảng âm Pinyin/, "/pinyin"],
       [/Sổ tay từ vựng/, "/my-vocab"],
+      [/Sổ tay ngữ pháp/, "/my-grammar"],
       [/Thống kê tiến độ/, "/progress"],
       [/Tạo tập viết in/, "/create-file"],
     ];

@@ -1,0 +1,16 @@
+{
+  "人": "human", "亻": "human", "女": "human", "口": "human", "心": "human", "忄": "human",
+  "手": "human", "扌": "human", "言": "human", "讠": "human", "足": "human", "⻊": "human",
+  "目": "human", "耳": "human", "首": "human", "面": "human", "身": "human", "牙": "human",
+  "齿": "human", "骨": "human", "页": "human", "頁": "human", "走": "human", "止": "human",
+  "山": "nature", "水": "nature", "氵": "nature", "木": "nature", "火": "nature", "灬": "nature",
+  "日": "nature", "月": "nature", "雨": "nature", "石": "nature", "田": "nature", "土": "nature",
+  "金": "nature", "钅": "nature", "风": "nature", "風": "nature", "云": "nature", "雲": "nature",
+  "光": "nature", "冰": "nature", "氺": "nature", "冫": "nature", "川": "nature", "《": "nature",
+  "巛": "nature", "艹": "nature", "艸": "nature", "竹": "nature", "禾": "nature", "米": "nature",
+  "瓜": "nature", "麦": "nature", "麥": "nature", "豆": "nature", "里": "nature", "谷": "nature",
+  "犭": "animal", "犬": "animal", "鸟": "animal", "鳥": "animal", "鱼": "animal", "魚": "animal",
+  "虫": "animal", "马": "animal", "馬": "animal", "牛": "animal", "羊": "animal", "鹿": "animal",
+  "鼠": "animal", "龙": "animal", "龍": "animal", "龟": "animal", "龜": "animal", "羽": "animal",
+  "豸": "animal", "亥": "animal", "彡": "other"
+}
