@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import { progressStore } from "@/lib/store/progress-store";
 import { LessonProvider, useLesson } from "../lesson-provider";
@@ -135,5 +135,62 @@ describe("Flash SRS state (port opendesign lesson.html)", () => {
     expect(container.querySelector("[data-autoplay='true']")).toBeTruthy();
     expect(localStorage.getItem("bye.lesson.autoplay")).toBe("1");
     localStorage.removeItem("bye.lesson.autoplay");
+  });
+});
+
+describe("LessonProvider — markPageDone khi flash deck hoàn thành (W0.1)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  function DoneProbe() {
+    const { revealed, setRevealed, grade, done } = useLesson();
+    return (
+      <div>
+        <span data-done={String(done)} />
+        <button onClick={() => setRevealed(true)}>reveal</button>
+        <button onClick={() => grade(3)}>g3</button>
+      </div>
+    );
+  }
+
+  it("chấm từ cuối cùng → bye.pageDone có 'hsk1/lesson-1'", () => {
+    const { container } = render(
+      <LessonProvider items={items} book="hsk1" page="lesson-1">
+        <DoneProbe />
+      </LessonProvider>
+    );
+    act(() => screen.getByText("reveal").click());
+    act(() => screen.getByText("g3").click()); // items chỉ có 1 phần tử → grade xong là done
+    expect(container.querySelector("[data-done='true']")).toBeTruthy();
+    expect(progressStore.getPageDone("hsk1", "lesson-1")).toBe(true);
+    expect(progressStore.listPageDone("hsk1")).toContain("hsk1/lesson-1");
+  });
+
+  it("chấm giữa bài (chưa hết) → KHÔNG mark", () => {
+    const two: LessonItem[] = [
+      ...items,
+      { ...items[0], index: 1, itemKey: "hsk1.lesson-1.1" },
+    ];
+    const { container } = render(
+      <LessonProvider items={two} book="hsk1" page="lesson-1">
+        <DoneProbe />
+      </LessonProvider>
+    );
+    act(() => screen.getByText("reveal").click());
+    act(() => screen.getByText("g3").click()); // từ đầu tiên → done=false
+    expect(container.querySelector("[data-done='true']")).toBeFalsy();
+    expect(progressStore.listPageDone("hsk1")).toEqual([]);
+  });
+
+  it("custom deck (không book/page) → không mark, không throw", () => {
+    render(
+      <LessonProvider items={items}>
+        <DoneProbe />
+      </LessonProvider>
+    );
+    act(() => screen.getByText("reveal").click());
+    act(() => screen.getByText("g3").click());
+    expect(progressStore.listPageDone()).toEqual([]);
   });
 });

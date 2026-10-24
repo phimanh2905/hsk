@@ -123,8 +123,12 @@ export function LessonProvider({
     progressStore.recordReview(item.itemKey, GRADE_LABEL[level]);
     toast(GRADE_TOAST[level]);
     setRevealed(false);
-    if (index >= items.length - 1) setDone(true);
-    else setIndex(index + 1);
+    if (index >= items.length - 1) {
+      setDone(true);
+      // W0.1: flash deck hết bài → mark bài done (dashboard lessonsDone đọc bye.pageDone).
+      // Custom deck không có book/page → bỏ qua (dashboard lessonsTotal không đếm deck tùy chỉnh).
+      if (book && page) progressStore.markPageDone(book, page);
+    } else setIndex(index + 1);
   };
 
   const toggleAutoplay = () => setAutoplay((v) => !v);
