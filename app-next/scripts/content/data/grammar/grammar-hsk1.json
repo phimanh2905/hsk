@@ -1,0 +1,2502 @@
+[
+  {
+    "title": "CÂU CHỮ 是 (A LÀ B)",
+    "hz": "是",
+    "topic": "ba",
+    "def": "Câu chữ 是 (a là b) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "是",
+        "key"
+      ],
+      [
+        "Danh ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "QUÊN ĐỘNG TỪ 是 HOẶC THAY BẰNG LÀ, CÂU A LÀ B BẮT BUỘC CÓ 是 GIỮA CHỦ NGỮ VÀ DANH NGỮ",
+      " , không bỏ được như tiếng Việt."
+    ],
+    "ex": [
+      {
+        "hz": "我是学生。",
+        "py": "wǒ shì xuésheng.",
+        "vi": "Tôi là học sinh."
+      },
+      {
+        "hz": "她是我妈妈。",
+        "py": "tā shì wǒ māma.",
+        "vi": "Cô ấy là mẹ tôi."
+      },
+      {
+        "hz": "你是老师吗?",
+        "py": "nǐ shì lǎoshī ma?",
+        "vi": "Bạn là giáo viên à?"
+      }
+    ],
+    "id": "shi",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI CÓ KHÔNG VỚI 吗",
+    "hz": "吗",
+    "topic": "bongu",
+    "def": "Câu hỏi có không với 吗 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Vị ngữ"
+      ],
+      [
+        "吗",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG THÊM DANH TỪ NGHI VẤN KHI ĐÃ CÓ 吗",
+      " ở cuối câu; một câu chỉ cần một cách hỏi là đủ."
+    ],
+    "ex": [
+      {
+        "hz": "你好吗?",
+        "py": "nǐ hǎo ma?",
+        "vi": "Bạn có khỏe không?"
+      },
+      {
+        "hz": "他是中国人吗?",
+        "py": "tā shì Zhōngguó rén ma?",
+        "vi": "Anh ấy là người Trung Quốc à?"
+      },
+      {
+        "hz": "你喝咖啡吗?",
+        "py": "nǐ hē kāfēi ma?",
+        "vi": "Bạn có uống cà phê không?"
+      }
+    ],
+    "id": "ma",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI VỚI 什么 (CÁI GÌ)",
+    "hz": "什么",
+    "topic": "hutu",
+    "def": "Câu hỏi với 什么 (cái gì) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ"
+      ],
+      [
+        "什么",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 什么 Ở ĐẦU CÂU NHƯ TỪ WHAT",
+      " ; trong tiếng Trung 什么 đứng ở vị trí của tân ngữ, sau động từ."
+    ],
+    "ex": [
+      {
+        "hz": "这是什么?",
+        "py": "zhè shì shénme?",
+        "vi": "Đây là cái gì?"
+      },
+      {
+        "hz": "你吃什么?",
+        "py": "nǐ chī shénme?",
+        "vi": "Bạn ăn gì?"
+      },
+      {
+        "hz": "你叫什么名字?",
+        "py": "nǐ jiào shénme míngzi?",
+        "vi": "Bạn tên là gì?"
+      }
+    ],
+    "id": "shen-me",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI VỚI 哪 (NÀO, ĐÂU)",
+    "hz": "哪",
+    "topic": "hutu",
+    "def": "Câu hỏi với 哪 (nào, đâu) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Vị ngữ"
+      ],
+      [
+        "哪",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "NHẦM 哪 (NÀO) VỚI 那 (ĐÓ)",
+      " ; hai chữ gần giống nhau nhưng 哪 dùng để hỏi, 那 dùng để chỉ."
+    ],
+    "ex": [
+      {
+        "hz": "你去哪儿?",
+        "py": "nǐ qù nǎr?",
+        "vi": "Bạn đi đâu?"
+      },
+      {
+        "hz": "你是哪国人?",
+        "py": "nǐ shì nǎ guó rén?",
+        "vi": "Bạn là người nước nào?"
+      },
+      {
+        "hz": "哪个是你的?",
+        "py": "nǎge shì nǐ de?",
+        "vi": "Cái nào là của bạn?"
+      }
+    ],
+    "id": "na",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI VỚI 谁 (AI)",
+    "hz": "谁",
+    "topic": "hutu",
+    "def": "Câu hỏi với 谁 (ai) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "谁",
+        "key"
+      ],
+      [
+        "Động từ"
+      ],
+      [
+        "Tân ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐỌC 谁 THÀNH SHUÍ KHI NÓI NHANH",
+      " ; trong khẩu ngữ 通常 đọc là shéi, hai cách đọc đều đúng."
+    ],
+    "ex": [
+      {
+        "hz": "她是谁?",
+        "py": "tā shì shéi?",
+        "vi": "Cô ấy là ai?"
+      },
+      {
+        "hz": "谁是你的中文老师?",
+        "py": "shéi shì nǐ de Zhōngwén lǎoshī?",
+        "vi": "Ai là giáo viên tiếng Trung của bạn?"
+      },
+      {
+        "hz": "你等谁?",
+        "py": "nǐ děng shéi?",
+        "vi": "Bạn đợi ai?"
+      }
+    ],
+    "id": "shui",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI VỚI 几 (MẤY)",
+    "hz": "几",
+    "topic": "hutu",
+    "def": "Câu hỏi với 几 (mấy) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "几",
+        "key"
+      ],
+      [
+        "Lượng từ + Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 几 CHO SỐ LỌN TRÊN MƯỜI",
+      " ; 几 chỉ hỏi số nhỏ thường dưới 10, số lớn phải dùng 多少."
+    ],
+    "ex": [
+      {
+        "hz": "你家有几口人?",
+        "py": "nǐ jiā yǒu jǐ kǒu rén?",
+        "vi": "Nhà bạn có mấy người?"
+      },
+      {
+        "hz": "现在几点?",
+        "py": "xiànzài jǐ diǎn?",
+        "vi": "Bây giờ là mấy giờ?"
+      },
+      {
+        "hz": "你有几个弟弟?",
+        "py": "nǐ yǒu jǐge dìdi?",
+        "vi": "Bạn có mấy người em trai?"
+      }
+    ],
+    "id": "ji",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI VỚI 多少 (BAO NHIÊU)",
+    "hz": "多少",
+    "topic": "hutu",
+    "def": "Câu hỏi với 多少 (bao nhiêu) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ"
+      ],
+      [
+        "多少",
+        "key"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "THÊM LƯỢNG TỪ SAU 多少 MỘT CÁCH TÙY TIỆN",
+      " ; 多少 đứng trước danh từ hoặc thay cả cụm số-lượng, không chia nhỏ được."
+    ],
+    "ex": [
+      {
+        "hz": "这个多少钱?",
+        "py": "zhège duōshao qián?",
+        "vi": "Cái này bao nhiêu tiền?"
+      },
+      {
+        "hz": "你有多少本书?",
+        "py": "nǐ yǒu duōshao běn shū?",
+        "vi": "Bạn có bao nhiêu cuốn sách?"
+      },
+      {
+        "hz": "你们班有多少学生?",
+        "py": "nǐmen bān yǒu duōshao xuésheng?",
+        "vi": "Lớp các bạn có bao nhiêu học sinh?"
+      }
+    ],
+    "id": "duo-shao",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI TUỔI VỚI 多大",
+    "hz": "多大",
+    "topic": "hutu",
+    "def": "Câu hỏi tuổi với 多大 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "多大",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "HỎI TUỔI NGƯỜI LỚN BẰNG 你几岁",
+      " ; 几岁 chỉ dùng cho trẻ nhỏ, với người lớn nên hỏi 你多大."
+    ],
+    "ex": [
+      {
+        "hz": "你多大?",
+        "py": "nǐ duō dà?",
+        "vi": "Bạn bao nhiêu tuổi?"
+      },
+      {
+        "hz": "你儿子多大?",
+        "py": "nǐ érzi duō dà?",
+        "vi": "Con trai bạn bao nhiêu tuổi?"
+      },
+      {
+        "hz": "你的狗多大?",
+        "py": "nǐ de gǒu duō dà?",
+        "vi": "Chú chó của bạn mấy tuổi?"
+      }
+    ],
+    "id": "duo-da",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI CÁCH THỨC VỚI 怎么",
+    "hz": "怎么",
+    "topic": "hutu",
+    "def": "Câu hỏi cách thức với 怎么 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "怎么",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 怎么 Ở CUỐI CÂU NHƯ TỪ THẾ NÀO",
+      " ; trong tiếng Trung 怎么 phải đứng trước động từ."
+    ],
+    "ex": [
+      {
+        "hz": "这个怎么说?",
+        "py": "zhège zěnme shuō?",
+        "vi": "Cái này nói thế nào?"
+      },
+      {
+        "hz": "这个字怎么写?",
+        "py": "zhège zì zěnme xiě?",
+        "vi": "Chữ này viết thế nào?"
+      },
+      {
+        "hz": "你怎么去学校?",
+        "py": "nǐ zěnme qù xuéxiào?",
+        "vi": "Bạn đi trường bằng cách nào?"
+      }
+    ],
+    "id": "zen-me",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI ĐÁNH GIÁ VỚI 怎么样",
+    "hz": "怎么样",
+    "topic": "hutu",
+    "def": "Câu hỏi đánh giá với 怎么样 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "怎么样",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "TÁCH 怎么样 THÀNH 怎么 + 什么",
+      " ; 怎么样 là một từ hỏi hoàn chỉnh nghĩa là ra sao, không tách được."
+    ],
+    "ex": [
+      {
+        "hz": "今天天气怎么样?",
+        "py": "jīntiān tiānqì zěnmeyàng?",
+        "vi": "Hôm nay thời tiết thế nào?"
+      },
+      {
+        "hz": "这个菜怎么样?",
+        "py": "zhège cài zěnmeyàng?",
+        "vi": "Món này ăn thế nào?"
+      },
+      {
+        "hz": "你的汉语怎么样?",
+        "py": "nǐ de Hànyǔ zěnmeyàng?",
+        "vi": "Tiếng Trung của bạn thế nào rồi?"
+      }
+    ],
+    "id": "zen-me-yang",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU HỎI TÓM TẮT VỚI 呢",
+    "hz": "呢",
+    "topic": "bongu",
+    "def": "Câu hỏi tóm tắt với 呢 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Ngữ đã biết"
+      ],
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "呢",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 呢 KHI CHƯA CÓ NGỮ CẢNH TRƯỚC ĐÓ",
+      " ; 呢 chỉ lặp lại câu hỏi đã nói, không mở đầu câu hỏi mới được."
+    ],
+    "ex": [
+      {
+        "hz": "我很好,你呢?",
+        "py": "wǒ hěn hǎo, nǐ ne?",
+        "vi": "Tôi khỏe, còn bạn thì sao?"
+      },
+      {
+        "hz": "他去学校,你呢?",
+        "py": "tā qù xuéxiào, nǐ ne?",
+        "vi": "Anh ấy đi trường, còn bạn?"
+      },
+      {
+        "hz": "我喝咖啡,你呢?",
+        "py": "wǒ hē kāfēi, nǐ ne?",
+        "vi": "Tôi uống cà phê, còn bạn?"
+      }
+    ],
+    "id": "ne",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU ĐỀ NGHỊ VỚI 吧",
+    "hz": "吧",
+    "topic": "bongu",
+    "def": "Câu đề nghị với 吧 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Vị ngữ"
+      ],
+      [
+        "吧",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 吧 Ở CÂU HỎI CÓ KHÔNG",
+      " ; 吞 chú ý 吧 dùng cho đề nghị hoặc phỏng đoán, câu hỏi Có không phải dùng 吗."
+    ],
+    "ex": [
+      {
+        "hz": "我们去学校吧!",
+        "py": "wǒmen qù xuéxiào ba!",
+        "vi": "Chúng ta đi trường thôi!"
+      },
+      {
+        "hz": "我们喝水吧。",
+        "py": "wǒmen hē shuǐ ba.",
+        "vi": "Chúng ta uống nước nhé."
+      },
+      {
+        "hz": "他是学生吧?",
+        "py": "tā shì xuésheng ba?",
+        "vi": "Anh ấy là học sinh chứ?"
+      }
+    ],
+    "id": "ba",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU MỜI KÈM 好吗",
+    "hz": "好吗",
+    "topic": "bongu",
+    "def": "Câu mời kèm 好吗 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Vị ngữ"
+      ],
+      [
+        ",好吗",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 好吗 Ở ĐẦU CÂU",
+      " ; 好吗 luôn đứng cuối câu như một câu hỏi đuôi mang tính mời mọc."
+    ],
+    "ex": [
+      {
+        "hz": "我们去学校,好吗?",
+        "py": "wǒmen qù xuéxiào, hǎo ma?",
+        "vi": "Chúng ta đi trường nhé?"
+      },
+      {
+        "hz": "你吃苹果,好吗?",
+        "py": "nǐ chī píngguǒ, hǎo ma?",
+        "vi": "Bạn ăn táo nhé?"
+      },
+      {
+        "hz": "我们看电视,好吗?",
+        "py": "wǒmen kàn diànshì, hǎo ma?",
+        "vi": "Chúng ta xem tivi nhé?"
+      }
+    ],
+    "id": "hao-ma",
+    "level": "HSK 1"
+  },
+  {
+    "title": "PHỦ ĐỊNH VỚI 不",
+    "hz": "不",
+    "topic": "hutu",
+    "def": "Phủ định với 不 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "不",
+        "key"
+      ],
+      [
+        "Động từ / Tính từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 不 ĐỂ PHỦ ĐỊNH ĐỘNG TỪ 有",
+      " ; 有 luôn bị phủ định bằng 没, không bao giờ nói 不有."
+    ],
+    "ex": [
+      {
+        "hz": "我不是学生。",
+        "py": "wǒ bú shì xuésheng.",
+        "vi": "Tôi không phải là học sinh."
+      },
+      {
+        "hz": "他不喝咖啡。",
+        "py": "tā bù hē kāfēi.",
+        "vi": "Anh ấy không uống cà phê."
+      },
+      {
+        "hz": "我不忙。",
+        "py": "wǒ bù máng.",
+        "vi": "Tôi không bận."
+      }
+    ],
+    "id": "bu",
+    "level": "HSK 1"
+  },
+  {
+    "title": "PHỦ ĐỊNH VỚI 没(有)",
+    "hz": "没",
+    "topic": "hutu",
+    "def": "Phủ định với 没(有) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "没",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 没 CHO THÓI QUEN Ở HIỆN TẠI",
+      " ; 没 chỉ phủ định sự sở hữu và hành động đã xảy ra, thói quen phải dùng 不."
+    ],
+    "ex": [
+      {
+        "hz": "我没有弟弟。",
+        "py": "wǒ méiyǒu dìdi.",
+        "vi": "Tôi không có em trai."
+      },
+      {
+        "hz": "他没来。",
+        "py": "tā méi lái.",
+        "vi": "Anh ấy đã không đến."
+      },
+      {
+        "hz": "我没去学校。",
+        "py": "wǒ méi qù xuéxiào.",
+        "vi": "Tôi đã không đi trường."
+      }
+    ],
+    "id": "mei",
+    "level": "HSK 1"
+  },
+  {
+    "title": "PHÓ TỪ 都 (ĐỀU)",
+    "hz": "都",
+    "topic": "hutu",
+    "def": "Phó từ 都 (đều) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ (số nhiều)"
+      ],
+      [
+        "都",
+        "key"
+      ],
+      [
+        "Vị ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 都 TRƯỚC CHỦ NGỮ HOẶC SAU ĐỘNG TỪ",
+      " ; 都 luôn đứng ngay sau chủ ngữ, trước động từ và tính từ."
+    ],
+    "ex": [
+      {
+        "hz": "我们都是学生。",
+        "py": "wǒmen dōu shì xuésheng.",
+        "vi": "Chúng tôi đều là học sinh."
+      },
+      {
+        "hz": "他们都喝咖啡。",
+        "py": "tāmen dōu hē kāfēi.",
+        "vi": "Họ đều uống cà phê."
+      },
+      {
+        "hz": "苹果和香蕉都很好吃。",
+        "py": "píngguǒ hé xiāngjiāo dōu hěn hǎochī.",
+        "vi": "Táo và chuối đều rất ngon."
+      }
+    ],
+    "id": "dou",
+    "level": "HSK 1"
+  },
+  {
+    "title": "PHÓ TỪ 也 (CŨNG)",
+    "hz": "也",
+    "topic": "hutu",
+    "def": "Phó từ 也 (cũng) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "也",
+        "key"
+      ],
+      [
+        "Vị ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 也 TRONG CÂU PHỦ ĐỊNH CÓ 不 và 没 SAI VỊ TRÍ",
+      " ; thứ tự đúng là 主语 + 不/没 + 也, ví dụ 他也不是学生."
+    ],
+    "ex": [
+      {
+        "hz": "他也是老师。",
+        "py": "tā yě shì lǎoshī.",
+        "vi": "Anh ấy cũng là giáo viên."
+      },
+      {
+        "hz": "我也爱中国菜。",
+        "py": "wǒ yě ài Zhōngguó cài.",
+        "vi": "Tôi cũng thích món Trung Quốc."
+      },
+      {
+        "hz": "他也不是学生。",
+        "py": "tā yě bú shì xuésheng.",
+        "vi": "Anh ấy cũng không phải học sinh."
+      }
+    ],
+    "id": "ye",
+    "level": "HSK 1"
+  },
+  {
+    "title": "PHÓ TỪ TRÌNH ĐỘ 很",
+    "hz": "很",
+    "topic": "hutu",
+    "def": "Phó từ trình độ 很 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "很",
+        "key"
+      ],
+      [
+        "Tính từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DỊCH 很 LÀ RẤT TRONG MỌI CÂU",
+      " ; ở câu vị ngữ tính từ, 很 chỉ giữ nhịp câu, nghĩa RẤT yếu đi, muốn nhấn mạnh phải đọc nhấn."
+    ],
+    "ex": [
+      {
+        "hz": "我很高兴。",
+        "py": "wǒ hěn gāoxìng.",
+        "vi": "Tôi rất vui."
+      },
+      {
+        "hz": "她很漂亮。",
+        "py": "tā hěn piàoliang.",
+        "vi": "Cô ấy đẹp."
+      },
+      {
+        "hz": "学校很大。",
+        "py": "xuéxiào hěn dà.",
+        "vi": "Trường rất lớn."
+      }
+    ],
+    "id": "hen",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẤU TRÚC 太…了",
+    "hz": "太了",
+    "topic": "hutu",
+    "def": "Cấu trúc 太…了 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "太",
+        "key"
+      ],
+      [
+        "Tính từ"
+      ],
+      [
+        "了",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "QUÊN 了 Ở CUỐI CẤU TRÚC 太…了",
+      " ; 太 luôn đi cặp với 了 ở cuối câu, thiếu một trong hai là sai ngữ pháp."
+    ],
+    "ex": [
+      {
+        "hz": "太好了!",
+        "py": "tài hǎo le!",
+        "vi": "Tốt quá!"
+      },
+      {
+        "hz": "你太忙了!",
+        "py": "nǐ tài máng le!",
+        "vi": "Bạn bận quá!"
+      },
+      {
+        "hz": "这个菜太好吃了!",
+        "py": "zhège cài tài hǎochī le!",
+        "vi": "Món này ngon quá!"
+      }
+    ],
+    "id": "tai-le",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ TRÌNH THỌC 会 (BIẾT LÀM)",
+    "hz": "会",
+    "topic": "hutu",
+    "def": "Động từ trình thọc 会 (biết làm) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "会",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 会 KHI NÓI VỀ SỰ CHO PHÉP",
+      " ; 会 diễn tả khả năng học được, sự cho phép phải dùng 能 hoặc 可以."
+    ],
+    "ex": [
+      {
+        "hz": "我会说汉语。",
+        "py": "wǒ huì shuō Hànyǔ.",
+        "vi": "Tôi biết nói tiếng Trung."
+      },
+      {
+        "hz": "他会打电话。",
+        "py": "tā huì dǎ diànhuà.",
+        "vi": "Anh ấy biết gọi điện thoại."
+      },
+      {
+        "hz": "你会写汉字吗?",
+        "py": "nǐ huì xiě Hànzì ma?",
+        "vi": "Bạn biết viết chữ Trung không?"
+      }
+    ],
+    "id": "hui",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ TRÌNH THỌC 能 (CÓ THỂ)",
+    "hz": "能",
+    "topic": "hutu",
+    "def": "Động từ trình thọc 能 (có thể) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "能",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "PHỦ ĐỊNH 能 BẰNG 不会",
+      " ; không được phép hay không thể làm phải phủ định bằng 不能."
+    ],
+    "ex": [
+      {
+        "hz": "我能坐这儿吗?",
+        "py": "wǒ néng zuò zhèr ma?",
+        "vi": "Tôi có thể ngồi đây không?"
+      },
+      {
+        "hz": "你能来吗?",
+        "py": "nǐ néng lái ma?",
+        "vi": "Bạn có thể đến được không?"
+      },
+      {
+        "hz": "今天我不能去学校。",
+        "py": "jīntiān wǒ bù néng qù xuéxiào.",
+        "vi": "Hôm nay tôi không thể đi trường."
+      }
+    ],
+    "id": "neng",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ TRÌNH THỌC 想 (MUỐN)",
+    "hz": "想",
+    "topic": "hutu",
+    "def": "Động từ trình thọc 想 (muốn) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "想",
+        "key"
+      ],
+      [
+        "Động từ / Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "NHẦM 想 (MUỐN, NHỚ) VỚI 要 (SẼ, CẦN)",
+      " ; 想 nói mong muốn nhẹ nhàng, 要 mang tính quyết định hoặc yêu cầu."
+    ],
+    "ex": [
+      {
+        "hz": "我想喝水。",
+        "py": "wǒ xiǎng hē shuǐ.",
+        "vi": "Tôi muốn uống nước."
+      },
+      {
+        "hz": "我想妈妈。",
+        "py": "wǒ xiǎng māma.",
+        "vi": "Tôi nhớ mẹ."
+      },
+      {
+        "hz": "你想吃什么?",
+        "py": "nǐ xiǎng chī shénme?",
+        "vi": "Bạn muốn ăn gì?"
+      }
+    ],
+    "id": "xiang",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ TRÌNH THỌC 要 (MUỐN, SẼ)",
+    "hz": "要",
+    "topic": "hutu",
+    "def": "Động từ trình thọc 要 (muốn, sẽ) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "要",
+        "key"
+      ],
+      [
+        "Danh từ / Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 要 TRƯỚC ĐỘNG TỪ DIỄN TẢ KHA NĂNG",
+      " ; 要 nói về mong muốn và dự định, khả năng phải dùng 会 hoặc 能."
+    ],
+    "ex": [
+      {
+        "hz": "我要一个苹果。",
+        "py": "wǒ yào yíge píngguǒ.",
+        "vi": "Tôi muốn một quả táo."
+      },
+      {
+        "hz": "他要咖啡。",
+        "py": "tā yào kāfēi.",
+        "vi": "Anh ấy muốn cà phê."
+      },
+      {
+        "hz": "明天我要去学校。",
+        "py": "míngtiān wǒ yào qù xuéxiào.",
+        "vi": "Ngày mai tôi sẽ đi trường."
+      }
+    ],
+    "id": "yao",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU CHỮ 在 (Ở ĐÂU)",
+    "hz": "在",
+    "topic": "ba",
+    "def": "Câu chữ 在 (ở đâu) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "在",
+        "key"
+      ],
+      [
+        "Địa điểm"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "QUÊN 在 KHI NÓI NƠI Ở",
+      " ; câu ai ở đâu bắt buộc phải có 在 trước địa điểm, không nối bằng 是."
+    ],
+    "ex": [
+      {
+        "hz": "我在学校。",
+        "py": "wǒ zài xuéxiào.",
+        "vi": "Tôi ở trường."
+      },
+      {
+        "hz": "他在家。",
+        "py": "tā zài jiā.",
+        "vi": "Anh ấy ở nhà."
+      },
+      {
+        "hz": "爸爸在商店。",
+        "py": "bàba zài shāngdiàn.",
+        "vi": "Bố ở cửa hàng."
+      }
+    ],
+    "id": "zai",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẤU TRÚC 正在 (ĐANG)",
+    "hz": "正在",
+    "topic": "hutu",
+    "def": "Cấu trúc 正在 (đang) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "正在",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 正在 SAU ĐỘNG TỪ",
+      " ; 正在 là phó từ nên phải đứng trước động từ diễn tả hành động đang diễn ra."
+    ],
+    "ex": [
+      {
+        "hz": "他正在吃饭。",
+        "py": "tā zhèngzài chī fàn.",
+        "vi": "Anh ấy đang ăn cơm."
+      },
+      {
+        "hz": "我们正在学汉语。",
+        "py": "wǒmen zhèngzài xué Hànyǔ.",
+        "vi": "Chúng tôi đang học tiếng Trung."
+      },
+      {
+        "hz": "妈妈正在看电视。",
+        "py": "māma zhèngzài kàn diànshì.",
+        "vi": "Mẹ đang xem tivi."
+      }
+    ],
+    "id": "zheng-zai",
+    "level": "HSK 1"
+  },
+  {
+    "title": "在 + ĐỊA ĐIỂM + ĐỘNG TỪ",
+    "hz": "在+VP",
+    "topic": "ba",
+    "def": "在 + địa điểm + động từ — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "在",
+        "key"
+      ],
+      [
+        "Địa điểm"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT ĐỊA ĐIỂM SAU ĐỘNG TỪ NHƯ TIẾNG VIỆT",
+      " ; trong tiếng Trung địa điểm đứng trước động từ qua 在."
+    ],
+    "ex": [
+      {
+        "hz": "我在家吃饭。",
+        "py": "wǒ zài jiā chī fàn.",
+        "vi": "Tôi ăn cơm ở nhà."
+      },
+      {
+        "hz": "他在学校学中文。",
+        "py": "tā zài xuéxiào xué Zhōngwén.",
+        "vi": "Anh ấy học tiếng Trung ở trường."
+      },
+      {
+        "hz": "我们在商店买苹果。",
+        "py": "wǒmen zài shāngdiàn mǎi píngguǒ.",
+        "vi": "Chúng tôi mua táo ở cửa hàng."
+      }
+    ],
+    "id": "zai-+-V-P",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU CHỮ 有 (CÓ, SỞ HỮU)",
+    "hz": "有",
+    "topic": "ba",
+    "def": "Câu chữ 有 (có, sở hữu) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "有",
+        "key"
+      ],
+      [
+        "Danh ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "NỐI NGƯỜI SỞ HỮU BẰNG 是",
+      " ; diễn tả sở hữu phải dùng 有, 是 chỉ dùng để định danh A là B."
+    ],
+    "ex": [
+      {
+        "hz": "我有一个弟弟。",
+        "py": "wǒ yǒu yíge dìdi.",
+        "vi": "Tôi có một người em trai."
+      },
+      {
+        "hz": "你家有电脑吗?",
+        "py": "nǐ jiā yǒu diànnǎo ma?",
+        "vi": "Nhà bạn có máy tính không?"
+      },
+      {
+        "hz": "桌子上有一本书。",
+        "py": "zhuōzi shang yǒu yì běn shū.",
+        "vi": "Trên bàn có một cuốn sách."
+      }
+    ],
+    "id": "you",
+    "level": "HSK 1"
+  },
+  {
+    "title": "TRỢ ĐỘNG TỪ 了 (HÀNH ĐỘNG XONG)",
+    "hz": "了",
+    "topic": "bongu",
+    "def": "Trợ động từ 了 (hành động xong) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ + 了",
+        "key"
+      ],
+      [
+        "Tân ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 了 VỚI HÀNH ĐỘNG THƯỜNG NGÀY",
+      " ; 了 chỉ gắn với hành động đã hoàn thành, thói quen hiện tại không dùng 了."
+    ],
+    "ex": [
+      {
+        "hz": "我吃了一个苹果。",
+        "py": "wǒ chīle yíge píngguǒ.",
+        "vi": "Tôi đã ăn một quả táo."
+      },
+      {
+        "hz": "我买了书。",
+        "py": "wǒ mǎile shū.",
+        "vi": "Tôi đã mua sách."
+      },
+      {
+        "hz": "他喝了咖啡。",
+        "py": "tā hēle kāfēi.",
+        "vi": "Anh ấy đã uống cà phê."
+      }
+    ],
+    "id": "le",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẤU TRÚC 的 (CỦA)",
+    "hz": "的",
+    "topic": "bongu",
+    "def": "Cấu trúc 的 (của) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh ngữ (người/vật)"
+      ],
+      [
+        "的",
+        "key"
+      ],
+      [
+        "Danh ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẢO THỨ TỰ SỞ HỮU NHƯ TIẾNG VIỆT",
+      " ; trong tiếng Trung người sở hữu đứng trước, 的 nối vào trước vật được sở hữu."
+    ],
+    "ex": [
+      {
+        "hz": "这是我的书。",
+        "py": "zhè shì wǒ de shū.",
+        "vi": "Đây là sách của tôi."
+      },
+      {
+        "hz": "这是爸爸的书。",
+        "py": "zhè shì bàba de shū.",
+        "vi": "Đây là sách của bố."
+      },
+      {
+        "hz": "她是我们的老师。",
+        "py": "tā shì wǒmen de lǎoshī.",
+        "vi": "Cô ấy là giáo viên của chúng tôi."
+      }
+    ],
+    "id": "de",
+    "level": "HSK 1"
+  },
+  {
+    "title": "LƯỢNG TỪ 个",
+    "hz": "个",
+    "topic": "hutu",
+    "def": "Lượng từ 个 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Số từ"
+      ],
+      [
+        "个",
+        "key"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ LƯỢNG TỪ KHI ĐẾM ĐỒ VẬT",
+      " ; tiếng Trung bắt buộc có lượng từ giữa số từ và danh từ, 个 là lượng từ thông dụng nhất."
+    ],
+    "ex": [
+      {
+        "hz": "我有两个朋友。",
+        "py": "wǒ yǒu liǎngge péngyou.",
+        "vi": "Tôi có hai người bạn."
+      },
+      {
+        "hz": "一个苹果。",
+        "py": "yíge píngguǒ.",
+        "vi": "Một quả táo."
+      },
+      {
+        "hz": "我们家有三个人。",
+        "py": "wǒmen jiā yǒu sānge rén.",
+        "vi": "Nhà tôi có ba người."
+      }
+    ],
+    "id": "ge",
+    "level": "HSK 1"
+  },
+  {
+    "title": "LƯỢNG TỪ 本、张、只、口",
+    "hz": "本",
+    "topic": "hutu",
+    "def": "Lượng từ 本、张、只、口 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Số từ"
+      ],
+      [
+        "Lượng từ",
+        "key"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 个 CHO MỌI DANH TỪ",
+      " ; sách đếm bằng 本, bàn ghế bằng 张, con vật bằng 只, nhân khẩu bằng 口, không thay thế tùy tiện."
+    ],
+    "ex": [
+      {
+        "hz": "一本书。",
+        "py": "yì běn shū.",
+        "vi": "Một cuốn sách."
+      },
+      {
+        "hz": "两只猫。",
+        "py": "liǎng zhǐ māo.",
+        "vi": "Hai con mèo."
+      },
+      {
+        "hz": "我家有四口人。",
+        "py": "wǒ jiā yǒu sì kǒu rén.",
+        "vi": "Nhà tôi có bốn nhân khẩu."
+      }
+    ],
+    "id": "ben",
+    "level": "HSK 1"
+  },
+  {
+    "title": "NÓI GIÁ TIỀN VỚI 块",
+    "hz": "块",
+    "topic": "hutu",
+    "def": "Nói giá tiền với 块 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh từ"
+      ],
+      [
+        "Số từ + 块",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ QUẢ 块 HOẶC 钱 KHI NÓI GIÁ",
+      " ; nói giá tiền cần đủ số từ và đơn vị, ví dụ 五块钱, không nói riêng lẻ."
+    ],
+    "ex": [
+      {
+        "hz": "这个五块钱。",
+        "py": "zhège wǔ kuài qián.",
+        "vi": "Cái này năm tệ."
+      },
+      {
+        "hz": "苹果三块钱。",
+        "py": "píngguǒ sān kuài qián.",
+        "vi": "Táo ba tệ."
+      },
+      {
+        "hz": "一杯水两块。",
+        "py": "yì bēi shuǐ liǎng kuài.",
+        "vi": "Một cốc nước hai tệ."
+      }
+    ],
+    "id": "kuai",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU DANH TỪ VỊ NGỮ (TUỔI TĂC)",
+    "hz": "岁",
+    "topic": "ba",
+    "def": "Câu danh từ vị ngữ (tuổi tăc) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Số từ + 岁",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "THÊM 是 TRƯỚC SỐ TUỔI",
+      " ; câu nói tuổi không cần động từ, số từ cộng 岁 đứng thẳng sau chủ ngữ."
+    ],
+    "ex": [
+      {
+        "hz": "我二十岁。",
+        "py": "wǒ èrshí suì.",
+        "vi": "Tôi hai mươi tuổi."
+      },
+      {
+        "hz": "我儿子五岁。",
+        "py": "wǒ érzi wǔ suì.",
+        "vi": "Con trai tôi năm tuổi."
+      },
+      {
+        "hz": "我妹妹十八岁。",
+        "py": "wǒ mèimei shíbā suì.",
+        "vi": "Em gái tôi mười tám tuổi."
+      }
+    ],
+    "id": "sui",
+    "level": "HSK 1"
+  },
+  {
+    "title": "THỜI LƯỢNG VỚI 半 (RƯỠI)",
+    "hz": "半",
+    "topic": "hutu",
+    "def": "Thời lượng với 半 (rưỡi) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Số từ + 小时"
+      ],
+      [
+        "半",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 半 TRƯỚC 小时 NHƯ MỘT RƯỠI TIẾNG",
+      " ; nói rưỡi tiếng thì 半 đứng sau 小时, còn nửa tiếng là 半个小时."
+    ],
+    "ex": [
+      {
+        "hz": "我睡了半个小时。",
+        "py": "wǒ shuìle bàn ge xiǎoshí.",
+        "vi": "Tôi đã ngủ nửa tiếng."
+      },
+      {
+        "hz": "一个半小时。",
+        "py": "yíge bàn xiǎoshí.",
+        "vi": "Một tiếng rưỡi."
+      },
+      {
+        "hz": "他学了半个小时汉语。",
+        "py": "tā xuéle bàn ge xiǎoshí Hànyǔ.",
+        "vi": "Anh ấy đã học nửa tiếng tiếng Trung."
+      }
+    ],
+    "id": "ban",
+    "level": "HSK 1"
+  },
+  {
+    "title": "NÓI GIỜ VỚI 点、分",
+    "hz": "点",
+    "topic": "hutu",
+    "def": "Nói giờ với 点、分 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Số từ + 点",
+        "key"
+      ],
+      [
+        "Số từ + 分"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẢO THỨ TỰ GIỜ VÀ PHÚT",
+      " ; tiếng Trung nói giờ trước rồi mới đến phút, hai giờ rưỡi là 两点半 không phải 半两."
+    ],
+    "ex": [
+      {
+        "hz": "现在八点。",
+        "py": "xiànzài bā diǎn.",
+        "vi": "Bây giờ là tám giờ."
+      },
+      {
+        "hz": "八点二十分。",
+        "py": "bā diǎn èrshí fēn.",
+        "vi": "Tám giờ hai mươi phút."
+      },
+      {
+        "hz": "十点半。",
+        "py": "shí diǎn bàn.",
+        "vi": "Mười giờ rưỡi."
+      }
+    ],
+    "id": "dian",
+    "level": "HSK 1"
+  },
+  {
+    "title": "TỪ NGỮ THỜI GIAN ĐỨNG ĐẦU CÂU",
+    "hz": "明天",
+    "topic": "ba",
+    "def": "Từ ngữ thời gian đứng đầu câu — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Từ thời gian",
+        "key"
+      ],
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Vị ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT TỪ THỜI GIAN SAU ĐỘNG TỪ",
+      " ; từ chỉ thời gian phải đứng trước động từ, ngay sau chủ ngữ hoặc đầu câu."
+    ],
+    "ex": [
+      {
+        "hz": "我明天去学校。",
+        "py": "wǒ míngtiān qù xuéxiào.",
+        "vi": "Ngày mai tôi đi trường."
+      },
+      {
+        "hz": "今天我很忙。",
+        "py": "jīntiān wǒ hěn máng.",
+        "vi": "Hôm nay tôi rất bận."
+      },
+      {
+        "hz": "星期天我在家。",
+        "py": "xīngqītiān wǒ zài jiā.",
+        "vi": "Chủ nhật tôi ở nhà."
+      }
+    ],
+    "id": "ming-tian",
+    "level": "HSK 1"
+  },
+  {
+    "title": "THỨ TỰ NĂM THÁNG NGÀY",
+    "hz": "月",
+    "topic": "ba",
+    "def": "Thứ tự năm tháng ngày — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Năm"
+      ],
+      [
+        "Tháng + 月",
+        "key"
+      ],
+      [
+        "Ngày + 号"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "NÓI NGÀY TRƯỚC THÁNG NHƯ TIẾNG VIỆT",
+      " ; tiếng Trung xếp từ lớn đến nhỏ: năm trước, tháng sau, ngày cuối cùng."
+    ],
+    "ex": [
+      {
+        "hz": "今天是十月二十三号。",
+        "py": "jīntiān shì shíyuè èrshísān hào.",
+        "vi": "Hôm nay là ngày hai mươi ba tháng mười."
+      },
+      {
+        "hz": "我的生日是五月八号。",
+        "py": "wǒ de shēngrì shì wǔyuè bā hào.",
+        "vi": "Sinh nhật tôi là ngày mùng 8 tháng 5."
+      },
+      {
+        "hz": "九月一号我上学。",
+        "py": "jiǔyuè yī hào wǒ shàngxué.",
+        "vi": "Ngày mùng 1 tháng 9 tôi đi học."
+      }
+    ],
+    "id": "yue",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐẠI TỪ CHỈ 这、那 (NÀY, KIA)",
+    "hz": "这",
+    "topic": "hutu",
+    "def": "Đại từ chỉ 这、那 (này, kia) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "这/那",
+        "key"
+      ],
+      [
+        "Lượng từ 个"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ 个 SAU 这 VÀ 那 KHI NÓI DANH TỪ ĐƠN",
+      " ; 这 và 那 phải kèm lượng từ 个 trước danh từ, không nói trực tiếp 这书."
+    ],
+    "ex": [
+      {
+        "hz": "这个人是我爸爸。",
+        "py": "zhège rén shì wǒ bàba.",
+        "vi": "Người này là bố tôi."
+      },
+      {
+        "hz": "那个是学校。",
+        "py": "nàge shì xuéxiào.",
+        "vi": "Kia là trường học."
+      },
+      {
+        "hz": "这个苹果很好吃。",
+        "py": "zhège píngguǒ hěn hǎochī.",
+        "vi": "Quả táo này rất ngon."
+      }
+    ],
+    "id": "zhe",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐẠI TỪ NƠI CHỐN 这儿、那儿",
+    "hz": "这儿",
+    "topic": "hutu",
+    "def": "Đại từ nơi chốn 这儿、那儿 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "在"
+      ],
+      [
+        "这儿/那儿",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 这 里 LUÔN THAY CHO 这儿",
+      " ; chỉ nơi đây dùng 这儿 hoặc 这里, nhưng trong một câu chỉ chọn một dạng cho thống nhất."
+    ],
+    "ex": [
+      {
+        "hz": "我在这儿。",
+        "py": "wǒ zài zhèr.",
+        "vi": "Tôi ở đây."
+      },
+      {
+        "hz": "他在那儿。",
+        "py": "tā zài nàr.",
+        "vi": "Anh ấy ở kia."
+      },
+      {
+        "hz": "这儿人很多。",
+        "py": "zhèr rén hěn duō.",
+        "vi": "Ở đây người rất đông."
+      }
+    ],
+    "id": "zhe-er",
+    "level": "HSK 1"
+  },
+  {
+    "title": "VỊ TỪ 里 (TRONG)",
+    "hz": "里",
+    "topic": "bongu",
+    "def": "Vị từ 里 (trong) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh từ + 里",
+        "key"
+      ],
+      [
+        "有/是"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 里 TRƯỚC DANH TỪ",
+      " ; 里 là vị từ luôn đứng sau danh từ chỉ nơi chứa, ví dụ 杯子里 không phải 里杯子."
+    ],
+    "ex": [
+      {
+        "hz": "杯子里有水。",
+        "py": "bēizi li yǒu shuǐ.",
+        "vi": "Trong cốc có nước."
+      },
+      {
+        "hz": "家里有桌子。",
+        "py": "jiā li yǒu zhuōzi.",
+        "vi": "Trong nhà có bàn."
+      },
+      {
+        "hz": "教室里都是学生。",
+        "py": "jiàoshì li dōu shì xuésheng.",
+        "vi": "Trong lớp toàn là học sinh."
+      }
+    ],
+    "id": "li",
+    "level": "HSK 1"
+  },
+  {
+    "title": "VỊ TỪ 上、下 (TRÊN, DƯỚI)",
+    "hz": "上",
+    "topic": "bongu",
+    "def": "Vị từ 上、下 (trên, dưới) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh từ + 上",
+        "key"
+      ],
+      [
+        "有"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "QUÊN 面 KHI NÓI 桌子下面",
+      " ; 桌子上 và 桌子上面 đều đúng nhưng phải giữ vị từ sau danh từ, không đảo lên trước."
+    ],
+    "ex": [
+      {
+        "hz": "桌子上有一本书。",
+        "py": "zhuōzi shang yǒu yì běn shū.",
+        "vi": "Trên bàn có một cuốn sách."
+      },
+      {
+        "hz": "桌子上有一只猫。",
+        "py": "zhuōzi shang yǒu yì zhǐ māo.",
+        "vi": "Trên bàn có một con mèo."
+      },
+      {
+        "hz": "书在床下面。",
+        "py": "shū zài chuáng xiàmiàn.",
+        "vi": "Sách ở dưới giường."
+      }
+    ],
+    "id": "shang",
+    "level": "HSK 1"
+  },
+  {
+    "title": "VỊ TỪ 前面、后面 (TRƯỚC, SAU)",
+    "hz": "后面",
+    "topic": "bongu",
+    "def": "Vị từ 前面、后面 (trước, sau) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh từ + 前面/后面",
+        "key"
+      ],
+      [
+        "有"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ 面 KHI DÙNG 前、后 ĐƠN LỆ",
+      " ; với người và vật cụ thể phải nói 前面、后面 đầy đủ, dạng 前、后 đơn lẻ chỉ dùng trong từ ghép."
+    ],
+    "ex": [
+      {
+        "hz": "学校前面有一个商店。",
+        "py": "xuéxiào qiánmiàn yǒu yíge shāngdiàn.",
+        "vi": "Trước trường có một cửa hàng."
+      },
+      {
+        "hz": "猫在车后面。",
+        "py": "māo zài chē hòumiàn.",
+        "vi": "Con mèo ở sau chiếc xe."
+      },
+      {
+        "hz": "我家后面是学校。",
+        "py": "wǒ jiā hòumiàn shì xuéxiào.",
+        "vi": "Sau nhà tôi là trường học."
+      }
+    ],
+    "id": "hou-mian",
+    "level": "HSK 1"
+  },
+  {
+    "title": "LIÊN TỪ 和 (VÀ)",
+    "hz": "和",
+    "topic": "bongu",
+    "def": "Liên từ 和 (và) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Danh ngữ"
+      ],
+      [
+        "和",
+        "key"
+      ],
+      [
+        "Danh ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 和 NỐI HAI CÂU",
+      " ; 和 chỉ nối danh từ với nhau, nối hai mệnh đề phải dùng dấu phẩy hoặc từ khác."
+    ],
+    "ex": [
+      {
+        "hz": "我和爸爸在家。",
+        "py": "wǒ hé bàba zài jiā.",
+        "vi": "Tôi và bố ở nhà."
+      },
+      {
+        "hz": "我和你都是学生。",
+        "py": "wǒ hé nǐ dōu shì xuésheng.",
+        "vi": "Tôi và bạn đều là học sinh."
+      },
+      {
+        "hz": "他喝咖啡和牛奶。",
+        "py": "tā hē kāfēi hé niúnǎi.",
+        "vi": "Anh ấy uống cà phê và sữa."
+      }
+    ],
+    "id": "he",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẤU TRÚC ĐỘNG TỪ KÉP VỚI 给",
+    "hz": "给",
+    "topic": "ba",
+    "def": "Cấu trúc động từ kép với 给 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ"
+      ],
+      [
+        "给",
+        "key"
+      ],
+      [
+        "Người nhận"
+      ],
+      [
+        "Vật"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT NGƯỜI NHẬN TRƯỚC ĐỘNG TỪ 给",
+      " ; thứ tự chuẩn là động từ trước, 给 nối người nhận rồi mới đến vật."
+    ],
+    "ex": [
+      {
+        "hz": "我给他一本书。",
+        "py": "wǒ gěi tā yì běn shū.",
+        "vi": "Tôi đưa anh ấy một cuốn sách."
+      },
+      {
+        "hz": "妈妈给我苹果。",
+        "py": "māma gěi wǒ píngguǒ.",
+        "vi": "Mẹ cho tôi táo."
+      },
+      {
+        "hz": "老师给学生书。",
+        "py": "lǎoshī gěi xuésheng shū.",
+        "vi": "Giáo viên đưa học sinh sách."
+      }
+    ],
+    "id": "gei",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU MỆNH LỆNH LỊCH SỰ VỚI 请",
+    "hz": "请",
+    "topic": "hutu",
+    "def": "Câu mệnh lệnh lịch sự với 请 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "请",
+        "key"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ 主语 HOẶC THÊM 你 SAU 请 SAI CÁCH",
+      " ; 请 + động từ là đủ lịch sự, thêm 你 vào giữa nghe gượng và không chuẩn."
+    ],
+    "ex": [
+      {
+        "hz": "请坐!",
+        "py": "qǐng zuò!",
+        "vi": "Mời ngồi!"
+      },
+      {
+        "hz": "请喝水。",
+        "py": "qǐng hē shuǐ.",
+        "vi": "Mời uống nước."
+      },
+      {
+        "hz": "请看这儿。",
+        "py": "qǐng kàn zhèr.",
+        "vi": "Xin nhìn đây."
+      }
+    ],
+    "id": "qing",
+    "level": "HSK 1"
+  },
+  {
+    "title": "SỐ LƯỢNG ÍT VỚI 一点儿",
+    "hz": "一点儿",
+    "topic": "hutu",
+    "def": "Số lượng ít với 一点儿 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Động từ"
+      ],
+      [
+        "一点儿",
+        "key"
+      ],
+      [
+        "Danh từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ 儿 HOẶC ĐẢO THÀNH 点儿一",
+      " ; thứ tự cố định là 一点儿 + danh từ, một số vùng khẩu ngữ nói 点儿 nhưng viết phải đủ 一点儿."
+    ],
+    "ex": [
+      {
+        "hz": "我喝一点儿水。",
+        "py": "wǒ hē yìdiǎnr shuǐ.",
+        "vi": "Tôi uống một chút nước."
+      },
+      {
+        "hz": "我会一点儿汉语。",
+        "py": "wǒ huì yìdiǎnr Hànyǔ.",
+        "vi": "Tôi biết một chút tiếng Trung."
+      },
+      {
+        "hz": "请给我一点儿咖啡。",
+        "py": "qǐng gěi wǒ yìdiǎnr kāfēi.",
+        "vi": "Cho tôi một chút cà phê."
+      }
+    ],
+    "id": "yi-dian-er",
+    "level": "HSK 1"
+  },
+  {
+    "title": "BỔ NGỮ 一下 (LÀM MỘT CHÚT)",
+    "hz": "一下",
+    "topic": "bi",
+    "def": "Bổ ngữ 一下 (làm một chút) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ"
+      ],
+      [
+        "一下",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 一下 TRƯỚC ĐỘNG TỪ",
+      " ; 一下 là bổ ngữ đứng ngay sau động từ, làm câu nghe nhẹ nhàng như thử hoặc làm qua loa."
+    ],
+    "ex": [
+      {
+        "hz": "我看一下。",
+        "py": "wǒ kàn yíxià.",
+        "vi": "Tôi xem một chút."
+      },
+      {
+        "hz": "你说一下。",
+        "py": "nǐ shuō yíxià.",
+        "vi": "Bạn nói thử xem."
+      },
+      {
+        "hz": "我看一下你的书。",
+        "py": "wǒ kàn yíxià nǐ de shū.",
+        "vi": "Tôi xem một chút sách của bạn."
+      }
+    ],
+    "id": "yi-xia",
+    "level": "HSK 1"
+  },
+  {
+    "title": "XIN LỖI VỚI 对不起、没关系",
+    "hz": "对不起",
+    "topic": "hutu",
+    "def": "Xin lỗi với 对不起、没关系 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "对不起",
+        "key"
+      ],
+      [
+        ","
+      ],
+      [
+        "没关系"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "TRẢ LỜI XIN LỖI BẰNG 不客气",
+      " ; 不客气 chỉ dùng khi nhận lời cảm ơn, khi ai xin lỗi phải đáp 没关系."
+    ],
+    "ex": [
+      {
+        "hz": "对不起!",
+        "py": "duìbuqǐ!",
+        "vi": "Xin lỗi!"
+      },
+      {
+        "hz": "没关系!",
+        "py": "méi guānxi!",
+        "vi": "Không sao!"
+      },
+      {
+        "hz": "对不起,老师。",
+        "py": "duìbuqǐ, lǎoshī.",
+        "vi": "Em xin lỗi, thầy ạ."
+      }
+    ],
+    "id": "dui-bu-qi",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ CHỈ HƯỚNG 去、来",
+    "hz": "去",
+    "topic": "hutu",
+    "def": "Động từ chỉ hướng 去、来 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "去/来",
+        "key"
+      ],
+      [
+        "Địa điểm"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 去 KHI VẬT THỂ CHỈ VỀ PHÍA MÌNH",
+      " ; 去 là đi ra xa người nói, 来 là đến gần người nói, chọn sai sẽ gây hiểu nhầm hướng."
+    ],
+    "ex": [
+      {
+        "hz": "我去学校。",
+        "py": "wǒ qù xuéxiào.",
+        "vi": "Tôi đi trường."
+      },
+      {
+        "hz": "他来我家。",
+        "py": "tā lái wǒ jiā.",
+        "vi": "Anh ấy đến nhà tôi."
+      },
+      {
+        "hz": "你去哪儿?",
+        "py": "nǐ qù nǎr?",
+        "vi": "Bạn đi đâu thế?"
+      }
+    ],
+    "id": "qu",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐI LẠI BẰNG PHƯƠNG TIỆN VỚI 坐",
+    "hz": "坐",
+    "topic": "hutu",
+    "def": "Đi lại bằng phương tiện với 坐 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "坐",
+        "key"
+      ],
+      [
+        "Phương tiện"
+      ],
+      [
+        "Động từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT PHƯƠNG TIỆN SAU ĐỘNG TỪ ĐÍCH ĐẾN",
+      " ; phương tiện đi qua 坐 phải đứng trước động từ chỉ hướng, ví dụ 坐车去 không phải 去...坐车."
+    ],
+    "ex": [
+      {
+        "hz": "我坐公共汽车去学校。",
+        "py": "wǒ zuò gōnggòng qìchē qù xuéxiào.",
+        "vi": "Tôi đi trường bằng xe buýt."
+      },
+      {
+        "hz": "他坐出租车回家。",
+        "py": "tā zuò chūzūchē huí jiā.",
+        "vi": "Anh ấy về nhà bằng taxi."
+      },
+      {
+        "hz": "我们坐车去。",
+        "py": "wǒmen zuò chē qù.",
+        "vi": "Chúng ta đi bằng xe nhé."
+      }
+    ],
+    "id": "zuo",
+    "level": "HSK 1"
+  },
+  {
+    "title": "GIỚI THIỆU HỌ VỚI 姓",
+    "hz": "姓",
+    "topic": "hutu",
+    "def": "Giới thiệu họ với 姓 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "姓",
+        "key"
+      ],
+      [
+        "Họ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "THÊM DANH TỪ XINGSHI SAU 姓",
+      " ; 姓 vừa là động từ vừa là danh từ, hỏi họ chỉ nói 你姓什么, không thêm từ khác."
+    ],
+    "ex": [
+      {
+        "hz": "你姓什么?",
+        "py": "nǐ xìng shénme?",
+        "vi": "Bạn họ gì?"
+      },
+      {
+        "hz": "我姓王。",
+        "py": "wǒ xìng Wáng.",
+        "vi": "Tôi họ Vương."
+      },
+      {
+        "hz": "他姓李。",
+        "py": "tā xìng Lǐ.",
+        "vi": "Anh ấy họ Lý."
+      }
+    ],
+    "id": "xing",
+    "level": "HSK 1"
+  },
+  {
+    "title": "GIỚI THIỆU TÊN VỚI 叫",
+    "hz": "叫",
+    "topic": "hutu",
+    "def": "Giới thiệu tên với 叫 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "叫",
+        "key"
+      ],
+      [
+        "Tên"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 是 THAY CHO 叫 KHI NÓI TÊN MÌNH",
+      " ; giới thiệu tên tự nhiên nhất là 我叫…, kết cấu 是 + tên nghe cứng nhắc hơn."
+    ],
+    "ex": [
+      {
+        "hz": "我叫小明。",
+        "py": "wǒ jiào Xiǎomíng.",
+        "vi": "Tôi tên là Tiểu Minh."
+      },
+      {
+        "hz": "她叫什么名字?",
+        "py": "tā jiào shénme míngzi?",
+        "vi": "Cô ấy tên là gì?"
+      },
+      {
+        "hz": "我妈妈叫张丽。",
+        "py": "wǒ māma jiào Zhāng Lì.",
+        "vi": "Mẹ tôi tên Trương Lệ."
+      }
+    ],
+    "id": "jiao",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẤU TRÚC 觉得 (THẤY, NGHĨ RẰNG)",
+    "hz": "觉得",
+    "topic": "hutu",
+    "def": "Cấu trúc 觉得 (thấy, nghĩ rằng) — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "觉得",
+        "key"
+      ],
+      [
+        "Mệnh đề"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 是 SAU 觉得 NHƯ TỪ THAT",
+      " ; sau 觉得 nối thẳng mệnh đề, không cần từ nối nào ở giữa."
+    ],
+    "ex": [
+      {
+        "hz": "我觉得很好。",
+        "py": "wǒ juéde hěn hǎo.",
+        "vi": "Tôi thấy rất tốt."
+      },
+      {
+        "hz": "我觉得苹果很好吃。",
+        "py": "wǒ juéde píngguǒ hěn hǎochī.",
+        "vi": "Tôi thấy táo rất ngon."
+      },
+      {
+        "hz": "你觉得怎么样?",
+        "py": "nǐ juéde zěnmeyàng?",
+        "vi": "Bạn thấy thế nào?"
+      }
+    ],
+    "id": "jue-de",
+    "level": "HSK 1"
+  },
+  {
+    "title": "HỎI LỊCH SỰ VỚI 请问",
+    "hz": "请问",
+    "topic": "hutu",
+    "def": "Hỏi lịch sự với 请问 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "请问",
+        "key"
+      ],
+      [
+        ","
+      ],
+      [
+        "Câu hỏi"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẶT 请问 Ở CUỐI CÂU",
+      " ; 请问 luôn mở đầu câu hỏi với người lạ, sau nó thường có dấu phẩy rồi mới đến câu hỏi."
+    ],
+    "ex": [
+      {
+        "hz": "请问,你去哪儿?",
+        "py": "qǐngwèn, nǐ qù nǎr?",
+        "vi": "Cho hỏi, bạn đi đâu?"
+      },
+      {
+        "hz": "请问,现在几点?",
+        "py": "qǐngwèn, xiànzài jǐ diǎn?",
+        "vi": "Cho hỏi, bây giờ mấy giờ?"
+      },
+      {
+        "hz": "请问,厕所在哪儿?",
+        "py": "qǐngwèn, cèsuǒ zài nǎr?",
+        "vi": "Cho hỏi, nhà vệ sinh ở đâu?"
+      }
+    ],
+    "id": "qing-wen",
+    "level": "HSK 1"
+  },
+  {
+    "title": "BIẾN ĐIỆU THANH CỦA 一",
+    "hz": "一",
+    "topic": "hutu",
+    "def": "Biến điệu thanh của 一 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Số từ 一",
+        "key"
+      ],
+      [
+        "Lượng từ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐỌC 一 LUÔN LÀ YĨ",
+      " ; 一 đọc yī khi đứng một mình, thành yí trước thanh 4 và yì trước thanh 1, 2, 3."
+    ],
+    "ex": [
+      {
+        "hz": "一个。",
+        "py": "yí ge.",
+        "vi": "Một cái."
+      },
+      {
+        "hz": "一本。",
+        "py": "yì běn.",
+        "vi": "Một cuốn."
+      },
+      {
+        "hz": "一天。",
+        "py": "yì tiān.",
+        "vi": "Một ngày."
+      }
+    ],
+    "id": "yi",
+    "level": "HSK 1"
+  },
+  {
+    "title": "ĐỘNG TỪ NHÂN ĐÔI 看看、试试",
+    "hz": "看看",
+    "topic": "hutu",
+    "def": "Động từ nhân đôi 看看、试试 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ ×2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "DÙNG 看看 CHO HÀNH ĐỘNG ĐANG XẢY RA",
+      " ; nhân đôi động từ diễn tả hành động ngắn, thử nghiệm hoặc nhẹ nhàng, không diễn tả sự đang tiếp diễn."
+    ],
+    "ex": [
+      {
+        "hz": "我看看。",
+        "py": "wǒ kànkan.",
+        "vi": "Tôi xem thử."
+      },
+      {
+        "hz": "你试试。",
+        "py": "nǐ shìshi.",
+        "vi": "Bạn thử xem."
+      },
+      {
+        "hz": "我们看看这个。",
+        "py": "wǒmen kànkan zhège.",
+        "vi": "Chúng ta xem thử cái này."
+      }
+    ],
+    "id": "kan-kan",
+    "level": "HSK 1"
+  },
+  {
+    "title": "HỎI VỊ TRÍ VỚI 在哪儿",
+    "hz": "在哪儿",
+    "topic": "hutu",
+    "def": "Hỏi vị trí với 在哪儿 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "在哪儿",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "BỎ 在 KHI HỎI ĐỊA CHỈ",
+      " ; hỏi cái gì ở đâu phải đủ 在哪儿, chỉ nói 哪儿 thôi là thiếu động từ 在."
+    ],
+    "ex": [
+      {
+        "hz": "学校在哪儿?",
+        "py": "xuéxiào zài nǎr?",
+        "vi": "Trường học ở đâu?"
+      },
+      {
+        "hz": "厕所在哪儿?",
+        "py": "cèsuǒ zài nǎr?",
+        "vi": "Nhà vệ sinh ở đâu?"
+      },
+      {
+        "hz": "你家在哪儿?",
+        "py": "nǐ jiā zài nǎr?",
+        "vi": "Nhà bạn ở đâu?"
+      }
+    ],
+    "id": "zai-na-er",
+    "level": "HSK 1"
+  },
+  {
+    "title": "TRẬT TỰ CÂU CHỦ - VỊ - TÂN",
+    "hz": "吃",
+    "topic": "ba",
+    "def": "Trật tự câu chủ - vị - tân — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "Tân ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐẢO TÂN NGỮ LÊN TRƯỚC ĐỘNG TỪ",
+      " ; câu đơn tiếng Trung luôn theo thứ tự chủ ngữ, động từ, tân ngữ, rất ít ngoại lệ."
+    ],
+    "ex": [
+      {
+        "hz": "我吃苹果。",
+        "py": "wǒ chī píngguǒ.",
+        "vi": "Tôi ăn táo."
+      },
+      {
+        "hz": "他喝咖啡。",
+        "py": "tā hē kāfēi.",
+        "vi": "Anh ấy uống cà phê."
+      },
+      {
+        "hz": "我们学汉语。",
+        "py": "wǒmen xué Hànyǔ.",
+        "vi": "Chúng tôi học tiếng Trung."
+      }
+    ],
+    "id": "chi",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CẢM ƠN VỚI 谢谢、不客气",
+    "hz": "谢谢",
+    "topic": "hutu",
+    "def": "Cảm ơn với 谢谢、不客气 — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "谢谢",
+        "key"
+      ],
+      [
+        "Người/vật"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "ĐÁP LỜI CẢM ƠN BẰNG 没关系",
+      " ; 没关系 dùng cho lời xin lỗi, đáp lời cảm ơn phải nói 不客气."
+    ],
+    "ex": [
+      {
+        "hz": "谢谢你!",
+        "py": "xièxie nǐ!",
+        "vi": "Cảm ơn bạn!"
+      },
+      {
+        "hz": "不客气!",
+        "py": "bú kèqi!",
+        "vi": "Không có gì!"
+      },
+      {
+        "hz": "谢谢你的书。",
+        "py": "xièxie nǐ de shū.",
+        "vi": "Cảm ơn cuốn sách của bạn."
+      }
+    ],
+    "id": "xie-xie",
+    "level": "HSK 1"
+  },
+  {
+    "title": "CÂU VỊ NGỮ TÍNH TỪ",
+    "hz": "忙",
+    "topic": "ba",
+    "def": "Câu vị ngữ tính từ — điểm ngữ pháp HSK 1.",
+    "formula": [
+      [
+        "Chủ ngữ"
+      ],
+      [
+        "Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Bẫy người Việt: ",
+      "THÊM 是 TRƯỚC TÍNH TỪ NHƯ TIẾNG VIỆT CÓ LÀ",
+      " ; câu vị ngữ tính từ không dùng 是, tính từ đứng thẳng sau chủ ngữ kèm 很 hoặc 不."
+    ],
+    "ex": [
+      {
+        "hz": "我很忙。",
+        "py": "wǒ hěn máng.",
+        "vi": "Tôi rất bận."
+      },
+      {
+        "hz": "今天很热。",
+        "py": "jīntiān hěn rè.",
+        "vi": "Hôm nay rất nóng."
+      },
+      {
+        "hz": "他不高兴。",
+        "py": "tā bù gāoxìng.",
+        "vi": "Anh ấy không vui."
+      }
+    ],
+    "id": "mang",
+    "level": "HSK 1"
+  }
+]

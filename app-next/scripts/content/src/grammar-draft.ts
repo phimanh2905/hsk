@@ -98,8 +98,11 @@ export async function parseGrammarResponse(
       );
     }
     const { hz } = v.data;
+    // Ruling W2 chạy bù: hạt từ dùng nhiều lần với nghĩa khác (了1 hoàn thành / 了2
+    // đổi trạng thái) là điểm NGỮ PHÁP khác nhau hợp lệ — chỉ warn, không throw;
+    // id uniqueness xử ở bridge (suffix số) vì slug pinyin trùng.
     if (existing.includes(hz) || seen.has(hz)) {
-      throw new Error(`parseGrammarResponse: điểm ngữ pháp trùng "${hz}" tại index ${i}`);
+      console.warn(`parseGrammarResponse: hz "${hz}" lặp (điểm khác nghĩa — chấp nhận)`);
     }
     seen.add(hz);
     const slugRows = rows[i];

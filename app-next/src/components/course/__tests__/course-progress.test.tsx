@@ -7,11 +7,11 @@ beforeEach(() => localStorage.clear());
 describe("CourseProgress (B2)", () => {
   it("0/15 khi trống", () => {
     render(<CourseProgress book="hsk1" />);
-    expect(screen.getByText("0/15 bài")).toBeInTheDocument();
+    expect(screen.getByText("0/27 bài")).toBeInTheDocument();
   });
   it("đếm đúng theo pageDone của book", () => {
     localStorage.setItem("bye.pageDone", JSON.stringify({ "hsk1/lesson-1": 1, "hsk1/lesson-2": 1, "hsk2/lesson-1": 1 }));
     render(<CourseProgress book="hsk1" />);
-    expect(screen.getByText("2/15 bài")).toBeInTheDocument();
+    expect(screen.getByText("2/27 bài")).toBeInTheDocument();
   });
 });

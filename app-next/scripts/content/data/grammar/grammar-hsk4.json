@@ -1,0 +1,2572 @@
+[
+  {
+    "title": "CÂU 把字句",
+    "hz": "SbǎOVC",
+    "topic": "ba",
+    "def": "Câu 把字句 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "把",
+        "key"
+      ],
+      [
+        "Tân ngữ",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "Bổ ngữ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ bổ ngữ sau động từ: ",
+      "我把作业做",
+      " là câu dở, phải nói 我把作业做完了。"
+    ],
+    "ex": [
+      {
+        "hz": "我把作业做完了。",
+        "py": "Wǒ bǎ zuòyè zuò wán le.",
+        "vi": "Tôi đã làm xong bài tập rồi."
+      },
+      {
+        "hz": "请把门打开。",
+        "py": "Qǐng bǎ mén dǎkāi.",
+        "vi": "Xin hãy mở cửa ra."
+      },
+      {
+        "hz": "他把手机放在桌子上了。",
+        "py": "Tā bǎ shǒujī fàng zài zhuōzi shang le.",
+        "vi": "Anh ấy đã đặt điện thoại lên bàn."
+      }
+    ],
+    "id": "S-b-ǎ-O-V-C",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CÂU BỊ ĐỘNG 被字句",
+    "hz": "SbèiagentV+C",
+    "topic": "ba",
+    "def": "Câu bị động 被字句 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ (bị tác động)",
+        "key"
+      ],
+      [
+        "被",
+        "key"
+      ],
+      [
+        "Người/vật tác động",
+        "key"
+      ],
+      [
+        "Động từ + bổ ngữ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên kết quả ở cuối câu: ",
+      "书被我借",
+      " chưa xong, phải nói 书被我借走了。"
+    ],
+    "ex": [
+      {
+        "hz": "杯子被弟弟打破了。",
+        "py": "Bēizi bèi dìdi dǎ pò le.",
+        "vi": "Cái cốc bị em trai đánh vỡ rồi."
+      },
+      {
+        "hz": "我的自行车被偷了。",
+        "py": "Wǒ de zìxíngchē bèi tōu le.",
+        "vi": "Xe đạp của tôi bị mất trộm rồi."
+      }
+    ],
+    "id": "S-b-è-i-a-g-e-n-t-V-+-C",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 连……都/也",
+    "hz": "liánXdōu/yěV/Adj",
+    "topic": "ba",
+    "def": "Cấu trúc 连……都/也 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "连",
+        "key"
+      ],
+      [
+        "Từ được nhấn mạnh",
+        "key"
+      ],
+      [
+        "都/也",
+        "key"
+      ],
+      [
+        "Động từ/Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 都/也 ở giữa: ",
+      "连饭不做",
+      " là sai, phải nói 连饭都不做。"
+    ],
+    "ex": [
+      {
+        "hz": "他连早饭都没吃就去上班了。",
+        "py": "Tā lián zǎofàn dōu méi chī jiù qù shàngbān le.",
+        "vi": "Anh ấy thậm chí còn chưa ăn sáng đã đi làm rồi."
+      },
+      {
+        "hz": "这个问题连老师都不会。",
+        "py": "Zhège wèntí lián lǎoshī dōu bú huì.",
+        "vi": "Câu hỏi này đến tận thầy cô cũng không biết."
+      }
+    ],
+    "id": "l-i-á-n-X-d-ō-u-/-y-ě-V-/-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CÂU 兼语句（让/叫/请）",
+    "hz": "Sràng/jiào/qǐngOV",
+    "topic": "ba",
+    "def": "Câu 兼语句（让/叫/请） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "让/叫/请",
+        "key"
+      ],
+      [
+        "Người",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay chèn 把 sai chỗ: ",
+      "我让他把过来",
+      " là sai, phải nói 我让他过来。"
+    ],
+    "ex": [
+      {
+        "hz": "老师让我们每天读课文。",
+        "py": "Lǎoshī ràng wǒmen měitiān dú kèwén.",
+        "vi": "Giáo viên bắt chúng tôi đọc bài mỗi ngày."
+      },
+      {
+        "hz": "我请你帮个忙。",
+        "py": "Wǒ qǐng nǐ bāng ge máng.",
+        "vi": "Tôi nhờ cậu giúp một việc."
+      }
+    ],
+    "id": "S-r-à-n-g-/-j-i-à-o-/-q-ǐ-n-g-O-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CÂU ĐỘNG TỪ LIÊN TIẾP (连动句)",
+    "hz": "SV1+OV2+O",
+    "topic": "hutu",
+    "def": "Câu động từ liên tiếp (连动句) — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "Động từ 1 + tân ngữ",
+        "key"
+      ],
+      [
+        "Động từ 2 + tân ngữ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thêm 为了 kiểu dịch máy: ",
+      "我去商店为了买东西",
+      " là sai, phải nói 我去商店买东西。"
+    ],
+    "ex": [
+      {
+        "hz": "我去银行换钱。",
+        "py": "Wǒ qù yínhuán huàn qián.",
+        "vi": "Tôi đến ngân hàng đổi tiền."
+      },
+      {
+        "hz": "他坐地铁上班。",
+        "py": "Tā zuò dìtiě shàngbān.",
+        "vi": "Anh ấy đi làm bằng tàu điện."
+      }
+    ],
+    "id": "S-V--+-O-V--+-O",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 是……的",
+    "hz": "SshìXV+de",
+    "topic": "hutu",
+    "def": "Cấu trúc 是……的 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "是",
+        "key"
+      ],
+      [
+        "Phần được nhấn mạnh",
+        "key"
+      ],
+      [
+        "Động từ + 的",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 的 ở cuối: ",
+      "他是昨天来",
+      " là câu dở, phải nói 他是昨天来的。"
+    ],
+    "ex": [
+      {
+        "hz": "我是在中国学的汉语。",
+        "py": "Wǒ shì zài Zhōngguó xué de Hànyǔ.",
+        "vi": "Tôi học tiếng Trung ở Trung Quốc (chứ)."
+      },
+      {
+        "hz": "他是坐火车去的。",
+        "py": "Tā shì zuò huǒchē qù de.",
+        "vi": "Anh ấy đi bằng tàu hỏa đấy."
+      }
+    ],
+    "id": "S-s-h-ì-X-V-+-d-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "SO SÁNH VỚI 比",
+    "hz": "AbǐBAdj+độ chênh",
+    "topic": "hutu",
+    "def": "So sánh với 比 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "比",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ],
+      [
+        "Tính từ + phần khác biệt",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thêm 很 trước tính từ: ",
+      "他比我很高",
+      " là sai, phải nói 他比我高得多。"
+    ],
+    "ex": [
+      {
+        "hz": "今天比昨天热。",
+        "py": "Jīntiān bǐ zuótiān rè.",
+        "vi": "Hôm nay nóng hơn hôm qua."
+      },
+      {
+        "hz": "他跑得比我快。",
+        "py": "Tā pǎo de bǐ wǒ kuài.",
+        "vi": "Anh ấy chạy nhanh hơn tôi."
+      }
+    ],
+    "id": "A-b-ǐ-B-A-d-j-+-đ-ộ-c-h-ê-n-h",
+    "level": "HSK 4"
+  },
+  {
+    "title": "SO SÁNH 跟……一样",
+    "hz": "AgēnByīyàngAdj",
+    "topic": "hutu",
+    "def": "So sánh 跟……一样 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "跟",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ],
+      [
+        "一样",
+        "key"
+      ],
+      [
+        "Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 一样: ",
+      "他跟我高",
+      " là sai, phải nói 他跟我一样高。"
+    ],
+    "ex": [
+      {
+        "hz": "这个房间跟那个房间一样大。",
+        "py": "Zhège fángjiān gēn nàge fángjiān yīyàng dà.",
+        "vi": "Căn phòng này to bằng căn phòng kia."
+      },
+      {
+        "hz": "我的意见跟他的一样。",
+        "py": "Wǒ de yìjiàn gēn tā de yīyàng.",
+        "vi": "Ý kiến của tôi giống hệt của anh ấy."
+      }
+    ],
+    "id": "A-g-ē-n-B-y-ī-y-à-n-g-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "SO SÁNH PHỦ ĐỊNH 没有……这么/那么",
+    "hz": "AméiyǒuBzhème/nàmeAdj",
+    "topic": "hutu",
+    "def": "So sánh phủ định 没有……这么/那么 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "没有",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ],
+      [
+        "这么/那么",
+        "key"
+      ],
+      [
+        "Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 比 để phủ định: ",
+      "他比我不高",
+      " là sai, phải nói 他没有我高。"
+    ],
+    "ex": [
+      {
+        "hz": "弟弟没有哥哥那么高。",
+        "py": "Dìdi méiyǒu gēge nàme gāo.",
+        "vi": "Em trai không cao bằng anh trai."
+      },
+      {
+        "hz": "今天没有昨天那么冷。",
+        "py": "Jīntiān méiyǒu zuótiān nàme lěng.",
+        "vi": "Hôm nay không lạnh bằng hôm qua."
+      }
+    ],
+    "id": "A-m-é-i-y-ǒ-u-B-z-h-è-m-e-/-n-à-m-e-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 越……越……",
+    "hz": "yuèX1yuèX2",
+    "topic": "hutu",
+    "def": "Cấu trúc 越……越…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "越",
+        "key"
+      ],
+      [
+        "V/Tính từ 1",
+        "key"
+      ],
+      [
+        "越",
+        "key"
+      ],
+      [
+        "V/Tính từ 2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay trộn hai mẫu: ",
+      "越学越来越难",
+      " là sai, dùng một trong hai: 越学越难 hoặc 越来越难。"
+    ],
+    "ex": [
+      {
+        "hz": "他越说越高兴。",
+        "py": "Tā yuè shuō yuè gāoxìng.",
+        "vi": "Anh ấy càng nói càng vui."
+      },
+      {
+        "hz": "雨越下越大。",
+        "py": "Yǔ yuè xià yuè dà.",
+        "vi": "Mưa càng lúc càng to."
+      }
+    ],
+    "id": "y-u-è-X--y-u-è-X-",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 越来越",
+    "hz": "SyuèláiyuèAdj/V",
+    "topic": "hutu",
+    "def": "Cấu trúc 越来越 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "越来越",
+        "key"
+      ],
+      [
+        "Tính từ/Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 来 ở giữa: ",
+      "越越好",
+      " là sai, phải nói 越来越好。"
+    ],
+    "ex": [
+      {
+        "hz": "天气越来越冷了。",
+        "py": "Tiānqì yuèláiyuè lěng le.",
+        "vi": "Thời tiết ngày càng lạnh rồi."
+      },
+      {
+        "hz": "汉语越来越有意思了。",
+        "py": "Hànyǔ yuèláiyuè yǒu yìsi le.",
+        "vi": "Tiếng Trung càng lúc càng thú vị rồi."
+      }
+    ],
+    "id": "S-y-u-è-l-á-i-y-u-è-A-d-j-/-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 一边……一边……",
+    "hz": "SyībiānV1yībiānV2",
+    "topic": "hutu",
+    "def": "Cấu trúc 一边……一边…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "一边",
+        "key"
+      ],
+      [
+        "Động từ 1",
+        "key"
+      ],
+      [
+        "一边",
+        "key"
+      ],
+      [
+        "Động từ 2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay lặp chủ ngữ ở vế sau: ",
+      "我一边听歌，我一边写作业",
+      " là dư, phải bỏ chủ ngữ thứ hai."
+    ],
+    "ex": [
+      {
+        "hz": "我们一边喝茶一边聊天。",
+        "py": "Wǒmen yībiān hē chá yībiān liáotiān.",
+        "vi": "Chúng tôi vừa uống trà vừa tán gẫu."
+      },
+      {
+        "hz": "他一边走路一边看手机。",
+        "py": "Tā yībiān zǒulù yībiān kàn shǒujī.",
+        "vi": "Anh ấy vừa đi bộ vừa xem điện thoại."
+      }
+    ],
+    "id": "S-y-ī-b-i-ā-n-V--y-ī-b-i-ā-n-V-",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 又……又……",
+    "hz": "SyòuX1yòuX2",
+    "topic": "hutu",
+    "def": "Cấu trúc 又……又…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "又",
+        "key"
+      ],
+      [
+        "Tính từ/Động từ 1",
+        "key"
+      ],
+      [
+        "又",
+        "key"
+      ],
+      [
+        "Tính từ/Động từ 2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 也 để nối: ",
+      "他又高也聪明",
+      " là sai, phải nói 他又高又聪明。"
+    ],
+    "ex": [
+      {
+        "hz": "这个西瓜又大又甜。",
+        "py": "Zhège xīguā yòu dà yòu tián.",
+        "vi": "Quả dưa hấu này vừa to vừa ngọt."
+      },
+      {
+        "hz": "她又聪明又勤劳。",
+        "py": "Tā yòu cōngming yòu qínláo.",
+        "vi": "Cô ấy vừa thông minh vừa chăm chỉ."
+      }
+    ],
+    "id": "S-y-ò-u-X--y-ò-u-X-",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 一……就……",
+    "hz": "yīV1jiùV2",
+    "topic": "hutu",
+    "def": "Cấu trúc 一……就…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "一",
+        "key"
+      ],
+      [
+        "Động từ 1",
+        "key"
+      ],
+      [
+        "就",
+        "key"
+      ],
+      [
+        "Động từ 2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 就 hai lần: ",
+      "他一回家就就睡觉",
+      " là sai, chỉ cần một 就。"
+    ],
+    "ex": [
+      {
+        "hz": "我一到家就给你打电话。",
+        "py": "Wǒ yī dào jiā jiù gěi nǐ dǎ diànhuà.",
+        "vi": "Tôi vừa về đến nhà là gọi cho bạn ngay."
+      },
+      {
+        "hz": "他一看书就困。",
+        "py": "Tā yī kàn shū jiù kùn.",
+        "vi": "Cậu ấy vừa cầm sách là buồn ngủ."
+      }
+    ],
+    "id": "y-ī-V--j-i-ù-V-",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 快要……了",
+    "hz": "Skuài(yào)V/Adjle",
+    "topic": "hutu",
+    "def": "Cấu trúc 快要……了 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "快/快要",
+        "key"
+      ],
+      [
+        "Động từ/Tính từ",
+        "key"
+      ],
+      [
+        "了",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 了: ",
+      "火车快到",
+      " là câu dở, phải nói 火车快到了。"
+    ],
+    "ex": [
+      {
+        "hz": "火车快到了。",
+        "py": "Huǒchē kuài dào le.",
+        "vi": "Tàu sắp đến rồi."
+      },
+      {
+        "hz": "天快要黑了。",
+        "py": "Tiān kuài yào hēi le.",
+        "vi": "Trời sắp tối rồi."
+      }
+    ],
+    "id": "S-k-u-à-i-y-à-o-V-/-A-d-j-l-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ KẾT QUẢ 完/好/到/见",
+    "hz": "Vwán/hǎo/dào/jiànle",
+    "topic": "bi",
+    "def": "Bổ ngữ kết quả 完/好/到/见 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "完/好/到/见",
+        "key"
+      ],
+      [
+        "(了)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay chỉ dùng động từ trần: ",
+      "我看你的信了",
+      " khác với 我看到你的信了 (thấy rõ được)."
+    ],
+    "ex": [
+      {
+        "hz": "我吃完了。",
+        "py": "Wǒ chī wán le.",
+        "vi": "Tôi ăn xong rồi."
+      },
+      {
+        "hz": "你听见了吗？",
+        "py": "Nǐ tīngjiàn le ma?",
+        "vi": "Bạn nghe thấy không?"
+      },
+      {
+        "hz": "作业做好了。",
+        "py": "Zuòyè zuò hǎo le.",
+        "vi": "Bài tập làm xong rồi."
+      }
+    ],
+    "id": "V-w-á-n-/-h-ǎ-o-/-d-à-o-/-j-i-à-n-l-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ KẾT QUẢ 错/对/懂/清楚",
+    "hz": "Vcuò/duì/dǒng/qīngchu",
+    "topic": "bi",
+    "def": "Bổ ngữ kết quả 错/对/懂/清楚 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "错/对/懂/清楚",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đảo bổ ngữ lên trước động từ: ",
+      "错听了",
+      " là sai, phải nói 听错了。"
+    ],
+    "ex": [
+      {
+        "hz": "我听错了。",
+        "py": "Wǒ tīng cuò le.",
+        "vi": "Tôi nghe nhầm rồi."
+      },
+      {
+        "hz": "你写错一个字。",
+        "py": "Nǐ xiě cuò yī ge zì.",
+        "vi": "Bạn viết sai một chữ."
+      },
+      {
+        "hz": "这道题我做对了。",
+        "py": "Zhè dào tí wǒ zuò duì le.",
+        "vi": "Câu này tôi làm đúng rồi."
+      }
+    ],
+    "id": "V-c-u-ò-/-d-u-ì-/-d-ǒ-n-g-/-q-ī-n-g-c-h-u",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ HƯỚNG 来/去",
+    "hz": "Vlái/qù(chỗ)",
+    "topic": "bi",
+    "def": "Bổ ngữ hướng 来/去 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "来/去",
+        "key"
+      ],
+      [
+        "(Tân ngữ nơi chốn)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ động từ trước 来/去: ",
+      "来学校去",
+      " là lộn xộn, phải nói 来学校 hoặc 去学校。"
+    ],
+    "ex": [
+      {
+        "hz": "他上来了。",
+        "py": "Tā shàng lái le.",
+        "vi": "Anh ấy đi lên (nơi này) rồi."
+      },
+      {
+        "hz": "我们进去吧。",
+        "py": "Wǒmen jìn qù ba.",
+        "vi": "Chúng ta vào đi."
+      },
+      {
+        "hz": "你带钱来了吗？",
+        "py": "Nǐ dài qián lái le ma?",
+        "vi": "Bạn mang tiền đến chưa?"
+      }
+    ],
+    "id": "V-l-á-i-/-q-ù-c-h-ỗ",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ HƯỚNG KÉP (复合趋向补语)",
+    "hz": "Vjìn/chū/shàng/xià/huí/guòlái/qù(O)",
+    "topic": "bi",
+    "def": "Bổ ngữ hướng kép (复合趋向补语) — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "进/出/上/下/回/过",
+        "key"
+      ],
+      [
+        "来/去",
+        "key"
+      ],
+      [
+        "(Tân ngữ)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay chèn tân ngữ sai chỗ: ",
+      "他走进去教室",
+      " là sai, phải nói 他走进教室去 hoặc 他走进教室。"
+    ],
+    "ex": [
+      {
+        "hz": "他走进教室去了。",
+        "py": "Tā zǒu jìn jiàoshì qù le.",
+        "vi": "Anh ấy bước vào lớp học rồi."
+      },
+      {
+        "hz": "小猫从床上跳下来了。",
+        "py": "Xiǎo māo cóng chuáng shang tiào xià lái le.",
+        "vi": "Con mèo nhảy xuống khỏi giường."
+      },
+      {
+        "hz": "快拿出你的书来。",
+        "py": "Kuài ná chū nǐ de shū lái.",
+        "vi": "Nhanh lấy sách ra đi."
+      }
+    ],
+    "id": "V-j-ì-n-/-c-h-ū-/-s-h-à-n-g-/-x-i-à-/-h-u-í-/-g-u-ò-l-á-i-/-q-ù-O",
+    "level": "HSK 4"
+  },
+  {
+    "title": "NGHĨA ẨN DỤ CỦA BỔ NGỮ HƯỚNG (起来/下来/出来)",
+    "hz": "Vqǐlái/xiàlái(ẩn dụ)",
+    "topic": "bi",
+    "def": "Nghĩa ẩn dụ của bổ ngữ hướng (起来/下来/出来) — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "起来/下来",
+        "key"
+      ],
+      [
+        "(nghĩa bắt đầu/yên tĩnh)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt dịch sát nghĩa đen: ",
+      "天冷起来了",
+      " không phải \"trời đứng lên lạnh\" — 起来 ở đây nghĩa là bắt đầu."
+    ],
+    "ex": [
+      {
+        "hz": "天气冷起来了。",
+        "py": "Tiānqì lěng qǐlái le.",
+        "vi": "Trời bắt đầu lạnh rồi."
+      },
+      {
+        "hz": "请大家安静下来。",
+        "py": "Qǐng dàjiā ānjìng xiàlái.",
+        "vi": "Xin mọi người yên tĩnh lại."
+      },
+      {
+        "hz": "这个问题我想不出来了。",
+        "py": "Zhège wèntí wǒ xiǎng bu chūlái le.",
+        "vi": "Câu này tôi nghĩ mãi không ra."
+      }
+    ],
+    "id": "V-q-ǐ-l-á-i-/-x-i-à-l-á-i-ẩ-n-d-ụ",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ KHẢ NĂNG V得/不C",
+    "hz": "Vde/bùC",
+    "topic": "bi",
+    "def": "Bổ ngữ khả năng v得/不c — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "得/不",
+        "key"
+      ],
+      [
+        "Kết quả/Hướng",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thay bằng 不能: ",
+      "我不能看懂",
+      " không tự nhiên, nên nói 我看不懂。"
+    ],
+    "ex": [
+      {
+        "hz": "这么多菜，我吃不完。",
+        "py": "Zhème duō cài, wǒ chī bu wán.",
+        "vi": "Nhiều món thế này, tôi ăn không hết."
+      },
+      {
+        "hz": "门太小，桌子搬不进去。",
+        "py": "Mén tài xiǎo, zhuōzi bān bu jìnqù.",
+        "vi": "Cửa quá nhỏ, cái bàn không kê vào được."
+      },
+      {
+        "hz": "明天我有事，来不了。",
+        "py": "Míngtiān wǒ yǒu shì, lái bu liǎo.",
+        "vi": "Ngày mai tôi bận, không đến được."
+      }
+    ],
+    "id": "V-d-e-/-b-ù-C",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ KHẢ NĂNG V得了/V不了",
+    "hz": "Vdeliǎo/bùliǎo",
+    "topic": "bi",
+    "def": "Bổ ngữ khả năng v得了/v不了 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "得/不了",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đọc sai thanh điệu: ",
+      "吃不了 đọc thành \"chī bù lè\"",
+      " là sai, phải đọc chī bù liǎo。"
+    ],
+    "ex": [
+      {
+        "hz": "这些菜我吃得了。",
+        "py": "Zhèxiē cài wǒ chī deliǎo.",
+        "vi": "Số món này tôi ăn hết nổi."
+      },
+      {
+        "hz": "我一天看不了那么多书。",
+        "py": "Wǒ yì tiān kàn bu liǎo nàme duō shū.",
+        "vi": "Một ngày tôi không đọc nổi nhiều sách thế."
+      }
+    ],
+    "id": "V-d-e-l-i-ǎ-o-/-b-ù-l-i-ǎ-o",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ MỨC ĐỘ VỚI 得",
+    "hz": "S/OVdeAdj",
+    "topic": "bi",
+    "def": "Bổ ngữ mức độ với 得 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ / Tân ngữ trước",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "得",
+        "key"
+      ],
+      [
+        "Tính từ mức độ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt tính từ kiểu tiếng Việt: ",
+      "他说汉语很好",
+      " là sai, phải nói 他汉语说得很好。"
+    ],
+    "ex": [
+      {
+        "hz": "他说得很快。",
+        "py": "Tā shuō de hěn kuài.",
+        "vi": "Anh ấy nói rất nhanh."
+      },
+      {
+        "hz": "姐姐做菜做得很好吃。",
+        "py": "Jiějie zuò cài zuò de hěn hǎochī.",
+        "vi": "Chị làm món rất ngon."
+      }
+    ],
+    "id": "S-/-O-V-d-e-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ MỨC ĐỘ 得很/极了/坏了",
+    "hz": "Adj/Vdehěn/jíle/huàile",
+    "topic": "bi",
+    "def": "Bổ ngữ mức độ 得很/极了/坏了 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Tính từ/Động từ",
+        "key"
+      ],
+      [
+        "得",
+        "key"
+      ],
+      [
+        "很/极了/坏了",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 得: ",
+      "他高兴极",
+      " là thiếu, phải nói 他高兴极了。"
+    ],
+    "ex": [
+      {
+        "hz": "我饿得很。",
+        "py": "Wǒ è de hěn.",
+        "vi": "Tôi đói lắm."
+      },
+      {
+        "hz": "这道菜好吃极了。",
+        "py": "Zhè dào cài hǎochī jí le.",
+        "vi": "Món này ngon tuyệt."
+      },
+      {
+        "hz": "孩子们高兴坏了。",
+        "py": "Háizimen gāoxìng huài le.",
+        "vi": "Bọn trẻ vui như nổ rồi."
+      }
+    ],
+    "id": "A-d-j-/-V-d-e-h-ě-n-/-j-í-l-e-/-h-u-à-i-l-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ THỜI LƯỢNG",
+    "hz": "Vlet(O)",
+    "topic": "bi",
+    "def": "Bổ ngữ thời lượng — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "了",
+        "key"
+      ],
+      [
+        "Thời lượng",
+        "key"
+      ],
+      [
+        "(Tân ngữ)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 了 khi có tân ngữ: ",
+      "我学汉语三年",
+      " nên nói 我学了三年汉语。"
+    ],
+    "ex": [
+      {
+        "hz": "我学了三年汉语。",
+        "py": "Wǒ xué le sān nián Hànyǔ.",
+        "vi": "Tôi đã học tiếng Trung ba năm."
+      },
+      {
+        "hz": "他睡了一个小时。",
+        "py": "Tā shuì le yí ge xiǎoshí.",
+        "vi": "Anh ấy ngủ một tiếng."
+      },
+      {
+        "hz": "我们等了十分钟车。",
+        "py": "Wǒmen děng le shí fēnzhōng chē.",
+        "vi": "Chúng tôi đợi xe mười phút."
+      }
+    ],
+    "id": "V-l-e-t-O",
+    "level": "HSK 4"
+  },
+  {
+    "title": "BỔ NGỮ SỐ LẦN (次/遍/趟/下)",
+    "hz": "Vlecì/biàn/tàng/xià(O)",
+    "topic": "bi",
+    "def": "Bổ ngữ số lần (次/遍/趟/下) — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "了",
+        "key"
+      ],
+      [
+        "次/遍/趟/下",
+        "key"
+      ],
+      [
+        "(Tân ngữ)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 次 với 遍: ",
+      "我看了三次这本书",
+      " nên nói 这本书我看了三遍 (đọc trọn từ đầu đến cuối)."
+    ],
+    "ex": [
+      {
+        "hz": "这个电影我看了两遍。",
+        "py": "Zhège diànyǐng wǒ kàn le liǎng biàn.",
+        "vi": "Bộ phim này tôi xem hai lượt."
+      },
+      {
+        "hz": "我去过一次上海。",
+        "py": "Wǒ qù guo yí cì Shànghǎi.",
+        "vi": "Tôi từng đến Thượng Hải một lần."
+      },
+      {
+        "hz": "请再说一遍。",
+        "py": "Qǐng zài shuō yí biàn.",
+        "vi": "Xin nhắc lại một lần nữa."
+      }
+    ],
+    "id": "V-l-e-c-ì-/-b-i-à-n-/-t-à-n-g-/-x-i-à-O",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 因为……所以……",
+    "hz": "yīnwèinguyên nhânsuǒyǐkết quả",
+    "topic": "bongu",
+    "def": "Cấu trúc 因为……所以…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "因为",
+        "key"
+      ],
+      [
+        "Nguyên nhân",
+        "key"
+      ],
+      [
+        "所以",
+        "key"
+      ],
+      [
+        "Kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay trộn 因为 với 为了: ",
+      "为了他病了，所以没来",
+      " là sai — nguyên nhân dùng 因为，mục đích mới dùng 为了。"
+    ],
+    "ex": [
+      {
+        "hz": "因为下雨，所以我们在家。",
+        "py": "Yīnwèi xià yǔ, suǒyǐ wǒmen zài jiā.",
+        "vi": "Vì trời mưa nên chúng tôi ở nhà."
+      },
+      {
+        "hz": "他因为工作忙，很久没回家了。",
+        "py": "Tā yīnwèi gōngzuò máng, hěn jiǔ méi huí jiā le.",
+        "vi": "Vì công việc bận nên anh ấy lâu rồi chưa về nhà."
+      }
+    ],
+    "id": "y-ī-n-w-è-i-n-g-u-y-ê-n-n-h-â-n-s-u-ǒ-y-ǐ-k-ế-t-q-u-ả",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 虽然……但是……",
+    "hz": "suīránAdànshì/kěshìB",
+    "topic": "bongu",
+    "def": "Cấu trúc 虽然……但是…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "虽然",
+        "key"
+      ],
+      [
+        "Vế nhượng bộ",
+        "key"
+      ],
+      [
+        "但是/可是",
+        "key"
+      ],
+      [
+        "Vế chính",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ vế sau: ",
+      "虽然天气不好",
+      " dừng ở đó mà thiếu 但是…… là câu dở."
+    ],
+    "ex": [
+      {
+        "hz": "虽然很难，但是我不放弃。",
+        "py": "Suīrán hěn nán, dànshì wǒ bú fàngqì.",
+        "vi": "Tuy khó nhưng tôi không bỏ cuộc."
+      },
+      {
+        "hz": "他虽然年轻，但是很有经验。",
+        "py": "Tā suīrán niánqīng, dànshì hěn yǒu jīngyàn.",
+        "vi": "Tuy trẻ nhưng anh ấy giàu kinh nghiệm."
+      }
+    ],
+    "id": "s-u-ī-r-á-n-A-d-à-n-s-h-ì-/-k-ě-s-h-ì-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 不但……而且……",
+    "hz": "SbúdànAérqiěB",
+    "topic": "bongu",
+    "def": "Cấu trúc 不但……而且…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "不但",
+        "key"
+      ],
+      [
+        "Vế 1",
+        "key"
+      ],
+      [
+        "而且",
+        "key"
+      ],
+      [
+        "Vế tiến hơn",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đảo hai vế sai hướng: ",
+      "他不但会说日语，而且会一点儿汉语",
+      " sai hướng — 而且 phải dẫn vế tiến hơn."
+    ],
+    "ex": [
+      {
+        "hz": "他不但会说汉语，而且会说日语。",
+        "py": "Tā búdàn huì shuō Hànyǔ, érqiě huì shuō Rìyǔ.",
+        "vi": "Anh ấy không những biết tiếng Trung mà còn biết tiếng Nhật."
+      },
+      {
+        "hz": "这个手机不但便宜，而且好用。",
+        "py": "Zhège shǒujī búdàn piányi, érqiě hǎoyòng.",
+        "vi": "Chiếc điện thoại này không những rẻ mà còn dễ dùng."
+      }
+    ],
+    "id": "S-b-ú-d-à-n-A-é-r-q-i-ě-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 只要……就……",
+    "hz": "zhǐyàođiều kiệnjiùkết quả",
+    "topic": "bongu",
+    "def": "Cấu trúc 只要……就…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "只要",
+        "key"
+      ],
+      [
+        "Điều kiện",
+        "key"
+      ],
+      [
+        "就",
+        "key"
+      ],
+      [
+        "Kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 只要 với 只有: ",
+      "只有你努力，你就会成功",
+      " là sai kết hợp — 只有 phải搭配 才。"
+    ],
+    "ex": [
+      {
+        "hz": "只要有时间，我就来。",
+        "py": "Zhǐyào yǒu shíjiān, wǒ jiù lái.",
+        "vi": "Miễn có thời gian là tôi đến."
+      },
+      {
+        "hz": "只要你说，我就帮你。",
+        "py": "Zhǐyào nǐ shuō, wǒ jiù bāng nǐ.",
+        "vi": "Miễn bạn nói là tôi giúp."
+      }
+    ],
+    "id": "z-h-ǐ-y-à-o-đ-i-ề-u-k-i-ệ-n-j-i-ù-k-ế-t-q-u-ả",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 只有……才……",
+    "hz": "zhǐyǒuđiều kiện duy nhấtcáikết quả",
+    "topic": "bongu",
+    "def": "Cấu trúc 只有……才…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "只有",
+        "key"
+      ],
+      [
+        "Điều kiện duy nhất",
+        "key"
+      ],
+      [
+        "才",
+        "key"
+      ],
+      [
+        "Kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 就 với 只有: ",
+      "只有你有钥匙，就能开门",
+      " là sai, phải nói 只有你有钥匙，才能开门。"
+    ],
+    "ex": [
+      {
+        "hz": "只有努力，才能成功。",
+        "py": "Zhǐyǒu nǔlì, cái néng chénggōng.",
+        "vi": "Chỉ khi chăm chỉ mới thành công được."
+      },
+      {
+        "hz": "只有坐地铁，才不会迟到。",
+        "py": "Zhǐyǒu zuò dìtiě, cái bú huì chídào.",
+        "vi": "Chỉ khi đi tàu điện mới không trễ."
+      }
+    ],
+    "id": "z-h-ǐ-y-ǒ-u-đ-i-ề-u-k-i-ệ-n-d-u-y-n-h-ấ-t-c-á-i-k-ế-t-q-u-ả",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 不管……都……",
+    "hz": "bùguǎnXdōukết quả",
+    "topic": "bongu",
+    "def": "Cấu trúc 不管……都…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "不管",
+        "key"
+      ],
+      [
+        "Từ nghi vấn/lựa chọn",
+        "key"
+      ],
+      [
+        "都",
+        "key"
+      ],
+      [
+        "Kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 都 ở vế sau: ",
+      "不管多忙，我陪你",
+      " là thiếu, phải nói 不管多忙，我都陪你。"
+    ],
+    "ex": [
+      {
+        "hz": "不管多忙，他都坚持锻炼。",
+        "py": "Bùguǎn duō máng, tā dōu jiānchí duànliàn.",
+        "vi": "Dù bận đến đâu anh ấy vẫn kiên trì rèn luyện."
+      },
+      {
+        "hz": "不管你去不去，我都要去。",
+        "py": "Bùguǎn nǐ qù bu qù, wǒ dōu yào qù.",
+        "vi": "Dù bạn có đi hay không thì tôi vẫn đi."
+      }
+    ],
+    "id": "b-ù-g-u-ǎ-n-X-d-ō-u-k-ế-t-q-u-ả",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 如果……就……",
+    "hz": "rúguǒgiả địnhjiùkết quả",
+    "topic": "bongu",
+    "def": "Cấu trúc 如果……就…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "如果",
+        "key"
+      ],
+      [
+        "Giả định",
+        "key"
+      ],
+      [
+        "就",
+        "key"
+      ],
+      [
+        "Kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 就 ở vế sau: ",
+      "如果你来，我高兴",
+      " tự nhiên hơn phải là 如果你来，我就很高兴。"
+    ],
+    "ex": [
+      {
+        "hz": "如果明天下雨，我们就不去了。",
+        "py": "Rúguǒ míngtiān xià yǔ, wǒmen jiù bú qù le.",
+        "vi": "Nếu mai trời mưa thì chúng ta không đi nữa."
+      },
+      {
+        "hz": "如果你不舒服，就早点儿休息。",
+        "py": "Rúguǒ nǐ bù shūfu, jiù zǎodiǎnr xiūxi.",
+        "vi": "Nếu bạn không khỏe thì nghỉ sớm đi."
+      }
+    ],
+    "id": "r-ú-g-u-ǒ-g-i-ả-đ-ị-n-h-j-i-ù-k-ế-t-q-u-ả",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 既然……就……",
+    "hz": "jìránsự kiệnjiùkết luận",
+    "topic": "bongu",
+    "def": "Cấu trúc 既然……就…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "既然",
+        "key"
+      ],
+      [
+        "Sự kiện đã rõ",
+        "key"
+      ],
+      [
+        "就",
+        "key"
+      ],
+      [
+        "Kết luận/khuyên",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 既然 với 如果: ",
+      "如果你已经来了",
+      " khi muốn nói 既然来了 — 既然 dùng cho việc đã xảy ra."
+    ],
+    "ex": [
+      {
+        "hz": "既然来了，就坐一会儿吧。",
+        "py": "Jìrán lái le, jiù zuò yíhuìr ba.",
+        "vi": "Đã đến rồi thì ngồi lại chút đi."
+      },
+      {
+        "hz": "既然你不会，我来教你。",
+        "py": "Jìrán nǐ bú huì, wǒ lái jiāo nǐ.",
+        "vi": "Đã thế bạn không biết thì tôi dạy."
+      }
+    ],
+    "id": "j-ì-r-á-n-s-ự-k-i-ệ-n-j-i-ù-k-ế-t-l-u-ậ-n",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 除了……以外",
+    "hz": "chúleAyǐwài/hái/dōuB",
+    "topic": "bongu",
+    "def": "Cấu trúc 除了……以外 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "除了",
+        "key"
+      ],
+      [
+        "A",
+        "key"
+      ],
+      [
+        "以外/还/都",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 还/都: ",
+      "除了汉语，他学英语",
+      " là dở, phải nói 除了汉语以外，他还学英语。"
+    ],
+    "ex": [
+      {
+        "hz": "除了汉语以外，他还会说法语。",
+        "py": "Chúle Hànyǔ yǐwài, tā hái huì shuō Fǎyǔ.",
+        "vi": "Ngoài tiếng Trung, anh ấy còn biết tiếng Pháp."
+      },
+      {
+        "hz": "除了你，大家都到了。",
+        "py": "Chúle nǐ, dàjiā dōu dào le.",
+        "vi": "Ngoài bạn ra thì ai cũng đến rồi."
+      }
+    ],
+    "id": "c-h-ú-l-e-A-y-ǐ-w-à-i-/-h-á-i-/-d-ō-u-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "LIÊN TỪ 或者",
+    "hz": "AhuòzhěB",
+    "topic": "bongu",
+    "def": "Liên từ 或者 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "或者",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 还是 trong câu trần thuật: ",
+      "我喝水还是喝茶",
+      " ở câu khẳng định là sai, phải nói 我喝水或者喝茶。"
+    ],
+    "ex": [
+      {
+        "hz": "我们坐火车或者飞机去。",
+        "py": "Wǒmen zuò huǒchē huòzhě fēijī qù.",
+        "vi": "Chúng ta đi bằng tàu hỏa hoặc máy bay."
+      },
+      {
+        "hz": "早上喝牛奶或者豆浆都行。",
+        "py": "Zǎoshang hē niúnǎi huòzhě dòujiāng dōu xíng.",
+        "vi": "Sáng uống sữa hoặc sữa đậu nành đều được."
+      }
+    ],
+    "id": "A-h-u-ò-z-h-ě-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "LIÊN TỪ 还是（câu hỏi lựa chọn）",
+    "hz": "AháishìB?",
+    "topic": "bongu",
+    "def": "Liên từ 还是（câu hỏi lựa chọn） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "还是",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ],
+      [
+        "(?)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 或者 trong câu hỏi lựa chọn: ",
+      "你喝茶或者咖啡？",
+      " là sai, phải nói 你喝茶还是咖啡？"
+    ],
+    "ex": [
+      {
+        "hz": "你喝茶还是咖啡？",
+        "py": "Nǐ hē chá háishì kāfēi?",
+        "vi": "Bạn uống trà hay cà phê?"
+      },
+      {
+        "hz": "我们星期六去还是星期日去？",
+        "py": "Wǒmen xīngqīliù qù háishì xīngqīrì qù?",
+        "vi": "Chúng ta đi thứ Bảy hay Chủ Nhật?"
+      }
+    ],
+    "id": "A-h-á-i-s-h-ì-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "PHÓ TỪ 却",
+    "hz": "SquèV/Adj",
+    "topic": "bongu",
+    "def": "Phó từ 却 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "却",
+        "key"
+      ],
+      [
+        "V/Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt 却 đầu câu: ",
+      "却他不喜欢",
+      " là sai, phải nói 他却不喜欢。"
+    ],
+    "ex": [
+      {
+        "hz": "他很努力，成绩却不好。",
+        "py": "Tā hěn nǔlì, chéngjì què bù hǎo.",
+        "vi": "Anh ấy rất chăm nhưng điểm lại không tốt."
+      },
+      {
+        "hz": "都十点了，他却还没起床。",
+        "py": "Dōu shí diǎn le, tā què hái méi qǐchuáng.",
+        "vi": "Mười giờ rồi mà anh ấy vẫn chưa dậy."
+      }
+    ],
+    "id": "S-q-u-è-V-/-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "PHÓ TỪ 甚至",
+    "hz": "A, BshènzhìX",
+    "topic": "bongu",
+    "def": "Phó từ 甚至 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Các vế tăng tiến",
+        "key"
+      ],
+      [
+        "甚至",
+        "key"
+      ],
+      [
+        "Cực đại",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 甚至 nối hai vế đối lập: ",
+      "他喜欢茶甚至不喜欢咖啡",
+      " là sai logic — 甚至 diễn tả mức tiến thêm."
+    ],
+    "ex": [
+      {
+        "hz": "这本书很有意思，我甚至读了两遍。",
+        "py": "Zhè běn shū hěn yǒu yìsi, wǒ shènzhì dú le liǎng biàn.",
+        "vi": "Cuốn sách này rất hay, tôi thậm chí đọc đến hai lượt."
+      },
+      {
+        "hz": "他会说法语、日语，甚至阿拉伯语。",
+        "py": "Tā huì shuō Fǎyǔ, Rìyǔ, shènzhì Ālābóyǔ.",
+        "vi": "Anh ấy biết tiếng Pháp, tiếng Nhật, thậm chí cả tiếng Ả Rập."
+      }
+    ],
+    "id": "A-B-s-h-è-n-z-h-ì-X",
+    "level": "HSK 4"
+  },
+  {
+    "title": "LIÊN TỪ 尽管……但",
+    "hz": "jǐnguǎnAdàn/háishìB",
+    "topic": "bongu",
+    "def": "Liên từ 尽管……但 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "尽管",
+        "key"
+      ],
+      [
+        "Vế nhượng bộ",
+        "key"
+      ],
+      [
+        "但/还是",
+        "key"
+      ],
+      [
+        "Vế chính",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 尽管 với 不管: ",
+      "尽管下不下雨",
+      " là sai — 不管 mới搭配 câu hỏi, 尽管 dùng cho sự thật."
+    ],
+    "ex": [
+      {
+        "hz": "尽管很累，他还是完成了作业。",
+        "py": "Jǐnguǎn hěn lèi, tā háishì wánchéng le zuòyè.",
+        "vi": "Tuy mệt nhưng anh ấy vẫn làm xong bài."
+      },
+      {
+        "hz": "尽管大家反对，他还是决定去。",
+        "py": "Jǐnguǎn dàjiā fǎnduì, tā háishì juédìng qù.",
+        "vi": "Tuy mọi người phản đối nhưng anh ấy vẫn quyết định đi."
+      }
+    ],
+    "id": "j-ǐ-n-g-u-ǎ-n-A-d-à-n-/-h-á-i-s-h-ì-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "LIÊN TỪ 因此",
+    "hz": "AyīncǐB",
+    "topic": "bongu",
+    "def": "Liên từ 因此 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Vế 1",
+        "key"
+      ],
+      [
+        "因此",
+        "key"
+      ],
+      [
+        "Vế kết quả",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 因此 cùng 所以 một lúc: ",
+      "所以他因此没来",
+      " là thừa — có 因此 thì bỏ 所以。"
+    ],
+    "ex": [
+      {
+        "hz": "他生病了，因此没来上课。",
+        "py": "Tā shēngbìng le, yīncǐ méi lái shàngkè.",
+        "vi": "Anh ấy ốm nên không đến học."
+      },
+      {
+        "hz": "物价上涨，因此很多人开始省钱。",
+        "py": "Wùjià shàngzhǎng, yīncǐ hěn duō rén kāishǐ shěngqián.",
+        "vi": "Giá cả tăng, vì thế nhiều người bắt đầu tiết kiệm."
+      }
+    ],
+    "id": "A-y-ī-n-c-ǐ-B",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 由",
+    "hz": "SyóuagentV",
+    "topic": "bongu",
+    "def": "Giới từ 由 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "由",
+        "key"
+      ],
+      [
+        "Người đảm nhiệm",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 由 với 从: ",
+      "这个问题从老师决定",
+      " là sai, phải nói 这个问题由老师决定。"
+    ],
+    "ex": [
+      {
+        "hz": "这个问题由老师决定。",
+        "py": "Zhège wèntí yóu lǎoshī juédìng.",
+        "vi": "Vấn đề này do thầy giáo quyết định."
+      },
+      {
+        "hz": "晚饭由爸爸做。",
+        "py": "Wǎnfàn yóu bàba zuò.",
+        "vi": "Bữa tối do bố nấu."
+      }
+    ],
+    "id": "S-y-ó-u-a-g-e-n-t-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 对",
+    "hz": "Sduìđối tượngV/Adj",
+    "topic": "bongu",
+    "def": "Giới từ 对 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "对",
+        "key"
+      ],
+      [
+        "Đối tượng",
+        "key"
+      ],
+      [
+        "V/Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 对 với 给: ",
+      "他给我很好",
+      " là sai, phải nói 他对我很好。"
+    ],
+    "ex": [
+      {
+        "hz": "他对朋友很热情。",
+        "py": "Tā duì péngyou hěn rèqíng.",
+        "vi": "Anh ấy rất nhiệt tình với bạn bè."
+      },
+      {
+        "hz": "汉语对工作很有帮助。",
+        "py": "Hànyǔ duì gōngzuò hěn yǒu bāngzhù.",
+        "vi": "Tiếng Trung rất có ích cho công việc."
+      }
+    ],
+    "id": "S-d-u-ì-đ-ố-i-t-ư-ợ-n-g-V-/-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 对……来说",
+    "hz": "duìXláishuōnhận xét",
+    "topic": "bongu",
+    "def": "Cấu trúc 对……来说 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "对",
+        "key"
+      ],
+      [
+        "Người/cái gì",
+        "key"
+      ],
+      [
+        "来说",
+        "key"
+      ],
+      [
+        "Nhận xét",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 来说: ",
+      "对我",
+      " thôi là thiếu, phải nói 对我来说。"
+    ],
+    "ex": [
+      {
+        "hz": "对我来说，健康最重要。",
+        "py": "Duì wǒ láishuō, jiànkāng zuì zhòngyào.",
+        "vi": "Đối với tôi, sức khỏe là quan trọng nhất."
+      },
+      {
+        "hz": "对学生来说，这个练习有点难。",
+        "py": "Duì xuésheng láishuō, zhège liànxí yǒudiǎn nán.",
+        "vi": "Đối với học sinh, bài tập này hơi khó."
+      }
+    ],
+    "id": "d-u-ì-X-l-á-i-s-h-u-ō-n-h-ậ-n-x-é-t",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 给",
+    "hz": "Sgěingười nhậnV+O",
+    "topic": "bongu",
+    "def": "Giới từ 给 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "给",
+        "key"
+      ],
+      [
+        "Người nhận",
+        "key"
+      ],
+      [
+        "Động từ + tân ngữ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 给: ",
+      "我打电话妈妈",
+      " là sai, phải nói 我给妈妈打电话。"
+    ],
+    "ex": [
+      {
+        "hz": "我给妈妈打电话。",
+        "py": "Wǒ gěi māma dǎ diànhuà.",
+        "vi": "Tôi gọi điện cho mẹ."
+      },
+      {
+        "hz": "他给我买了一本书。",
+        "py": "Tā gěi wǒ mǎi le yì běn shū.",
+        "vi": "Anh ấy mua cho tôi một cuốn sách."
+      },
+      {
+        "hz": "请给我看看。",
+        "py": "Qǐng gěi wǒ kànkan.",
+        "vi": "Cho tôi xem với."
+      }
+    ],
+    "id": "S-g-ě-i-n-g-ư-ờ-i-n-h-ậ-n-V-+-O",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 向/往/朝",
+    "hz": "Sxiàng/wǎng/cháohướngV",
+    "topic": "bongu",
+    "def": "Giới từ 向/往/朝 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "向/往/朝",
+        "key"
+      ],
+      [
+        "Hướng",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 往 với người học: ",
+      "我往他学习",
+      " là sai, phải nói 我向他学习。"
+    ],
+    "ex": [
+      {
+        "hz": "我们往东走。",
+        "py": "Wǒmen wǎng dōng zǒu.",
+        "vi": "Chúng ta đi về phía đông."
+      },
+      {
+        "hz": "他向同学们介绍了自己。",
+        "py": "Tā xiàng tóngxuémen jièshào le zìjǐ.",
+        "vi": "Anh ấy giới thiệu bản thân với các bạn."
+      },
+      {
+        "hz": "往前看！",
+        "py": "Wǎng qián kàn!",
+        "vi": "Nhìn về phía trước!"
+      }
+    ],
+    "id": "S-x-i-à-n-g-/-w-ǎ-n-g-/-c-h-á-o-h-ư-ớ-n-g-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "CẤU TRÚC 从……到……",
+    "hz": "cóngđầudàocuối",
+    "topic": "bongu",
+    "def": "Cấu trúc 从……到…… — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "从",
+        "key"
+      ],
+      [
+        "Điểm đầu",
+        "key"
+      ],
+      [
+        "到",
+        "key"
+      ],
+      [
+        "Điểm cuối",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đảo điểm đầu cuối: ",
+      "从九点到达八点",
+      " là sai, phải nói 从八点到九点。"
+    ],
+    "ex": [
+      {
+        "hz": "我从家到学校要走二十分钟。",
+        "py": "Wǒ cóng jiā dào xuéxiào yào zǒu èrshí fēnzhōng.",
+        "vi": "Từ nhà đến trường tôi phải đi hai mươi phút."
+      },
+      {
+        "hz": "商店从早上九点开到晚上九点。",
+        "py": "Shāngdiàn cóng zǎoshang jiǔ diǎn kāi dào wǎnshang jiǔ diǎn.",
+        "vi": "Cửa hàng mở từ sáng 9 giờ đến tối 9 giờ."
+      }
+    ],
+    "id": "c-ó-n-g-đ-ầ-u-d-à-o-c-u-ố-i",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 离",
+    "hz": "AlíBkhoảng cách",
+    "topic": "bongu",
+    "def": "Giới từ 离 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "A",
+        "key"
+      ],
+      [
+        "离",
+        "key"
+      ],
+      [
+        "B",
+        "key"
+      ],
+      [
+        "Khoảng cách/Adj",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 从 thay 离: ",
+      "学校从我家的距离",
+      " là kiểu dịch máy, phải nói 学校离我家很近。"
+    ],
+    "ex": [
+      {
+        "hz": "学校离我家很近。",
+        "py": "Xuéxiào lí wǒ jiā hěn jìn.",
+        "vi": "Trường cách nhà tôi rất gần."
+      },
+      {
+        "hz": "现在离考试还有一个月。",
+        "py": "Xiànzài lí kǎoshì hái yǒu yí ge yuè.",
+        "vi": "Bây giờ còn một tháng nữa mới thi."
+      }
+    ],
+    "id": "A-l-í-B-k-h-o-ả-n-g-c-á-c-h",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 按/按照",
+    "hz": "àn/ànzhàotiêu chuẩnV",
+    "topic": "bongu",
+    "def": "Giới từ 按/按照 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "按/按照",
+        "key"
+      ],
+      [
+        "Tiêu chuẩn/quy định",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 跟 thay 按: ",
+      "跟规定做",
+      " là sai, phải nói 按规定做。"
+    ],
+    "ex": [
+      {
+        "hz": "按照老师说的做。",
+        "py": "Ànzhào lǎoshī shuō de zuò.",
+        "vi": "Làm theo những gì thầy nói."
+      },
+      {
+        "hz": "我们按时间表上课。",
+        "py": "Wǒmen àn shíjiānbiǎo shàngkè.",
+        "vi": "Chúng tôi học theo thời khóa biểu."
+      }
+    ],
+    "id": "à-n-/-à-n-z-h-à-o-t-i-ê-u-c-h-u-ẩ-n-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 根据",
+    "hz": "gēnjùcăn cứnhận định",
+    "topic": "bongu",
+    "def": "Giới từ 根据 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "根据",
+        "key"
+      ],
+      [
+        "Căn cứ",
+        "key"
+      ],
+      [
+        "Nhận định/Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 根据 với 按照: ",
+      "根据规定进来",
+      " là sai — quy định cứng nhắc dùng 按照，dựa vào nguồn thông tin mới用 根据。"
+    ],
+    "ex": [
+      {
+        "hz": "根据天气预报，明天有雨。",
+        "py": "Gēnjù tiānqì yùbào, míngtiān yǒu yǔ.",
+        "vi": "Theo dự báo thời tiết, mai có mưa."
+      },
+      {
+        "hz": "根据我的经验，这个方法很有用。",
+        "py": "Gēnjù wǒ de jīngyàn, zhège fāngfǎ hěn yǒuyòng.",
+        "vi": "Theo kinh nghiệm của tôi, cách này rất hữu ích."
+      }
+    ],
+    "id": "g-ē-n-j-ù-c-ă-n-c-ứ-n-h-ậ-n-đ-ị-n-h",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 为了",
+    "hz": "wèilemục đíchhành động",
+    "topic": "bongu",
+    "def": "Giới từ 为了 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "为了",
+        "key"
+      ],
+      [
+        "Mục đích",
+        "key"
+      ],
+      [
+        "Hành động",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 为了 với 因为: ",
+      "为了他病了",
+      " là sai — nguyên nhân dùng 因为，mục đích mới用 为了。"
+    ],
+    "ex": [
+      {
+        "hz": "为了考试，他每天复习。",
+        "py": "Wèile kǎoshì, tā měitiān fùxí.",
+        "vi": "Vì kỳ thi nên cậu ấy ôn bài mỗi ngày."
+      },
+      {
+        "hz": "我为了健康开始运动。",
+        "py": "Wǒ wèile jiànkāng kāishǐ yùndòng.",
+        "vi": "Vì sức khỏe nên tôi bắt đầu vận động."
+      }
+    ],
+    "id": "w-è-i-l-e-m-ụ-c-đ-í-c-h-h-à-n-h-đ-ộ-n-g",
+    "level": "HSK 4"
+  },
+  {
+    "title": "GIỚI TỪ 趁",
+    "hz": "chènthời điểmV",
+    "topic": "bongu",
+    "def": "Giới từ 趁 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "趁",
+        "key"
+      ],
+      [
+        "Cơ hội/thời điểm",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ hành động sau 趁: ",
+      "趁年轻",
+      " một mình chưa xong, phải nói 趁年轻多学点儿东西。"
+    ],
+    "ex": [
+      {
+        "hz": "趁年轻，多学点儿东西。",
+        "py": "Chèn niánqīng, duō xué diǎnr dōngxi.",
+        "vi": "Nhân còn trẻ, học thêm chút."
+      },
+      {
+        "hz": "趁热吃吧。",
+        "py": "Chèn rè chī ba.",
+        "vi": "Ăn khi còn nóng đi."
+      }
+    ],
+    "id": "c-h-è-n-t-h-ờ-i-đ-i-ể-m-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "TRỢ TỪ 了（biến đổi tình huống）",
+    "hz": "tình huốngV/Adjle",
+    "topic": "bongu",
+    "def": "Trợ từ 了（biến đổi tình huống） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Tình huống mới",
+        "key"
+      ],
+      [
+        "V/Tính từ",
+        "key"
+      ],
+      [
+        "了",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên 了 diễn tả thay đổi: ",
+      "现在我不喝咖啡",
+      " khi so với trước thì phải nói 现在我不喝咖啡了。"
+    ],
+    "ex": [
+      {
+        "hz": "他会开车了。",
+        "py": "Tā huì kāichē le.",
+        "vi": "Anh ấy biết lái xe rồi."
+      },
+      {
+        "hz": "下雨了。",
+        "py": "Xià yǔ le.",
+        "vi": "Trời mưa rồi."
+      },
+      {
+        "hz": "我不吃甜的了。",
+        "py": "Wǒ bù chī tián de le.",
+        "vi": "Tôi không ăn đồ ngọt nữa rồi."
+      }
+    ],
+    "id": "t-ì-n-h-h-u-ố-n-g-V-/-A-d-j-l-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "TRỢ TỪ 过（kinh nghiệm）",
+    "hz": "SVguò(số lần)",
+    "topic": "bongu",
+    "def": "Trợ từ 过（kinh nghiệm） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ],
+      [
+        "过",
+        "key"
+      ],
+      [
+        "(Số lần)",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 过 với 了: ",
+      "我去了北京",
+      " là hành động đã xong; kinh nghiệm phải nói 我去过北京。"
+    ],
+    "ex": [
+      {
+        "hz": "我去过中国两次。",
+        "py": "Wǒ qù guo Zhōngguó liǎng cì.",
+        "vi": "Tôi từng đến Trung Quốc hai lần."
+      },
+      {
+        "hz": "你吃过北京烤鸭吗？",
+        "py": "Nǐ chī guo Běijīng kǎoyā ma?",
+        "vi": "Bạn đã từng ăn vịt quay Bắc Kinh chưa?"
+      }
+    ],
+    "id": "S-V-g-u-ò-s-ố-l-ầ-n",
+    "level": "HSK 4"
+  },
+  {
+    "title": "TRỢ TỪ 着（tình trạng kéo dài）",
+    "hz": "SV1zheV2",
+    "topic": "bongu",
+    "def": "Trợ từ 着（tình trạng kéo dài） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "Động từ 1",
+        "key"
+      ],
+      [
+        "着",
+        "key"
+      ],
+      [
+        "Động từ 2",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 了 thay 着: ",
+      "他开了电视睡觉",
+      " là sai, phải nói 他开着电视睡觉。"
+    ],
+    "ex": [
+      {
+        "hz": "他开着电视睡觉。",
+        "py": "Tā kāizhe diànshì shuìjiào.",
+        "vi": "Anh ấy ngủ mà để television bật."
+      },
+      {
+        "hz": "门开着呢。",
+        "py": "Mén kāizhe ne.",
+        "vi": "Cửa đang mở đấy."
+      }
+    ],
+    "id": "S-V--z-h-e-V-",
+    "level": "HSK 4"
+  },
+  {
+    "title": "TRỢ TỪ NGỮ KHÍ 吗/吧/呢",
+    "hz": "câu hỏima/ba/ne",
+    "topic": "bongu",
+    "def": "Trợ từ ngữ khí 吗/吧/呢 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Câu/Thành phần hỏi",
+        "key"
+      ],
+      [
+        "吗/吧/呢",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 吧 cho câu hỏi thật: ",
+      "你是学生吧？",
+      " là phỏng đoán; hỏi thật phải nói 你是学生吗？"
+    ],
+    "ex": [
+      {
+        "hz": "你是学生吗？",
+        "py": "Nǐ shì xuésheng ma?",
+        "vi": "Bạn là học sinh à?"
+      },
+      {
+        "hz": "我们走吧。",
+        "py": "Wǒmen zǒu ba.",
+        "vi": "Chúng ta đi thôi."
+      },
+      {
+        "hz": "你呢？",
+        "py": "Nǐ ne?",
+        "vi": "Còn bạn thì sao?"
+      }
+    ],
+    "id": "c-â-u-h-ỏ-i-m-a-/-b-a-/-n-e",
+    "level": "HSK 4"
+  },
+  {
+    "title": "ĐỘNG TỪ TRỢ TÌNH 能/会/可以",
+    "hz": "Snéng/huì/kěyǐV",
+    "topic": "bongu",
+    "def": "Động từ trợ tình 能/会/可以 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "能/会/可以",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 会 với 能: ",
+      "我能说汉语",
+      " chỉ đúng khi nói khả năng cụ thể; \"biết\" phải nói 我会说汉语。"
+    ],
+    "ex": [
+      {
+        "hz": "我会说一点儿汉语。",
+        "py": "Wǒ huì shuō yìdiǎnr Hànyǔ.",
+        "vi": "Tôi biết nói chút tiếng Trung."
+      },
+      {
+        "hz": "今天不能喝酒，我要开车。",
+        "py": "Jīntiān bù néng hē jiǔ, wǒ yào kāichē.",
+        "vi": "Hôm nay không được rượu, tôi phải lái xe."
+      }
+    ],
+    "id": "S-n-é-n-g-/-h-u-ì-/-k-ě-y-ǐ-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "应该/必须/得（děi）",
+    "hz": "Syīnggāi/bìxū/děiV",
+    "topic": "bongu",
+    "def": "应该/必须/得（děi） — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "应该/必须/得",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đọc 得 thành \"de\": ",
+      "我得走了",
+      " 中 得 phải đọc \"děi\" chứ không phải \"de\"。"
+    ],
+    "ex": [
+      {
+        "hz": "你应该早点儿睡觉。",
+        "py": "Nǐ yīnggāi zǎodiǎnr shuìjiào.",
+        "vi": "Bạn nên ngủ sớm hơn."
+      },
+      {
+        "hz": "我得走了。",
+        "py": "Wǒ děi zǒu le.",
+        "vi": "Tôi phải đi rồi."
+      }
+    ],
+    "id": "S-y-ī-n-g-g-ā-i-/-b-ì-x-ū-/-d-ě-i-V",
+    "level": "HSK 4"
+  },
+  {
+    "title": "PHÓ TỪ 才 và 就",
+    "hz": "S+thời giancái/jiùV/Adj",
+    "topic": "bongu",
+    "def": "Phó từ 才 và 就 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ + thời điểm",
+        "key"
+      ],
+      [
+        "才/就",
+        "key"
+      ],
+      [
+        "Động từ/Tính từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đảo 才 và 就: ",
+      "他才八点来",
+      " là sai, phải nói 他八点才来。"
+    ],
+    "ex": [
+      {
+        "hz": "他八点才来。",
+        "py": "Tā bā diǎn cái lái.",
+        "vi": "Anh ấy 8 giờ mới đến."
+      },
+      {
+        "hz": "我五分钟就做完了。",
+        "py": "Wǒ wǔ fēnzhōng jiù zuò wán le.",
+        "vi": "Tôi 5 phút là làm xong."
+      }
+    ],
+    "id": "S-+-t-h-ờ-i-g-i-a-n-c-á-i-/-j-i-ù-V-/-A-d-j",
+    "level": "HSK 4"
+  },
+  {
+    "title": "PHÓ TỪ 再 và 又",
+    "hz": "Szài/yòuV",
+    "topic": "bongu",
+    "def": "Phó từ 再 và 又 — điểm ngữ pháp HSK 4.",
+    "formula": [
+      [
+        "Chủ ngữ",
+        "key"
+      ],
+      [
+        "再/又",
+        "key"
+      ],
+      [
+        "Động từ",
+        "key"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 又 cho tương lai: ",
+      "明天我又来",
+      " là sai, tương lai dùng 再：明天我再来。"
+    ],
+    "ex": [
+      {
+        "hz": "请再说一遍。",
+        "py": "Qǐng zài shuō yí biàn.",
+        "vi": "Xin nói lại lần nữa."
+      },
+      {
+        "hz": "昨天他又迟到了。",
+        "py": "Zuótiān tā yòu chídào le.",
+        "vi": "Hôm qua anh ấy lại trễ nữa."
+      }
+    ],
+    "id": "S-z-à-i-/-y-ò-u-V",
+    "level": "HSK 4"
+  }
+]
