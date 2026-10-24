@@ -4,7 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
    seed 1 thẻ review (intervalDays 1, dueAt quá khứ) → phiên ôn reveal + "Nhớ"
    (good) → SM-2 kéo interval 1 → 2 ngày, thẻ rời hàng due sau reload; log
    rating 3 vào bye.review.logs. Chấm lại "Quên" (again) → thẻ rơi bucket
-   Yếu (mem < 55), log rating 1. Key dùng vocab thật (hsk1.lesson-1.0 = 你好) để
+   Yếu (mem < 55), log rating 1. Key dùng vocab thật (hsk1.lesson-1.0 = 你) để
    buildQueue resolve được qua ContentBridge. */
 
 const KEY = "hsk1.lesson-1.0";
@@ -93,14 +93,14 @@ test("SM-2 cycle: Nhớ kéo interval + rời hàng due; Quên rơi bucket Yếu
   const start = page.getByTestId("start-session");
   await expect(start).toHaveText(/Bắt đầu ôn tập ngay \(1 từ\)/);
   const jade = page.getByTestId("bucket").filter({ hasText: "Đã khắc sâu" });
-  await expect(jade.getByRole("button", { name: "你好" })).toBeVisible();
+  await expect(jade.getByRole("button", { name: "你" })).toBeVisible();
 
   /* ---- Phiên ôn: reveal → "Nhớ" (good) ---- */
   await start.click();
   const dialog = page.getByRole("dialog", { name: "Phiên ôn tập" });
   await expect(dialog).toBeVisible();
   await dismissTtsConsent(page);
-  await expect(dialog.getByTestId("sess-glyph")).toHaveText("你好");
+  await expect(dialog.getByTestId("sess-glyph")).toHaveText("你");
   await dialog.getByRole("button", { name: "Chạm để xem nghĩa · Space" }).click();
   await expect(dialog.getByTestId("sess-mean")).toBeVisible();
   await dialog.locator('button[data-grade="good"]').click();
@@ -157,5 +157,5 @@ test("SM-2 cycle: Nhớ kéo interval + rời hàng due; Quên rơi bucket Yếu
   await openReview(page);
   const weak = page.getByTestId("bucket").filter({ hasText: "Yếu · Dễ quên" });
   await expect(weak).toContainText("1 từ");
-  await expect(weak.getByRole("button", { name: "你好" })).toBeVisible();
+  await expect(weak.getByRole("button", { name: "你" })).toBeVisible();
 });
