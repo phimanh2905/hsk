@@ -35,6 +35,31 @@ test.describe("content từ D1", () => {
     await expect(audio).toHaveCount(1);
   });
 
+  // T10 acceptance (data-gated, cùng lý do fixme trên): playlist audio qua API +
+  // audio player ở studio + file mp3 render bởi Kokoro trên public/.
+  // Bật khi gen-dialogues + render-dialogue-audio + seed D1 dev xong cho HSK 1–3.
+  test.fixme("playlist audio + player + mp3 (acceptance W3)", async ({ page, request }) => {
+    // API /api/v1/content/shadowing không đổi — trả playlist "Hội thoại theo bài".
+    const api = await request.get("/api/v1/content/shadowing");
+    expect(api.ok()).toBeTruthy();
+    const body = (await api.json()) as { playlists?: Array<{ title?: string }> };
+    const list = body.playlists ?? [];
+    expect(list.some((p) => (p.title ?? "").includes("Hội thoại theo bài"))).toBeTruthy();
+    // Studio chứa <audio data-testid="audio-player"> (hsk2/lesson-1).
+    await page.goto("/shadowing/hsk2/lesson-1");
+    await expect(page.locator('audio[data-testid="audio-player"]')).toHaveCount(1);
+    // File mp3 được serve từ public/audio/.
+    const head = await request.head("/audio/hsk1/lesson-1-1.mp3");
+    expect(head.status()).toBe(200);
+  });
+
+  // Case KHÔNG cần audio (chạy trong baseline): trang /reading render từ static
+  // passages (W3.4/T9) — không phụ thuộc D1 hay file mp3.
+  test("trang /reading render không cần audio", async ({ page }) => {
+    await page.goto("/reading");
+    await expect(page.getByRole("heading", { name: "Bài đọc", exact: true })).toBeVisible();
+  });
+
   test("lesson sai key trả 404", async ({ page }) => {
     const res = await page.goto("/lesson/hsk9/khong-co");
     expect(res?.status()).toBe(404);

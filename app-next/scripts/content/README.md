@@ -159,3 +159,39 @@ pnpm wrangler d1 execute hsk --local --command "SELECT type, COUNT(*) FROM conte
 
 Migration cột (`type`, `audio_dir`) là `drizzle/0008_*.sql` — apply trước khi seed.
 Idempotent: INSERT OR REPLACE theo PK, chạy lại an toàn.
+
+## Ngân sách dung lượng public/audio (W3 T10)
+
+Check tổng dung lượng mp3 render vào `public/audio/**`, nhóm theo book:
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next
+pnpm dlx tsx scripts/content/src/check-audio-size.mts
+# --audio-dir <path> để trỏ thư mục khác (dùng trong unit test fixture)
+```
+
+- Ngưỡng: WARN nếu tổng > 40MB, FAIL (exit 1) nếu tổng > 80MB.
+- Kỳ vọng sau render đủ HSK 1–3: ~25–35MB (130 bài × ~50s × 32kbps).
+- Vượt WARN → giảm bitrate về 24k trong `render-dialogue-audio.py` rồi render lại `--force`.
+- Unit test: `pnpm vitest run scripts/content/__tests__/check-audio-size.test.ts` (fixture tmp dirs).
+
+## Acceptance checklist Wave 3 (dialogue + reading + Kokoro)
+
+Chạy các verify sau khi hoàn tất data thật (gen-dialogues → render Kokoro → merge-audio-timing → seed D1):
+
+1. **≥1 dialogue/bài HSK 1–3** — đếm bằng node:
+   ```bash
+   node -e '
+   for (const l of [1,2,3]) {
+     const d = require("./scripts/content/data/dialogues/dialogues-hsk" + l + ".json");
+     console.log("hsk" + l, d.length, "bài");
+   }'
+   # Kỳ vọng: số bài = số bài học của level (hsk1: lesson-1..N), mỗi bài 8–15 câu.
+   ```
+2. **e2e player audio** — `pnpm exec playwright test e2e/content-d1.spec.ts`:
+   case "playlist audio + player + mp3 (acceptance W3)" + case fixme "hsk1/lesson-1"
+   trả 200 và có `<audio data-testid="audio-player">` (bật fixme khi data đã seed).
+3. **Size trong ngân sách** — `pnpm dlx tsx scripts/content/src/check-audio-size.mts`
+   → `OK` (tổng ≤ 40MB; nếu WARN/FAIL xem mục ngân sách ở trên).
+4. **Reading passages** — `/reading` render từ `src/content/reading-passages.ts`
+   (static, e2e case "trang /reading render không cần audio").
