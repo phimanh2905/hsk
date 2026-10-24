@@ -42,6 +42,9 @@ export type HanziQuizRec = {
   last: number;     // epoch ms lần hoàn thành gần nhất
 };
 
+/* Bản nháp bài đọc (Wave 0 W0.4 — /reading auto-save), key bye.reading.drafts */
+export type ReadingDraft = { text: string; at: string };
+
 export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
@@ -91,6 +94,8 @@ export interface ProgressStoreApi {
   recordHanziQuiz(ch: string, score?: number): void;
   getSoundRulesBest(): number;
   recordSoundRulesResult(correct: number): void;
+  getReadingDrafts(): ReadingDraft[];
+  saveReadingDraft(text: string): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -637,6 +642,26 @@ export class ProgressStore implements ProgressStoreApi {
   recordSoundRulesResult(correct: number): void {
     if (correct <= this.getSoundRulesBest()) return;
     writeNum("bye.soundrules.best", correct);
+    dispatchProgress();
+  }
+
+  /* ---------- reading drafts (bye.reading.drafts — Wave 0 W0.4) ---------- */
+
+  getReadingDrafts(): ReadingDraft[] {
+    const v = readJSON<ReadingDraft[]>("bye.reading.drafts", []);
+    if (!Array.isArray(v)) return [];
+    return v.filter(
+      (d): d is ReadingDraft => !!d && typeof d === "object" && typeof d.text === "string" && typeof d.at === "string"
+    );
+  }
+
+  saveReadingDraft(text: string): void {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    const drafts = this.getReadingDrafts();
+    if (drafts[0]?.text === trimmed) return; // dán lại đúng bài gần nhất — không nhân bản
+    drafts.unshift({ text: trimmed, at: new Date().toISOString() });
+    writeJSON("bye.reading.drafts", drafts.slice(0, 5));
     dispatchProgress();
   }
 }
