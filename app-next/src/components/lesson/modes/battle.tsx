@@ -15,6 +15,7 @@ import { progressStore } from "@/lib/store/progress-store";
 import { useLoginModal } from "@/components/shell/login-modal";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import { checkTyped } from "./typing";
+import { computeBattleScore } from "@/lib/battle/score";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CircleCheck, CircleX, Medal, PartyPopper, Swords, Timer, Trophy, Zap } from "@/components/ui/icon";
@@ -30,6 +31,8 @@ export type BattleQuestion = {
 
 const TOTAL_QUESTIONS = 13;
 const NEXT_DELAY_MS = 300;
+const MIN_ITEMS = 4; // ít nhất 4 từ mới có đủ 3 đáp án nhiễu khác biệt
+const MAX_SCORE = 150;
 
 /* Top-10 cứng theo SPEC-02 §7 (dữ liệu SP1 — không tỉnh đầy đủ tên thật) */
 const TOP10 = [
@@ -152,9 +155,13 @@ export default function BattleMode() {
   const [picked, setPicked] = useState<string | null>(null);
   const [typed, setTyped] = useState("");
   const [elapsedSec, setElapsedSec] = useState(0);
-  const [result, setResult] = useState<{ correct: number; timeMs: number; isRecord: boolean } | null>(null);
+  const [result, setResult] = useState<{ correct: number; timeMs: number; isRecord: boolean; score: number } | null>(
+    null
+  );
 
   const startRef = useRef(0);
+  const qStartRef = useRef(0);
+  const timesMsRef = useRef<number[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const nextRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -178,6 +185,8 @@ export default function BattleMode() {
     setTyped("");
     setResult(null);
     startRef.current = Date.now();
+    qStartRef.current = Date.now();
+    timesMsRef.current = [];
     setElapsedSec(0);
     setPhase("running");
     // timer đếm giây — dọn trong unmount + khi kết thúc
@@ -191,19 +200,22 @@ export default function BattleMode() {
   const finishBattle = (finalCorrect: number) => {
     clearTimers();
     const timeMs = Date.now() - startRef.current;
+    const score = computeBattleScore(finalCorrect, questions.length, timeMs);
     const isRecord = progressStore.saveBattleBest(ctx, finalCorrect, timeMs);
     if (isRecord) toast("Kỷ lục mới của bài này!");
-    setResult({ correct: finalCorrect, timeMs, isRecord });
+    setResult({ correct: finalCorrect, timeMs, isRecord, score });
     setPhase("done");
   };
 
   const settle = (ok: boolean) => {
     const finalCorrect = correct + (ok ? 1 : 0);
     if (ok) setCorrect(finalCorrect);
+    timesMsRef.current.push(Date.now() - qStartRef.current);
     if (pos >= questions.length - 1) {
       finishBattle(finalCorrect);
     } else {
       nextRef.current = setTimeout(() => {
+        qStartRef.current = Date.now();
         setPos((p) => p + 1);
         setLocked(false);
         setPicked(null);
@@ -238,9 +250,8 @@ export default function BattleMode() {
           Đấu trí
         </h2>
         <p className="text-sm text-text-secondary mt-2">
-          Trả lời 13 câu — trộn ngẫu nhiên 5 dạng: chữ Hán → nghĩa, nghĩa → chữ Hán, chữ Hán → pinyin,
-          điền từ vào câu và gõ pinyin. Ai đúng nhiều và nhanh nhất sẽ đứng đầu bảng xếp hạng của bài này.
-          Thi lại bao nhiêu lần cũng được — bảng chỉ tính lượt tốt nhất của bạn.
+          {`Trả lời ${TOTAL_QUESTIONS} câu — điểm tối đa ${MAX_SCORE} (100đ chính xác + 50đ trả lời nhanh ≤2 giây/câu).`}
+          {" Trộn ngẫu nhiên 5 dạng: chữ Hán → nghĩa, nghĩa → chữ Hán, chữ Hán → pinyin, điền từ vào câu và gõ pinyin. Ai đúng nhiều và nhanh nhất sẽ đứng đầu bảng xếp hạng của bài này. Thi lại bao nhiêu lần cũng được — bảng chỉ tính lượt tốt nhất của bạn."}
         </p>
         <div className="flex flex-wrap items-center gap-2 mt-3">
           <span className="text-sm font-semibold text-text-secondary">
@@ -257,9 +268,15 @@ export default function BattleMode() {
             {fmtTime(best.timeMs)}
           </p>
         )}
-        <Button type="button" data-start className="mt-4" onClick={beginBattle}>
-          Bắt đầu thi
-        </Button>
+        {items.length < MIN_ITEMS ? (
+          <p className="text-sm font-bold text-feedback-error mt-4">
+            Bài này cần ít nhất 4 từ để chơi Đấu trí — hãy học Flashcard trước nhé.
+          </p>
+        ) : (
+          <Button type="button" data-start className="mt-4" onClick={beginBattle}>
+            Bắt đầu thi
+          </Button>
+        )}
 
         <Card className="p-4 mt-6">
           <h3 className="font-extrabold mb-2 flex items-center gap-1.5">
@@ -307,6 +324,9 @@ export default function BattleMode() {
             Đúng <span className="font-extrabold text-action-primary text-2xl">{result.correct} / {questions.length}</span> câu
           </p>
           <p className="text-lg mt-1">Thời gian: <span className="font-extrabold">{fmtTime(result.timeMs)}</span></p>
+          <p className="text-lg mt-1">
+            Điểm: <span data-score className="font-extrabold text-action-primary">{result.score}</span>/{MAX_SCORE}
+          </p>
           <p className="text-sm font-bold text-text-secondary mt-3">
             Kỷ lục của bạn: {result.correct}/{questions.length} — {fmtTime(result.timeMs)}
             {result.isRecord ? " (mới!)" : ""}
