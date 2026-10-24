@@ -272,11 +272,14 @@ function applyServerPayload(server: SyncPayload): void {
   }
 
   const heat = readJSON<Record<string, number>>(HEAT_KEY, {});
+  let heatDirty = false;
   for (const rec of server.studyDay) {
     if (!rec || typeof rec.date !== "string") continue;
-    heat[rec.date] = Math.max(heat[rec.date] ?? 0, rec.xp);
+    const mergedXp = Math.max(heat[rec.date] ?? 0, rec.xp);
+    if (mergedXp !== (heat[rec.date] ?? 0)) heatDirty = true;
+    heat[rec.date] = mergedXp;
   }
-  writeJSON(HEAT_KEY, heat);
+  if (heatDirty) writeJSON(HEAT_KEY, heat);
 
   const pageDone = readJSON<Record<string, number>>(PAGE_DONE_KEY, {});
   const stations = readJSON<Record<string, Record<string, { pct: number; stars: 0 | 1 | 2 | 3 }>>>(STATIONS_KEY, {});
@@ -335,7 +338,8 @@ function applyServerPayload(server: SyncPayload): void {
     writeJSON(PAGE_DONE_KEY, pageDone);
     writeJSON(STATIONS_KEY, stations);
   }
-  if (srsDirty) {
+  if (srsDirty || pageDirty || heatDirty) {
+    // merge ngược đổi dữ liệu local → bắn event để heatmap/my-vocab... re-render
     try {
       window.dispatchEvent(new CustomEvent("bye:progress"));
     } catch {
@@ -357,6 +361,15 @@ async function doFlush(): Promise<void> {
       body: JSON.stringify(payload),
       keepalive: true,
     });
+    if (res.status === 401) {
+      // session hết hạn — dừng retry loop, chờ hybridOnAuthChange khi login lại
+      loggedIn = false;
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      return;
+    }
     if (!res.ok) throw new Error(String(res.status));
     const server = (await res.json()) as SyncPayload & { serverTime: number };
     applyServerPayload(server);

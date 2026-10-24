@@ -225,6 +225,63 @@ describe("hybrid-store", () => {
     expect(typeof tombs.srs["hsk1.d.4"]).toBe("number");
   });
 
+  it("merge ngược có lesson/heat mới → listener bye:progress được gọi", async () => {
+    localStorage.setItem("bye.heat", JSON.stringify({ "2026-10-20": 3 }));
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    const listener = vi.fn();
+    window.addEventListener("bye:progress", listener);
+
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          srs: [],
+          studyDay: [{ date: "2026-10-21", xp: 9, correct: 0, updatedAt: 1 }],
+          lessonProgress: [
+            { book: "hsk1", lesson: "5", modes: {}, knownCount: 2, updatedAt: Date.now(), deletedAt: null },
+          ],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+    window.removeEventListener("bye:progress", listener);
+
+    expect(listener).toHaveBeenCalled();
+    expect(JSON.parse(localStorage.getItem("bye.pageDone") || "{}")["hsk1/5"]).toBe(1);
+    expect(JSON.parse(localStorage.getItem("bye.heat") || "{}")["2026-10-21"]).toBe(9);
+  });
+
+  it("flush trả 401 → dừng loggedIn, không retry POST; login lại → fetch tiếp", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(new Response("unauthorized", { status: 401 }));
+
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // dirty giữ nguyên
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").studyDay).toBe(1);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fetchMock).toHaveBeenCalledTimes(1); // không retry
+
+    // login lại → merge-push fetch tiếp
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+    hybridOnAuthChangeFn(false);
+    hybridOnAuthChangeFn(true);
+    await settle();
+    expect(fetchMock.mock.calls.length).toBeGreaterThan(1);
+  });
+
   it("guest: dirty tích tụ nhưng không bao giờ fetch", async () => {
     initHybridStoreFn();
     progressStore.addXp(3);
