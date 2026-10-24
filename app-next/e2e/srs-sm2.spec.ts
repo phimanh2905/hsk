@@ -47,10 +47,8 @@ async function srsState(page: Page) {
 }
 
 /* Tab "HSK 1" — thẻ seed là hsk1.* mà dashboard mặc định mở HSK 2.
-   ContentBridge nạp vocab async nhưng không tự bắn bye:progress → dashboard
-   render trước khi resolveWord sẵn sàng; bắn đúng event re-render của store
-   sau khi vocab response (mô phỏng tick store mà người dùng thực có qua tương
-   tác/sync — xem concern trong task-7-report). */
+   ContentBridge bắn bye:progress sau khi setVocabData → dashboard tự re-render
+   khi vocab response về; chỉ cần poll cho tới khi dashboard resolve được thẻ. */
 async function openReview(page: Page) {
   const vocab = page.waitForResponse((r) =>
     r.url().includes("/api/v1/content/vocab") && !r.url().includes("vocab-meta") && r.request().method() === "GET"
@@ -58,17 +56,8 @@ async function openReview(page: Page) {
   await page.goto("/review");
   await vocab;
   await page.getByRole("group", { name: "Lọc cấp độ HSK" }).getByRole("button", { name: "HSK 1" }).click();
-  /* Vocab response về ≠ setVocabData đã chạy (promise .then trong trang). Bắn
-     event tick và poll cho tới khi dashboard resolve được thẻ — event là cơ chế
-     re-render chính thức của store, người dùng thực kích hoạt qua tương tác/sync. */
   await expect
-    .poll(() =>
-      page.evaluate(() => {
-        window.dispatchEvent(new Event("bye:progress"));
-        return document.querySelector("[data-testid=hero-count]")?.textContent;
-      }),
-      { timeout: 20_000 },
-    )
+    .poll(() => page.evaluate(() => document.querySelector("[data-testid=hero-count]")?.textContent), { timeout: 20_000 })
     .toBe("1 từ");
   await expect(page.getByTestId("bucket")).toHaveCount(3);
 }
