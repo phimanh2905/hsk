@@ -57,3 +57,26 @@ python3 -c "import json;d=json.load(open('out/EA3rwvr99Q0/whisper-smoke.json'));
 Kết quả tham chiếu (máy dev, 2026-10-24): `OK 00:00:00,000 '啊'` — 218 tokens cho 90s audio, ~13s tổng thời gian (Metal).
 
 Lưu ý: `-ml 1` bắt buộc (mỗi token 1 segment con) để có `timestamps.from` ở từng phần tử; `-ojf` = JSON full, không fallback text.
+
+## Word list HSK 3.0 (W2 content pipeline)
+
+Tải dataset chuẩn HSK 3.0 vào `scripts/content/vendor/` (gitignored, không commit):
+
+```bash
+mkdir -p /Volumes/samsung512/Code/hsk/app-next/scripts/content/vendor
+curl -L -o /Volumes/samsung512/Code/hsk/app-next/scripts/content/vendor/hsk30.csv \
+  https://raw.githubusercontent.com/ivankra/hsk30/master/hsk30.csv
+head -2 /Volumes/samsung512/Code/hsk/app-next/scripts/content/vendor/hsk30.csv
+```
+
+- Nguồn: repo `ivankra/hsk30` (branch `master`) — License: MIT (code), dữ liệu nguồn văn bản Bộ GD&ĐT TQ.
+- File dùng: `hsk30.csv` (1 dòng/từ, cột `Simplified`/`Pinyin`/`Level`). Level `1..6`, `7-9` bị parser bỏ qua.
+- Chuẩn cumulative HSK 3.0: 500 / 1272 / 2245 / 3245 / 4316 (level 1-5).
+
+## Script W2 (Node, chạy bằng tsx)
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next
+pnpm vitest run scripts/content            # unit + integration test
+pnpm exec tsx scripts/content/src/hsk-list.ts   # (nếu có CLI; các script batch ở task sau)
+```
