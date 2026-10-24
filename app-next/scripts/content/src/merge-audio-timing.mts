@@ -19,7 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const appRoot = path.resolve(scriptDir, "../..");
+const appRoot = path.resolve(scriptDir, "../../.."); // scriptDir = scripts/content/src → app-next
 
 function argValue(name: string): string | undefined {
   const i = process.argv.indexOf(name);

@@ -21,14 +21,16 @@ test.describe("content từ D1", () => {
 
   test("playlist Hội thoại theo bài render từ D1 (W3.3)", async ({ page }) => {
     await page.goto("/shadowing");
-    await expect(page.getByText("Hội thoại theo bài").first()).toBeVisible();
+    // Library render video cards (tên playlist không hiển thị ở card level) —
+    // assert 1 video audio của playlist "Hội thoại theo bài" có mặt.
+    await expect(page.getByText("Chào hỏi & xưng hô").first()).toBeVisible();
   });
 
   // T7 đã xong phần code: route catch-all [...videoId] + <audio data-testid="audio-player">
   // (unit + studio test xanh). Còn fixme vì DATA chưa có: dialogueByLesson rỗng
   // (gen-dialogues + render Kokoro chưa chạy) → D1 chưa có video "hsk1/lesson-1"
   // → route trả 404. Bật lại khi data dialogues được seed vào D1 dev.
-  test.fixme("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
+  test("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
     const res = await page.goto("/shadowing/hsk1/lesson-1");
     expect(res?.status()).toBe(200);
     const audio = page.locator('audio[data-testid="audio-player"]');
@@ -38,13 +40,13 @@ test.describe("content từ D1", () => {
   // T10 acceptance (data-gated, cùng lý do fixme trên): playlist audio qua API +
   // audio player ở studio + file mp3 render bởi Kokoro trên public/.
   // Bật khi gen-dialogues + render-dialogue-audio + seed D1 dev xong cho HSK 1–3.
-  test.fixme("playlist audio + player + mp3 (acceptance W3)", async ({ page, request }) => {
+  test("playlist audio + player + mp3 (acceptance W3)", async ({ page, request }) => {
     // API /api/v1/content/shadowing không đổi — trả playlist "Hội thoại theo bài".
     const api = await request.get("/api/v1/content/shadowing");
     expect(api.ok()).toBeTruthy();
     const body = (await api.json()) as { playlists?: Array<{ title?: string }> };
     const list = body.playlists ?? [];
-    expect(list.some((p) => (p.title ?? "").includes("Hội thoại theo bài"))).toBeTruthy();
+    expect(list.some((p) => (p.name ?? "").includes("Hội thoại theo bài"))).toBeTruthy();
     // Studio chứa <audio data-testid="audio-player"> (hsk2/lesson-1).
     await page.goto("/shadowing/hsk2/lesson-1");
     await expect(page.locator('audio[data-testid="audio-player"]')).toHaveCount(1);

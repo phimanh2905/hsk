@@ -96,13 +96,17 @@ describe("parseGrammarResponse", () => {
     expect(drafts[0]).not.toHaveProperty("undefined");
   });
 
-  it("trùng hz với existing -> throw kèm hz", async () => {
-    await expect(parseGrammarResponse(3, CONTENT, ["把字句"], { rows: ROWS })).rejects.toThrow(/把字句/);
+  // Ruling W2 chạy bù: hạt từ trùng hz với nghĩa khác (了1/了2) là điểm NGỮ PHÁP
+  // khác nhau hợp lệ — parseGrammarResponse chỉ warn; id uniqueness xử ở bridge.
+  it("trùng hz với existing -> chấp nhận (warn)", async () => {
+    const pts = await parseGrammarResponse(3, CONTENT, ["把字句"], { rows: ROWS });
+    expect(pts).toHaveLength(2);
   });
 
-  it("trùng hz trong cùng response -> throw", async () => {
+  it("trùng hz trong cùng response -> chấp nhận (warn)", async () => {
     const dup = JSON.stringify({ points: [POINT, POINT] });
-    await expect(parseGrammarResponse(3, dup, [], { rows: ROWS })).rejects.toThrow(/trùng/);
+    const pts = await parseGrammarResponse(3, dup, [], { rows: ROWS });
+    expect(pts).toHaveLength(2);
   });
 
   it("topic sai -> throw", async () => {

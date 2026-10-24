@@ -11,77 +11,99 @@
         "speaker": "A",
         "zh": "你好！",
         "pinyin": "Nǐ hǎo!",
-        "vi": "Chào bạn!"
+        "vi": "Chào bạn!",
+        "audio": "hsk1/lesson-1-1",
+        "durSec": 1.68
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "你好！请问，你叫什么名字？",
         "pinyin": "Nǐ hǎo! Qǐngwèn, nǐ jiào shénme míngzi?",
-        "vi": "Chào bạn! Cho hỏi, bạn tên là gì?"
+        "vi": "Chào bạn! Cho hỏi, bạn tên là gì?",
+        "audio": "hsk1/lesson-1-2",
+        "durSec": 3.45
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "我叫王小美。你呢？",
         "pinyin": "Wǒ jiào Wáng Xiǎoměi. Nǐ ne?",
-        "vi": "Tôi gọi là Vương Tiểu Mỹ. Còn bạn?"
+        "vi": "Tôi gọi là Vương Tiểu Mỹ. Còn bạn?",
+        "audio": "hsk1/lesson-1-3",
+        "durSec": 2.38
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "我叫李大伟。这位是王先生。",
         "pinyin": "Wǒ jiào Lǐ Dàwěi. Zhè wèi shì Wáng xiānsheng.",
-        "vi": "Tôi tên Lý Đại Vỹ. Vị này là ông Vương."
+        "vi": "Tôi tên Lý Đại Vỹ. Vị này là ông Vương.",
+        "audio": "hsk1/lesson-1-4",
+        "durSec": 3.65
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "王先生，你好！",
         "pinyin": "Wáng xiānsheng, nǐ hǎo!",
-        "vi": "Chào ông Vương!"
+        "vi": "Chào ông Vương!",
+        "audio": "hsk1/lesson-1-5",
+        "durSec": 2.35
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你好，你好！请进，请坐。",
         "pinyin": "Nǐ hǎo, nǐ hǎo! Qǐng jìn, qǐng zuò.",
-        "vi": "Chào chào! Mời vào, mời ngồi."
+        "vi": "Chào chào! Mời vào, mời ngồi.",
+        "audio": "hsk1/lesson-1-6",
+        "durSec": 3.2
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "谢谢！她们是谁？",
         "pinyin": "Xièxie! Tāmen shì shéi?",
-        "vi": "Cảm ơn! Họ là ai vậy?"
+        "vi": "Cảm ơn! Họ là ai vậy?",
+        "audio": "hsk1/lesson-1-7",
+        "durSec": 2.55
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "她们是我的朋友们。小姐，你好吗？",
         "pinyin": "Tāmen shì wǒ de péngyǒumen. Xiǎojiě, nǐ hǎo ma?",
-        "vi": "Họ là bạn của tôi. Cô gái, bạn khỏe không?"
+        "vi": "Họ là bạn của tôi. Cô gái, bạn khỏe không?",
+        "audio": "hsk1/lesson-1-8",
+        "durSec": 3.7
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "我很好，谢谢。对不起，我要走了。",
         "pinyin": "Wǒ hěn hǎo, xièxie. Duìbuqǐ, wǒ yào zǒu le.",
-        "vi": "Tôi khỏe, cảm ơn. Xin lỗi, tôi phải đi rồi."
+        "vi": "Tôi khỏe, cảm ơn. Xin lỗi, tôi phải đi rồi.",
+        "audio": "hsk1/lesson-1-9",
+        "durSec": 3.48
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "没关系。再见！",
         "pinyin": "Méi guānxi. Zàijiàn!",
-        "vi": "Không sao đâu. Tạm biệt!"
+        "vi": "Không sao đâu. Tạm biệt!",
+        "audio": "hsk1/lesson-1-10",
+        "durSec": 2.52
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "再见！明天见。",
         "pinyin": "Zàijiàn! Míngtiān jiàn.",
-        "vi": "Tạm biệt! Hẹn gặp ngày mai."
+        "vi": "Tạm biệt! Hẹn gặp ngày mai.",
+        "audio": "hsk1/lesson-1-11",
+        "durSec": 2.33
       }
     ]
   },
@@ -97,77 +119,99 @@
         "speaker": "A",
         "zh": "老师，您好！这是我的朋友。",
         "pinyin": "Lǎoshī, nín hǎo! Zhè shì wǒ de péngyǒu.",
-        "vi": "Thưa thầy, chào thầy! Đây là bạn của em."
+        "vi": "Thưa thầy, chào thầy! Đây là bạn của em.",
+        "audio": "hsk1/lesson-2-1",
+        "durSec": 3.12
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "你好！请你介绍一下。",
         "pinyin": "Nǐ hǎo! Qǐng nǐ jièshào yíxià.",
-        "vi": "Chào em! Em hãy giới thiệu nhé."
+        "vi": "Chào em! Em hãy giới thiệu nhé.",
+        "audio": "hsk1/lesson-2-2",
+        "durSec": 3.05
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "他叫马克，他是外国人。",
         "pinyin": "Tā jiào Mǎkè, tā shì wàiguórén.",
-        "vi": "Anh ấy tên Mã Khắc, anh ấy là người nước ngoài."
+        "vi": "Anh ấy tên Mã Khắc, anh ấy là người nước ngoài.",
+        "audio": "hsk1/lesson-2-3",
+        "durSec": 2.88
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "你好，马克！你是哪国人？",
         "pinyin": "Nǐ hǎo, Mǎkè! Nǐ shì nǎ guó rén?",
-        "vi": "Chào Mã Khắc! Bạn là người nước nào?"
+        "vi": "Chào Mã Khắc! Bạn là người nước nào?",
+        "audio": "hsk1/lesson-2-4",
+        "durSec": 3.1
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我是美国人。这是哪儿？",
         "pinyin": "Wǒ shì Měiguórén. Zhè shì nǎr?",
-        "vi": "Tôi là người Mỹ. Đây là đâu vậy?"
+        "vi": "Tôi là người Mỹ. Đây là đâu vậy?",
+        "audio": "hsk1/lesson-2-5",
+        "durSec": 2.9
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "这里是我们学校，那边是图书馆。",
         "pinyin": "Zhèlǐ shì wǒmen xuéxiào, nàbiān shì túshūguǎn.",
-        "vi": "Đây là trường của chúng tôi, kia là thư viện."
+        "vi": "Đây là trường của chúng tôi, kia là thư viện.",
+        "audio": "hsk1/lesson-2-6",
+        "durSec": 3.9
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "谁在那边？他们在这里做什么？",
         "pinyin": "Shéi zài nàbiān? Tāmen zài zhèlǐ zuò shénme?",
-        "vi": "Ai ở đằng kia vậy? Họ đang làm gì ở đây?"
+        "vi": "Ai ở đằng kia vậy? Họ đang làm gì ở đây?",
+        "audio": "hsk1/lesson-2-7",
+        "durSec": 3.35
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "那边是我的同学们，他们在这儿学习汉语。",
         "pinyin": "Nàbiān shì wǒ de tóngxuémen, tāmen zài zhèr xuéxí Hànyǔ.",
-        "vi": "Kia là các bạn cùng lớp của tôi, họ đang học tiếng Trung ở đây."
+        "vi": "Kia là các bạn cùng lớp của tôi, họ đang học tiếng Trung ở đây.",
+        "audio": "hsk1/lesson-2-8",
+        "durSec": 4.4
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "哪些人也是学生？",
         "pinyin": "Nǎxiē rén yě shì xuésheng?",
-        "vi": "Những ai cũng là học sinh vậy?"
+        "vi": "Những ai cũng là học sinh vậy?",
+        "audio": "hsk1/lesson-2-9",
+        "durSec": 2.55
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "这些都是学生。你不要开玩笑，快去认识他们！",
         "pinyin": "Zhèxiē dōu shì xuésheng. Nǐ búyào kāi wánxiào, kuài qù rènshi tāmen!",
-        "vi": "Tất cả những người này đều là học sinh. Đừng đùa nữa, mau đi làm quen với họ đi!"
+        "vi": "Tất cả những người này đều là học sinh. Đừng đùa nữa, mau đi làm quen với họ đi!",
+        "audio": "hsk1/lesson-2-10",
+        "durSec": 5.03
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "好，我现在就过去。",
         "pinyin": "Hǎo, wǒ xiànzài jiù guòqù.",
-        "vi": "Được, tôi sẽ qua đó ngay bây giờ."
+        "vi": "Được, tôi sẽ qua đó ngay bây giờ.",
+        "audio": "hsk1/lesson-2-11",
+        "durSec": 2.5
       }
     ]
   },
@@ -183,77 +227,99 @@
         "speaker": "A",
         "zh": "请进！这是我的家。",
         "pinyin": "Qǐng jìn! Zhè shì wǒ de jiā.",
-        "vi": "Mời vào! Đây là nhà của tôi."
+        "vi": "Mời vào! Đây là nhà của tôi.",
+        "audio": "hsk1/lesson-3-1",
+        "durSec": 2.52
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "谢谢！你的家人都在家里吗？",
         "pinyin": "Xièxie! Nǐ de jiārén dōu zài jiālǐ ma?",
-        "vi": "Cảm ơn! Gia đình bạn có ai ở nhà hết không?"
+        "vi": "Cảm ơn! Gia đình bạn có ai ở nhà hết không?",
+        "audio": "hsk1/lesson-3-2",
+        "durSec": 3.5
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "他们在客厅。这是我爸爸和妈妈。",
         "pinyin": "Tāmen zài kètīng. Zhè shì wǒ bàba hé māma.",
-        "vi": "Họ ở phòng khách. Đây là bố và mẹ của tôi."
+        "vi": "Họ ở phòng khách. Đây là bố và mẹ của tôi.",
+        "audio": "hsk1/lesson-3-3",
+        "durSec": 3.52
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "叔叔阿姨好！这几位是谁？",
         "pinyin": "Shūshu āyí hǎo! Zhè jǐ wèi shì shéi?",
-        "vi": "Chào chú và dì! Mấy người này là ai vậy?"
+        "vi": "Chào chú và dì! Mấy người này là ai vậy?",
+        "audio": "hsk1/lesson-3-4",
+        "durSec": 3.4
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "这是我哥哥，这是我姐姐，那是我妹妹。",
         "pinyin": "Zhè shì wǒ gēge, zhè shì wǒ jiějie, nà shì wǒ mèimei.",
-        "vi": "Đây là anh trai tôi, đây là chị gái tôi, còn kia là em gái tôi."
+        "vi": "Đây là anh trai tôi, đây là chị gái tôi, còn kia là em gái tôi.",
+        "audio": "hsk1/lesson-3-5",
+        "durSec": 3.98
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你的爷爷和奶奶呢？",
         "pinyin": "Nǐ de yéye hé nǎinai ne?",
-        "vi": "Ông và bà của bạn đâu?"
+        "vi": "Ông và bà của bạn đâu?",
+        "audio": "hsk1/lesson-3-6",
+        "durSec": 2.73
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "他们不在，他们去儿子家了。",
         "pinyin": "Tāmen bú zài, tāmen qù érzi jiā le.",
-        "vi": "Họ không ở đây, họ đi nhà con trai rồi."
+        "vi": "Họ không ở đây, họ đi nhà con trai rồi.",
+        "audio": "hsk1/lesson-3-7",
+        "durSec": 3.03
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "你有儿子吗？",
         "pinyin": "Nǐ yǒu érzi ma?",
-        "vi": "Bạn có con trai không?"
+        "vi": "Bạn có con trai không?",
+        "audio": "hsk1/lesson-3-8",
+        "durSec": 2.12
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "没有儿子，我有一个女儿。",
         "pinyin": "Méiyǒu érzi, wǒ yǒu yí ge nǚ'ér.",
-        "vi": "Không có con trai, tôi có một con gái."
+        "vi": "Không có con trai, tôi có một con gái.",
+        "audio": "hsk1/lesson-3-9",
+        "durSec": 2.85
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "她真可爱！你女儿几岁了？",
         "pinyin": "Tā zhēn kě'ài! Nǐ nǚ'ér jǐ suì le?",
-        "vi": "Cô bé đáng yêu thật! Con gái bạn mấy tuổi rồi?"
+        "vi": "Cô bé đáng yêu thật! Con gái bạn mấy tuổi rồi?",
+        "audio": "hsk1/lesson-3-10",
+        "durSec": 3.23
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "她五岁了。来，我们喝茶吧。",
         "pinyin": "Tā wǔ suì le. Lái, wǒmen hē chá ba.",
-        "vi": "Nó năm tuổi rồi. Nào, mình uống trà đi."
+        "vi": "Nó năm tuổi rồi. Nào, mình uống trà đi.",
+        "audio": "hsk1/lesson-3-11",
+        "durSec": 2.92
       }
     ]
   },
@@ -269,70 +335,90 @@
         "speaker": "A",
         "zh": "今天是我的生日！",
         "pinyin": "Jīntiān shì wǒ de shēngrì!",
-        "vi": "Hôm nay là sinh nhật của tôi!"
+        "vi": "Hôm nay là sinh nhật của tôi!",
+        "audio": "hsk1/lesson-4-1",
+        "durSec": 2.48
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "真的吗？生日快乐！",
         "pinyin": "Zhēn de ma? Shēngrì kuàilè!",
-        "vi": "Thật sao? Chúc mừng sinh nhật!"
+        "vi": "Thật sao? Chúc mừng sinh nhật!",
+        "audio": "hsk1/lesson-4-2",
+        "durSec": 2.83
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "谢谢！我请了很多朋友。",
         "pinyin": "Xièxie! Wǒ qǐng le hěn duō péngyǒu.",
-        "vi": "Cảm ơn! Tôi mời rất nhiều bạn bè."
+        "vi": "Cảm ơn! Tôi mời rất nhiều bạn bè.",
+        "audio": "hsk1/lesson-4-3",
+        "durSec": 3
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "有小朋友吗？我的孩子想去。",
         "pinyin": "Yǒu xiǎopéngyǒu ma? Wǒ de háizi xiǎng qù.",
-        "vi": "Có trẻ con không? Con của tôi muốn đi."
+        "vi": "Có trẻ con không? Con của tôi muốn đi.",
+        "audio": "hsk1/lesson-4-4",
+        "durSec": 3.58
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "有，他们都是我的小同学。",
         "pinyin": "Yǒu, tāmen dōu shì wǒ de xiǎo tóngxué.",
-        "vi": "Có, các bạn ấy đều là bạn học nhỏ của tôi."
+        "vi": "Có, các bạn ấy đều là bạn học nhỏ của tôi.",
+        "audio": "hsk1/lesson-4-5",
+        "durSec": 3
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你们班的男生多还是女生多？",
         "pinyin": "Nǐmen bān de nánshēng duō háishì nǚshēng duō?",
-        "vi": "Lớp của bạn nam nhiều hay nữ nhiều?"
+        "vi": "Lớp của bạn nam nhiều hay nữ nhiều?",
+        "audio": "hsk1/lesson-4-6",
+        "durSec": 3.6
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "男生多，女生只有四个。",
         "pinyin": "Nánshēng duō, nǚshēng zhǐyǒu sì ge.",
-        "vi": "Nam nhiều hơn, nữ chỉ có bốn bạn."
+        "vi": "Nam nhiều hơn, nữ chỉ có bốn bạn.",
+        "audio": "hsk1/lesson-4-7",
+        "durSec": 3.03
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "我女儿也是你的同学吗？",
         "pinyin": "Wǒ nǚ'ér yě shì nǐ de tóngxué ma?",
-        "vi": "Con gái tôi cũng là bạn cùng lớp của bạn à?"
+        "vi": "Con gái tôi cũng là bạn cùng lớp của bạn à?",
+        "audio": "hsk1/lesson-4-8",
+        "durSec": 3.05
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "是，她是我的好朋友，我们都喜欢她。",
         "pinyin": "Shì, tā shì wǒ de hǎo péngyǒu, wǒmen dōu xǐhuan tā.",
-        "vi": "Vâng, bạn ấy là bạn thân của tôi, ai cũng thích bạn ấy."
+        "vi": "Vâng, bạn ấy là bạn thân của tôi, ai cũng thích bạn ấy.",
+        "audio": "hsk1/lesson-4-9",
+        "durSec": 3.63
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "太好了！现在我们去看她吧。",
         "pinyin": "Tài hǎo le! Xiànzài wǒmen qù kàn tā ba.",
-        "vi": "Tốt quá! Bây giờ chúng ta đi thăm cô bé nhé."
+        "vi": "Tốt quá! Bây giờ chúng ta đi thăm cô bé nhé.",
+        "audio": "hsk1/lesson-4-10",
+        "durSec": 3.33
       }
     ]
   },
@@ -348,70 +434,90 @@
         "speaker": "A",
         "zh": "老板，这个多少钱？",
         "pinyin": "Lǎobǎn, zhège duōshao qián?",
-        "vi": "Chủ cửa hàng, cái này bao nhiêu tiền?"
+        "vi": "Chủ cửa hàng, cái này bao nhiêu tiền?",
+        "audio": "hsk1/lesson-5-1",
+        "durSec": 2.65
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "十块。",
         "pinyin": "Shí kuài.",
-        "vi": "Mười tệ."
+        "vi": "Mười tệ.",
+        "audio": "hsk1/lesson-5-2",
+        "durSec": 1.73
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "太贵了，八块可以吗？",
         "pinyin": "Tài guì le, bā kuài kěyǐ ma?",
-        "vi": "Đắt quá, tám tệ được không?"
+        "vi": "Đắt quá, tám tệ được không?",
+        "audio": "hsk1/lesson-5-3",
+        "durSec": 2.55
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "可以。你还要别的吗？",
         "pinyin": "Kěyǐ. Nǐ hái yào bié de ma?",
-        "vi": "Được. Bạn còn muốn mua gì nữa không?"
+        "vi": "Được. Bạn còn muốn mua gì nữa không?",
+        "audio": "hsk1/lesson-5-4",
+        "durSec": 2.7
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我要三本书，一个杯子，两包茶。",
         "pinyin": "Wǒ yào sān běn shū, yí ge bēizi, liǎng bāo chá.",
-        "vi": "Tôi muốn ba cuốn sách, một cái cốc, hai gói trà."
+        "vi": "Tôi muốn ba cuốn sách, một cái cốc, hai gói trà.",
+        "audio": "hsk1/lesson-5-5",
+        "durSec": 3.6
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "一共一百零八块。",
         "pinyin": "Yígòng yìbǎi líng bā kuài.",
-        "vi": "Cộng lại là một trăm lẻ tám tệ."
+        "vi": "Cộng lại là một trăm lẻ tám tệ.",
+        "audio": "hsk1/lesson-5-6",
+        "durSec": 2.73
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "这里是两百元。",
         "pinyin": "Zhèlǐ shì liǎngbǎi yuán.",
-        "vi": "Đây là hai trăm tệ."
+        "vi": "Đây là hai trăm tệ.",
+        "audio": "hsk1/lesson-5-7",
+        "durSec": 2.38
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "找你九十二块。",
         "pinyin": "Zhǎo nǐ jiǔshí'èr kuài.",
-        "vi": "Tôi trả lại bạn chín mươi hai tệ."
+        "vi": "Tôi trả lại bạn chín mươi hai tệ.",
+        "audio": "hsk1/lesson-5-8",
+        "durSec": 2.65
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "这些钱是对的。再见！",
         "pinyin": "Zhèxiē qián shì duì de. Zàijiàn!",
-        "vi": "Tiền này là đúng rồi. Tạm biệt!"
+        "vi": "Tiền này là đúng rồi. Tạm biệt!",
+        "audio": "hsk1/lesson-5-9",
+        "durSec": 2.65
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "再见！明天再来。",
         "pinyin": "Zàijiàn! Míngtiān zài lái.",
-        "vi": "Tạm biệt! Mai quay lại nhé."
+        "vi": "Tạm biệt! Mai quay lại nhé.",
+        "audio": "hsk1/lesson-5-10",
+        "durSec": 2.67
       }
     ]
   },
@@ -427,70 +533,90 @@
         "speaker": "A",
         "zh": "请问，今天是几月几号？",
         "pinyin": "Qǐngwèn, jīntiān shì jǐ yuè jǐ hào?",
-        "vi": "Cho hỏi, hôm nay là ngày mấy tháng mấy?"
+        "vi": "Cho hỏi, hôm nay là ngày mấy tháng mấy?",
+        "audio": "hsk1/lesson-6-1",
+        "durSec": 3.08
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "今天是十月十五号。",
         "pinyin": "Jīntiān shì shí yuè shíwǔ hào.",
-        "vi": "Hôm nay là ngày mười lăm tháng mười."
+        "vi": "Hôm nay là ngày mười lăm tháng mười.",
+        "audio": "hsk1/lesson-6-2",
+        "durSec": 3
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "明天是你的生日吗？",
         "pinyin": "Míngtiān shì nǐ de shēngrì ma?",
-        "vi": "Mai là sinh nhật của bạn à?"
+        "vi": "Mai là sinh nhật của bạn à?",
+        "audio": "hsk1/lesson-6-3",
+        "durSec": 2.58
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "不是，我的生日是十二月一日。",
         "pinyin": "Bú shì, wǒ de shēngrì shì shí'èr yuè yí rì.",
-        "vi": "Không phải, sinh nhật tôi là ngày một tháng mười hai."
+        "vi": "Không phải, sinh nhật tôi là ngày một tháng mười hai.",
+        "audio": "hsk1/lesson-6-4",
+        "durSec": 3.58
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "你前天去哪儿了？我昨天找你。",
         "pinyin": "Nǐ qiántiān qù nǎr le? Wǒ zuótiān zhǎo nǐ.",
-        "vi": "Hôm kia bạn đi đâu vậy? Tôi tìm bạn hôm qua."
+        "vi": "Hôm kia bạn đi đâu vậy? Tôi tìm bạn hôm qua.",
+        "audio": "hsk1/lesson-6-5",
+        "durSec": 3.48
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "我昨天在家里，前天在朋友家。",
         "pinyin": "Wǒ zuótiān zài jiālǐ, qiántiān zài péngyǒu jiā.",
-        "vi": "Hôm qua tôi ở nhà, hôm kia ở nhà bạn tôi."
+        "vi": "Hôm qua tôi ở nhà, hôm kia ở nhà bạn tôi.",
+        "audio": "hsk1/lesson-6-6",
+        "durSec": 3.9
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "下个星期天你有空吗？",
         "pinyin": "Xià ge xīngqītiān nǐ yǒu kòng ma?",
-        "vi": "Chủ nhật tới bạn có rảnh không?"
+        "vi": "Chủ nhật tới bạn có rảnh không?",
+        "audio": "hsk1/lesson-6-7",
+        "durSec": 2.83
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "星期日我有点儿事。",
         "pinyin": "Xīngqīrì wǒ yǒudiǎnr shì.",
-        "vi": "Chủ nhật tôi hơi có việc."
+        "vi": "Chủ nhật tôi hơi có việc.",
+        "audio": "hsk1/lesson-6-8",
+        "durSec": 3.03
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "那后天呢？",
         "pinyin": "Nà hòutiān ne?",
-        "vi": "Vậy mốt thì sao?"
+        "vi": "Vậy mốt thì sao?",
+        "audio": "hsk1/lesson-6-9",
+        "durSec": 2.05
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "后天可以。我们晚上见。",
         "pinyin": "Hòutiān kěyǐ. Wǒmen wǎnshang jiàn.",
-        "vi": "Mốt thì được. Tối chúng ta gặp nhau nhé."
+        "vi": "Mốt thì được. Tối chúng ta gặp nhau nhé.",
+        "audio": "hsk1/lesson-6-10",
+        "durSec": 3.17
       }
     ]
   },
@@ -506,77 +632,99 @@
         "speaker": "A",
         "zh": "现在几点了？",
         "pinyin": "Xiànzài jǐ diǎn le?",
-        "vi": "Bây giờ là mấy giờ rồi?"
+        "vi": "Bây giờ là mấy giờ rồi?",
+        "audio": "hsk1/lesson-7-1",
+        "durSec": 2.17
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "现在是上午九点。",
         "pinyin": "Xiànzài shì shàngwǔ jiǔ diǎn.",
-        "vi": "Bây giờ là chín giờ sáng."
+        "vi": "Bây giờ là chín giờ sáng.",
+        "audio": "hsk1/lesson-7-2",
+        "durSec": 3
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "我早上六点就起床了，很累。",
         "pinyin": "Wǒ zǎoshang liù diǎn jiù qǐchuáng le, hěn lèi.",
-        "vi": "Tôi sáu giờ sáng đã dậy rồi, rất mệt."
+        "vi": "Tôi sáu giờ sáng đã dậy rồi, rất mệt.",
+        "audio": "hsk1/lesson-7-3",
+        "durSec": 3.4
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "你昨天晚上几点睡觉？",
         "pinyin": "Nǐ zuótiān wǎnshang jǐ diǎn shuìjiào?",
-        "vi": "Tối qua bạn mấy giờ đi ngủ?"
+        "vi": "Tối qua bạn mấy giờ đi ngủ?",
+        "audio": "hsk1/lesson-7-4",
+        "durSec": 3.38
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "十二点半，我睡的时间太少了。",
         "pinyin": "Shí'èr diǎn bàn, wǒ shuì de shíjiān tài shǎo le.",
-        "vi": "Mười hai giờ rưỡi, thời gian tôi ngủ quá ít."
+        "vi": "Mười hai giờ rưỡi, thời gian tôi ngủ quá ít.",
+        "audio": "hsk1/lesson-7-5",
+        "durSec": 3.33
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "今晚你要工作到什么时候？",
         "pinyin": "Jīnwǎn nǐ yào gōngzuò dào shénme shíhou?",
-        "vi": "Tối nay bạn sẽ làm việc đến mấy giờ?"
+        "vi": "Tối nay bạn sẽ làm việc đến mấy giờ?",
+        "audio": "hsk1/lesson-7-6",
+        "durSec": 3.52
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "中午十二点我就下班了。",
         "pinyin": "Zhōngwǔ shí'èr diǎn wǒ jiù xiàbān le.",
-        "vi": "Mười hai giờ trưa tôi đã tan làm rồi."
+        "vi": "Mười hai giờ trưa tôi đã tan làm rồi.",
+        "audio": "hsk1/lesson-7-7",
+        "durSec": 2.95
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "那下午我们一起去学校吧。",
         "pinyin": "Nà xiàwǔ wǒmen yìqǐ qù xuéxiào ba.",
-        "vi": "Vậy chiều chúng ta cùng đến trường nhé."
+        "vi": "Vậy chiều chúng ta cùng đến trường nhé.",
+        "audio": "hsk1/lesson-7-8",
+        "durSec": 3.38
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "好，我马上来。你等我一会儿。",
         "pinyin": "Hǎo, wǒ mǎshàng lái. Nǐ děng wǒ yíhuìr.",
-        "vi": "Được, tôi đến ngay. Bạn chờ tôi một lát."
+        "vi": "Được, tôi đến ngay. Bạn chờ tôi một lát.",
+        "audio": "hsk1/lesson-7-9",
+        "durSec": 3.05
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "今年的新年你回家吗？",
         "pinyin": "Jīnnián de xīnnián nǐ huí jiā ma?",
-        "vi": "Năm nay ngày Tết bạn có về nhà không?"
+        "vi": "Năm nay ngày Tết bạn có về nhà không?",
+        "audio": "hsk1/lesson-7-10",
+        "durSec": 3
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "我们学校明年一月放假，我今年不能回家。",
         "pinyin": "Wǒmen xuéxiào míngnián yí yuè fàngjià, wǒ jīnnián bù néng huí jiā.",
-        "vi": "Trường tôi nghỉ hè tháng Một năm sau, năm nay tôi không về được."
+        "vi": "Trường tôi nghỉ hè tháng Một năm sau, năm nay tôi không về được.",
+        "audio": "hsk1/lesson-7-11",
+        "durSec": 4.5
       }
     ]
   },
@@ -592,70 +740,90 @@
         "speaker": "A",
         "zh": "你在哪儿学习汉语？",
         "pinyin": "Nǐ zài nǎr xuéxí Hànyǔ?",
-        "vi": "Bạn học tiếng Trung ở đâu?"
+        "vi": "Bạn học tiếng Trung ở đâu?",
+        "audio": "hsk1/lesson-8-1",
+        "durSec": 2.6
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "我在语言学院学习中文。",
         "pinyin": "Wǒ zài yǔyán xuéyuàn xuéxí Zhōngwén.",
-        "vi": "Tôi học tiếng Trung ở Học viện ngôn ngữ."
+        "vi": "Tôi học tiếng Trung ở Học viện ngôn ngữ.",
+        "audio": "hsk1/lesson-8-2",
+        "durSec": 3.38
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "你们班有多少个学生？",
         "pinyin": "Nǐmen bān yǒu duōshao ge xuésheng?",
-        "vi": "Lớp của bạn có bao nhiêu học sinh?"
+        "vi": "Lớp của bạn có bao nhiêu học sinh?",
+        "audio": "hsk1/lesson-8-3",
+        "durSec": 2.8
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "十个学生，两个老师。",
         "pinyin": "Shí ge xuésheng, liǎng ge lǎoshī.",
-        "vi": "Mười học sinh, hai giáo viên."
+        "vi": "Mười học sinh, hai giáo viên.",
+        "audio": "hsk1/lesson-8-4",
+        "durSec": 2.98
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我们今天读课文，明天听写汉字。",
         "pinyin": "Wǒmen jīntiān dú kèwén, míngtiān tīngxiě Hànzì.",
-        "vi": "Hôm nay chúng tôi đọc bài học."
+        "vi": "Hôm nay chúng tôi đọc bài học.",
+        "audio": "hsk1/lesson-8-5",
+        "durSec": 3.75
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "今天的课文难吗？",
         "pinyin": "Jīntiān de kèwén nán ma?",
-        "vi": "Bài học hôm nay khó không?"
+        "vi": "Bài học hôm nay khó không?",
+        "audio": "hsk1/lesson-8-6",
+        "durSec": 2.62
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "不太难，可是我的书包里有二十个生字。",
         "pinyin": "Bú tài nán, kěshì wǒ de shūbāo lǐ yǒu èrshí ge shēngzì.",
-        "vi": "Không quá khó, nhưng cặp của tôi có hai mươi chữ mới."
+        "vi": "Không quá khó, nhưng cặp của tôi có hai mươi chữ mới.",
+        "audio": "hsk1/lesson-8-7",
+        "durSec": 4.08
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "你的课本呢？",
         "pinyin": "Nǐ de kèběn ne?",
-        "vi": "Sách giáo khoa của bạn đâu?"
+        "vi": "Sách giáo khoa của bạn đâu?",
+        "audio": "hsk1/lesson-8-8",
+        "durSec": 2.25
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "书和本子都在桌子上。",
         "pinyin": "Shū hé běnzi dōu zài zhuōzi shang.",
-        "vi": "Sách và vở đều ở trên bàn."
+        "vi": "Sách và vở đều ở trên bàn.",
+        "audio": "hsk1/lesson-8-9",
+        "durSec": 3
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "放学以后，我们一起读书吧。",
         "pinyin": "Fàngxué yǐhòu, wǒmen yìqǐ dúshū ba.",
-        "vi": "Sau giờ học, mình cùng đọc sách nhé."
+        "vi": "Sau giờ học, mình cùng đọc sách nhé.",
+        "audio": "hsk1/lesson-8-10",
+        "durSec": 3.27
       }
     ]
   },
@@ -671,70 +839,90 @@
         "speaker": "A",
         "zh": "明天我们考试，你记得吗？",
         "pinyin": "Míngtiān wǒmen kǎoshì, nǐ jìde ma?",
-        "vi": "Ngày mai chúng ta kiểm tra, bạn nhớ không?"
+        "vi": "Ngày mai chúng ta kiểm tra, bạn nhớ không?",
+        "audio": "hsk1/lesson-9-1",
+        "durSec": 2.9
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "哎呀！我忘了！考什么？",
         "pinyin": "Āiyā! Wǒ wàng le! Kǎo shénme?",
-        "vi": "Trời ơi, tôi quên mất rồi! Thi cái gì vậy?"
+        "vi": "Trời ơi, tôi quên mất rồi! Thi cái gì vậy?",
+        "audio": "hsk1/lesson-9-2",
+        "durSec": 2.83
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "考汉字和课文。你不应该忘记！",
         "pinyin": "Kǎo Hànzì hé kèwén. Nǐ bù yīnggāi wàngjì!",
-        "vi": "Thi chữ Hán và bài học. Bạn không nên quên chứ!"
+        "vi": "Thi chữ Hán và bài học. Bạn không nên quên chứ!",
+        "audio": "hsk1/lesson-9-3",
+        "durSec": 3.65
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "我晚上在图书馆复习，你别担心。",
         "pinyin": "Wǒ wǎnshang zài túshūguǎn fùxí, nǐ bié dānxīn.",
-        "vi": "Tối tôi ôn bài ở thư viện, bạn đừng lo."
+        "vi": "Tối tôi ôn bài ở thư viện, bạn đừng lo.",
+        "audio": "hsk1/lesson-9-4",
+        "durSec": 4.15
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我早上八点上课，中午下课。",
         "pinyin": "Wǒ zǎoshang bā diǎn shàngkè, zhōngwǔ xiàkè.",
-        "vi": "Tôi tám giờ sáng vào lớp, trưa thì tan học."
+        "vi": "Tôi tám giờ sáng vào lớp, trưa thì tan học.",
+        "audio": "hsk1/lesson-9-5",
+        "durSec": 3.45
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你女儿在哪个小学上学？",
         "pinyin": "Nǐ nǚ'ér zài nǎ ge xiǎoxué shàngxué?",
-        "vi": "Con gái bạn học tiểu học nào?"
+        "vi": "Con gái bạn học tiểu học nào?",
+        "audio": "hsk1/lesson-9-6",
+        "durSec": 3.25
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "她在第五小学，她每天走路去上学。",
         "pinyin": "Tā zài dì-wǔ xiǎoxué, tā měitiān zǒulù qù shàngxué.",
-        "vi": "Nó học tiểu học số năm, ngày nào cũng đi bộ đến trường."
+        "vi": "Nó học tiểu học số năm, ngày nào cũng đi bộ đến trường.",
+        "audio": "hsk1/lesson-9-7",
+        "durSec": 4.08
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "中学生也考试吗？",
         "pinyin": "Zhōngxuéshēng yě kǎoshì ma?",
-        "vi": "Học sinh trung học cũng có thi không?"
+        "vi": "Học sinh trung học cũng có thi không?",
+        "audio": "hsk1/lesson-9-8",
+        "durSec": 2.77
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "当然，他们考试很多，知识也很多。",
         "pinyin": "Dāngrán, tāmen kǎoshì hěn duō, zhīshi yě hěn duō.",
-        "vi": "Đương nhiên rồi, họ thi rất nhiều, kiến thức cũng nhiều."
+        "vi": "Đương nhiên rồi, họ thi rất nhiều, kiến thức cũng nhiều.",
+        "audio": "hsk1/lesson-9-9",
+        "durSec": 3.9
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "那我们快去教学楼吧！要记住明天的考试！",
         "pinyin": "Nà wǒmen kuài qù jiàoxué lóu ba! Yào jìzhù míngtiān de kǎoshì!",
-        "vi": "Vậy mình mau đến tòa nhà học đi! Phải nhớ kỳ thi ngày mai đó!"
+        "vi": "Vậy mình mau đến tòa nhà học đi! Phải nhớ kỳ thi ngày mai đó!",
+        "audio": "hsk1/lesson-9-10",
+        "durSec": 4.5
       }
     ]
   },
@@ -750,70 +938,90 @@
         "speaker": "A",
         "zh": "喂，你在干什么？",
         "pinyin": "Wéi, nǐ zài gàn shénme?",
-        "vi": "A-lô, bạn đang làm gì vậy?"
+        "vi": "A-lô, bạn đang làm gì vậy?",
+        "audio": "hsk1/lesson-10-1",
+        "durSec": 2.33
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "我在上网，你在忙吗？",
         "pinyin": "Wǒ zài shàngwǎng, nǐ zài máng ma?",
-        "vi": "Tôi đang lướt mạng, bạn có bận không?"
+        "vi": "Tôi đang lướt mạng, bạn có bận không?",
+        "audio": "hsk1/lesson-10-2",
+        "durSec": 2.77
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "很忙。我在开会，我的手机要没电了。",
         "pinyin": "Hěn máng. Wǒ zài kāihuì, wǒ de shǒujī yào méi diàn le.",
-        "vi": "Bận lắm. Tôi đang họp, điện thoại sắp hết pin rồi."
+        "vi": "Bận lắm. Tôi đang họp, điện thoại sắp hết pin rồi.",
+        "audio": "hsk1/lesson-10-3",
+        "durSec": 3.63
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "那你晚上给我打电话吧。",
         "pinyin": "Nà nǐ wǎnshang gěi wǒ dǎ diànhuà ba.",
-        "vi": "Vậy tối bạn gọi điện cho tôi nhé."
+        "vi": "Vậy tối bạn gọi điện cho tôi nhé.",
+        "audio": "hsk1/lesson-10-4",
+        "durSec": 3.12
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "好。我六点下班，七点到家。",
         "pinyin": "Hǎo. Wǒ liù diǎn xiàbān, qī diǎn dào jiā.",
-        "vi": "Được. Sáu giờ tôi tan làm, bảy giờ về đến nhà."
+        "vi": "Được. Sáu giờ tôi tan làm, bảy giờ về đến nhà.",
+        "audio": "hsk1/lesson-10-5",
+        "durSec": 3.3
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你今天上班累吗？",
         "pinyin": "Nǐ jīntiān shàngbān lèi ma?",
-        "vi": "Hôm nay đi làm bạn có mệt không?"
+        "vi": "Hôm nay đi làm bạn có mệt không?",
+        "audio": "hsk1/lesson-10-6",
+        "durSec": 2.8
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "很累，工人叔叔们从早工作到晚。",
         "pinyin": "Hěn lèi, gōngrén shūshumen cóng zǎo gōngzuò dào wǎn.",
-        "vi": "Mệt lắm, các chú công nhân làm việc từ sáng đến tối."
+        "vi": "Mệt lắm, các chú công nhân làm việc từ sáng đến tối.",
+        "audio": "hsk1/lesson-10-7",
+        "durSec": 3.85
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "晚上看看电视吧，别工作了。",
         "pinyin": "Wǎnshang kànkan diànshì ba, bié gōngzuò le.",
-        "vi": "Tối thì xem tivi đi, đừng làm việc nữa."
+        "vi": "Tối thì xem tivi đi, đừng làm việc nữa.",
+        "audio": "hsk1/lesson-10-8",
+        "durSec": 3.58
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "好主意！我买了一个新电视机。",
         "pinyin": "Hǎo zhǔyi! Wǒ mǎi le yí ge xīn diànshìjī.",
-        "vi": "Ý hay đấy! Tôi mới mua một cái tivi mới."
+        "vi": "Ý hay đấy! Tôi mới mua một cái tivi mới.",
+        "audio": "hsk1/lesson-10-9",
+        "durSec": 3.33
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "太好了，晚上见！别忘了打电话！",
         "pinyin": "Tài hǎo le, wǎnshang jiàn! Bié wàngle dǎ diànhuà!",
-        "vi": "Tốt quá, tối gặp nhau nhé! Đừng quên gọi điện đó!"
+        "vi": "Tốt quá, tối gặp nhau nhé! Đừng quên gọi điện đó!",
+        "audio": "hsk1/lesson-10-10",
+        "durSec": 3.88
       }
     ]
   },
@@ -829,70 +1037,90 @@
         "speaker": "A",
         "zh": "我累了，我们休息一下吧。",
         "pinyin": "Wǒ lèi le, wǒmen xiūxi yíxià ba.",
-        "vi": "Tôi mệt rồi, mình nghỉ một chút nhé."
+        "vi": "Tôi mệt rồi, mình nghỉ một chút nhé.",
+        "audio": "hsk1/lesson-11-1",
+        "durSec": 2.92
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "好。你看，前面有一个大商场。",
         "pinyin": "Hǎo. Nǐ kàn, qiánmiàn yǒu yí ge dà shāngchǎng.",
-        "vi": "Được đấy. Nhìn kìa, phía trước có một trung tâm thương mại to."
+        "vi": "Được đấy. Nhìn kìa, phía trước có một trung tâm thương mại to.",
+        "audio": "hsk1/lesson-11-2",
+        "durSec": 3.65
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "我们去书店，我要买一本汉语书。",
         "pinyin": "Wǒmen qù shūdiàn, wǒ yào mǎi yì běn Hànyǔ shū.",
-        "vi": "Chúng ta đến nhà sách đi, tôi muốn mua một cuốn sách tiếng Trung."
+        "vi": "Chúng ta đến nhà sách đi, tôi muốn mua một cuốn sách tiếng Trung.",
+        "audio": "hsk1/lesson-11-3",
+        "durSec": 3.52
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "好，再买些东西吃吧，我饿了。",
         "pinyin": "Hǎo, zài mǎi xiē dōngxi chī ba, wǒ è le.",
-        "vi": "Được, rồi mua thêm đồ ăn nhé, tôi đói rồi."
+        "vi": "Được, rồi mua thêm đồ ăn nhé, tôi đói rồi.",
+        "audio": "hsk1/lesson-11-4",
+        "durSec": 3.35
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我带了我的钱包，我来拿钱。",
         "pinyin": "Wǒ dài le wǒ de qiánbāo, wǒ lái ná qián.",
-        "vi": "Tôi mang ví rồi, để tôi lấy tiền."
+        "vi": "Tôi mang ví rồi, để tôi lấy tiền.",
+        "audio": "hsk1/lesson-11-5",
+        "durSec": 3.25
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "这个书店的东西很贵吗？",
         "pinyin": "Zhège shūdiàn de dōngxi hěn guì ma?",
-        "vi": "Đồ ở nhà sách này có đắt không?"
+        "vi": "Đồ ở nhà sách này có đắt không?",
+        "audio": "hsk1/lesson-11-6",
+        "durSec": 3.25
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "不贵，书也很好。",
         "pinyin": "Bú guì, shū yě hěn hǎo.",
-        "vi": "Không đắt, sách cũng hay nữa."
+        "vi": "Không đắt, sách cũng hay nữa.",
+        "audio": "hsk1/lesson-11-7",
+        "durSec": 2.38
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "那快走吧！",
         "pinyin": "Nà kuài zǒu ba!",
-        "vi": "Vậy mau đi thôi!"
+        "vi": "Vậy mau đi thôi!",
+        "audio": "hsk1/lesson-11-8",
+        "durSec": 2.2
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "等等，你的钱包在桌子上，别忘了！",
         "pinyin": "Děngdeng, nǐ de qiánbāo zài zhuōzi shang, bié wàngle!",
-        "vi": "Khoan đã, ví của bạn trên bàn kìa, đừng quên!"
+        "vi": "Khoan đã, ví của bạn trên bàn kìa, đừng quên!",
+        "audio": "hsk1/lesson-11-9",
+        "durSec": 3.63
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "谢谢！走，我们先去上边儿的书店。",
         "pinyin": "Xièxie! Zǒu, wǒmen xiān qù shàngbiānr de shūdiàn.",
-        "vi": "Cảm ơn! Đi thôi, mình lên nhà sách ở tầng trên trước."
+        "vi": "Cảm ơn! Đi thôi, mình lên nhà sách ở tầng trên trước.",
+        "audio": "hsk1/lesson-11-10",
+        "durSec": 4.03
       }
     ]
   },
@@ -908,70 +1136,90 @@
         "speaker": "A",
         "zh": "请问，车站在这边吗？",
         "pinyin": "Qǐngwèn, chēzhàn zài zhè biān ma?",
-        "vi": "Cho hỏi, bến xe ở phía này phải không?"
+        "vi": "Cho hỏi, bến xe ở phía này phải không?",
+        "audio": "hsk1/lesson-12-1",
+        "durSec": 2.8
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "不是，车站在东边，饭店的旁边。",
         "pinyin": "Bú shì, chēzhàn zài dōngbiān, fàndiàn de pángbiān.",
-        "vi": "Không phải đâu, bến xe ở phía đông, cạnh khách sạn."
+        "vi": "Không phải đâu, bến xe ở phía đông, cạnh khách sạn.",
+        "audio": "hsk1/lesson-12-2",
+        "durSec": 3.9
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "那银行在哪儿？",
         "pinyin": "Nà yínháng zài nǎr?",
-        "vi": "Vậy ngân hàng ở đâu?"
+        "vi": "Vậy ngân hàng ở đâu?",
+        "audio": "hsk1/lesson-12-3",
+        "durSec": 2.33
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "银行在饭店的西边。",
         "pinyin": "Yínháng zài fàndiàn de xībiān.",
-        "vi": "Ngân hàng ở phía tây của khách sạn."
+        "vi": "Ngân hàng ở phía tây của khách sạn.",
+        "audio": "hsk1/lesson-12-4",
+        "durSec": 3.03
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "楼上是什么？楼下呢？",
         "pinyin": "Lóushàng shì shénme? Lóuxià ne?",
-        "vi": "Tầng trên là gì vậy? Tầng dưới thì sao?"
+        "vi": "Tầng trên là gì vậy? Tầng dưới thì sao?",
+        "audio": "hsk1/lesson-12-5",
+        "durSec": 2.67
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "楼上是教室，楼下是图书馆。",
         "pinyin": "Lóushàng shì jiàoshì, lóuxià shì túshūguǎn.",
-        "vi": "Tầng trên là phòng học, tầng dưới là thư viện."
+        "vi": "Tầng trên là phòng học, tầng dưới là thư viện.",
+        "audio": "hsk1/lesson-12-6",
+        "durSec": 3.75
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "桌子里边有个杯子，杯子后边有个书包。",
         "pinyin": "Zhuōzi lǐbian yǒu ge bēizi, bēizi hòubiān yǒu ge shūbāo.",
-        "vi": "Trong bàn có một cái cốc, sau cái cốc có một cái cặp."
+        "vi": "Trong bàn có một cái cốc, sau cái cốc có một cái cặp.",
+        "audio": "hsk1/lesson-12-7",
+        "durSec": 4.08
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "你的左边是学校，右边是医院，明白了？",
         "pinyin": "Nǐ de zuǒbiān shì xuéxiào, yòubiān shì yīyuàn, míngbai le?",
-        "vi": "Bên trái bạn là trường, bên phải là bệnh viện, hiểu chưa?"
+        "vi": "Bên trái bạn là trường, bên phải là bệnh viện, hiểu chưa?",
+        "audio": "hsk1/lesson-12-8",
+        "durSec": 4.38
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "明白了！中间的那个大房子是什么？",
         "pinyin": "Míngbai le! Zhōngjiān de nà ge dà fángzi shì shénme?",
-        "vi": "Rồi! Ngôi nhà to ở giữa là gì vậy?"
+        "vi": "Rồi! Ngôi nhà to ở giữa là gì vậy?",
+        "audio": "hsk1/lesson-12-9",
+        "durSec": 3.83
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "那是学校，从北边走路来，五分钟就到了。",
         "pinyin": "Nà shì xuéxiào, cóng běibiān zǒulù lái, wǔ fēnzhōng jiù dào le.",
-        "vi": "Đó là trường, đi bộ từ phía bắc, năm phút là đến."
+        "vi": "Đó là trường, đi bộ từ phía bắc, năm phút là đến.",
+        "audio": "hsk1/lesson-12-10",
+        "durSec": 4.67
       }
     ]
   },
@@ -987,84 +1235,108 @@
         "speaker": "A",
         "zh": "你们好！请进来，请进来！",
         "pinyin": "Nǐmen hǎo! Qǐng jìnlái, qǐng jìnlái!",
-        "vi": "Chào các bạn! Mời vào, mời vào!"
+        "vi": "Chào các bạn! Mời vào, mời vào!",
+        "audio": "hsk1/lesson-13-1",
+        "durSec": 3.15
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "谢谢！你的房子真大。",
         "pinyin": "Xièxie! Nǐ de fángzi zhēn dà.",
-        "vi": "Cảm ơn! Nhà bạn rộng thật."
+        "vi": "Cảm ơn! Nhà bạn rộng thật.",
+        "audio": "hsk1/lesson-13-2",
+        "durSec": 2.95
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "这是我的房间，门在门口。",
         "pinyin": "Zhè shì wǒ de fángjiān, mén zài ménkǒu.",
-        "vi": "Đây là phòng của tôi, cửa ở ngay cửa vào."
+        "vi": "Đây là phòng của tôi, cửa ở ngay cửa vào.",
+        "audio": "hsk1/lesson-13-3",
+        "durSec": 3.1
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "你的书都放在哪儿？",
         "pinyin": "Nǐ de shū dōu fàng zài nǎr?",
-        "vi": "Sách của bạn để ở đâu hết vậy?"
+        "vi": "Sách của bạn để ở đâu hết vậy?",
+        "audio": "hsk1/lesson-13-4",
+        "durSec": 2.85
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "书在楼上，本子在桌子上，书包在地上。",
         "pinyin": "Shū zài lóushàng, běnzi zài zhuōzi shang, shūbāo zài dìshang.",
-        "vi": "Sách ở tầng trên, vở trên bàn, cặp sách dưới đất."
+        "vi": "Sách ở tầng trên, vở trên bàn, cặp sách dưới đất.",
+        "audio": "hsk1/lesson-13-5",
+        "durSec": 4.33
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "我们走吧，飞机票在身上吗？",
         "pinyin": "Wǒmen zǒu ba, fēijīpiào zài shēnshang ma?",
-        "vi": "Mình đi thôi, vé máy bay mang theo người chưa?"
+        "vi": "Mình đi thôi, vé máy bay mang theo người chưa?",
+        "audio": "hsk1/lesson-13-6",
+        "durSec": 3.55
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "在身上。机场离这儿远吗？",
         "pinyin": "Zài shēnshang. Jīchǎng lí zhèr yuǎn ma?",
-        "vi": "Rồi. Sân bay cách đây xa không?"
+        "vi": "Rồi. Sân bay cách đây xa không?",
+        "audio": "hsk1/lesson-13-7",
+        "durSec": 3.12
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "不太远，车站就在楼下。",
         "pinyin": "Bú tài yuǎn, chēzhàn jiù zài lóuxià.",
-        "vi": "Không xa lắm, bến xe ngay dưới tầng."
+        "vi": "Không xa lắm, bến xe ngay dưới tầng.",
+        "audio": "hsk1/lesson-13-8",
+        "durSec": 3.25
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "你住在哪个国家？",
         "pinyin": "Nǐ zhù zài nǎ ge guójiā?",
-        "vi": "Bạn sống ở quốc gia nào?"
+        "vi": "Bạn sống ở quốc gia nào?",
+        "audio": "hsk1/lesson-13-9",
+        "durSec": 2.48
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "我住在中国，我的家就在这里。",
         "pinyin": "Wǒ zhù zài Zhōngguó, wǒ de jiā jiù zài zhèlǐ.",
-        "vi": "Tôi sống ở Trung Quốc, nhà tôi ở ngay đây."
+        "vi": "Tôi sống ở Trung Quốc, nhà tôi ở ngay đây.",
+        "audio": "hsk1/lesson-13-10",
+        "durSec": 3.7
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "电影院在哪儿？我们出去的时候想看电影。",
         "pinyin": "Diànyǐngyuàn zài nǎr? Wǒmen chūqù de shíhou xiǎng kàn diànyǐng.",
-        "vi": "Rạp chiếu phim ở đâu? Lúc đi ra tụi mình muốn xem phim."
+        "vi": "Rạp chiếu phim ở đâu? Lúc đi ra tụi mình muốn xem phim.",
+        "audio": "hsk1/lesson-13-11",
+        "durSec": 4.42
       },
       {
         "n": 12,
         "speaker": "B",
         "zh": "从门口出来，往南走就是电影院。",
         "pinyin": "Cóng ménkǒu chūlái, wǎng nán zǒu jiù shì diànyǐngyuàn.",
-        "vi": "Ra khỏi cửa, đi về phía nam là tới rạp phim."
+        "vi": "Ra khỏi cửa, đi về phía nam là tới rạp phim.",
+        "audio": "hsk1/lesson-13-12",
+        "durSec": 4.08
       }
     ]
   },
@@ -1080,70 +1352,90 @@
         "speaker": "A",
         "zh": "明天我们去上海，怎么走？",
         "pinyin": "Míngtiān wǒmen qù Shànghǎi, zěnme zǒu?",
-        "vi": "Ngày mai chúng ta đi Thượng Hải, đi đường nào?"
+        "vi": "Ngày mai chúng ta đi Thượng Hải, đi đường nào?",
+        "audio": "hsk1/lesson-14-1",
+        "durSec": 3.08
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "坐火车快，开车太慢了。",
         "pinyin": "Zuò huǒchē kuài, kāichē tài màn le.",
-        "vi": "Đi tàu hỏa thì nhanh, lái xe thì chậm quá."
+        "vi": "Đi tàu hỏa thì nhanh, lái xe thì chậm quá.",
+        "audio": "hsk1/lesson-14-2",
+        "durSec": 3.17
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "对，打车去火车站吧。",
         "pinyin": "Duì, dǎchē qù huǒchēzhàn ba.",
-        "vi": "Đúng đó, bắt taxi đến nhà ga nhé."
+        "vi": "Đúng đó, bắt taxi đến nhà ga nhé.",
+        "audio": "hsk1/lesson-14-3",
+        "durSec": 2.75
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "好。上车的钱我来拿。",
         "pinyin": "Hǎo. Shàngchē de qián wǒ lái ná.",
-        "vi": "Được. Tiền xe để tôi trả."
+        "vi": "Được. Tiền xe để tôi trả.",
+        "audio": "hsk1/lesson-14-4",
+        "durSec": 3.05
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "到了！下车吧，我们在这里买票。",
         "pinyin": "Dào le! Xiàchē ba, wǒmen zài zhèlǐ mǎi piào.",
-        "vi": "Đến rồi! Xuống xe đi, mình mua vé ở đây."
+        "vi": "Đến rồi! Xuống xe đi, mình mua vé ở đây.",
+        "audio": "hsk1/lesson-14-5",
+        "durSec": 3.52
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "两张去上海的票，多少钱？",
         "pinyin": "Liǎng zhāng qù Shànghǎi de piào, duōshao qián?",
-        "vi": "Hai vé đi Thượng Hải, bao nhiêu tiền?"
+        "vi": "Hai vé đi Thượng Hải, bao nhiêu tiền?",
+        "audio": "hsk1/lesson-14-6",
+        "durSec": 3.7
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "二百元。飞机票很贵，火车票便宜。",
         "pinyin": "Èrbǎi yuán. Fēijīpiào hěn guì, huǒchēpiào piányi.",
-        "vi": "Hai trăm tệ. Vé máy bay đắt lắm, vé tàu thì rẻ."
+        "vi": "Hai trăm tệ. Vé máy bay đắt lắm, vé tàu thì rẻ.",
+        "audio": "hsk1/lesson-14-7",
+        "durSec": 3.83
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "路远吗？",
         "pinyin": "Lù yuǎn ma?",
-        "vi": "Đường có xa không?"
+        "vi": "Đường có xa không?",
+        "audio": "hsk1/lesson-14-8",
+        "durSec": 1.8
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "有点儿远，可是不飞，走路怎么行？",
         "pinyin": "Yǒudiǎnr yuǎn, kěshì bù fēi, zǒulù zěnme xíng?",
-        "vi": "Hơi xa, nhưng không bay được thì đi bộ làm sao nổi?"
+        "vi": "Hơi xa, nhưng không bay được thì đi bộ làm sao nổi?",
+        "audio": "hsk1/lesson-14-9",
+        "durSec": 3.8
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "哈哈，火车跑得快！我们坐汽车再走一段路就到了。",
         "pinyin": "Hāhā, huǒchē pǎo de kuài! Wǒmen zuò qìchē zài zǒu yí duàn lù jiù dào le.",
-        "vi": "Haha, tàu chạy nhanh mà! Rồi đi ô tô tiếp một đoạn đường nữa là tới."
+        "vi": "Haha, tàu chạy nhanh mà! Rồi đi ô tô tiếp một đoạn đường nữa là tới.",
+        "audio": "hsk1/lesson-14-10",
+        "durSec": 5.33
       }
     ]
   },
@@ -1159,77 +1451,99 @@
         "speaker": "A",
         "zh": "我饿了，我们去吃饭吧。",
         "pinyin": "Wǒ è le, wǒmen qù chīfàn ba.",
-        "vi": "Tôi đói rồi, mình đi ăn cơm nhé."
+        "vi": "Tôi đói rồi, mình đi ăn cơm nhé.",
+        "audio": "hsk1/lesson-15-1",
+        "durSec": 2.73
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "好，我想喝一杯茶。你渴吗？",
         "pinyin": "Hǎo, wǒ xiǎng hē yì bēi chá. Nǐ kě ma?",
-        "vi": "Được, tôi muốn uống một cốc trà. Bạn có khát không?"
+        "vi": "Được, tôi muốn uống một cốc trà. Bạn có khát không?",
+        "audio": "hsk1/lesson-15-2",
+        "durSec": 3.23
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "渴，我要一杯水。",
         "pinyin": "Kě, wǒ yào yì bēi shuǐ.",
-        "vi": "Khát lắm, tôi muốn một cốc nước."
+        "vi": "Khát lắm, tôi muốn một cốc nước.",
+        "audio": "hsk1/lesson-15-3",
+        "durSec": 2.27
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "来两杯水，一杯牛奶，两碗米饭。",
         "pinyin": "Lái liǎng bēi shuǐ, yì bēi niúnǎi, liǎng wǎn mǐfàn.",
-        "vi": "Cho hai cốc nước, một cốc sữa, hai bát cơm."
+        "vi": "Cho hai cốc nước, một cốc sữa, hai bát cơm.",
+        "audio": "hsk1/lesson-15-4",
+        "durSec": 3.75
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "你们有什么菜？",
         "pinyin": "Nǐmen yǒu shénme cài?",
-        "vi": "Quán có những món gì vậy?"
+        "vi": "Quán có những món gì vậy?",
+        "audio": "hsk1/lesson-15-5",
+        "durSec": 2.25
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "有鸡蛋、肉、面条儿和面包。",
         "pinyin": "Yǒu jīdàn, ròu, miàntiáor hé miànbāo.",
-        "vi": "Có trứng, thịt, mì và bánh mì."
+        "vi": "Có trứng, thịt, mì và bánh mì.",
+        "audio": "hsk1/lesson-15-6",
+        "durSec": 3.48
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "我要鸡蛋和肉，我想这里的菜很好吃。",
         "pinyin": "Wǒ yào jīdàn hé ròu, wǒ xiǎng zhèlǐ de cài hěn hǎochī.",
-        "vi": "Tôi muốn trứng và thịt, tôi nghĩ món ở đây rất ngon."
+        "vi": "Tôi muốn trứng và thịt, tôi nghĩ món ở đây rất ngon.",
+        "audio": "hsk1/lesson-15-7",
+        "durSec": 4.08
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "早饭吃什么？",
         "pinyin": "Zǎofàn chī shénme?",
-        "vi": "Bữa sáng ăn gì?"
+        "vi": "Bữa sáng ăn gì?",
+        "audio": "hsk1/lesson-15-8",
+        "durSec": 2.38
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "早饭我常吃鸡蛋。晚上回家吃晚饭。",
         "pinyin": "Zǎofàn wǒ cháng chī jīdàn. Wǎnshang huí jiā chī wǎnfàn.",
-        "vi": "Sáng tôi thường ăn trứng. Tối về nhà ăn cơm."
+        "vi": "Sáng tôi thường ăn trứng. Tối về nhà ăn cơm.",
+        "audio": "hsk1/lesson-15-9",
+        "durSec": 4
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "桌子上有水果，我们坐下，慢慢吃。",
         "pinyin": "Zhuōzi shang yǒu shuǐguǒ, wǒmen zuòxià, mànmàn chī.",
-        "vi": "Trên bàn có trái cây, mình ngồi xuống, ăn từ từ nhé."
+        "vi": "Trên bàn có trái cây, mình ngồi xuống, ăn từ từ nhé.",
+        "audio": "hsk1/lesson-15-10",
+        "durSec": 4.03
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "真好吃！我还要一杯茶。",
         "pinyin": "Zhēn hǎochī! Wǒ hái yào yì bēi chá.",
-        "vi": "Ngon thật! Tôi còn muốn thêm một cốc trà nữa."
+        "vi": "Ngon thật! Tôi còn muốn thêm một cốc trà nữa.",
+        "audio": "hsk1/lesson-15-11",
+        "durSec": 2.92
       }
     ]
   },
@@ -1245,77 +1559,99 @@
         "speaker": "A",
         "zh": "你怎么了？你生病了吗？",
         "pinyin": "Nǐ zěnme le? Nǐ shēngbìng le ma?",
-        "vi": "Bạn làm sao vậy? Bạn ốm à?"
+        "vi": "Bạn làm sao vậy? Bạn ốm à?",
+        "audio": "hsk1/lesson-16-1",
+        "durSec": 2.75
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "是的，我病了，我去医院看病。",
         "pinyin": "Shì de, wǒ bìng le, wǒ qù yīyuàn kànbìng.",
-        "vi": "Đúng vậy, tôi ốm rồi, tôi đến bệnh viện khám."
+        "vi": "Đúng vậy, tôi ốm rồi, tôi đến bệnh viện khám.",
+        "audio": "hsk1/lesson-16-2",
+        "durSec": 3.42
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "医生怎么说？你的身体好吗？",
         "pinyin": "Yīshēng zěnme shuō? Nǐ de shēntǐ hǎo ma?",
-        "vi": "Bác sĩ nói sao? Sức khỏe của bạn có ổn không?"
+        "vi": "Bác sĩ nói sao? Sức khỏe của bạn có ổn không?",
+        "audio": "hsk1/lesson-16-3",
+        "durSec": 3.15
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "医生说没有大问题，我不用去医院了。",
         "pinyin": "Yīshēng shuō méiyǒu dà wèntí, wǒ búyòng qù yīyuàn le.",
-        "vi": "Bác sĩ nói không có vấn đề gì lớn, tôi không cần đến bệnh viện nữa."
+        "vi": "Bác sĩ nói không có vấn đề gì lớn, tôi không cần đến bệnh viện nữa.",
+        "audio": "hsk1/lesson-16-4",
+        "durSec": 4.17
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "太好了！我很高兴！你的手怎么样？",
         "pinyin": "Tài hǎo le! Wǒ hěn gāoxìng! Nǐ de shǒu zěnmeyàng?",
-        "vi": "Tốt quá! Tôi rất vui! Cái tay của bạn thế nào rồi?"
+        "vi": "Tốt quá! Tôi rất vui! Cái tay của bạn thế nào rồi?",
+        "audio": "hsk1/lesson-16-5",
+        "durSec": 3.55
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "好多了。洗手的时候有一点儿疼。",
         "pinyin": "Hǎo duō le. Xǐshǒu de shíhou yǒu yìdiǎnr téng.",
-        "vi": "Khỏe hơn nhiều rồi. Lúc rửa tay còn hơi đau một chút."
+        "vi": "Khỏe hơn nhiều rồi. Lúc rửa tay còn hơi đau một chút.",
+        "audio": "hsk1/lesson-16-6",
+        "durSec": 3.9
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "医院里有很多病人吗？",
         "pinyin": "Yīyuàn lǐ yǒu hěn duō bìngrén ma?",
-        "vi": "Trong bệnh viện có nhiều bệnh nhân không?"
+        "vi": "Trong bệnh viện có nhiều bệnh nhân không?",
+        "audio": "hsk1/lesson-16-7",
+        "durSec": 2.62
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "很多。有的病人生气了，有的病人在笑。",
         "pinyin": "Hěn duō. Yǒu de bìngrén shēngqì le, yǒu de bìngrén zài xiào.",
-        "vi": "Nhiều lắm. Có bệnh nhân thì đang giận, có người đang cười."
+        "vi": "Nhiều lắm. Có bệnh nhân thì đang giận, có người đang cười.",
+        "audio": "hsk1/lesson-16-8",
+        "durSec": 4.28
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "你的爱好是什么？",
         "pinyin": "Nǐ de àihào shì shénme?",
-        "vi": "Sở thích của bạn là gì?"
+        "vi": "Sở thích của bạn là gì?",
+        "audio": "hsk1/lesson-16-9",
+        "durSec": 2.45
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "我的爱好是唱歌，唱歌让我高兴。",
         "pinyin": "Wǒ de àihào shì chànggē, chànggē ràng wǒ gāoxìng.",
-        "vi": "Sở thích của tôi là hát, hát khiến tôi vui."
+        "vi": "Sở thích của tôi là hát, hát khiến tôi vui.",
+        "audio": "hsk1/lesson-16-10",
+        "durSec": 3.95
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "我知道洗手间在哪儿，我们一起去吧。",
         "pinyin": "Wǒ zhīdào xǐshǒujiān zài nǎr, wǒmen yìqǐ qù ba.",
-        "vi": "Tôi biết nhà vệ sinh ở đâu, mình cùng đi nhé."
+        "vi": "Tôi biết nhà vệ sinh ở đâu, mình cùng đi nhé.",
+        "audio": "hsk1/lesson-16-11",
+        "durSec": 3.8
       }
     ]
   },
@@ -1331,77 +1667,99 @@
         "speaker": "A",
         "zh": "今天天气真好！",
         "pinyin": "Jīntiān tiānqì zhēn hǎo!",
-        "vi": "Thời tiết hôm nay đẹp thật!"
+        "vi": "Thời tiết hôm nay đẹp thật!",
+        "audio": "hsk1/lesson-17-1",
+        "durSec": 2.48
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "是啊，天上有太阳，没有雨。",
         "pinyin": "Shì a, tiānshang yǒu tàiyáng, méiyǒu yǔ.",
-        "vi": "Ừ mà, trời có nắng, không có mưa."
+        "vi": "Ừ mà, trời có nắng, không có mưa.",
+        "audio": "hsk1/lesson-17-2",
+        "durSec": 3.3
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "昨天下午下雨了，风很大。",
         "pinyin": "Zuótiān xiàwǔ xià yǔ le, fēng hěn dà.",
-        "vi": "Chiều qua trời mưa, gió rất lớn."
+        "vi": "Chiều qua trời mưa, gió rất lớn.",
+        "audio": "hsk1/lesson-17-3",
+        "durSec": 3.1
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "明天会不会下雨？",
         "pinyin": "Míngtiān huì bú huì xià yǔ?",
-        "vi": "Mai có mưa không nhỉ?"
+        "vi": "Mai có mưa không nhỉ?",
+        "audio": "hsk1/lesson-17-4",
+        "durSec": 2.83
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我希望明天还是好天气。",
         "pinyin": "Wǒ xīwàng míngtiān háishì hǎo tiānqì.",
-        "vi": "Tôi hy vọng mai vẫn là thời tiết đẹp."
+        "vi": "Tôi hy vọng mai vẫn là thời tiết đẹp.",
+        "audio": "hsk1/lesson-17-5",
+        "durSec": 3.2
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "我们去公园玩儿吧，那里很好玩儿！",
         "pinyin": "Wǒmen qù gōngyuán wánr ba, nàlǐ hěn hǎowánr!",
-        "vi": "Mình đi công viên chơi nhé, ở đó vui lắm!"
+        "vi": "Mình đi công viên chơi nhé, ở đó vui lắm!",
+        "audio": "hsk1/lesson-17-6",
+        "durSec": 3.83
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "好！我妈妈说，认真读书，也要认真玩儿。",
         "pinyin": "Hǎo! Wǒ māma shuō, rènzhēn dúshū, yě yào rènzhēn wánr.",
-        "vi": "Hay đấy! Mẹ tôi nói, học nghiêm túc mà chơi cũng phải chơi nghiêm túc."
+        "vi": "Hay đấy! Mẹ tôi nói, học nghiêm túc mà chơi cũng phải chơi nghiêm túc.",
+        "audio": "hsk1/lesson-17-7",
+        "durSec": 4.12
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "你看那座山，真高真白！",
         "pinyin": "Nǐ kàn nà zuò shān, zhēn gāo zhēn bái!",
-        "vi": "Bạn nhìn ngọn núi kia kìa, cao và trắng thật!"
+        "vi": "Bạn nhìn ngọn núi kia kìa, cao và trắng thật!",
+        "audio": "hsk1/lesson-17-8",
+        "durSec": 3.33
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "那是雪。山上的树很小，山下的树很大。",
         "pinyin": "Nà shì xuě. Shānshang de shù hěn xiǎo, shānxià de shù hěn dà.",
-        "vi": "Đó là tuyết. Cây trên núi nhỏ lắm, cây dưới núi thì to."
+        "vi": "Đó là tuyết. Cây trên núi nhỏ lắm, cây dưới núi thì to.",
+        "audio": "hsk1/lesson-17-9",
+        "durSec": 4.38
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "这棵老树真好看！快点走，别太慢了！",
         "pinyin": "Zhè kē lǎo shù zhēn hǎokàn! Kuàidiǎn zǒu, bié tài màn le!",
-        "vi": "Cây già này đẹp thật! Đi nhanh lên, đừng chậm thế!"
+        "vi": "Cây già này đẹp thật! Đi nhanh lên, đừng chậm thế!",
+        "audio": "hsk1/lesson-17-10",
+        "durSec": 4.23
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "我的新鞋太大了，我走得慢。",
         "pinyin": "Wǒ de xīn xié tài dà le, wǒ zǒu de màn.",
-        "vi": "Đôi giày mới của tôi rộng quá nên tôi đi chậm."
+        "vi": "Đôi giày mới của tôi rộng quá nên tôi đi chậm.",
+        "audio": "hsk1/lesson-17-11",
+        "durSec": 3.17
       }
     ]
   },
@@ -1417,84 +1775,108 @@
         "speaker": "A",
         "zh": "这个杯子真好看！多少钱？",
         "pinyin": "Zhège bēizi zhēn hǎokàn! Duōshao qián?",
-        "vi": "Cái cốc này xinh thật! Bao nhiêu tiền?"
+        "vi": "Cái cốc này xinh thật! Bao nhiêu tiền?",
+        "audio": "hsk1/lesson-18-1",
+        "durSec": 3.23
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "一百块，太贵了！",
         "pinyin": "Yìbǎi kuài, tài guì le!",
-        "vi": "Một trăm tệ, đắt quá!"
+        "vi": "Một trăm tệ, đắt quá!",
+        "audio": "hsk1/lesson-18-2",
+        "durSec": 2.58
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "真的太贵了。那个新杯子呢？",
         "pinyin": "Zhēn de tài guì le. Nàge xīn bēizi ne?",
-        "vi": "Đắt thật đấy. Cái cốc mới kia thì sao?"
+        "vi": "Đắt thật đấy. Cái cốc mới kia thì sao?",
+        "audio": "hsk1/lesson-18-3",
+        "durSec": 3.08
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "那个很难看，还不好用。",
         "pinyin": "Nàge hěn nánkàn, hái bù hǎo yòng.",
-        "vi": "Cái kia xấu lắm, mà dùng cũng không tiện."
+        "vi": "Cái kia xấu lắm, mà dùng cũng không tiện.",
+        "audio": "hsk1/lesson-18-4",
+        "durSec": 3.17
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "你看，这两个一样吗？",
         "pinyin": "Nǐ kàn, zhè liǎng ge yíyàng ma?",
-        "vi": "Bạn xem, hai cái này giống nhau không?"
+        "vi": "Bạn xem, hai cái này giống nhau không?",
+        "audio": "hsk1/lesson-18-5",
+        "durSec": 2.58
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "不一样，一个大，一个小，一个重，一个轻。",
         "pinyin": "Bù yíyàng, yí ge dà, yí ge xiǎo, yí ge zhòng, yí ge qīng.",
-        "vi": "Không giống, một cái to một cái nhỏ, một cái nặng một cái nhẹ."
+        "vi": "Không giống, một cái to một cái nhỏ, một cái nặng một cái nhẹ.",
+        "audio": "hsk1/lesson-18-6",
+        "durSec": 4.05
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "今天真冷，明天会不会很热？",
         "pinyin": "Jīntiān zhēn lěng, míngtiān huì bú huì hěn rè?",
-        "vi": "Hôm nay lạnh thật, mai có nóng lắm không?"
+        "vi": "Hôm nay lạnh thật, mai có nóng lắm không?",
+        "audio": "hsk1/lesson-18-7",
+        "durSec": 3.42
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "明天热，后天更热。",
         "pinyin": "Míngtiān rè, hòutiān gèng rè.",
-        "vi": "Mai nóng, mốt còn nóng hơn."
+        "vi": "Mai nóng, mốt còn nóng hơn.",
+        "audio": "hsk1/lesson-18-8",
+        "durSec": 2.8
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "你的答案对了没有？",
         "pinyin": "Nǐ de dá'àn duì le méiyǒu?",
-        "vi": "Câu trả lời của bạn đúng chưa?"
+        "vi": "Câu trả lời của bạn đúng chưa?",
+        "audio": "hsk1/lesson-18-9",
+        "durSec": 2.62
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "对了。老师说我最棒！",
         "pinyin": "Duì le. Lǎoshī shuō wǒ zuì bàng!",
-        "vi": "Đúng rồi. Thầy cô nói tôi là giỏi nhất!"
+        "vi": "Đúng rồi. Thầy cô nói tôi là giỏi nhất!",
+        "audio": "hsk1/lesson-18-10",
+        "durSec": 2.92
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "真棒！我答错了，我很不高兴。",
         "pinyin": "Zhēn bàng! Wǒ dácuò le, wǒ hěn bù gāoxìng.",
-        "vi": "Giỏi thật! Tôi trả lời sai, tôi không vui chút nào."
+        "vi": "Giỏi thật! Tôi trả lời sai, tôi không vui chút nào.",
+        "audio": "hsk1/lesson-18-11",
+        "durSec": 3.25
       },
       {
         "n": 12,
         "speaker": "B",
         "zh": "没关系，你的成绩不差，真的非常不错！",
         "pinyin": "Méi guānxi, nǐ de chéngjì bú chà, zhēn de fēicháng búcuò!",
-        "vi": "Không sao, kết quả của bạn không tệ, thật sự rất ổn!"
+        "vi": "Không sao, kết quả của bạn không tệ, thật sự rất ổn!",
+        "audio": "hsk1/lesson-18-12",
+        "durSec": 4.45
       }
     ]
   },
@@ -1510,77 +1892,99 @@
         "speaker": "A",
         "zh": "今天晚上我们去看电影吧！",
         "pinyin": "Jīntiān wǎnshang wǒmen qù kàn diànyǐng ba!",
-        "vi": "Tối nay mình đi xem phim nhé!"
+        "vi": "Tối nay mình đi xem phim nhé!",
+        "audio": "hsk1/lesson-19-1",
+        "durSec": 3.3
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "好！什么电影？",
         "pinyin": "Hǎo! Shénme diànyǐng?",
-        "vi": "Được! Phim gì vậy?"
+        "vi": "Được! Phim gì vậy?",
+        "audio": "hsk1/lesson-19-2",
+        "durSec": 2.43
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "一部新的中国电影，很有名。",
         "pinyin": "Yí bù xīn de Zhōngguó diànyǐng, hěn yǒumíng.",
-        "vi": "Một bộ phim Trung Quốc mới, nổi tiếng lắm."
+        "vi": "Một bộ phim Trung Quốc mới, nổi tiếng lắm.",
+        "audio": "hsk1/lesson-19-3",
+        "durSec": 3.23
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "我看过了，我第二次看。",
         "pinyin": "Wǒ kànguò le, wǒ dì-èr cì kàn.",
-        "vi": "Tôi xem rồi, đây là lần thứ hai tôi xem."
+        "vi": "Tôi xem rồi, đây là lần thứ hai tôi xem.",
+        "audio": "hsk1/lesson-19-4",
+        "durSec": 3.1
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "你在哪儿看见它的？",
         "pinyin": "Nǐ zài nǎr kànjiàn tā de?",
-        "vi": "Bạn xem nó ở đâu vậy?"
+        "vi": "Bạn xem nó ở đâu vậy?",
+        "audio": "hsk1/lesson-19-5",
+        "durSec": 2.58
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "我看到了电影的信息，马上就去买了票。",
         "pinyin": "Wǒ kàndào le diànyǐng de xìnxī, mǎshàng jiù qù mǎi le piào.",
-        "vi": "Tôi thấy thông tin phim, liền đi mua vé ngay."
+        "vi": "Tôi thấy thông tin phim, liền đi mua vé ngay.",
+        "audio": "hsk1/lesson-19-6",
+        "durSec": 4.55
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "我们唱歌还是看电影？",
         "pinyin": "Wǒmen chànggē háishì kàn diànyǐng?",
-        "vi": "Mình hát hay xem phim đây?"
+        "vi": "Mình hát hay xem phim đây?",
+        "audio": "hsk1/lesson-19-7",
+        "durSec": 2.92
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "先看电影，回家的时候再唱歌。",
         "pinyin": "Xiān kàn diànyǐng, huíjiā de shíhou zài chànggē.",
-        "vi": "Xem phim trước, về nhà thì hát sau."
+        "vi": "Xem phim trước, về nhà thì hát sau.",
+        "audio": "hsk1/lesson-19-8",
+        "durSec": 3.92
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "去山上的路上，我听到了一首歌。",
         "pinyin": "Qù shānshang de lùshang, wǒ tīngdào le yì shǒu gē.",
-        "vi": "Trên đường lên núi, tôi nghe được một bài hát."
+        "vi": "Trên đường lên núi, tôi nghe được một bài hát.",
+        "audio": "hsk1/lesson-19-9",
+        "durSec": 3.67
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "好好听！树上有很多鸟，地上有很多花。",
         "pinyin": "Hǎo hǎotīng! Shùshang yǒu hěn duō niǎo, dìshang yǒu hěn duō huā.",
-        "vi": "Hay thật! Trên cây có nhiều chim, dưới đất có nhiều hoa."
+        "vi": "Hay thật! Trên cây có nhiều chim, dưới đất có nhiều hoa.",
+        "audio": "hsk1/lesson-19-10",
+        "durSec": 4.55
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "这个国家的地方真美！",
         "pinyin": "Zhège guójiā de dìfang zhēn měi!",
-        "vi": "Đất nước này cảnh đẹp thật!"
+        "vi": "Đất nước này cảnh đẹp thật!",
+        "audio": "hsk1/lesson-19-11",
+        "durSec": 2.9
       }
     ]
   },
@@ -1596,77 +2000,99 @@
         "speaker": "A",
         "zh": "你会打球吗？",
         "pinyin": "Nǐ huì dǎqiú ma?",
-        "vi": "Bạn chơi bóng được không?"
+        "vi": "Bạn chơi bóng được không?",
+        "audio": "hsk1/lesson-20-1",
+        "durSec": 2.1
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "会，我常常和朋友们一起打球。",
         "pinyin": "Huì, wǒ chángcháng hé péngyǒumen yìqǐ dǎqiú.",
-        "vi": "Được chứ, tôi thường chơi bóng cùng bạn bè."
+        "vi": "Được chứ, tôi thường chơi bóng cùng bạn bè.",
+        "audio": "hsk1/lesson-20-2",
+        "durSec": 3.83
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "很好！我也是。我们一块儿去吧！",
         "pinyin": "Hěn hǎo! Wǒ yě shì. Wǒmen yíkuàir qù ba!",
-        "vi": "Tốt lắm! Tôi cũng vậy. Mình cùng đi thôi!"
+        "vi": "Tốt lắm! Tôi cũng vậy. Mình cùng đi thôi!",
+        "audio": "hsk1/lesson-20-3",
+        "durSec": 3.23
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "好，还是老地方。",
         "pinyin": "Hǎo, háishì lǎo dìfang.",
-        "vi": "Được, vẫn chỗ cũ nhé."
+        "vi": "Được, vẫn chỗ cũ nhé.",
+        "audio": "hsk1/lesson-20-4",
+        "durSec": 2.62
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "先做运动，然后再吃饭。",
         "pinyin": "Xiān zuò yùndòng, ránhòu zài chīfàn.",
-        "vi": "Tập thể dục trước, rồi mới ăn cơm sau."
+        "vi": "Tập thể dục trước, rồi mới ăn cơm sau.",
+        "audio": "hsk1/lesson-20-5",
+        "durSec": 3.1
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "今天你们都很忙吗？",
         "pinyin": "Jīntiān nǐmen dōu hěn máng ma?",
-        "vi": "Hôm nay các bạn đều bận à?"
+        "vi": "Hôm nay các bạn đều bận à?",
+        "audio": "hsk1/lesson-20-6",
+        "durSec": 2.77
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "大家都想玩儿球，都很高兴。",
         "pinyin": "Dàjiā dōu xiǎng wánr qiú, dōu hěn gāoxìng.",
-        "vi": "Ai cũng muốn chơi bóng, ai cũng vui."
+        "vi": "Ai cũng muốn chơi bóng, ai cũng vui.",
+        "audio": "hsk1/lesson-20-7",
+        "durSec": 3.42
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "我一边听音乐，一边走路来。",
         "pinyin": "Wǒ yìbiān tīng yīnyuè, yìbiān zǒulù lái.",
-        "vi": "Tôi vừa nghe nhạc vừa đi bộ đến đây."
+        "vi": "Tôi vừa nghe nhạc vừa đi bộ đến đây.",
+        "audio": "hsk1/lesson-20-8",
+        "durSec": 3.55
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "你走得很快！",
         "pinyin": "Nǐ zǒu de hěn kuài!",
-        "vi": "Bạn đi nhanh thật đấy!"
+        "vi": "Bạn đi nhanh thật đấy!",
+        "audio": "hsk1/lesson-20-9",
+        "durSec": 2.3
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "是的，因为我还有事，我得早点儿回家。",
         "pinyin": "Shì de, yīnwèi wǒ hái yǒu shì, wǒ děi zǎodiǎnr huí jiā.",
-        "vi": "Đúng vậy, vì tôi còn việc, phải về nhà sớm một chút."
+        "vi": "Đúng vậy, vì tôi còn việc, phải về nhà sớm một chút.",
+        "audio": "hsk1/lesson-20-10",
+        "durSec": 4.3
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "没问题，就一会儿，马上就完了。",
         "pinyin": "Méi wèntí, jiù yíhuìr, mǎshàng jiù wán le.",
-        "vi": "Không sao đâu, chỉ một lát thôi, xong ngay mà."
+        "vi": "Không sao đâu, chỉ một lát thôi, xong ngay mà.",
+        "audio": "hsk1/lesson-20-11",
+        "durSec": 3.45
       }
     ]
   },
@@ -1682,84 +2108,108 @@
         "speaker": "A",
         "zh": "你会说中文吗？",
         "pinyin": "Nǐ huì shuō Zhōngwén ma?",
-        "vi": "Bạn nói được tiếng Trung không?"
+        "vi": "Bạn nói được tiếng Trung không?",
+        "audio": "hsk1/lesson-21-1",
+        "durSec": 2.2
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "会说一点儿，我说得不好。",
         "pinyin": "Huì shuō yìdiǎnr, wǒ shuō de bù hǎo.",
-        "vi": "Nói được một chút, tôi nói chưa tốt."
+        "vi": "Nói được một chút, tôi nói chưa tốt.",
+        "audio": "hsk1/lesson-21-2",
+        "durSec": 3.35
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "你想学吗？我可以教你。",
         "pinyin": "Nǐ xiǎng xué ma? Wǒ kěyǐ jiāo nǐ.",
-        "vi": "Bạn có muốn học không? Tôi có thể dạy bạn."
+        "vi": "Bạn có muốn học không? Tôi có thể dạy bạn.",
+        "audio": "hsk1/lesson-21-3",
+        "durSec": 2.92
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "太好了！给这本书，是给你的。",
         "pinyin": "Tài hǎo le! Gěi zhè běn shū, shì gěi nǐ de.",
-        "vi": "Tốt quá! Cầm cuốn sách này, là tặng bạn đấy."
+        "vi": "Tốt quá! Cầm cuốn sách này, là tặng bạn đấy.",
+        "audio": "hsk1/lesson-21-4",
+        "durSec": 3.65
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "谢谢！这本书非常有用。",
         "pinyin": "Xièxie! Zhè běn shū fēicháng yǒuyòng.",
-        "vi": "Cảm ơn! Cuốn sách này rất hữu ích."
+        "vi": "Cảm ơn! Cuốn sách này rất hữu ích.",
+        "audio": "hsk1/lesson-21-5",
+        "durSec": 3.12
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "你要怎么学？每天学吗？",
         "pinyin": "Nǐ yào zěnme xué? Měitiān xué ma?",
-        "vi": "Bạn định học thế nào? Học mỗi ngày à?"
+        "vi": "Bạn định học thế nào? Học mỗi ngày à?",
+        "audio": "hsk1/lesson-21-6",
+        "durSec": 3.12
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "对，正学着呢。可是不知道为什么很难。",
         "pinyin": "Duì, zhèng xuézhe ne. Kěshì bù zhīdào wèishénme hěn nán.",
-        "vi": "Đúng rồi, đang học đây. Nhưng không biết sao nó khó quá."
+        "vi": "Đúng rồi, đang học đây. Nhưng không biết sao nó khó quá.",
+        "audio": "hsk1/lesson-21-7",
+        "durSec": 4.08
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "别担心！没有不会的学生，只有不会的老师。",
         "pinyin": "Bié dānxīn! Méiyǒu bú huì de xuésheng, zhǐyǒu bú huì de lǎoshī.",
-        "vi": "Đừng lo! Không có học sinh dốt, chỉ có thầy cô dạy dốt."
+        "vi": "Đừng lo! Không có học sinh dốt, chỉ có thầy cô dạy dốt.",
+        "audio": "hsk1/lesson-21-8",
+        "durSec": 4.5
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "哈哈，你真会说话！我是不是有很多问题？",
         "pinyin": "Hāhā, nǐ zhēn huì shuōhuà! Wǒ shì bú shì yǒu hěn duō wèntí?",
-        "vi": "Haha, bạn nói hay thật! Chắc tôi hỏi nhiều câu lắm nhỉ?"
+        "vi": "Haha, bạn nói hay thật! Chắc tôi hỏi nhiều câu lắm nhỉ?",
+        "audio": "hsk1/lesson-21-9",
+        "durSec": 4.25
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "不多，还有别的问题吗？",
         "pinyin": "Bù duō, hái yǒu bié de wèntí ma?",
-        "vi": "Không nhiều đâu, còn câu hỏi nào nữa không?"
+        "vi": "Không nhiều đâu, còn câu hỏi nào nữa không?",
+        "audio": "hsk1/lesson-21-10",
+        "durSec": 2.88
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "没有了。我们喝着茶，慢慢说。",
         "pinyin": "Méiyǒu le. Wǒmen hēzhe chá, mànmàn shuō.",
-        "vi": "Hết rồi rồi. Mình vừa uống trà vừa nói chuyện từ từ nhé."
+        "vi": "Hết rồi rồi. Mình vừa uống trà vừa nói chuyện từ từ nhé.",
+        "audio": "hsk1/lesson-21-11",
+        "durSec": 3.17
       },
       {
         "n": 12,
         "speaker": "B",
         "zh": "好，从今天开始，我每天教你一个小时。",
         "pinyin": "Hǎo, cóng jīntiān kāishǐ, wǒ měitiān jiāo nǐ yí ge xiǎoshí.",
-        "vi": "Được, từ hôm nay, mỗi ngày tôi dạy bạn một tiếng."
+        "vi": "Được, từ hôm nay, mỗi ngày tôi dạy bạn một tiếng.",
+        "audio": "hsk1/lesson-21-12",
+        "durSec": 4.55
       }
     ]
   },
@@ -1775,70 +2225,90 @@
         "speaker": "A",
         "zh": "外面很冷，快把门关上！",
         "pinyin": "Wàimiàn hěn lěng, kuài bǎ mén guānshang!",
-        "vi": "Ngoài trời lạnh lắm, mau đóng cửa lại đi!"
+        "vi": "Ngoài trời lạnh lắm, mau đóng cửa lại đi!",
+        "audio": "hsk1/lesson-22-1",
+        "durSec": 3
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "好。把窗户打开吗？",
         "pinyin": "Hǎo. Bǎ chuānghu dǎkāi ma?",
-        "vi": "Rồi. Có mở cửa sổ không?"
+        "vi": "Rồi. Có mở cửa sổ không?",
+        "audio": "hsk1/lesson-22-2",
+        "durSec": 2.83
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "不要，太冷了。请帮我一个忙。",
         "pinyin": "Bú yào, tài lěng le. Qǐng bāng wǒ yí ge máng.",
-        "vi": "Đừng, lạnh lắm. Giúp tôi một việc nhé."
+        "vi": "Đừng, lạnh lắm. Giúp tôi một việc nhé.",
+        "audio": "hsk1/lesson-22-3",
+        "durSec": 3.15
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "什么事？你说，我帮忙。",
         "pinyin": "Shénme shì? Nǐ shuō, wǒ bāngmáng.",
-        "vi": "Việc gì vậy? Bạn cứ nói, tôi giúp."
+        "vi": "Việc gì vậy? Bạn cứ nói, tôi giúp.",
+        "audio": "hsk1/lesson-22-4",
+        "durSec": 2.92
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "请把我的衣服放回房间里。",
         "pinyin": "Qǐng bǎ wǒ de yīfu fàng huí fángjiān lǐ.",
-        "vi": "Hãy cầm quần áo của tôi đặt lại vào phòng giúp tôi."
+        "vi": "Hãy cầm quần áo của tôi đặt lại vào phòng giúp tôi.",
+        "audio": "hsk1/lesson-22-5",
+        "durSec": 3.23
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "行，没问题。",
         "pinyin": "Xíng, méi wèntí.",
-        "vi": "Được, không sao."
+        "vi": "Được, không sao.",
+        "audio": "hsk1/lesson-22-6",
+        "durSec": 2.2
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "谢谢！你现在回去吗？",
         "pinyin": "Xièxie! Nǐ xiànzài huíqù ma?",
-        "vi": "Cảm ơn! Bây giờ bạn quay về à?"
+        "vi": "Cảm ơn! Bây giờ bạn quay về à?",
+        "audio": "hsk1/lesson-22-7",
+        "durSec": 2.77
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "是的，我得回家了。再见！",
         "pinyin": "Shì de, wǒ děi huí jiā le. Zàijiàn!",
-        "vi": "Vâng, tôi phải về nhà rồi. Tạm biệt!"
+        "vi": "Vâng, tôi phải về nhà rồi. Tạm biệt!",
+        "audio": "hsk1/lesson-22-8",
+        "durSec": 3.1
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "路上小心！到了给我打电话。",
         "pinyin": "Lùshang xiǎoxīn! Dào le gěi wǒ dǎ diànhuà.",
-        "vi": "Đi đường cẩn thận nhé! Đến nơi thì gọi điện cho tôi."
+        "vi": "Đi đường cẩn thận nhé! Đến nơi thì gọi điện cho tôi.",
+        "audio": "hsk1/lesson-22-9",
+        "durSec": 3.3
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "好，我到家就打给你。",
         "pinyin": "Hǎo, wǒ dào jiā jiù dǎ gěi nǐ.",
-        "vi": "Được, về đến nhà tôi sẽ gọi cho bạn."
+        "vi": "Được, về đến nhà tôi sẽ gọi cho bạn.",
+        "audio": "hsk1/lesson-22-10",
+        "durSec": 2.92
       }
     ]
   },
@@ -1854,77 +2324,99 @@
         "speaker": "A",
         "zh": "早上好！你几点起床？",
         "pinyin": "Zǎoshang hǎo! Nǐ jǐ diǎn qǐchuáng?",
-        "vi": "Chào buổi sáng! Bạn mấy giờ dậy?"
+        "vi": "Chào buổi sáng! Bạn mấy giờ dậy?",
+        "audio": "hsk1/lesson-23-1",
+        "durSec": 2.98
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "我六点起床，然后去找早饭。",
         "pinyin": "Wǒ liù diǎn qǐchuáng, ránhòu qù zhǎo zǎofàn.",
-        "vi": "Tôi sáu giờ dậy, rồi đi tìm đồ ăn sáng."
+        "vi": "Tôi sáu giờ dậy, rồi đi tìm đồ ăn sáng.",
+        "audio": "hsk1/lesson-23-2",
+        "durSec": 3.85
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "你今天去哪儿？",
         "pinyin": "Nǐ jīntiān qù nǎr?",
-        "vi": "Hôm nay bạn đi đâu?"
+        "vi": "Hôm nay bạn đi đâu?",
+        "audio": "hsk1/lesson-23-3",
+        "durSec": 2.33
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "我回去学校，有课。",
         "pinyin": "Wǒ huíqù xuéxiào, yǒu kè.",
-        "vi": "Tôi quay lại trường, có tiết học."
+        "vi": "Tôi quay lại trường, có tiết học.",
+        "audio": "hsk1/lesson-23-4",
+        "durSec": 2.98
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "用我的书吧，非常有用。",
         "pinyin": "Yòng wǒ de shū ba, fēicháng yǒuyòng.",
-        "vi": "Dùng sách của tôi đi, rất hữu ích đấy."
+        "vi": "Dùng sách của tôi đi, rất hữu ích đấy.",
+        "audio": "hsk1/lesson-23-5",
+        "durSec": 3
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "谢谢！找到它了！",
         "pinyin": "Xièxie! Zhǎodào tā le!",
-        "vi": "Cảm ơn! Tôi tìm thấy nó rồi!"
+        "vi": "Cảm ơn! Tôi tìm thấy nó rồi!",
+        "audio": "hsk1/lesson-23-6",
+        "durSec": 2.6
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "你晚上做什么？",
         "pinyin": "Nǐ wǎnshang zuò shénme?",
-        "vi": "Buổi tối bạn làm gì?"
+        "vi": "Buổi tối bạn làm gì?",
+        "audio": "hsk1/lesson-23-7",
+        "durSec": 2.4
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "睡觉以前看书，十一点睡觉。",
         "pinyin": "Shuìjiào yǐqián kànshū, shíyī diǎn shuìjiào.",
-        "vi": "Trước khi ngủ thì đọc sách, mười một giờ đi ngủ."
+        "vi": "Trước khi ngủ thì đọc sách, mười một giờ đi ngủ.",
+        "audio": "hsk1/lesson-23-8",
+        "durSec": 3.77
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "真有规律！你的生活很有名吗？哈哈！",
         "pinyin": "Zhēn yǒu guīlǜ! Nǐ de shēnghuó hěn yǒumíng ma? Hāhā!",
-        "vi": "Đều đặn thật! Cuộc sống của bạn có nổi tiếng không? Haha!"
+        "vi": "Đều đặn thật! Cuộc sống của bạn có nổi tiếng không? Haha!",
+        "audio": "hsk1/lesson-23-9",
+        "durSec": 3.63
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "别笑话我！我等你的答案。",
         "pinyin": "Bié xiàohua wǒ! Wǒ děng nǐ de dá'àn.",
-        "vi": "Đừng chọc tôi! Tôi đang chờ câu trả lời của bạn đấy."
+        "vi": "Đừng chọc tôi! Tôi đang chờ câu trả lời của bạn đấy.",
+        "audio": "hsk1/lesson-23-10",
+        "durSec": 3.27
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "好了，我们来吧！",
         "pinyin": "Hǎo le, wǒmen lái ba!",
-        "vi": "Xong rồi, mình bắt đầu nhé!"
+        "vi": "Xong rồi, mình bắt đầu nhé!",
+        "audio": "hsk1/lesson-23-11",
+        "durSec": 2.17
       }
     ]
   },
@@ -1940,84 +2432,108 @@
         "speaker": "A",
         "zh": "你好，我认识你吗？",
         "pinyin": "Nǐ hǎo, wǒ rènshi nǐ ma?",
-        "vi": "Chào bạn, tôi quen bạn nhỉ?"
+        "vi": "Chào bạn, tôi quen bạn nhỉ?",
+        "audio": "hsk1/lesson-24-1",
+        "durSec": 2.3
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "认识！上次我们见过面。",
         "pinyin": "Rènshi! Shàng cì wǒmen jiànguò miàn.",
-        "vi": "Quen chứ! Lần trước chúng ta đã gặp nhau rồi."
+        "vi": "Quen chứ! Lần trước chúng ta đã gặp nhau rồi.",
+        "audio": "hsk1/lesson-24-2",
+        "durSec": 3.3
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "啊，想起来了！你最近怎么样？",
         "pinyin": "A, xiǎng qǐlái le! Nǐ zuìjìn zěnmeyàng?",
-        "vi": "À, nhớ ra rồi! Dạo này bạn thế nào?"
+        "vi": "À, nhớ ra rồi! Dạo này bạn thế nào?",
+        "audio": "hsk1/lesson-24-3",
+        "durSec": 3.17
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "挺好的。我告诉你一个好消息。",
         "pinyin": "Tǐng hǎo de. Wǒ gàosu nǐ yí ge hǎo xiāoxi.",
-        "vi": "Vẫn tốt. Tôi báo cho bạn một tin vui nhé."
+        "vi": "Vẫn tốt. Tôi báo cho bạn một tin vui nhé.",
+        "audio": "hsk1/lesson-24-4",
+        "durSec": 3.8
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "什么事？请说！",
         "pinyin": "Shénme shì? Qǐng shuō!",
-        "vi": "Việc gì vậy? Bạn nói đi!"
+        "vi": "Việc gì vậy? Bạn nói đi!",
+        "audio": "hsk1/lesson-24-5",
+        "durSec": 2.27
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "我考试最好，我妈妈很高兴。",
         "pinyin": "Wǒ kǎoshì zuì hǎo, wǒ māma hěn gāoxìng.",
-        "vi": "Tôi thi tốt nhất, mẹ tôi rất vui."
+        "vi": "Tôi thi tốt nhất, mẹ tôi rất vui.",
+        "audio": "hsk1/lesson-24-6",
+        "durSec": 3.67
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "真棒！你的朋友们也考得好吗？",
         "pinyin": "Zhēn bàng! Nǐ de péngyǒumen yě kǎo de hǎo ma?",
-        "vi": "Giỏi thật! Bạn bè của bạn cũng thi tốt không?"
+        "vi": "Giỏi thật! Bạn bè của bạn cũng thi tốt không?",
+        "audio": "hsk1/lesson-24-7",
+        "durSec": 3.17
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "别人都很好，没有人觉得难。",
         "pinyin": "Biérén dōu hěn hǎo, méiyǒu rén juéde nán.",
-        "vi": "Mọi người đều làm tốt cả, không ai thấy khó cả."
+        "vi": "Mọi người đều làm tốt cả, không ai thấy khó cả.",
+        "audio": "hsk1/lesson-24-8",
+        "durSec": 3.4
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "我问你一个问题，好吗？",
         "pinyin": "Wǒ wèn nǐ yí ge wèntí, hǎo ma?",
-        "vi": "Tôi hỏi bạn một câu nhé?"
+        "vi": "Tôi hỏi bạn một câu nhé?",
+        "audio": "hsk1/lesson-24-9",
+        "durSec": 2.58
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "问吧，我明白的话就回答你。",
         "pinyin": "Wèn ba, wǒ míngbai de huà jiù huídá nǐ.",
-        "vi": "Hỏi đi, nếu tôi hiểu thì tôi sẽ trả lời."
+        "vi": "Hỏi đi, nếu tôi hiểu thì tôi sẽ trả lời.",
+        "audio": "hsk1/lesson-24-10",
+        "durSec": 3.45
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "没关系，你不用回答。都是小事。",
         "pinyin": "Méi guānxi, nǐ búyòng huídá. Dōu shì xiǎoshì.",
-        "vi": "Không sao đâu, bạn không cần trả lời. Chỉ là chuyện nhỏ thôi."
+        "vi": "Không sao đâu, bạn không cần trả lời. Chỉ là chuyện nhỏ thôi.",
+        "audio": "hsk1/lesson-24-11",
+        "durSec": 3.7
       },
       {
         "n": 12,
         "speaker": "B",
         "zh": "谢谢你的好意，朋友们都说我很好。",
         "pinyin": "Xièxie nǐ de hǎoyì, péngyǒumen dōu shuō wǒ hěn hǎo.",
-        "vi": "Cảm ơn tấm lòng của bạn, bạn bè ai cũng nói tôi dễ mến."
+        "vi": "Cảm ơn tấm lòng của bạn, bạn bè ai cũng nói tôi dễ mến.",
+        "audio": "hsk1/lesson-24-12",
+        "durSec": 4.05
       }
     ]
   },
@@ -2033,77 +2549,99 @@
         "speaker": "A",
         "zh": "你今年多大了？",
         "pinyin": "Nǐ jīnnián duō dà le?",
-        "vi": "Năm nay bạn bao nhiêu tuổi rồi?"
+        "vi": "Năm nay bạn bao nhiêu tuổi rồi?",
+        "audio": "hsk1/lesson-25-1",
+        "durSec": 2.38
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "我二十岁。你呢？",
         "pinyin": "Wǒ èrshí suì. Nǐ ne?",
-        "vi": "Tôi hai mươi tuổi. Còn bạn?"
+        "vi": "Tôi hai mươi tuổi. Còn bạn?",
+        "audio": "hsk1/lesson-25-2",
+        "durSec": 2.43
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "我比你大一岁，我二十一。",
         "pinyin": "Wǒ bǐ nǐ dà yí suì, wǒ èrshíyī.",
-        "vi": "Tôi hơn bạn một tuổi, tôi hai mươi một."
+        "vi": "Tôi hơn bạn một tuổi, tôi hai mươi một.",
+        "audio": "hsk1/lesson-25-3",
+        "durSec": 2.95
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "白天你在学校学习几个小时？",
         "pinyin": "Báitiān nǐ zài xuéxiào xuéxí jǐ ge xiǎoshí?",
-        "vi": "Ban ngày bạn học mấy tiếng ở trường?"
+        "vi": "Ban ngày bạn học mấy tiếng ở trường?",
+        "audio": "hsk1/lesson-25-4",
+        "durSec": 3.83
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "大概六个小时，有时候多，有时候少。",
         "pinyin": "Dàgài liù ge xiǎoshí, yǒushíhou duō, yǒushíhou shǎo.",
-        "vi": "Khoảng sáu tiếng, lúc thì nhiều, lúc thì ít."
+        "vi": "Khoảng sáu tiếng, lúc thì nhiều, lúc thì ít.",
+        "audio": "hsk1/lesson-25-5",
+        "durSec": 4.03
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "每天学那么久！你最好休息一下儿。",
         "pinyin": "Měitiān xué nàme jiǔ! Nǐ zuì hǎo xiūxi yíxiàr.",
-        "vi": "Mỗi ngày học lâu thế! Tốt nhất bạn nên nghỉ ngơi một chút."
+        "vi": "Mỗi ngày học lâu thế! Tốt nhất bạn nên nghỉ ngơi một chút.",
+        "audio": "hsk1/lesson-25-6",
+        "durSec": 4.17
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "你说得对，我上学期就是这样累病的。",
         "pinyin": "Nǐ shuō de duì, wǒ shàngxuéqī jiù shì zhèyàng lèi bìng de.",
-        "vi": "Bạn nói đúng, học kỳ trước tôi đã mệt bệnh như thế đấy."
+        "vi": "Bạn nói đúng, học kỳ trước tôi đã mệt bệnh như thế đấy.",
+        "audio": "hsk1/lesson-25-7",
+        "durSec": 4.2
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "今天几号？我们下次考试是什么时候？",
         "pinyin": "Jīntiān jǐ hào? Wǒmen xià cì kǎoshì shì shénme shíhou?",
-        "vi": "Hôm nay ngày mấy? Lần thi tới của chúng ta là khi nào?"
+        "vi": "Hôm nay ngày mấy? Lần thi tới của chúng ta là khi nào?",
+        "audio": "hsk1/lesson-25-8",
+        "durSec": 4.33
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "今天是八号，考试在下星期一。",
         "pinyin": "Jīntiān shì bā hào, kǎoshì zài xià xīngqīyī.",
-        "vi": "Hôm nay là ngày mùng tám, thi vào thứ Hai tuần sau."
+        "vi": "Hôm nay là ngày mùng tám, thi vào thứ Hai tuần sau.",
+        "audio": "hsk1/lesson-25-9",
+        "durSec": 3.65
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "最后，别忘了带笔！上次的笔忘在我家了。",
         "pinyin": "Zuìhòu, bié wàngle dài bǐ! Shàng cì de bǐ wàng zài wǒ jiā le.",
-        "vi": "Cuối cùng, đừng quên mang bút nhé! Cái bút lần trước bạn để quên ở nhà tôi."
+        "vi": "Cuối cùng, đừng quên mang bút nhé! Cái bút lần trước bạn để quên ở nhà tôi.",
+        "audio": "hsk1/lesson-25-10",
+        "durSec": 4.47
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "我记住了，这次一定不忘记。",
         "pinyin": "Wǒ jìzhù le, zhè cì yídìng bú wàngjì.",
-        "vi": "Tôi nhớ rồi, lần này nhất định không quên."
+        "vi": "Tôi nhớ rồi, lần này nhất định không quên.",
+        "audio": "hsk1/lesson-25-11",
+        "durSec": 3.27
       }
     ]
   },
@@ -2119,77 +2657,99 @@
         "speaker": "A",
         "zh": "你喜欢学汉语吗？",
         "pinyin": "Nǐ xǐhuan xué Hànyǔ ma?",
-        "vi": "Bạn có thích học tiếng Trung không?"
+        "vi": "Bạn có thích học tiếng Trung không?",
+        "audio": "hsk1/lesson-26-1",
+        "durSec": 2.4
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "喜欢！汉语很有意思。",
         "pinyin": "Xǐhuan! Hànyǔ hěn yǒu yìsi.",
-        "vi": "Thích chứ! Tiếng Trung rất thú vị."
+        "vi": "Thích chứ! Tiếng Trung rất thú vị.",
+        "audio": "hsk1/lesson-26-2",
+        "durSec": 2.83
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "今天课上到第几页了？",
         "pinyin": "Jīntiān kè shàng dào dì-jǐ yè le?",
-        "vi": "Hôm nay học đến trang thứ mấy rồi?"
+        "vi": "Hôm nay học đến trang thứ mấy rồi?",
+        "audio": "hsk1/lesson-26-3",
+        "durSec": 2.83
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "第十页，老师说这篇课文很重要。",
         "pinyin": "Dì-shí yè, lǎoshī shuō zhè piān kèwén hěn zhòngyào.",
-        "vi": "Trang mười, thầy giáo nói bài học này rất quan trọng."
+        "vi": "Trang mười, thầy giáo nói bài học này rất quan trọng.",
+        "audio": "hsk1/lesson-26-4",
+        "durSec": 4.05
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "我已经读了两遍。中间有几句话我不会。",
         "pinyin": "Wǒ yǐjīng dú le liǎng biàn. Zhōngjiān yǒu jǐ jù huà wǒ bú huì.",
-        "vi": "Tôi đã đọc hai lần rồi. Giữa bài có mấy câu tôi không biết."
+        "vi": "Tôi đã đọc hai lần rồi. Giữa bài có mấy câu tôi không biết.",
+        "audio": "hsk1/lesson-26-5",
+        "durSec": 4.42
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "下课以后我教你说。",
         "pinyin": "Xiàkè yǐhòu wǒ jiāo nǐ shuō.",
-        "vi": "Sau giờ học tôi dạy bạn nói."
+        "vi": "Sau giờ học tôi dạy bạn nói.",
+        "audio": "hsk1/lesson-26-6",
+        "durSec": 3.08
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "谢谢！我想去北京看看。",
         "pinyin": "Xièxie! Wǒ xiǎng qù Běijīng kànkan.",
-        "vi": "Cảm ơn! Tôi muốn đi Bắc Kinh chơi."
+        "vi": "Cảm ơn! Tôi muốn đi Bắc Kinh chơi.",
+        "audio": "hsk1/lesson-26-7",
+        "durSec": 3
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "好啊！我来给你画一张地图。",
         "pinyin": "Hǎo a! Wǒ lái gěi nǐ huà yì zhāng dìtú.",
-        "vi": "Hay đấy! Để tôi vẽ cho bạn một tấm bản đồ."
+        "vi": "Hay đấy! Để tôi vẽ cho bạn một tấm bản đồ.",
+        "audio": "hsk1/lesson-26-8",
+        "durSec": 3.48
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "我还有很多事要做，我的床还没收拾呢。",
         "pinyin": "Wǒ hái yǒu hěn duō shì yào zuò, wǒ de chuáng hái méi shōushi ne.",
-        "vi": "Tôi còn nhiều việc phải làm, giường tôi còn chưa dọn nữa."
+        "vi": "Tôi còn nhiều việc phải làm, giường tôi còn chưa dọn nữa.",
+        "audio": "hsk1/lesson-26-9",
+        "durSec": 3.98
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "别忙了，先去买两个包子吃吧！",
         "pinyin": "Bié máng le, xiān qù mǎi liǎng ge bāozi chī ba!",
-        "vi": "Đừng bận nữa, đi mua hai cái bánh bao ăn đã!"
+        "vi": "Đừng bận nữa, đi mua hai cái bánh bao ăn đã!",
+        "audio": "hsk1/lesson-26-10",
+        "durSec": 3.58
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "好主意！包子很好吃。",
         "pinyin": "Hǎo zhǔyi! Bāozi hěn hǎochī.",
-        "vi": "Ý hay đấy! Bánh bao ăn rất ngon."
+        "vi": "Ý hay đấy! Bánh bao ăn rất ngon.",
+        "audio": "hsk1/lesson-26-11",
+        "durSec": 2.77
       }
     ]
   },
@@ -2205,84 +2765,108 @@
         "speaker": "A",
         "zh": "你今天请假了吗？",
         "pinyin": "Nǐ jīntiān qǐngjià le ma?",
-        "vi": "Hôm nay bạn xin nghỉ phép rồi à?"
+        "vi": "Hôm nay bạn xin nghỉ phép rồi à?",
+        "audio": "hsk1/lesson-27-1",
+        "durSec": 2.52
       },
       {
         "n": 2,
         "speaker": "B",
         "zh": "请了，我有很多事要准备。",
         "pinyin": "Qǐng le, wǒ yǒu hěn duō shì yào zhǔnbèi.",
-        "vi": "Xin rồi, tôi có nhiều việc phải chuẩn bị."
+        "vi": "Xin rồi, tôi có nhiều việc phải chuẩn bị.",
+        "audio": "hsk1/lesson-27-2",
+        "durSec": 3.27
       },
       {
         "n": 3,
         "speaker": "A",
         "zh": "你要干什么？",
         "pinyin": "Nǐ yào gàn shénme?",
-        "vi": "Bạn định làm gì vậy?"
+        "vi": "Bạn định làm gì vậy?",
+        "audio": "hsk1/lesson-27-3",
+        "durSec": 2.12
       },
       {
         "n": 4,
         "speaker": "B",
         "zh": "爸爸过生日，我要做一顿好饭。",
         "pinyin": "Bàba guò shēngrì, wǒ yào zuò yí dùn hǎofàn.",
-        "vi": "Bố tôi sắp sinh nhật, tôi định nấu một bữa cơm ngon."
+        "vi": "Bố tôi sắp sinh nhật, tôi định nấu một bữa cơm ngon.",
+        "audio": "hsk1/lesson-27-4",
+        "durSec": 3.7
       },
       {
         "n": 5,
         "speaker": "A",
         "zh": "让我帮你吧。先买什么？",
         "pinyin": "Ràng wǒ bāng nǐ ba. Xiān mǎi shénme?",
-        "vi": "Để tôi giúp bạn. Mua gì trước?"
+        "vi": "Để tôi giúp bạn. Mua gì trước?",
+        "audio": "hsk1/lesson-27-5",
+        "durSec": 2.83
       },
       {
         "n": 6,
         "speaker": "B",
         "zh": "买饭和菜，还要少买一点儿水果。",
         "pinyin": "Mǎi fàn hé cài, hái yào shǎo mǎi yìdiǎnr shuǐguǒ.",
-        "vi": "Mua cơm và rau, còn cần mua ít trái cây."
+        "vi": "Mua cơm và rau, còn cần mua ít trái cây.",
+        "audio": "hsk1/lesson-27-6",
+        "durSec": 3.92
       },
       {
         "n": 7,
         "speaker": "A",
         "zh": "这个动作真快！已经七点了。",
         "pinyin": "Zhège dòngzuò zhēn kuài! Yǐjīng qī diǎn le.",
-        "vi": "Vân tay lẹ thật! Đã bảy giờ rồi."
+        "vi": "Vân tay lẹ thật! Đã bảy giờ rồi.",
+        "audio": "hsk1/lesson-27-7",
+        "durSec": 3.3
       },
       {
         "n": 8,
         "speaker": "B",
         "zh": "时间过得真快，我们继续吧。",
         "pinyin": "Shíjiān guò de zhēn kuài, wǒmen jìxù ba.",
-        "vi": "Thời gian trôi nhanh thật, mình làm tiếp nhé."
+        "vi": "Thời gian trôi nhanh thật, mình làm tiếp nhé.",
+        "audio": "hsk1/lesson-27-8",
+        "durSec": 3.48
       },
       {
         "n": 9,
         "speaker": "A",
         "zh": "你的口渴了吧？喝点儿水。",
         "pinyin": "Nǐ de kǒu kě le ba? Hē diǎnr shuǐ.",
-        "vi": "Bạn khát rồi phải không? Uống chút nước đi."
+        "vi": "Bạn khát rồi phải không? Uống chút nước đi.",
+        "audio": "hsk1/lesson-27-9",
+        "durSec": 3
       },
       {
         "n": 10,
         "speaker": "B",
         "zh": "谢谢！对了，这句话怎么说：生日快乐？",
         "pinyin": "Xièxie! Duìle, zhè jù huà zěnme shuō: shēngrì kuàilè?",
-        "vi": "Cảm ơn! Này, câu này nói sao nhỉ: chúc mừng sinh nhật?"
+        "vi": "Cảm ơn! Này, câu này nói sao nhỉ: chúc mừng sinh nhật?",
+        "audio": "hsk1/lesson-27-10",
+        "durSec": 4.38
       },
       {
         "n": 11,
         "speaker": "A",
         "zh": "就说：生日快乐！爸爸一定很高兴。",
         "pinyin": "Jiù shuō: shēngrì kuàilè! Bàba yídìng hěn gāoxìng.",
-        "vi": "Chỉ cần nói: chúc mừng sinh nhật! Bố bạn nhất định sẽ rất vui."
+        "vi": "Chỉ cần nói: chúc mừng sinh nhật! Bố bạn nhất định sẽ rất vui.",
+        "audio": "hsk1/lesson-27-11",
+        "durSec": 3.9
       },
       {
         "n": 12,
         "speaker": "B",
         "zh": "太好了，重要的事情都准备好了！",
         "pinyin": "Tài hǎo le, zhòngyào de shìqing dōu zhǔnbèi hǎo le!",
-        "vi": "Tốt quá, những việc quan trọng đều đã chuẩn bị xong rồi!"
+        "vi": "Tốt quá, những việc quan trọng đều đã chuẩn bị xong rồi!",
+        "audio": "hsk1/lesson-27-12",
+        "durSec": 3.98
       }
     ]
   }
