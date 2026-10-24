@@ -13,6 +13,7 @@ import { getAutoscroll } from "@/lib/shadowing/prefs";
 import { useTts } from "@/lib/tts/use-tts";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 import { topicVi } from "@/content/shadowing";
+import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
@@ -63,7 +64,18 @@ export default function ShadowingStudio({
   subtitles: SubtitleSentence[];
   enginePostSink?: (m: string) => void;
 }) {
-  const eng = usePlayerEngine({ subs, postSink: enginePostSink });
+  /* ---------- T7 — chế độ audio: engine điều khiển <audio id="audioplayer">,
+     src clip theo câu hiện tại; audioSrcs undefined → YouTube giữ nguyên. ---------- */
+  const audioDir = video.type === "audio" ? video.audioDir : null;
+  const isAudio = !!audioDir;
+  const audioSrcs = audioDir ? subs.map((s) => `/${audioDir}-${s.n}.mp3`) : undefined;
+  const eng = usePlayerEngine({ subs, postSink: enginePostSink, audioSrcs });
+  const [audioMissing, setAudioMissing] = useState(false);
+  useEffect(() => { setAudioMissing(false); }, [eng.cur]);
+  // vai A/B trong transcript (hội thoại theo bài) — map rỗng → không label
+  const dialogue = isAudio
+    ? (dialogueByLesson as Record<string, DialogueRecord | undefined>)[video.id]
+    : undefined;
   const toast = useToast();
   const { speak } = useTts();
   const { progressMap, recordPractice } = useShadowingProgress();
@@ -200,27 +212,54 @@ export default function ShadowingStudio({
               className="relative aspect-video max-h-[250px] w-full overflow-hidden rounded-card border border-border-subtle bg-surface-muted"
               data-od-id="video-stage"
             >
-              <iframe
-                id="ytplayer"
-                title={"YouTube video player — " + video.title}
-                src={"https://www.youtube-nocookie.com/embed/" + video.id + "?enablejsapi=1&rel=0&playsinline=1"}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-              {!eng.ytReady && (
-                <div
-                  data-testid="video-overlay"
-                  className="absolute inset-0 grid place-items-center bg-surface-muted text-center"
-                >
-                  <div>
-                    <span className="hanzi text-7xl text-white/20">{video.title.slice(0, 2)}</span>
-                    <p className="mt-2 text-sm text-text-secondary">Video YouTube — cần kết nối mạng</p>
-                    {eng.tts && (
-                      <p className="text-sm text-feedback-warning">Dùng TTS đọc câu — không cần mạng cũng học được.</p>
-                    )}
+              {isAudio ? (
+                <>
+                  <audio
+                    id="audioplayer"
+                    data-testid="audio-player"
+                    src={audioSrcs?.[eng.cur]}
+                    preload="auto"
+                    className="hidden"
+                    onError={() => setAudioMissing(true)}
+                  />
+                  <div className="grid h-full place-items-center text-center">
+                    <div>
+                      <span className="hanzi text-6xl text-white/25">{video.title.slice(0, 2)}</span>
+                      <p className="mt-2 text-sm font-bold text-text-primary">Audio hội thoại</p>
+                      <p className="text-xs text-text-secondary">Bản xứ: mp3 Kokoro theo từng câu</p>
+                      {audioMissing && (
+                        <p data-testid="audio-missing" className="mt-2 text-xs text-feedback-warning">
+                          Audio đang được tạo — bạn vẫn luyện bằng TTS hoặc tự đọc theo transcript.
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </>
+              ) : (
+                <>
+                  <iframe
+                    id="ytplayer"
+                    title={"YouTube video player — " + video.title}
+                    src={"https://www.youtube-nocookie.com/embed/" + video.id + "?enablejsapi=1&rel=0&playsinline=1"}
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  {!eng.ytReady && (
+                    <div
+                      data-testid="video-overlay"
+                      className="absolute inset-0 grid place-items-center bg-surface-muted text-center"
+                    >
+                      <div>
+                        <span className="hanzi text-7xl text-white/20">{video.title.slice(0, 2)}</span>
+                        <p className="mt-2 text-sm text-text-secondary">Video YouTube — cần kết nối mạng</p>
+                        {eng.tts && (
+                          <p className="text-sm text-feedback-warning">Dùng TTS đọc câu — không cần mạng cũng học được.</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
             {/* player toolbar */}
@@ -499,7 +538,9 @@ export default function ShadowingStudio({
               hidden={tab === "dict"}
               className="mt-3 max-h-[640px] space-y-2 overflow-y-auto pr-0.5"
             >
-              {subs.map((s, i) => (
+              {subs.map((s, i) => {
+                const speaker = dialogue?.lines.find((l) => l.n === s.n)?.speaker;
+                return (
                 <div
                   key={i}
                   data-sent={i}
@@ -511,6 +552,15 @@ export default function ShadowingStudio({
                 >
                   <div className="text-[11px] font-bold tabular-nums text-text-secondary">
                     Câu {s.n} · {fmt(s.start)} – {fmt(s.end)}
+                    {speaker && (
+                      <span
+                        data-testid="speaker-label"
+                        className={"ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-extrabold " +
+                          (speaker === "A" ? "bg-jade-wash text-feedback-success" : "bg-amber-wash text-amber-ink")}
+                      >
+                        Vai {speaker}
+                      </span>
+                    )}
                   </div>
                   <div className="mt-1 flex items-start gap-2">
                     <div className="min-w-0 flex-1">
@@ -554,7 +604,8 @@ export default function ShadowingStudio({
                     )}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* dictation box */}

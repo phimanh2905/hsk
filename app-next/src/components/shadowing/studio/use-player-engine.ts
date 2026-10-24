@@ -17,10 +17,23 @@ export function findSentenceIndex(subs: SubtitleSentence[], t: number): number {
   return t >= subs[subs.length - 1].end ? subs.length - 1 : 0;
 }
 
-export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; postSink?: (msg: string) => void }) {
+export function usePlayerEngine({
+  subs,
+  postSink,
+  audioSrcs,
+}: {
+  subs: SubtitleSentence[];
+  postSink?: (msg: string) => void;
+  audioSrcs?: string[];
+}) {
   const { speak, cancel: ttsCancel } = useTts();
   // iframe do Task 8 render và gắn qua window ("ytplayer"); engine tìm nó lúc gửi lệnh.
   const iframeEl = () => document.getElementById("ytplayer") as HTMLIFrameElement | null;
+  /* T7 — chế độ audio: studio render <audio id="audioplayer"> với src theo câu
+     (audioSrcs[index]); engine điều khiển element này thay vì postMessage YouTube.
+     audioSrcs undefined/[] → mode YouTube giữ nguyên behavior cũ. */
+  const audioMode = !!audioSrcs && audioSrcs.length > 0;
+  const audioEl = () => document.getElementById("audioplayer") as HTMLAudioElement | null;
 
   // stateRef = mirror của clone state — KHÔNG đưa playback vào React state
   const st = useRef({
@@ -32,6 +45,7 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
     lastTime: 0,
     loop: false,
     autoSplit: true,
+    audio: false, // T7: mode audio → mọi lệnh ytCmd thành no-op, TTS fallback tắt
   });
 
   // slice hiển thị
@@ -43,12 +57,14 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
   const [loop, setLoop] = useState(false);
   const [autoSplit] = useState(true); // Task 8 có thể nâng thành state điều khiển từ settings
   st.current.autoSplit = autoSplit;
+  st.current.audio = audioMode;
 
   const sinkRef = useRef(postSink);
   sinkRef.current = postSink;
 
   /* ---------- điều khiển YouTube (postMessage) — port shadowing-video.js:52-56 ---------- */
   function ytSend(obj: Record<string, unknown>) {
+    if (st.current.audio) return; // mode audio: không gửi gì vào YouTube
     sinkRef.current?.(JSON.stringify(obj));
     if (st.current.tts || !iframeEl()?.contentWindow) return;
     try { iframeEl()!.contentWindow!.postMessage(JSON.stringify(obj), YT_ORIGIN); } catch { /* silent */ }
@@ -84,12 +100,42 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
     ytCmd("setPlaybackRate", [st.current.rate]);
   }
 
+  /* ---------- T7 — điều khiển <audio id="audioplayer"> (clip mp3 theo câu) ---------- */
+  function seekAudio(i: number) {
+    const el = audioEl();
+    if (!el) return;
+    // start là mốc toàn bài; clip per-câu ngắn hơn → mốc vượt độ dài clip thì về 0
+    el.currentTime = subs[i].start < (el.duration || Infinity) ? subs[i].start : 0;
+  }
+  function audioPlay() {
+    try {
+      const p = audioEl()?.play();
+      if (p && typeof p.catch === "function") p.catch(() => { /* 404/no source */ });
+    } catch { /* silent */ }
+  }
+
+  // clip mp3 hết → tự sang câu tiếp (loop → replay câu); hết danh sách → pause
+  useEffect(() => {
+    if (!st.current.audio) return;
+    const el = audioEl();
+    if (!el) return;
+    const onEnded = () => {
+      if (st.current.loop) { seekAudio(st.current.cur); audioPlay(); return; }
+      if (st.current.cur + 1 < subs.length) gotoSentence(st.current.cur + 1, true);
+      else pause();
+    };
+    el.addEventListener("ended", onEnded);
+    return () => el.removeEventListener("ended", onEnded);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subs]);
+
   /* onIframeLoad của video-player cũ (gửi handshake "listening" khi iframe load)
      chuyển sang Task 8 cùng với <iframe> — hook không render DOM. */
 
   /* ---------- polling 500ms — port shadowing-video.js:87-107 ---------- */
   useEffect(() => {
     const id = setInterval(() => {
+      if (st.current.audio) return; // T7: mode audio do 'ended' điều khiển, không polling
       if (st.current.tts) return;
       // iframe có thể onLoad TRƯỚC khi hydration gắn handler → handshake "listening" mất,
       // widget không bao giờ nhận onReady và overlay kẹt. Gửi lại handshake mỗi nhịp cho tới khi sẵn sàng.
@@ -117,6 +163,7 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
   /* ---------- fallback TTS 4s — port shadowing-video.js:110-118 ---------- */
   useEffect(() => {
     const id = setTimeout(() => {
+      if (st.current.audio) return; // T7: audio thật có sẵn, không cần TTS fallback
       if (!st.current.ytReady && !st.current.tts) {
         st.current.tts = true;
         setTts(true);
@@ -129,6 +176,10 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
   }, []);
 
   function speakSentence(i: number, onend?: () => void) {
+    if (st.current.audio) { // T7: audio mode — "Nghe câu" phát clip thật thay vì TTS
+      gotoSentence(Math.min(Math.max(i, 0), subs.length - 1), true);
+      return;
+    }
     const s = subs[i];
     speak(s.parts.map((p) => p.zh).join(" "), {
       lang: "zh-CN",
@@ -153,11 +204,13 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
   /* ---------- play / pause / câu — port shadowing-video.js:153-182 ---------- */
   function play() {
     st.current.playing = true; setPlaying(true);
+    if (st.current.audio) { audioPlay(); return; }
     if (st.current.tts) speakCurrent();
     else { ytCmd("playVideo"); ytCmd("setPlaybackRate", [st.current.rate]); }
   }
   function pause() {
     st.current.playing = false; setPlaying(false);
+    if (st.current.audio) { try { audioEl()?.pause(); } catch { /* silent */ } return; }
     if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } } else ytCmd("pauseVideo");
   }
   const togglePlay = () => { if (st.current.playing) pause(); else play(); };
@@ -165,6 +218,12 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
   function gotoSentence(i: number, autoplay: boolean) {
     const clamped = Math.min(Math.max(i, 0), subs.length - 1);
     st.current.cur = clamped;
+    if (st.current.audio) {
+      seekAudio(clamped); // src clip mới do studio render theo cur
+      if (autoplay) play();
+      setCur(clamped);
+      return;
+    }
     if (st.current.tts) {
       if (st.current.playing || autoplay) { st.current.playing = true; setPlaying(true); speakCurrent(); }
       else setCur(clamped);
@@ -180,6 +239,7 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
 
   const setRatePublic = (r: number) => {
     st.current.rate = r; setRate(r);
+    if (st.current.audio) { try { audioEl()!.playbackRate = r; } catch { /* silent */ } return; }
     if (!st.current.tts) ytCmd("setPlaybackRate", [r]);
   };
   const toggleLoop = () => { st.current.loop = !st.current.loop; setLoop(st.current.loop); };
@@ -206,6 +266,7 @@ export function usePlayerEngine({ subs, postSink }: { subs: SubtitleSentence[]; 
 
   /* ---------- nghe lại câu — port shadowing-video.js ---------- */
   const listenCurrent = () => {
+    if (st.current.audio) { gotoSentence(st.current.cur, true); return; }
     if (tts) speakSentence(cur);
     else { ytCmd("seekTo", [subs[cur].start, true]); ytCmd("playVideo"); }
   };

@@ -8,18 +8,24 @@ import ShadowingStudio from "./shadowing-studio";
    generateStaticParams đã bỏ). */
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: Promise<{ videoId: string }> }): Promise<Metadata> {
+/* T7 — catch-all: video audio có id chứa "/" ("hsk1/lesson-1") → params là
+   mảng segment, join lại thành id gốc. YouTube id 1 segment giữ nguyên. */
+function idFromParams(videoId: string | string[]): string {
+  return Array.isArray(videoId) ? videoId.join("/") : videoId;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ videoId: string | string[] }> }): Promise<Metadata> {
   const { videoId } = await params;
-  const video = await getShadowingVideoById(videoId);
+  const video = await getShadowingVideoById(idFromParams(videoId));
   return { title: video ? `${video.title} | Shadowing | Bye HSK` : "Shadowing | Bye HSK" };
 }
 const FALLBACK_SUBS = (durSec: number): SubtitleSentence[] => [
   { n: 1, start: 0, end: durSec || 60, parts: [{ zh: "(Video này chưa có bản chép — đang cập nhật.)" }], pinyin: "", vi: "" },
 ];
 
-export default async function ShadowingVideoPage({ params }: { params: Promise<{ videoId: string }> }) {
+export default async function ShadowingVideoPage({ params }: { params: Promise<{ videoId: string | string[] }> }) {
   const { videoId } = await params;
-  const video = await getShadowingVideoById(videoId);
+  const video = await getShadowingVideoById(idFromParams(videoId));
   if (!video) notFound();
   const subs = (await getShadowingSubtitlesByVideo(video.id)) ?? FALLBACK_SUBS(video.durSec);
   return (

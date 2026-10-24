@@ -98,3 +98,26 @@ describe("waveform + record dock (port waveform-card/record-dock)", () => {
     expect(screen.getByTestId("record-dock")).toHaveClass("opacity-45", "saturate-50");
   });
 });
+
+describe("T7 — chế độ audio (video.type === 'audio')", () => {
+  const audioVideo: ShadowingVideo = {
+    ...video, id: "hsk1/lesson-1", type: "audio", audioDir: "audio/shadowing/hsk1/lesson-1",
+  };
+  it("render <audio data-testid='audio-player'> theo câu, KHÔNG iframe YouTube", () => {
+    render(<ShadowingStudio video={audioVideo} subtitles={subs} />);
+    const audio = screen.getByTestId("audio-player");
+    expect(audio).toHaveAttribute("src", "/audio/shadowing/hsk1/lesson-1-1.mp3");
+    expect(screen.queryByTitle(/YouTube video player/)).toBeNull();
+    expect(screen.queryByTestId("video-overlay")).toBeNull();
+  });
+  it("chuyển câu → src clip đổi theo câu hiện tại", () => {
+    render(<ShadowingStudio video={audioVideo} subtitles={subs} />);
+    fireEvent.click(screen.getByRole("button", { name: "Câu tiếp theo ▶" }));
+    expect(screen.getByTestId("audio-player")).toHaveAttribute("src", "/audio/shadowing/hsk1/lesson-1-2.mp3");
+  });
+  it("audio 404 → thông báo 'Audio đang được tạo'", () => {
+    render(<ShadowingStudio video={audioVideo} subtitles={subs} />);
+    fireEvent.error(screen.getByTestId("audio-player"));
+    expect(screen.getByTestId("audio-missing")).toHaveTextContent(/Audio đang được tạo/);
+  });
+});

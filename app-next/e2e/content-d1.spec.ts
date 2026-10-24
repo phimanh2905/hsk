@@ -24,8 +24,10 @@ test.describe("content từ D1", () => {
     await expect(page.getByText("Hội thoại theo bài").first()).toBeVisible();
   });
 
-  // FIXME(T7): video id "hsk1/lesson-1" chứa "/" cần route catch-all + audio
-  // player data-testid="audio-player" — bật lại khi Task 7 merge.
+  // T7 đã xong phần code: route catch-all [...videoId] + <audio data-testid="audio-player">
+  // (unit + studio test xanh). Còn fixme vì DATA chưa có: dialogueByLesson rỗng
+  // (gen-dialogues + render Kokoro chưa chạy) → D1 chưa có video "hsk1/lesson-1"
+  // → route trả 404. Bật lại khi data dialogues được seed vào D1 dev.
   test.fixme("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
     const res = await page.goto("/shadowing/hsk1/lesson-1");
     expect(res?.status()).toBe(200);
