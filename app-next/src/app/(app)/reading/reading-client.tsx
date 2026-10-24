@@ -228,13 +228,17 @@ function ReadingClientInner() {
   };
 
   /* Wave 7 T6: AI dịch + pinyin từng câu — mỗi câu 1 request (route giới hạn 20 messages),
-     parse JSON an toàn, câu nào fail bỏ qua. */
+     parse JSON an toàn, câu nào fail bỏ qua. Cap 20 câu còn thiếu pinyin để tránh
+     dội 30-70 request liên tiếp vào route (429 + UI treo) với bài dài. */
+  const AI_ANNOTATE_CAP = 20;
   const annotateWithAi = async () => {
     if (!doc || annotating) return;
+    const missing = doc.sentences.filter((s) => !s.py);
+    const targets = missing.slice(0, AI_ANNOTATE_CAP);
+    const skipped = missing.length - targets.length;
     setAnnotating(true);
     try {
-      for (const s of doc.sentences) {
-        if (s.py) continue;
+      for (const s of targets) {
         let raw: string;
         try {
           raw = await askAi([
@@ -270,7 +274,11 @@ function ReadingClientInner() {
           // JSON rác → bỏ qua câu đó
         }
       }
-      toast("Đã chú thích bằng AI");
+      if (skipped > 0) {
+        toast(`Chỉ chú thích ${AI_ANNOTATE_CAP} câu đầu — bài dài sẽ được chia nhỏ ở bản sau`);
+      } else {
+        toast("Đã chú thích bằng AI");
+      }
     } finally {
       setAnnotating(false);
     }

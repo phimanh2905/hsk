@@ -73,4 +73,21 @@ describe("ReadingClient — AI dịch & chú thích (Wave 7 T6)", () => {
       expect(screen.getByRole("status")).toHaveTextContent("AI đang bận, thử lại sau"),
     );
   });
+
+  it("bài >20 câu thiếu pinyin → chỉ gọi askAi 20 lần, toast cảnh báo câu bị bỏ qua", async () => {
+    askAiMock.mockResolvedValue(JSON.stringify({ py: "py", vi: "vi" }));
+    const text = Array.from({ length: 25 }, (_, i) => `第${i + 1}课。`).join("");
+    const user = userEvent.setup();
+    render(<ReadingClient />);
+    await user.type(screen.getByLabelText(/Nội dung bài đọc/), text);
+    await user.click(screen.getByText("Tạo bài đọc"));
+    expect(screen.getByText(/25 câu/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /AI dịch & chú thích/ }));
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Chỉ chú thích 20 câu đầu — bài dài sẽ được chia nhỏ ở bản sau",
+      ),
+    );
+    expect(askAiMock).toHaveBeenCalledTimes(20);
+  });
 });

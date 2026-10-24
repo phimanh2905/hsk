@@ -29,6 +29,10 @@ export default function AiWidget() {
   useEffect(() => {
     setBubbleHidden(localStorage.getItem("bye.chatBubble") === "0");
   }, []);
+  // Đăng nhập lại sau khi từng bị 401 → mở khóa ô nhập (không cần reload).
+  useEffect(() => {
+    if (loggedIn) setNeedLogin(false);
+  }, [loggedIn]);
 
   async function send() {
     const value = input.trim();
@@ -117,6 +121,9 @@ export default function AiWidget() {
               </Link>
             </div>
           )}
+          <p className="mt-2 text-[10px] text-text-secondary">
+            Nội dung AI chỉ mang tính tham khảo.
+          </p>
         </Card>
       ) : null}
 

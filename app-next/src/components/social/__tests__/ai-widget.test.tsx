@@ -147,6 +147,44 @@ describe("AiWidget", () => {
     );
   });
 
+  it("res 401 → needLogin; loggedIn trở lại true → ô nhập mở khóa (reset needLogin)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 })
+        )
+      )
+    );
+    const { rerender } = renderWidget();
+    await openAndAsk("Hỏi");
+    await waitFor(() =>
+      expect(screen.getByText("Đăng nhập để hỏi Tiểu Ngữ")).toBeInTheDocument()
+    );
+    // user đăng nhập lại: session false → true → needLogin reset
+    mockUseSession.mockReturnValue({ loggedIn: false, name: "", image: null, isPending: false, logout: async () => {} });
+    rerender(
+      <ToastProvider>
+        <AiWidget />
+      </ToastProvider>
+    );
+    mockUseSession.mockReturnValue({ loggedIn: true, name: "A", image: null, isPending: false, logout: async () => {} });
+    rerender(
+      <ToastProvider>
+        <AiWidget />
+      </ToastProvider>
+    );
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText("Nhập câu hỏi…")).toBeInTheDocument()
+    );
+  });
+
+  it("widget có disclaimer 'Nội dung AI chỉ mang tính tham khảo.'", () => {
+    renderWidget();
+    fireEvent.click(screen.getByRole("button", { name: /Hỏi AI/ }));
+    expect(screen.getByText("Nội dung AI chỉ mang tính tham khảo.")).toBeInTheDocument();
+  });
+
   it("pending=true → hiện bubble '…' thay reply", async () => {
     let resolveFetch: (r: Response) => void = () => {};
     vi.stubGlobal(
