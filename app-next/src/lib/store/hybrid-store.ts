@@ -91,6 +91,13 @@ function recordTombstone(domain: "srs" | "lessonProgress", key: string): void {
   writeJSON(TOMBSTONE_KEY, tombs);
 }
 
+function clearTombstone(domain: "srs" | "lessonProgress", key: string): void {
+  const tombs = readTombstones();
+  if (!(key in tombs[domain])) return;
+  delete tombs[domain][key];
+  writeJSON(TOMBSTONE_KEY, tombs);
+}
+
 function persistDirty(): void {
   const obj: Partial<Record<SyncDomain, 1>> = {};
   for (const d of dirty) obj[d] = 1;
@@ -337,7 +344,9 @@ function applyServerPayload(server: SyncPayload): void {
   }
 }
 
-async function flush(): Promise<void> {
+let flushing: Promise<void> | null = null;
+
+async function doFlush(): Promise<void> {
   if (!loggedIn || dirty.size === 0) return;
   const domains = [...dirty];
   const payload = computePayload();
@@ -358,10 +367,25 @@ async function flush(): Promise<void> {
   }
 }
 
+/* In-flight guard: call trùng lúc flush đang chạy trả về cùng promise —
+   tránh 2 POST song song và dirty bị xóa bởi snapshot cũ. */
+function flush(): Promise<void> {
+  if (flushing) return flushing;
+  flushing = doFlush().finally(() => {
+    flushing = null;
+  });
+  return flushing;
+}
+
 /* ---- lifecycle ---- */
 
 function onUnload(): void {
   void hybridSyncNow();
+}
+
+function onVisibility(): void {
+  // visibilitychange bắn cả khi tab focus lại — chỉ sync khi đang rời tab
+  if (typeof document !== "undefined" && document.visibilityState === "hidden") void hybridSyncNow();
 }
 
 export function initHybridStore(): () => void {
@@ -371,8 +395,12 @@ export function initHybridStore(): () => void {
     const original = (progressStore[method] as (...a: unknown[]) => unknown).bind(progressStore);
     (progressStore as unknown as Record<string, unknown>)[method] = (...args: unknown[]) => {
       const out = original(...args);
-      if (method === "toggleSrs" && !progressStore.getSrs(args[0] as string)) {
-        recordTombstone("srs", args[0] as string); // toggle OFF → tombstone
+      if (method === "toggleSrs") {
+        if (progressStore.getSrs(args[0] as string)) {
+          clearTombstone("srs", args[0] as string); // toggle ON lại → item sống, tombstone cũ hết nghĩa
+        } else {
+          recordTombstone("srs", args[0] as string); // toggle OFF → tombstone
+        }
       }
       markDirty(domain);
       return out;
@@ -381,12 +409,12 @@ export function initHybridStore(): () => void {
   restoreDirty();
   if (typeof window !== "undefined") {
     window.addEventListener("beforeunload", onUnload);
-    window.addEventListener("visibilitychange", onUnload);
+    window.addEventListener("visibilitychange", onVisibility);
   }
   return () => {
     if (typeof window !== "undefined") {
       window.removeEventListener("beforeunload", onUnload);
-      window.removeEventListener("visibilitychange", onUnload);
+      window.removeEventListener("visibilitychange", onVisibility);
     }
   };
 }

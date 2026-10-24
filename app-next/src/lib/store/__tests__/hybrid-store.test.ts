@@ -123,6 +123,48 @@ describe("hybrid-store", () => {
     expect(typeof rec!.deletedAt).toBe("number");
   });
 
+  it("toggle OFF → ON lại: tombstone bị xóa, payload item sống KHÔNG mang deletedAt", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    progressStore.toggleSrs("hsk1.a.9"); // ON
+    progressStore.toggleSrs("hsk1.a.9"); // OFF → tombstone
+    expect(typeof JSON.parse(localStorage.getItem(TOMBSTONE_KEY) || "{}").srs["hsk1.a.9"]).toBe("number");
+
+    progressStore.toggleSrs("hsk1.a.9"); // ON lại
+    expect(JSON.parse(localStorage.getItem(TOMBSTONE_KEY) || "{}").srs["hsk1.a.9"]).toBeUndefined();
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const rec = (body.srs as Array<Record<string, unknown>>).find((r) => r.key === "hsk1.a.9");
+    expect(rec).toBeTruthy();
+    expect(rec!.deletedAt).toBeNull();
+  });
+
+  it("flush in-flight guard: 2 hybridSyncNow khi fetch chậm → chỉ 1 POST", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    let resolveFetch!: (v: Response) => void;
+    fetchMock.mockImplementation(() => new Promise<Response>((res) => (resolveFetch = res)));
+
+    progressStore.addXp(1);
+    const p1 = hybridSyncNowFn();
+    const p2 = hybridSyncNowFn(); // cùng lúc flush đang chờ fetch
+    resolveFetch(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+    await Promise.all([p1, p2]);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("payload compute: studyDay từ bye.heat với correct 0; srs từ getAllSrs", async () => {
     initHybridStoreFn();
     hybridOnAuthChangeFn(true);
