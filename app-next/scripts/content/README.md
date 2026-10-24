@@ -80,3 +80,32 @@ cd /Volumes/samsung512/Code/hsk/app-next
 pnpm vitest run scripts/content            # unit + integration test
 pnpm exec tsx scripts/content/src/hsk-list.ts   # (nếu có CLI; các script batch ở task sau)
 ```
+
+## Dialogues + Reading (Wave 3)
+
+Sinh hội thoại mẫu per bài học (dialogue) qua LLM cho HSK 1–3, dùng cho tab Reading/Kokoro.
+
+- Input: `data/vocab/lessons-hskN.json` (từ gen-lessons W2.3) + `data/vocab/hsk1..N.json` (vocab cumulative để check OOV).
+- Output: `scripts/content/data/dialogues/dialogues-hskN.json` — mảng `{id: "hskN/lesson-X", book, lesson, title, titleVi, lines: [{n, speaker: "A"|"B", zh, pinyin, vi}]}` (audio/durSec thêm sau khi TTS).
+- Validate thuần: `scripts/content/src/dialogues.ts` (8–15 câu, vai A/B xen kẽ, đủ zh/pinyin/vi; OOV vocab chỉ là warning).
+
+Chạy (mỗi level một lệnh, KHÔNG chạy trong build/CI):
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next
+pnpm dlx tsx scripts/content/gen-dialogues.mts --level 1
+pnpm dlx tsx scripts/content/gen-dialogues.mts --level 2
+pnpm dlx tsx scripts/content/gen-dialogues.mts --level 3
+# 1 bài duy nhất (regenerate sau khi xóa bài khỏi JSON):
+pnpm dlx tsx scripts/content/gen-dialogues.mts --level 1 --lesson lesson-1
+```
+
+Env: `.env.local` (app-next) cung cấp `CONTENT_LLM_BASE_URL` / `CONTENT_LLM_KEY` / `CONTENT_LLM_MODEL`. 1 request/bài, retry kèm message lỗi tối đa 5 lần/bài; chạy lại sẽ skip các bài đã có trong output. Exit 1 nếu còn bài fail.
+
+### Review checklist (spot-check mỗi level)
+
+1. Số câu 8–15, vai A/B xen kẽ đúng (bắt đầu A).
+2. Mỗi câu đủ zh + pinyin + vi; pinyin có dấu thanh, KHÔNG tone number (lỗi LLM hay gặp: `ni3` — nếu hàng loạt thì fix prompt rồi chạy lại).
+3. Dịch Việt tự nhiên, đúng nghĩa; câu không máy móc/lặp cấu trúc.
+4. Từ trong câu nằm trong độ phủ vocab của bài + level trước (cột OOV trong log chỉ là warning — xem có đáng bỏ qua không).
+5. Nội dung bám chủ đề bài; không dính nội dung có bản quyền.
