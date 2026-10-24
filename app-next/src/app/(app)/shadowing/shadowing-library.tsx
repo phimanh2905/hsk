@@ -4,6 +4,8 @@
 import { useMemo, useState } from "react";
 import { topicVi, type ShadowingVideo, type SubtitleSentence, type ShadowingTopic } from "@/content/shadowing";
 import { pickDaily, syntheticLines } from "@/lib/shadowing/daily";
+import { subtitlePct } from "@/lib/shadowing/subtitle-progress";
+import type { ProgressRec } from "@/lib/shadowing/progress";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
@@ -271,7 +273,7 @@ function StatusPill({
   rec,
   total,
 }: {
-  rec?: { status: string; score: number | null; linesDone: number };
+  rec?: ProgressRec;
   total: number;
 }) {
   const base = "rounded-full border px-2 py-0.5 text-[11px] font-bold whitespace-nowrap";
@@ -284,7 +286,7 @@ function StatusPill({
   if (rec?.status === "mid")
     return (
       <span className={`${base} border-feedback-warning bg-amber-wash text-amber-ink`}>
-        Đang luyện · {Math.min(rec.linesDone, total)}/{total} câu
+        Đang luyện · {subtitlePct(rec, total) ?? 0}% câu
       </span>
     );
   return <span className={`${base} border-border-default bg-surface-muted text-text-secondary`}>Chưa học</span>;
