@@ -18,6 +18,7 @@ import { Chip } from "@/components/ui/chip";
 import { Select } from "@/components/ui/select";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
+import { askAi } from "@/lib/ai-client";
 import { progressStore, type ReadingDraft } from "@/lib/store/progress-store";
 
 const MAX = 3000;
@@ -154,6 +155,7 @@ function ReadingClientInner() {
   const toast = useToastSafe();
   const [text, setText] = useState("");
   const [doc, setDoc] = useState<Doc | null>(null);
+  const [annotating, setAnnotating] = useState(false);
   const [showVi, setShowVi] = useState(false);
   const [showPy, setShowPy] = useState(false);
   const k = useKaraoke(doc?.sentences ?? []);
@@ -223,6 +225,55 @@ function ReadingClientInner() {
     k.stop();
     setText(syncCounter(d.text));
     createDocFromText(d.text); // tái dùng pipeline tạo doc
+  };
+
+  /* Wave 7 T6: AI dịch + pinyin từng câu — mỗi câu 1 request (route giới hạn 20 messages),
+     parse JSON an toàn, câu nào fail bỏ qua. */
+  const annotateWithAi = async () => {
+    if (!doc || annotating) return;
+    setAnnotating(true);
+    try {
+      for (const s of doc.sentences) {
+        if (s.py) continue;
+        let raw: string;
+        try {
+          raw = await askAi([
+            {
+              role: "user",
+              content: `Dịch câu sau sang tiếng Việt và thêm pinyin, trả JSON {"zh":"...","py":"...","vi":"..."}: ${s.zh}`,
+            },
+          ]);
+        } catch {
+          // 429/502/network — hẳn là dừng, không quét tiếp
+          toast("AI đang bận, thử lại sau");
+          return;
+        }
+        try {
+          const parsed = JSON.parse(raw.trim().replace(/^```(?:json)?|```$/g, "").trim()) as {
+            zh?: string; py?: string; vi?: string;
+          };
+          if (parsed.py || parsed.vi) {
+            setDoc((cur) =>
+              cur
+                ? {
+                    ...cur,
+                    sentences: cur.sentences.map((row) =>
+                      row.zh === s.zh
+                        ? { ...row, py: parsed.py ?? row.py, vi: parsed.vi ?? row.vi }
+                        : row,
+                    ),
+                  }
+                : cur,
+            );
+          }
+        } catch {
+          // JSON rác → bỏ qua câu đó
+        }
+      }
+      toast("Đã chú thích bằng AI");
+    } finally {
+      setAnnotating(false);
+    }
   };
 
   return (
@@ -313,6 +364,15 @@ function ReadingClientInner() {
                   >
                     {k.playingAll ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
                     {k.playingAll ? "Dừng" : "Phát cả bài"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={annotating}
+                    onClick={annotateWithAi}
+                  >
+                    ✨ AI dịch &amp; chú thích
                   </Button>
                   <Chip selected={showVi} onClick={() => setShowVi((v) => !v)}>
                     Dịch
