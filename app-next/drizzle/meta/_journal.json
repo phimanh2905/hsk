@@ -43,6 +43,13 @@
       "when": 1791767400000,
       "tag": "0005_content_grammars",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1792828220029,
+      "tag": "0006_abnormal_bushwacker",
+      "breakpoints": true
     }
   ]
 }

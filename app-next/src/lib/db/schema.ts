@@ -210,3 +210,53 @@ export const contentShadowingSubtitles = sqliteTable("content_shadowing_subtitle
     .$type<{ n: number; start: number; end: number; parts: { zh: string }[]; pinyin: string; vi: string }[]>()
     .notNull(),
 });
+
+/* ================= HybridStore sync (spec 2026-10-24 Wave 4) =================
+   localStorage-first: client ghi local + debounce POST /api/v1/sync; server chỉ
+   lưu + merge. updatedAt/deletedAt là EPOCH MS do client sinh (so sánh clock
+   Conflict: counter max, modes per-key max, còn lại bản updatedAt lớn hơn thắng;
+   tombstone deleted_at giữ 90 ngày rồi purge (route sync tự dọn). */
+
+export const srsCards = sqliteTable(
+  "srs_cards",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    key: text("key").notNull(), // SRS item key, vd "hsk1.u1.3"
+    status: text("status", { enum: ["new", "learning", "learned", "known"] }).notNull().default("new"),
+    dueAt: integer("due_at"), // epoch ms
+    reviewCount: integer("review_count").notNull().default(0),
+    lastReviewedAt: integer("last_reviewed_at"), // epoch ms
+    updatedAt: integer("updated_at").notNull(), // epoch ms — client clock
+    deletedAt: integer("deleted_at"), // tombstone epoch ms
+  },
+  (t) => [uniqueIndex("srs_cards_user_key_uq").on(t.userId, t.key)]
+);
+
+export const studyDay = sqliteTable(
+  "study_day",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    date: text("date").notNull(), // YYYY-MM-DD theo Asia/Ho_Chi_Minh (vnDayString)
+    xp: integer("xp").notNull().default(0),
+    correct: integer("correct").notNull().default(0), // Wave 5 ghi vào
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.date] })]
+);
+
+export const lessonProgress = sqliteTable(
+  "lesson_progress",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    book: text("book").notNull(), // hsk1..hsk5 hoặc levelId roadmap
+    lesson: text("lesson").notNull(), // pageId hoặc stationId
+    modes: text("modes", { mode: "json" })
+      .$type<Record<string, number>>()
+      .notNull()
+      .default(sql`'{}'`),
+    knownCount: integer("known_count").notNull().default(0),
+    updatedAt: integer("updated_at").notNull(),
+    deletedAt: integer("deleted_at"),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
+);
