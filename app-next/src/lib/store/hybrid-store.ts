@@ -1,0 +1,428 @@
+"use client";
+
+/* HybridStore — bọc ProgressStore (spec 2026-10-24 Wave 4). localStorage-first:
+   mọi ghi vẫn vào ProgressStore ngay; module này patch các method mutate trên
+   singleton progressStore (own-property shadow prototype) để đánh dirty + debounce
+   5s POST /api/v1/sync. Guest thuần local (dirty tích tụ, không fetch). Login lần
+   đầu: merge-push 2 chiều. Response merge ngược bằng luật sync-merge (số max,
+   timestamp theo updatedAt, tombstone deleted_at). */
+
+import {
+  mergeLesson,
+  mergeSrs,
+  mergeStudyDay,
+  type SyncLessonRecord,
+  type SyncPayload,
+  type SyncSrsRecord,
+  type SyncStudyDayRecord,
+} from "./sync-merge";
+import { progressStore, type SrsItem } from "./progress-store";
+
+export type SyncDomain = "srs" | "studyDay" | "lessonProgress";
+
+const DIRTY_KEY = "bye.sync.dirty";
+const TOMBSTONE_KEY = "bye.sync.tombstones";
+const DEBOUNCE_MS = 5000;
+const TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000;
+
+const SRS_ITEMS_KEY = "bye.srs.items";
+const HEAT_KEY = "bye.heat";
+const PAGE_DONE_KEY = "bye.pageDone";
+const STATIONS_KEY = "bye.roadmap.stations.v1";
+
+/* Method → domain: chỉ những method ghi data thuộc 3 bảng sync. setWordNote/
+   toggleWordStar... nằm ngoài phạm vi Wave 4 (wordMeta chưa có bảng) — KHÔNG patch. */
+const PATCHES: Array<[keyof typeof progressStore, SyncDomain]> = [
+  ["toggleSrs", "srs"],
+  ["addSrsBatch", "srs"],
+  ["recordReview", "srs"],
+  ["migrateLegacySrs", "srs"],
+  ["addXp", "studyDay"],
+  ["markPageDone", "lessonProgress"],
+  ["setStationProgress", "lessonProgress"],
+];
+
+let inited = false;
+let loggedIn = false;
+let timer: ReturnType<typeof setTimeout> | null = null;
+const dirty = new Set<SyncDomain>();
+
+type Tombstones = { srs: Record<string, number>; lessonProgress: Record<string, number> };
+
+/* ---------- helpers (copy pattern progress-store) ---------- */
+
+function readJSON<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeJSON(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* silent */
+  }
+}
+
+function readTombstones(): Tombstones {
+  const raw = readJSON<Partial<Tombstones>>(TOMBSTONE_KEY, {});
+  const cutoff = Date.now() - TOMBSTONE_TTL_MS;
+  const out: Tombstones = { srs: {}, lessonProgress: {} };
+  for (const domain of ["srs", "lessonProgress"] as const) {
+    const map = raw[domain];
+    if (!map || typeof map !== "object") continue;
+    for (const [k, at] of Object.entries(map)) {
+      if (typeof at !== "number") continue;
+      if (at < cutoff) continue; // tombstone quá 90 ngày — bỏ
+      out[domain][k] = at;
+    }
+  }
+  return out;
+}
+
+function recordTombstone(domain: "srs" | "lessonProgress", key: string): void {
+  const tombs = readTombstones();
+  tombs[domain][key] = Date.now();
+  writeJSON(TOMBSTONE_KEY, tombs);
+}
+
+function persistDirty(): void {
+  const obj: Partial<Record<SyncDomain, 1>> = {};
+  for (const d of dirty) obj[d] = 1;
+  writeJSON(DIRTY_KEY, obj);
+}
+
+function restoreDirty(): void {
+  const obj = readJSON<Partial<Record<SyncDomain, 1>>>(DIRTY_KEY, {});
+  for (const d of ["srs", "studyDay", "lessonProgress"] as const) {
+    if (obj[d]) dirty.add(d);
+  }
+}
+
+function markDirty(d: SyncDomain): void {
+  dirty.add(d);
+  persistDirty();
+  schedule();
+}
+
+function schedule(): void {
+  if (!loggedIn || dirty.size === 0) return;
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(() => {
+    timer = null;
+    void flush();
+  }, DEBOUNCE_MS);
+}
+
+/* ---- snapshot local → payload (chỉ domain dirty) ---- */
+
+function countKnown(book: string, lesson: string): number {
+  const prefix = `${book}.${lesson}.`;
+  return progressStore
+    .getAllSrs()
+    .filter((it) => it.key.startsWith(prefix) && it.status === "known").length;
+}
+
+function computePayload(): SyncPayload {
+  const tombs = readTombstones();
+  const srs: SyncSrsRecord[] = dirty.has("srs")
+    ? progressStore
+        .getAllSrs()
+        .map((it) => ({
+          key: it.key,
+          status: it.status,
+          dueAt: it.dueAt,
+          reviewCount: it.reviewCount,
+          lastReviewedAt: it.lastReviewedAt,
+          updatedAt: it.updatedAt,
+          deletedAt: tombs.srs[it.key] ?? null,
+        }))
+        .concat(
+          // item đã xóa local (không còn trong getAllSrs) — gửi tombstone đứng yên
+          Object.entries(tombs.srs)
+            .filter(([k]) => !progressStore.getSrs(k))
+            .map(([key, deletedAt]) => ({
+              key,
+              status: "new" as const,
+              dueAt: null,
+              reviewCount: 0,
+              lastReviewedAt: null,
+              updatedAt: deletedAt,
+              deletedAt,
+            }))
+        )
+    : [];
+  const studyDay: SyncStudyDayRecord[] = dirty.has("studyDay")
+    ? Object.entries(progressStore.getHeat() ?? {}).map(([date, xp]) => ({
+        date,
+        xp,
+        correct: 0,
+        updatedAt: Date.now(),
+      }))
+    : [];
+  const lessonProgress: SyncLessonRecord[] = [];
+  if (dirty.has("lessonProgress")) {
+    for (const bp of progressStore.listPageDone()) {
+      const slash = bp.indexOf("/");
+      const book = bp.slice(0, slash);
+      const lesson = bp.slice(slash + 1);
+      lessonProgress.push({
+        book,
+        lesson,
+        modes: {},
+        knownCount: countKnown(book, lesson),
+        updatedAt: Date.now(),
+        deletedAt: tombs.lessonProgress[bp] ?? null,
+      });
+    }
+    // station progress: mỗi (levelId, stationId) → 1 row, modes = { pct, stars }
+    // (đọc trực tiếp localStorage "bye.roadmap.stations.v1" — progressStore chỉ expose theo levelId)
+    const all = readJSON<Record<string, Record<string, { pct: number; stars: 0 | 1 | 2 | 3 }>>>(STATIONS_KEY, {});
+    for (const [book, stations] of Object.entries(all)) {
+      for (const [lesson, rec] of Object.entries(stations)) {
+        if (!rec || typeof rec !== "object") continue;
+        lessonProgress.push({
+          book,
+          lesson,
+          modes: { pct: rec.pct, stars: rec.stars },
+          knownCount: 0,
+          updatedAt: Date.now(),
+          deletedAt: tombs.lessonProgress[`${book}/${lesson}`] ?? null,
+        });
+      }
+    }
+  }
+  return { srs, studyDay, lessonProgress };
+}
+
+/* ---- merge ngược server → local (ghi TRỰC TIẾP localStorage, KHÔNG qua
+       method patched để không tái đánh dirty vòng lặp) ---- */
+
+function srsItemToSync(it: SrsItem, deletedAt: number | null): SyncSrsRecord {
+  return {
+    key: it.key,
+    status: it.status,
+    dueAt: it.dueAt,
+    reviewCount: it.reviewCount,
+    lastReviewedAt: it.lastReviewedAt,
+    updatedAt: it.updatedAt,
+    deletedAt,
+  };
+}
+
+function applyServerPayload(server: SyncPayload): void {
+  const tombs = readTombstones();
+  let srsDirty = false;
+
+  for (const rec of server.srs) {
+    if (!rec || typeof rec.key !== "string") continue;
+    const localItem = progressStore.getSrs(rec.key);
+    const tombAt = tombs.srs[rec.key] ?? null;
+    const localRec: SyncSrsRecord | null = localItem
+      ? srsItemToSync(localItem, tombAt)
+      : tombAt != null
+        ? {
+            key: rec.key,
+            status: "new",
+            dueAt: null,
+            reviewCount: 0,
+            lastReviewedAt: null,
+            updatedAt: tombAt,
+            deletedAt: tombAt,
+          }
+        : null;
+    const merged = localRec ? mergeSrs(rec, localRec) : rec;
+    if (merged.deletedAt != null) {
+      // tombstone thắng → xóa local item + ghi tombstone mới hơn (nếu có)
+      if (localItem) {
+        const items = readJSON<Record<string, SrsItem>>(SRS_ITEMS_KEY, {});
+        delete items[rec.key];
+        writeJSON(SRS_ITEMS_KEY, items);
+        srsDirty = true;
+      }
+      if (tombAt == null || merged.deletedAt > tombAt) {
+        tombs.srs[rec.key] = merged.deletedAt;
+        writeJSON(TOMBSTONE_KEY, tombs);
+      }
+    } else if (!localItem || merged.updatedAt > localItem.updatedAt) {
+      const items = readJSON<Record<string, SrsItem>>(SRS_ITEMS_KEY, {});
+      items[rec.key] = {
+        key: rec.key,
+        status: merged.status,
+        dueAt: merged.dueAt,
+        reviewCount: merged.reviewCount,
+        lastReviewedAt: merged.lastReviewedAt,
+        updatedAt: merged.updatedAt,
+      };
+      writeJSON(SRS_ITEMS_KEY, items);
+      srsDirty = true;
+    }
+  }
+
+  const heat = readJSON<Record<string, number>>(HEAT_KEY, {});
+  for (const rec of server.studyDay) {
+    if (!rec || typeof rec.date !== "string") continue;
+    heat[rec.date] = Math.max(heat[rec.date] ?? 0, rec.xp);
+  }
+  writeJSON(HEAT_KEY, heat);
+
+  const pageDone = readJSON<Record<string, number>>(PAGE_DONE_KEY, {});
+  const stations = readJSON<Record<string, Record<string, { pct: number; stars: 0 | 1 | 2 | 3 }>>>(STATIONS_KEY, {});
+  let pageDirty = false;
+  for (const rec of server.lessonProgress) {
+    if (!rec || typeof rec.book !== "string" || typeof rec.lesson !== "string") continue;
+    const bp = `${rec.book}/${rec.lesson}`;
+    const tombAt = tombs.lessonProgress[bp] ?? null;
+    const deletedWins = rec.deletedAt != null && (tombAt == null || rec.deletedAt >= tombAt);
+    if (deletedWins) {
+      if (pageDone[bp]) {
+        delete pageDone[bp];
+        pageDirty = true;
+      }
+      const st = stations[rec.book];
+      if (st && st[rec.lesson]) {
+        delete st[rec.lesson];
+        pageDirty = true;
+      }
+      if (tombAt == null || rec.deletedAt! > tombAt) {
+        tombs.lessonProgress[bp] = rec.deletedAt!;
+        writeJSON(TOMBSTONE_KEY, tombs);
+      }
+      continue;
+    }
+    if (tombAt != null && rec.updatedAt <= tombAt) continue; // tombstone local mới hơn — bỏ qua
+    // station progress (modes có pct) → merge vào bye.roadmap.stations.v1
+    if (typeof rec.modes?.pct === "number") {
+      const local = stations[rec.book]?.[rec.lesson];
+      const localRec: SyncLessonRecord = {
+        book: rec.book,
+        lesson: rec.lesson,
+        modes: local ? { pct: local.pct, stars: local.stars } : {},
+        knownCount: 0,
+        updatedAt: 0,
+        deletedAt: tombAt,
+      };
+      const merged = mergeLesson(rec, localRec);
+      if (!merged.deletedAt) {
+        stations[rec.book] = {
+          ...(stations[rec.book] ?? {}),
+          [rec.lesson]: {
+            pct: merged.modes.pct ?? rec.modes.pct,
+            stars: (merged.modes.stars ?? 0) as 0 | 1 | 2 | 3,
+          },
+        };
+        pageDirty = true;
+      }
+    } else if (!pageDone[bp]) {
+      // lesson done ở thiết bị khác → đánh done local
+      pageDone[bp] = 1;
+      pageDirty = true;
+    }
+  }
+  if (pageDirty) {
+    writeJSON(PAGE_DONE_KEY, pageDone);
+    writeJSON(STATIONS_KEY, stations);
+  }
+  if (srsDirty) {
+    try {
+      window.dispatchEvent(new CustomEvent("bye:progress"));
+    } catch {
+      /* silent */
+    }
+  }
+}
+
+async function flush(): Promise<void> {
+  if (!loggedIn || dirty.size === 0) return;
+  const domains = [...dirty];
+  const payload = computePayload();
+  try {
+    const res = await fetch("/api/v1/sync", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    const server = (await res.json()) as SyncPayload & { serverTime: number };
+    applyServerPayload(server);
+    for (const d of domains) dirty.delete(d);
+    persistDirty();
+  } catch {
+    schedule(); // giữ dirty, thử lại sau 5s nữa
+  }
+}
+
+/* ---- lifecycle ---- */
+
+function onUnload(): void {
+  void hybridSyncNow();
+}
+
+export function initHybridStore(): () => void {
+  if (inited) return () => {};
+  inited = true;
+  for (const [method, domain] of PATCHES) {
+    const original = (progressStore[method] as (...a: unknown[]) => unknown).bind(progressStore);
+    (progressStore as unknown as Record<string, unknown>)[method] = (...args: unknown[]) => {
+      const out = original(...args);
+      if (method === "toggleSrs" && !progressStore.getSrs(args[0] as string)) {
+        recordTombstone("srs", args[0] as string); // toggle OFF → tombstone
+      }
+      markDirty(domain);
+      return out;
+    };
+  }
+  restoreDirty();
+  if (typeof window !== "undefined") {
+    window.addEventListener("beforeunload", onUnload);
+    window.addEventListener("visibilitychange", onUnload);
+  }
+  return () => {
+    if (typeof window !== "undefined") {
+      window.removeEventListener("beforeunload", onUnload);
+      window.removeEventListener("visibilitychange", onUnload);
+    }
+  };
+}
+
+/** Provider (Task 5) gọi mỗi khi state session đổi. */
+export function hybridOnAuthChange(nextLoggedIn: boolean): void {
+  if (nextLoggedIn && !loggedIn) {
+    loggedIn = true;
+    void hybridMergeOnLogin();
+  } else if (!nextLoggedIn) {
+    loggedIn = false;
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  } else {
+    loggedIn = nextLoggedIn;
+  }
+}
+
+/** Merge-push 2 chiều lần đầu đăng nhập: POST toàn bộ local state → response
+    merge ngược vào local. Gọi 1 lần per lần login. */
+export async function hybridMergeOnLogin(): Promise<void> {
+  dirty.add("srs");
+  dirty.add("studyDay");
+  dirty.add("lessonProgress"); // push toàn bộ 2 chiều
+  persistDirty();
+  await flush();
+}
+
+/** Đánh dirty thủ công (dùng khi code ngoài ProgressStore đổi data, ví dụ Wave 5). */
+export function hybridMarkDirty(d: SyncDomain): void {
+  markDirty(d);
+}
+
+/** Flush ngay toàn bộ dirty domain (dùng trước beforeunload / khi login). */
+export function hybridSyncNow(): Promise<void> {
+  return flush();
+}

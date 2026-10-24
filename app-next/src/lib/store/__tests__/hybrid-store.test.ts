@@ -1,0 +1,252 @@
+/* HybridStore tests (Task 4 — spec 2026-10-24 Wave 4). jsdom localStorage +
+   fake timers + fetch stub. Session điều khiển qua hybridOnAuthChange (Task 5
+   sẽ nối useSession vào). */
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { progressStore as ProgressStoreApi } from "../progress-store";
+import type {
+  hybridMarkDirty,
+  hybridMergeOnLogin,
+  hybridOnAuthChange,
+  hybridSyncNow,
+  initHybridStore,
+} from "../hybrid-store";
+
+/* Module state (inited/loggedIn) là per-module — reset giữa các test để cô lập. */
+let progressStore: typeof ProgressStoreApi;
+let hybridMarkDirtyFn: typeof hybridMarkDirty;
+let hybridMergeOnLoginFn: typeof hybridMergeOnLogin;
+let hybridOnAuthChangeFn: typeof hybridOnAuthChange;
+let hybridSyncNowFn: typeof hybridSyncNow;
+let initHybridStoreFn: typeof initHybridStore;
+
+const DIRTY_KEY = "bye.sync.dirty";
+const TOMBSTONE_KEY = "bye.sync.tombstones";
+
+type FetchMock = ReturnType<typeof vi.fn>;
+
+let fetchMock: FetchMock;
+
+function lastBody(): Record<string, unknown> {
+  const call = fetchMock.mock.calls[fetchMock.mock.calls.length - 1];
+  return JSON.parse(call[1].body as string);
+}
+
+function sse(key: string, over: Partial<Record<string, unknown>> = {}) {
+  return {
+    key,
+    status: "known",
+    dueAt: null,
+    reviewCount: 1,
+    lastReviewedAt: 1000,
+    updatedAt: 1000,
+    deletedAt: null,
+    ...over,
+  };
+}
+
+async function settle() {
+  await vi.advanceTimersByTimeAsync(0);
+}
+
+beforeEach(async () => {
+  vi.resetModules();
+  const ps = await import("../progress-store");
+  const hs = await import("../hybrid-store");
+  progressStore = ps.progressStore;
+  hybridMarkDirtyFn = hs.hybridMarkDirty;
+  hybridMergeOnLoginFn = hs.hybridMergeOnLogin;
+  hybridOnAuthChangeFn = hs.hybridOnAuthChange;
+  hybridSyncNowFn = hs.hybridSyncNow;
+  initHybridStoreFn = hs.initHybridStore;
+
+  localStorage.clear();
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-10-24T00:00:00Z"));
+  fetchMock = vi.fn();
+  vi.stubGlobal("fetch", fetchMock);
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
+
+describe("hybrid-store", () => {
+  it("init + addXp → dirty studyDay, debounce 5s mới fetch /api/v1/sync", async () => {
+    const cleanup = initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle(); // merge-on-login ban đầu
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    progressStore.addXp(5);
+    const dirty = JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}");
+    expect(dirty.studyDay).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(4999);
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe("/api/v1/sync");
+    expect(init.method).toBe("POST");
+    // sau flush thành công dirty cleared
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").studyDay).toBeUndefined();
+
+    cleanup();
+  });
+
+  it("toggleSrs ON → dirty srs; toggle OFF → tombstone + payload deletedAt", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    expect(progressStore.toggleSrs("hsk1.a.1")).toBe(true);
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").srs).toBe(1);
+
+    expect(progressStore.toggleSrs("hsk1.a.1")).toBe(false);
+    const tombs = JSON.parse(localStorage.getItem(TOMBSTONE_KEY) || "{}");
+    expect(typeof tombs.srs["hsk1.a.1"]).toBe("number");
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const rec = (body.srs as Array<Record<string, unknown>>).find((r) => r.key === "hsk1.a.1");
+    expect(rec).toBeTruthy();
+    expect(typeof rec!.deletedAt).toBe("number");
+  });
+
+  it("payload compute: studyDay từ bye.heat với correct 0; srs từ getAllSrs", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    progressStore.addXp(7);
+    progressStore.toggleSrs("hsk1.b.2");
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const body = lastBody();
+    const day = (body.studyDay as Array<Record<string, unknown>>)[0];
+    expect(day.xp).toBe(7);
+    expect(day.correct).toBe(0);
+    const srs = (body.srs as Array<Record<string, unknown>>).find((r) => r.key === "hsk1.b.2");
+    expect(srs).toBeTruthy();
+  });
+
+  it("response server merge ngược: updatedAt server mới hơn → local cập nhật; deletedAt mới hơn → xóa local + tombstone", async () => {
+    const t0 = Date.now() - 10_000;
+    localStorage.setItem(
+      "bye.srs.items",
+      JSON.stringify({
+        "hsk1.c.3": { key: "hsk1.c.3", status: "new", dueAt: t0, reviewCount: 0, lastReviewedAt: null, updatedAt: t0 },
+      })
+    );
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          srs: [
+            sse("hsk1.c.3", { status: "known", updatedAt: Date.now(), reviewCount: 5 }),
+            sse("hsk1.d.4", { deletedAt: Date.now(), updatedAt: Date.now(), status: "new" }),
+          ],
+          studyDay: [],
+          lessonProgress: [],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const items = JSON.parse(localStorage.getItem("bye.srs.items") || "{}");
+    expect(items["hsk1.c.3"].status).toBe("known");
+    expect(items["hsk1.c.3"].reviewCount).toBe(5);
+    expect(items["hsk1.d.4"]).toBeUndefined();
+    const tombs = JSON.parse(localStorage.getItem(TOMBSTONE_KEY) || "{}");
+    expect(typeof tombs.srs["hsk1.d.4"]).toBe("number");
+  });
+
+  it("guest: dirty tích tụ nhưng không bao giờ fetch", async () => {
+    initHybridStoreFn();
+    progressStore.addXp(3);
+    hybridMarkDirtyFn("srs");
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").srs).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("login transition: merge-push toàn bộ local state rồi clear dirty; fetch fail giữ dirty", async () => {
+    initHybridStoreFn();
+    // guest mutations
+    progressStore.addXp(4); // studyDay dirty
+    progressStore.markPageDone("hsk1", "1"); // chưa dirty (guest vẫn đánh dirty — markPageDone patched)
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").studyDay).toBe(1);
+
+    // login → merge-push toàn bộ (kể cả domain không dirty)
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+    hybridOnAuthChangeFn(true); // login transition → merge-push
+    await settle();
+    const body = lastBody();
+    expect(body.studyDay).toBeTruthy();
+    expect(body.lessonProgress).toBeTruthy();
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").studyDay).toBeUndefined();
+
+    // fail → dirty giữ nguyên, không crash
+    progressStore.addXp(2);
+    fetchMock.mockRejectedValueOnce(new Error("network"));
+    await hybridSyncNowFn();
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").studyDay).toBe(1);
+  });
+
+  it("debounce gom đợt: 5 mutate trong 1s → chỉ 1 fetch sau 5s", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    for (let i = 0; i < 5; i++) {
+      progressStore.addXp(1);
+      await vi.advanceTimersByTimeAsync(200);
+    }
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("initHybridStore idempotent: init 2 lần vẫn chỉ patch 1 lớp", async () => {
+    const cleanup = initHybridStoreFn();
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    cleanup();
+  });
+});
