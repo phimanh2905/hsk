@@ -1,14 +1,15 @@
 /* W3.3 — Pure module sinh seed "Hội thoại theo bài" từ DialogueRecord[].
    Tách khỏi gen script để unit test được (script .mts chỉ gọi hàm).
-   Playlist: id "htoi-thoai-theo-bai" (đúng theo brief task 6), slug "hoi-thoai-theo-bai".
+   Playlist: id = slug "hoi-thoai-theo-bai" (controller ruling, sửa từ brief typo), "hoi-thoai-theo-bai".
    Video: type "audio", audioDir "audio/<book>/<lesson>", durSec = ceil(tổng durSec lines,
    line thiếu durSec → 0). Subtitle sentences: start/end cumulative từ durSec
-   (end câu i = start câu i+1, câu cuối = tổng). */
+   (end câu i = start câu i+1, câu cuối = tổng RAW — không ceil; chỉ durSec
+   hiển thị mới ceil). */
 import type { DialogueRecord } from "./dialogues";
 import type { ShadowingPlaylist, ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 
 export const DIALOGUE_PLAYLIST: ShadowingPlaylist = {
-  id: "htoi-thoai-theo-bai",
+  id: "hoi-thoai-theo-bai",
   slug: "hoi-thoai-theo-bai",
   name: "Hội thoại theo bài",
   total: 0,
@@ -66,7 +67,7 @@ export function dialogueRows(
       const sentence: SubtitleSentence = {
         n: j + 1,
         start,
-        end: j === d.lines.length - 1 ? durSec : start + durs[j],
+        end: j === d.lines.length - 1 ? total : start + durs[j],
         parts: [{ zh: ln.zh }],
         pinyin: ln.pinyin,
         vi: ln.vi,

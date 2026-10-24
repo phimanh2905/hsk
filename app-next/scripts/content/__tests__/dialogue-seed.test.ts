@@ -34,7 +34,7 @@ describe("dialogueRows (W3.3 seed playlist Hội thoại theo bài)", () => {
 
   it("1 playlist đúng id/slug/name/channel", () => {
     expect(out.playlist).toEqual({
-      id: "htoi-thoai-theo-bai",
+      id: "hoi-thoai-theo-bai",
       slug: "hoi-thoai-theo-bai",
       name: "Hội thoại theo bài",
       total: 2,
@@ -47,7 +47,7 @@ describe("dialogueRows (W3.3 seed playlist Hội thoại theo bài)", () => {
     expect(out.videos).toHaveLength(2);
     const v1 = out.videos[0];
     expect(v1.id).toBe("hsk1/lesson-1");
-    expect(v1.playlistId).toBe("htoi-thoai-theo-bai");
+    expect(v1.playlistId).toBe("hoi-thoai-theo-bai");
     expect(v1.type).toBe("audio");
     expect(v1.audioDir).toBe("audio/hsk1/lesson-1");
     expect(v1.durSec).toBe(8); // ceil(3.5 + 4 + 0)
@@ -79,10 +79,10 @@ describe("dialogueRows (W3.3 seed playlist Hội thoại theo bài)", () => {
     expect(s1[1].start).toBe(3.5);
     expect(s1[1].end).toBe(7.5); // end câu i = start câu i+1
     expect(s1[2].start).toBe(7.5);
-    expect(s1[2].end).toBe(8); // câu cuối end = durSec tổng
+    expect(s1[2].end).toBe(7.5); // câu cuối end = tổng RAW (không ceil)
     const s2 = out.subtitles["hsk1/lesson-2"];
     expect(s2[1].start).toBe(5);
-    expect(s2[1].end).toBe(8); // câu cuối end = durSec (ceil tổng)
+    expect(s2[1].end).toBe(7.2); // câu cuối end = tổng RAW
     expect(s2[0].parts).toEqual([{ zh: "这个多少钱？" }]);
   });
 });

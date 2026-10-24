@@ -24,7 +24,9 @@ test.describe("content từ D1", () => {
     await expect(page.getByText("Hội thoại theo bài").first()).toBeVisible();
   });
 
-  test("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
+  // FIXME(T7): video id "hsk1/lesson-1" chứa "/" cần route catch-all + audio
+  // player data-testid="audio-player" — bật lại khi Task 7 merge.
+  test.fixme("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
     const res = await page.goto("/shadowing/hsk1/lesson-1");
     expect(res?.status()).toBe(200);
     const audio = page.locator('audio[data-testid="audio-player"]');
