@@ -3,6 +3,7 @@ import { render, cleanup, act } from "@testing-library/react";
 import { createRef } from "react";
 import { StudioGrid, type StudioGridApi } from "../studio-grid";
 import { loadWriterCharData } from "../writer-data";
+import { progressStore } from "@/lib/store/progress-store";
 
 /* Revised design (ruling 2026-10-07): watch KHÔNG dùng hanzi-writer — nét mẫu thật từ
    loadWriterCharData qua useStudioStrokes; draw dùng useWriter (quiz + outline hint). */
@@ -161,5 +162,30 @@ describe("StudioGrid — step (watch, useStudioStrokes)", () => {
     act(() => apiRef.current!.stepPrev()); // stepRef=1 — nét 2 ẩn lại
     expect(classes(paths[2])).toBe("hz-st todo");
     expect(classes(paths[0])).toBe("hz-st done");
+  });
+});
+
+describe("StudioGrid — recordHanziQuiz khi draw quiz hoàn thành (W0.2)", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("draw mode: startQuiz nhận onComplete; gọi onComplete → ghi bye.hanzi.quiz cho sel.g", async () => {
+    await setup({ sel: { kind: "char", g: "水" }, mode: "draw" });
+    // ready effect đã gọi startQuiz với onComplete
+    expect(writerFns.startQuiz).toHaveBeenCalled();
+    const onComplete = writerFns.startQuiz.mock.calls[0][0] as (() => void) | undefined;
+    expect(typeof onComplete).toBe("function");
+    expect(progressStore.getHanziQuiz("水")).toBeNull();
+    onComplete!();
+    const rec = progressStore.getHanziQuiz("水");
+    expect(rec).not.toBeNull();
+    expect(rec!.attempts).toBe(1);
+  });
+
+  it("watch mode: startQuiz KHÔNG được gọi (không ghi progress)", async () => {
+    await setup({ sel: { kind: "char", g: "火" }, mode: "watch" });
+    expect(writerFns.startQuiz).not.toHaveBeenCalled();
+    expect(progressStore.getHanziQuiz("火")).toBeNull();
   });
 });
