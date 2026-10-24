@@ -22,7 +22,7 @@ describe("cfDefaults (bảng mặc định gốc clone)", () => {
   it("cfDefaultsFor: stroke-order → 6 chữ 永 远 学 习 汉 字; vocab → từ Bài 1 HSK1; khác → DEFAULT_CHARS", () => {
     expect(cfDefaultsFor("stroke-order").chars.map((c) => c.hanzi)).toEqual(["永", "远", "学", "习", "汉", "字"]);
     expect(cfDefaultsFor("big-char").chars[0]).toMatchObject({ hanzi: "永", pinyin: "yǒng", hv: "VĨNH" });
-    expect(cfDefaultsFor("vocab").chars[0].hanzi).toBe("你好");
+    expect(cfDefaultsFor("vocab").chars[0].hanzi).toBe("你");
     expect(cfDefaultsFor("grid-paper").chars).toEqual(DEFAULT_CHARS);
   });
   it("mergeCfState: key có trong raw thắng, chars/traceStyle hỏng → default", () => {

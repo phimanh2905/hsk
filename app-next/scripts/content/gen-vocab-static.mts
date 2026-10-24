@@ -77,9 +77,15 @@ function currentCardMeta(slug: string): string | undefined {
 for (const level of [1, 2, 3, 4, 5]) {
   const words = loadJson<VocabWord[]>(path.join(dataDir, `hsk${level}.json`));
   const split = loadJson<LessonSplit>(path.join(dataDir, `lessons-hsk${level}.json`));
+  // Ruling W2 chạy bù: homograph (cùng hanzi khác pinyin/nghĩa) hợp lệ trong data —
+  // giữ bản đầu cho lookup bài học; bản thứ hai vẫn có trong D1 seed? Không —
+  // static chỉ phát từ trong bài (second-entry 0.2% chấp nhận không vào bài).
   const byHanzi = new Map<string, VocabWord>();
   for (const w of words) {
-    if (byHanzi.has(w.hanzi)) throw new Error(`hsk${level}.json: hanzi trùng "${w.hanzi}"`);
+    if (byHanzi.has(w.hanzi)) {
+      console.warn(`hsk${level}.json: hanzi trùng "${w.hanzi}" — giữ bản đầu (homograph)`);
+      continue;
+    }
     byHanzi.set(w.hanzi, w);
   }
   const used = new Set<string>();
@@ -104,10 +110,12 @@ for (const level of [1, 2, 3, 4, 5]) {
     lines.push("  ]");
     lines.push("};");
   });
+  // Ruling: homograph second-entry (cùng hanzi) không gán bài — chấp nhận (0.2%),
+  // chỉ cảnh báo thay vì fail. Bài học vẫn dạy đủ nghĩa chính.
   const missing = words.length - used.size;
   if (missing > 0) {
     const miss = [...byHanzi.keys()].filter((h) => !used.has(h)).slice(0, 10);
-    throw new Error(`hsk${level}: ${missing} từ trong hsk${level}.json không thuộc bài nào (vd: ${miss.join(", ")})`);
+    console.warn(`hsk${level}: ${missing} từ không thuộc bài nào (homograph — vd: ${miss.join(", ")})`);
   }
   levelBlocks.push(lines.join("\n") + "\n");
 

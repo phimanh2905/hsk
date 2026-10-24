@@ -68,7 +68,7 @@ describe("notebooks (SPEC-18)", () => {
       ["Mẫu câu gọi thoại", 12], ["Ngữ pháp hay sai", 8],
     ]);
     expect(notebooks.vocab.samples[0].rows).toHaveLength(12);
-    expect(notebooks.vocab.samples[0].rows[0]).toEqual({ hanzi: "时间", pinyin: "shíjiān", hanviet: "thời gian", meaning: "thời gian" });
+    expect(notebooks.vocab.samples[0].rows[0]).toEqual({ hanzi: "时间", pinyin: "shíjiān", hanviet: "THỜI GIAN", meaning: "thời gian" });
   });
 });
 

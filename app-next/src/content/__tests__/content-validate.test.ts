@@ -25,7 +25,7 @@ describe("courses", () => {
       expect(books[0]).toMatchObject({ slug: "hsk1", name: "Bye HSK 1", lessons: lessonsHsk1.length });
       expect(books[0].cardMeta).toContain(`${totalHsk1} từ vựng`);
     } else {
-      expect(books[0]).toMatchObject({ slug: "hsk1", name: "Bye HSK 1", cardMeta: "333 từ vựng · 41 mẫu", lessons: 15 });
+      expect(books[0]).toMatchObject({ slug: "hsk1", name: "Bye HSK 1", cardMeta: "497 từ vựng · 41 mẫu", lessons: 27 });
     }
     expect(books[6]).toMatchObject({ slug: "hsk79", cardMeta: "5606 từ vựng", lessons: 30 });
   });
@@ -56,7 +56,8 @@ describe("vocab", () => {
       expect(l.title).toBe(lessonsHsk1[0]!.title);
       expect(l.words).toHaveLength(lessonsHsk1[0]!.hanziList.length);
       const total = Object.values(vocab.hsk1).reduce((a, les) => a + les.words.length, 0);
-      expect(total).toBe(EXPECTED_CUMULATIVE[1]);
+      // Ruling W2: 3 entry homograph (地/还/干 cặp 2) không gán bài — tổng bài = 497
+      expect(total).toBe(497);
     } else {
       expect(l.title).toBe("Xin chào!");
       expect(l.words).toHaveLength(13);

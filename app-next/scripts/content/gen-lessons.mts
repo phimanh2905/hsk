@@ -11,7 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { llmConfigFromEnv } from "./src/llm";
 import { generateSplit, type LessonSplit } from "./src/lessons";
-import { EXPECTED_CUMULATIVE } from "./src/hsk-list";
+import { EXPECTED_PER_LEVEL_UNIQUE } from "./src/hsk-list";
 import { readEnvFile } from "./src/read-env";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -35,10 +35,10 @@ if (!existsSync(vocabPath)) {
   console.error(`Không tìm thấy vocab input: ${vocabPath}`);
   process.exit(1);
 }
-const allHanzi = (JSON.parse(readFileSync(vocabPath, "utf8")) as { hanzi: string }[]).map((w) => w.hanzi);
-const expected = EXPECTED_CUMULATIVE[level];
+const allHanzi = [...new Set((JSON.parse(readFileSync(vocabPath, "utf8")) as { hanzi: string }[]).map((w) => w.hanzi))];
+const expected = EXPECTED_PER_LEVEL_UNIQUE[level];
 if (allHanzi.length !== expected) {
-  console.error(`Vocab input ${vocabPath} có ${allHanzi.length} từ != EXPECTED_CUMULATIVE[${level}] = ${expected}`);
+  console.error(`Vocab input ${vocabPath} có ${allHanzi.length} từ unique != EXPECTED_PER_LEVEL_UNIQUE[${level}] = ${expected}`);
   process.exit(1);
 }
 

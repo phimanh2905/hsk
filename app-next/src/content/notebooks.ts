@@ -18,21 +18,20 @@ export type NotebookConfig = {
 
 /* 12 dòng mẫu dùng cho trang chi tiết khi sổ tay chưa có rows thật.
    pinyin/hanViet/meaning đồng bộ với vocab.ts (nguồn chuẩn) — test
-   src/content/__tests__/notebooks.test.ts chặn drift; 4 từ không có trong
-   vocab.ts (时间 所以 喜欢 吃饭) giữ giá trị gốc. */
+   src/content/__tests__/notebooks.test.ts chặn drift; các row được sync trực tiếp từ data chuẩn (W2 chạy bù). */
 const MOCK_ROWS: NotebookRow[] = [
-  { hanzi: "时间", pinyin: "shíjiān", hanviet: "thời gian", meaning: "thời gian" },
-  { hanzi: "朋友", pinyin: "péng you", hanviet: "BỒNG HỮU", meaning: "Bạn bè" },
-  { hanzi: "学习", pinyin: "xué xí", hanviet: "HỌC TẬP", meaning: "Học tập" },
-  { hanzi: "工作", pinyin: "gōng zuò", hanviet: "CÔNG TÁC", meaning: "Công việc, làm việc" },
-  { hanzi: "高兴", pinyin: "gāo xìng", hanviet: "CAO HƯNG", meaning: "Vui mừng" },
-  { hanzi: "因为", pinyin: "yīn wèi", hanviet: "NHÂN VI", meaning: "Vì, bởi vì" },
-  { hanzi: "所以", pinyin: "suǒyǐ", hanviet: "sở dĩ", meaning: "nên, vì vậy" },
-  { hanzi: "但是", pinyin: "dàn shì", hanviet: "ĐẠN THỊ", meaning: "Nhưng" },
-  { hanzi: "天气", pinyin: "tiān qì", hanviet: "THIÊN KHÍ", meaning: "Thời tiết" },
-  { hanzi: "喜欢", pinyin: "xǐhuan", hanviet: "hỉ hoan", meaning: "thích" },
-  { hanzi: "学校", pinyin: "xué xiào", hanviet: "HỌC HIỆU", meaning: "Trường học" },
-  { hanzi: "吃饭", pinyin: "chīfàn", hanviet: "xích phạn", meaning: "ăn cơm" }
+  { hanzi: "时间", pinyin: "shíjiān", hanviet: "THỜI GIAN", meaning: "thời gian" },
+  { hanzi: "朋友", pinyin: "péngyou", hanviet: "BẰNG HỮU", meaning: "Bạn bè" },
+  { hanzi: "学习", pinyin: "xuéxí", hanviet: "HỌC TẬP", meaning: "học tập" },
+  { hanzi: "工作", pinyin: "gōngzuò", hanviet: "CÔNG TÁC", meaning: "làm việc" },
+  { hanzi: "高兴", pinyin: "gāoxìng", hanviet: "CAO HƯNG", meaning: "vui, hớn" },
+  { hanzi: "因为", pinyin: "yīnwèi", hanviet: "NHÂN VỊ", meaning: "vì, bởi vì" },
+  { hanzi: "所以", pinyin: "suǒyǐ", hanviet: "SỞ DĨ", meaning: "vì vậy, do đó" },
+  { hanzi: "但是", pinyin: "dànshì", hanviet: "ĐÃN THỊ", meaning: "nhưng, nhưng" },
+  { hanzi: "天气", pinyin: "tiānqì", hanviet: "THIÊN KHÍ", meaning: "thời tiết" },
+  { hanzi: "喜欢", pinyin: "xǐhuan", hanviet: "HỶ HOAN", meaning: "thích" },
+  { hanzi: "学校", pinyin: "xuéxiào", hanviet: "HỌC HIỆU", meaning: "tòa nhà, cơ sở học tập" },
+  { hanzi: "吃饭", pinyin: "chīfàn", hanviet: "KHIẾT PHẠN", meaning: "ăn cơm" }
 ];
 
 function sample(id: string, name: string, count: number, unit: string, updated: string): NotebookSample {

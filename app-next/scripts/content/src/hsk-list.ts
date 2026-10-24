@@ -6,6 +6,10 @@
    vd "省 shěng" L2 có 2 nghĩa) — không được gộp. */
 export type HskEntry = { id?: string; hanzi: string; pinyin: string; level: number };
 
+/* Số cặp (hanzi,pinyin) unique per level — chuẩn có vài row trùng đúng cặp (2 nghĩa),
+   data vocab per-level phải khớp các số này (xem ruling W2 chạy bù). */
+export const EXPECTED_PER_LEVEL_UNIQUE: Record<number, number> = { 1: 500, 2: 771, 3: 970, 4: 999, 5: 1071 };
+
 export const EXPECTED_CUMULATIVE = { 1: 500, 2: 1272, 3: 2245, 4: 3245, 5: 4316 } as const;
 
 /* Tách 1 dòng CSV hỗ trợ quote cơ bản ("a,b" là 1 field, "" là literal "). */
