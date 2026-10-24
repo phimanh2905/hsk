@@ -140,7 +140,7 @@ export default function LeaderboardPage() {
             </li>
           ) : (
             monthRows.map((r, i) => (
-              <Row key={r.name} rank={i + 1} name={r.name} rightText={String(r.totalScore)} rightSub={r.lessonsPlayed + " bài"} />
+              <Row key={`${r.name}-${i}`} rank={i + 1} name={r.name} rightText={String(r.totalScore)} rightSub={r.lessonsPlayed + " bài"} />
             ))
           )
         ) : tab === "lesson" && lesson ? (
@@ -158,11 +158,11 @@ export default function LeaderboardPage() {
             </li>
           ) : (
             lessonRows.map((r, i) => (
-              <Row key={r.name} rank={i + 1} name={r.name} rightText={String(r.score)} rightSub={`${r.correct}/${r.total} câu — ${fmtDuration(r.durationMs)}`} />
+              <Row key={`${r.name}-${i}`} rank={i + 1} name={r.name} rightText={String(r.score)} rightSub={`${r.correct}/${r.total} câu — ${fmtDuration(r.durationMs)}`} />
             ))
           )
         ) : (
-          leaderboardData.xp.map((r, i) => <Row key={r.name} rank={i + 1} name={r.name} rightText={formatXp(r.points)} />)
+          leaderboardData.xp.map((r, i) => <Row key={`${r.name}-${i}`} rank={i + 1} name={r.name} rightText={formatXp(r.points)} />)
         )}
       </ol>
 

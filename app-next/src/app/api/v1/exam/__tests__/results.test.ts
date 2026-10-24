@@ -72,6 +72,21 @@ describe("POST /api/v1/exam/results", () => {
     expect(res.status).toBe(400);
   });
 
+  it("400 khi section không nằm trong enum listening/reading/writing", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const res = await POST(
+      postReq({ ...validBody, sections: [{ section: "speaking", score: 8, maxScore: 10 }] })
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it("400 khi totalScore lệch tổng điểm các sections", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const res = await POST(postReq({ ...validBody, totalScore: 9 }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("total_score_mismatch");
+  });
+
   it("400 khi body sai shape", async () => {
     getSession.mockResolvedValue({ user: { id: "u1" } });
     expect((await POST(postReq({ ...validBody, maxScore: 0 }))).status).toBe(400);

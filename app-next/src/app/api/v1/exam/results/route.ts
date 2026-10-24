@@ -17,7 +17,7 @@ const bodySchema = z.object({
   sections: z
     .array(
       z.object({
-        section: z.string().min(1),
+        section: z.enum(["listening", "reading", "writing"]),
         score: z.number().int().min(0),
         maxScore: z.number().int().min(0),
       })
@@ -31,6 +31,10 @@ export async function POST(req: NextRequest) {
 
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "invalid_body" }, { status: 400 });
+
+  const sumSections = parsed.data.sections.reduce((acc, s) => acc + s.score, 0);
+  if (parsed.data.totalScore !== sumSections)
+    return NextResponse.json({ error: "total_score_mismatch" }, { status: 400 });
 
   const id = crypto.randomUUID();
   await createDb().insert(hskExamResults).values({
