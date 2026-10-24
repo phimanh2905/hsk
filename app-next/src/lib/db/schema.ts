@@ -285,3 +285,45 @@ export const reviewLogs = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.itemKey, t.reviewedAt] })]
 );
+
+/* ================= Wave 6: Đấu trí + luyện thi ================= */
+
+/* Mỗi lượt chơi Đấu trí trong lesson (W6.2). `score` do client tính
+   (100đ chính xác + 50đ tốc độ, max 150) — server chỉ validate khoảng giá trị. */
+export const battleAttempts = sqliteTable(
+  "battle_attempts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    bookSlug: text("book_slug").notNull(),
+    lessonSlug: text("lesson_slug").notNull(),
+    correctCount: integer("correct_count").notNull(),
+    totalCount: integer("total_count").notNull(),
+    durationMs: integer("duration_ms").notNull(),
+    score: integer("score").notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    index("battle_attempts_lesson_idx").on(t.bookSlug, t.lessonSlug, t.score),
+    index("battle_attempts_month_idx").on(t.createdAt),
+    index("battle_attempts_user_idx").on(t.userId, t.createdAt),
+  ]
+);
+
+/* Kết quả luyện thi chứng chỉ (W6.3). `sections` là JSON breakdown theo
+   listening/reading/writing — shape theo type ExamSectionResult ở lib/exam/types. */
+export const hskExamResults = sqliteTable(
+  "hsk_exam_results",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    level: text("level").notNull(), // "hsk1" ... "hsk6"
+    totalScore: integer("total_score").notNull(),
+    maxScore: integer("max_score").notNull(),
+    sections: text("sections", { mode: "json" })
+      .$type<{ section: string; score: number; maxScore: number }[]>()
+      .notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index("hsk_exam_results_user_idx").on(t.userId, t.createdAt)]
+);
