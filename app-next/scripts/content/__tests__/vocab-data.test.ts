@@ -8,6 +8,8 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { vocabWordSchema } from "../../../src/content/schema";
 import { EXPECTED_CUMULATIVE } from "../src/hsk-list";
+// unique (hanzi+pinyin) per level — chuẩn HSK 3.0 có vài row trùng cặp (2 nghĩa)
+const EXPECTED_PER_LEVEL_UNIQUE = { 1: 500, 2: 771, 3: 970, 4: 999, 5: 1071 } as const;
 import type { VocabWord } from "../../src/content/vocab";
 
 const HAN_VIET_UPPER =
@@ -22,10 +24,10 @@ function loadLevel(level: number): VocabWord[] {
 describe.each([1, 2, 3, 4, 5] as const)("vocab data hsk%i", (level) => {
   const words = loadLevel(level);
 
-  it("đủ số từ EXPECTED_CUMULATIVE[level]", () => {
-    // cumulative: level N cần EXPECTED_CUMULATIVE[N] từ TỔNG CỘTỦ qua các level
-    const prev = level === 1 ? 0 : EXPECTED_CUMULATIVE[level - 1];
-    expect(words.length).toBe(EXPECTED_CUMULATIVE[level] - prev);
+  it("đủ số từ theo unique (hanzi+pinyin) của chuẩn", () => {
+    // Ruling W2 chạy bù: dataset có các row trùng đúng cặp (vd 批 pī 2 nghĩa) —
+    // test "không trùng" cấm trùng cặp, nên count = số cặp unique của level.
+    expect(words.length).toBe(EXPECTED_PER_LEVEL_UNIQUE[level]);
   });
 
   it("không trùng (hanzi+pinyin)", () => {
