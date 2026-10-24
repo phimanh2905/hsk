@@ -48,13 +48,12 @@ test("404: route không tồn tại hiện mascot và nút về trang chủ", as
   await expect(page.getByRole("link", { name: "Về trang chủ" })).toBeVisible();
 });
 
-test("AI widget: mascot kép render ở mọi route và reply sau 400ms", async ({ page }) => {
+test("AI widget: mascot kép render ở mọi route — guest thấy nút đăng nhập", async ({ page }) => {
   await page.goto("/leaderboard");
   const mascot = page.getByRole("button", { name: "Hỏi AI" });
   await expect(mascot).toBeVisible();
   await mascot.click();
-  await page.getByLabel("Nhập câu hỏi cho trợ lý AI").fill("xin chào");
-  // restyle: nút gửi giờ là IconButton "Gửi" (không còn ➤)
-  await page.getByRole("button", { name: "Gửi" }).click();
-  await expect(page.getByText("Mình là bản demo — thử bấm biểu tượng ngôi sao trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!")).toBeVisible({ timeout: 2000 });
+  // Wave 7: widget gọi API thật → guest thấy CTA đăng nhập thay vì mock reply.
+  // Luồng gửi tin nhắn + reply (upstream mock) được test ở e2e/ai-assistant.spec.ts.
+  await expect(page.getByRole("link", { name: "Đăng nhập để hỏi Tiểu Ngữ" })).toBeVisible();
 });
