@@ -50,6 +50,13 @@
       "when": 1792828220029,
       "tag": "0006_abnormal_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792832190765,
+      "tag": "0007_rare_dragon_man",
+      "breakpoints": true
     }
   ]
 }

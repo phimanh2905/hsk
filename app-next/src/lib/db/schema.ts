@@ -3,6 +3,7 @@ import {
   index,
   integer,
   primaryKey,
+  real,
   sqliteTable,
   text,
   uniqueIndex,
@@ -222,12 +223,18 @@ export const srsCards = sqliteTable(
   {
     userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
     key: text("key").notNull(), // SRS item key, vd "hsk1.u1.3"
-    status: text("status", { enum: ["new", "learning", "learned", "known"] }).notNull().default("new"),
+    status: text("status", { enum: ["new", "learning", "review", "relearning"] }).notNull().default("new"),
     dueAt: integer("due_at"), // epoch ms
     reviewCount: integer("review_count").notNull().default(0),
     lastReviewedAt: integer("last_reviewed_at"), // epoch ms
     updatedAt: integer("updated_at").notNull(), // epoch ms — client clock
     deletedAt: integer("deleted_at"), // tombstone epoch ms
+    /* SM-2 (Wave 5): hệ số ease kẹp [1.3, 3.0], init 2.5; interval hiện tại (ngày);
+       lapses = số lần Again ở review/relearning. Chỉ số áp dụng cho status
+       review/relearning; learning dùng due_at theo phút với interval_days = 0. */
+    ease: real("ease").notNull().default(2.5),
+    intervalDays: integer("interval_days").notNull().default(0),
+    lapses: integer("lapses").notNull().default(0),
   },
   (t) => [uniqueIndex("srs_cards_user_key_uq").on(t.userId, t.key)]
 );
@@ -258,5 +265,21 @@ export const lessonProgress = sqliteTable(
     updatedAt: integer("updated_at").notNull(),
     deletedAt: integer("deleted_at"),
   },
-  (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
+    (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
+);
+
+/* ================= Wave 5 — review logs (W5.2) =================
+   Append-only log mọi lần ôn; sync 1 chiều push (merge append-only theo
+   (user_id, item_key, reviewed_at)). Không tombstone, không merge field-wise. */
+export const reviewLogs = sqliteTable(
+  "review_logs",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    itemKey: text("item_key").notNull(), // SRS item key, vd "hsk1.u1.3"
+    cardType: text("card_type", { enum: ["vocab", "grammar"] }).notNull(),
+    rating: integer("rating").notNull(), // 1=Again 2=Hard 3=Good 4=Easy
+    durationMs: integer("duration_ms").notNull(),
+    reviewedAt: integer("reviewed_at").notNull(), // epoch ms client
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.itemKey, t.reviewedAt] })]
 );
