@@ -49,7 +49,7 @@ export function dialogueRows(
       id: d.id,
       title: d.titleVi,
       playlistId: DIALOGUE_PLAYLIST.id,
-      hsk: d.book,
+      hsk: d.book.toUpperCase(),
       views: 0,
       viewsSuffix: "",
       duration: formatDuration(total),

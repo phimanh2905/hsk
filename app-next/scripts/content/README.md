@@ -160,6 +160,23 @@ pnpm wrangler d1 execute hsk --local --command "SELECT type, COUNT(*) FROM conte
 Migration cột (`type`, `audio_dir`) là `drizzle/0008_*.sql` — apply trước khi seed.
 Idempotent: INSERT OR REPLACE theo PK, chạy lại an toàn.
 
+## Reading passages (Wave 3)
+
+Sinh bài đọc per level qua LLM, dùng cho tab Reading (Kokoro TTS):
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next
+pnpm dlx tsx scripts/content/gen-reading.mts --level 1   # sinh + spot-check
+pnpm dlx tsx scripts/content/gen-reading.mts --level 2
+pnpm dlx tsx scripts/content/gen-reading.mts --level 3
+```
+
+Sau khi cả 3 level đạt, merge data nguồn:
+
+```bash
+pnpm dlx tsx scripts/content/gen-reading-src.mts
+```
+
 ## Ngân sách dung lượng public/audio (W3 T10)
 
 Check tổng dung lượng mp3 render vào `public/audio/**`, nhóm theo book:

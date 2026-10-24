@@ -51,7 +51,7 @@ describe("dialogueRows (W3.3 seed playlist Hội thoại theo bài)", () => {
     expect(v1.type).toBe("audio");
     expect(v1.audioDir).toBe("audio/hsk1/lesson-1");
     expect(v1.durSec).toBe(8); // ceil(3.5 + 4 + 0)
-    expect(v1.hsk).toBe("hsk1");
+    expect(v1.hsk).toBe("HSK1");
     expect(v1.duration).toBe("0:08");
     expect(v1.views).toBe(0);
     expect(v1.viewsSuffix).toBe("");
