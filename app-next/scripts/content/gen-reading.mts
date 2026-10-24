@@ -54,6 +54,9 @@ if (!existsSync(lessonsPath)) {
 }
 const lessons = JSON.parse(readFileSync(lessonsPath, "utf8")) as Lesson[];
 
+const env = { ...readEnvFile(path.join(appRoot, ".env.local")), ...process.env } as Record<string, string>;
+const cfg = llmConfigFromEnv(env);
+
 // vocabSet: cumulative hanzi hsk1..level (điều kiện OOV warning)
 const vocabByHanzi = new Map<string, VocabEntry>();
 const vocabSet = new Set<string>();

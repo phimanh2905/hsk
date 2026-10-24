@@ -5,7 +5,8 @@
    grace 2500ms). Dán đoạn văn ≤ 3000 ký tự; demo doc + MCQ + từ vựng (demo). */
 
 import { useEffect, useState } from "react";
-import { readingData, type ReadingSentence } from "@/content/reading";
+import { readingData, type ReadingQuestion, type ReadingSentence, type ReadingVocab } from "@/content/reading";
+import { readingPassages, type ReadingPassage } from "@/content/reading-passages";
 import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "@/components/reading/karaoke";
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal, useLoginModal } from "@/components/shell/login-modal";
@@ -34,7 +35,8 @@ type Doc = {
   title: string;
   meta: string;
   sentences: KaraokeSentence[];
-  extras: typeof readingData.demoDoc | null;
+  /* W3 T9: passage thật (readingPassages) hoặc demoDoc — Extras chỉ dùng questions + vocab */
+  extras: { questions: ReadingQuestion[]; vocab: ReadingVocab[] } | null;
 };
 
 /* ---------- account-box (sidebar) ---------- */
@@ -227,6 +229,25 @@ function ReadingClientInner() {
     createDocFromText(d.text); // tái dùng pipeline tạo doc
   };
 
+  /* W3 T9: mở passage tĩnh theo level — câu đã tách sẵn + pinyin + dịch + questions/vocab,
+     tái dùng engine karaoke + Extras của demoDoc. Text đổ vào textarea và lưu draft
+     (W0.4 autosave chỉ wire trên nút "Tạo bài đọc" nên phải gọi saveReadingDraft tại đây). */
+  const openPassage = (id: string) => {
+    const p = readingPassages.find((x) => x.id === id) as ReadingPassage | undefined;
+    if (!p) return;
+    k.stop();
+    const full = zhFull(p);
+    setText(syncCounter(full));
+    setDoc({
+      title: p.title,
+      meta: `HSK ${p.book.replace("hsk", "")} · ${p.titleVi} · ${p.sentences.length} câu · ${full.length} ký tự`,
+      sentences: p.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
+      extras: p,
+    });
+    progressStore.saveReadingDraft(full.slice(0, MAX));
+    setDrafts(progressStore.getReadingDrafts());
+  };
+
   /* Wave 7 T6: AI dịch + pinyin từng câu — mỗi câu 1 request (route giới hạn 20 messages),
      parse JSON an toàn, câu nào fail bỏ qua. Cap 20 câu còn thiếu pinyin để tránh
      dội 30-70 request liên tiếp vào route (429 + UI treo) với bài dài. */
@@ -298,6 +319,25 @@ function ReadingClientInner() {
               </span>
             </button>
           </Card>
+          {readingPassages.length > 0 && (
+            <Card className="p-4">
+              <h2 className="font-extrabold mb-2">Bài đọc theo level</h2>
+              <Select
+                data-testid="reading-passage-select"
+                defaultValue=""
+                onChange={(e) => openPassage(e.target.value)}
+                aria-label="Chọn bài đọc theo level"
+                className="w-full text-sm"
+              >
+                <option value="">— Chọn bài đọc —</option>
+                {readingPassages.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.title} · HSK {p.book.replace("hsk", "")}
+                  </option>
+                ))}
+              </Select>
+            </Card>
+          )}
           {drafts.length > 0 && (
             <Card className="p-4">
               <h2 className="font-extrabold mb-2">Bản nháp đã lưu</h2>
