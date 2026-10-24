@@ -8,6 +8,8 @@ import { Lightbulb, Volume2 } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { useTts } from "@/lib/tts/use-tts";
+import { useToastSafe } from "@/components/shell/toast-provider";
+import { askAi } from "@/lib/ai-client";
 import type { StudioRadical, StudioCharMeta } from "@/content/hanzi-studio/radical-index";
 import { cn } from "@/lib/cn";
 import { SegControl } from "./seg-control";
@@ -51,17 +53,44 @@ export function StudioWorkbench({
   onSelectTray: (ch: string) => void;
 }) {
   const { speak } = useTts();
+  const toast = useToastSafe();
   const [speed, setSpeed] = useState<"0.75" | "1">("1");
   const [hintOn, setHintOn] = useState(false);
+  const [writingText, setWritingText] = useState("");
+  const [writingResult, setWritingResult] = useState<string | null>(null);
+  const [writingLoading, setWritingLoading] = useState(false);
   const glyph = data ? (data.kind === "rad" ? data.rad.char : data.meta.ch) : "";
   const rad = data?.rad;
 
   useEffect(() => {
     setSpeed("1");
     setHintOn(false);
+    setWritingText("");
+    setWritingResult(null);
     apiRef.current?.setHint(false); // grid không rebuild theo state workbench — bảo nó tắt hint
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glyph]);
+
+  const checkWriting = async () => {
+    const text = writingText.trim();
+    if (!text || writingLoading || !isChar) return;
+    setWritingLoading(true);
+    try {
+      const result = await askAi([
+        {
+          role: "user",
+          content:
+            `Chấm câu sau có dùng đúng chữ "${glyph}" (${data?.kind === "char" ? (data.meaning ?? "") : ""}) không: "${text}". ` +
+            `Chỉ ra lỗi dụng từ/thứ tự, sửa lại, giải thích ngắn.`,
+        },
+      ]);
+      setWritingResult(result);
+    } catch {
+      toast("Chấm viết tạm thời không khả dụng");
+    } finally {
+      setWritingLoading(false);
+    }
+  };
 
   /* Không có data nét: panel fallback, ẩn mọi control */
   if (!data || !hasStrokeData || !rad) {
@@ -172,6 +201,42 @@ export function StudioWorkbench({
             <Lightbulb size={14} strokeWidth={1.5} aria-hidden="true" /> Gợi ý nét mờ
           </Button>
       </div>
+
+      {isChar ? (
+        <div data-od-id="writing-check" className="mt-3.5 rounded-xl border border-border-subtle bg-surface-muted p-3">
+          <h4 className="mb-2 text-[10.5px] font-extrabold tracking-[0.07em] text-text-secondary/70">✍️ CHẤM VIẾT</h4>
+          <label htmlFor="writing-input" className="sr-only">
+            Câu tiếng Trung chứa chữ {glyph}
+          </label>
+          <textarea
+            id="writing-input"
+            data-writing-input
+            value={writingText}
+            onChange={(e) => setWritingText(e.target.value)}
+            rows={2}
+            placeholder={`Gõ một câu tiếng Trung có chứa "${glyph}"…`}
+            className="zh w-full rounded-control border border-border-subtle bg-surface-elevated p-2.5 text-[14px] text-text-primary focus:outline-none focus:ring-3 ring-action-focus ring-offset-2"
+          />
+          <div className="mt-2 flex items-center justify-end gap-2">
+            <Button
+              type="button"
+              className={TOOL_BTN}
+              disabled={writingLoading || !writingText.trim()}
+              onClick={checkWriting}
+            >
+              Chấm
+            </Button>
+          </div>
+          {writingLoading ? (
+            <p className="mt-2 text-[12.5px] text-text-secondary" aria-busy="true">…</p>
+          ) : null}
+          {writingResult !== null && !writingLoading ? (
+            <div className="mt-2 whitespace-pre-wrap rounded-control border border-border-subtle bg-surface-elevated p-2.5 text-[12.5px] text-text-primary">
+              {writingResult}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       {rad.chars.length > 0 ? (
         <div data-od-id="char-tray" className="mt-3.5">
