@@ -26,12 +26,12 @@ export async function GET(req: NextRequest) {
   if (scope === "lesson") {
     const rows = await db.all<LessonRow>(
       sql`SELECT u.name, b.score, b.correct_count AS correct, b.total_count AS total,
-                 b.duration_ms AS durationMs, b.created_at AS createdAt
-          FROM battle_attempts b JOIN user u ON u.id = b.user_id
+                 b.duration_ms AS durationMs, b.createdAt AS createdAt
+          FROM battle_attempts b JOIN user u ON u.id = b.userId
           WHERE b.book_slug = ${book} AND b.lesson_slug = ${page}
             AND b.id = (SELECT b2.id FROM battle_attempts b2
-                        WHERE b2.user_id = b.user_id AND b2.book_slug = b.book_slug AND b2.lesson_slug = b.lesson_slug
-                        ORDER BY b2.score DESC, b2.duration_ms ASC, b2.created_at ASC LIMIT 1)
+                        WHERE b2.userId = b.userId AND b2.book_slug = b.book_slug AND b2.lesson_slug = b.lesson_slug
+                        ORDER BY b2.score DESC, b2.duration_ms ASC, b2.createdAt ASC LIMIT 1)
           ORDER BY b.score DESC, b.duration_ms ASC LIMIT 10`
     );
     return NextResponse.json({
@@ -41,12 +41,12 @@ export async function GET(req: NextRequest) {
 
   // scope=month — best per user×lesson trong tháng hiện tại (UTC)
   const rows = await db.all<MonthRow>(
-    sql`SELECT b.user_id AS userId, u.name, b.book_slug AS bookSlug, b.lesson_slug AS lessonSlug, b.score
-        FROM battle_attempts b JOIN user u ON u.id = b.user_id
-        WHERE b.created_at >= CAST(strftime('%s', 'start of month') AS INTEGER)
+    sql`SELECT b.userId AS userId, u.name, b.book_slug AS bookSlug, b.lesson_slug AS lessonSlug, b.score
+        FROM battle_attempts b JOIN user u ON u.id = b.userId
+        WHERE b.createdAt >= CAST(strftime('%s', 'now', 'start of month') AS INTEGER)
           AND b.id = (SELECT b2.id FROM battle_attempts b2
-                      WHERE b2.user_id = b.user_id AND b2.book_slug = b.book_slug AND b2.lesson_slug = b.lesson_slug
-                      ORDER BY b2.score DESC, b2.duration_ms ASC, b2.created_at ASC LIMIT 1)`
+                      WHERE b2.userId = b.userId AND b2.book_slug = b.book_slug AND b2.lesson_slug = b.lesson_slug
+                      ORDER BY b2.score DESC, b2.duration_ms ASC, b2.createdAt ASC LIMIT 1)`
   );
 
   const byUser = new Map<string, { name: string; totalScore: number; bestScore: number; lessonsPlayed: number }>();

@@ -8,8 +8,10 @@ test("leaderboard: tab XP tổng mặc định, đổi sang Đấu trí tháng k
 
   await page.getByRole("tab", { name: "Đấu trí tháng" }).click();
   await expect(page).toHaveURL(/\/leaderboard\?tab=battle$/);
-  await expect(page.getByText("Minh Anh Phạm")).toBeVisible();
-  await expect(page.getByText("12/15").first()).toBeVisible();
+  // W6.2: tab Đấu trí ăn data thật GET /api/v1/battle/leaderboard?scope=month
+  // (mock battle đã bỏ) — load xong không còn skeleton, XP mock biến mất khỏi list.
+  await expect(page.locator("li.animate-pulse")).toHaveCount(0, { timeout: 15_000 });
+  await expect(page.locator("[data-leaderboard-list] li").first()).toBeVisible();
   await expect(page.getByText("My Phan")).toBeHidden();
 
   // URL trực tiếp ?tab=battle mở đúng tab

@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
   // rank = số user có best-score per-lesson cao hơn attempt này, +1
   const bestRows = await db.all<{ n: number }>(
     sql`SELECT COUNT(*) AS n FROM (
-          SELECT user_id, MAX(score) AS best FROM battle_attempts
+          SELECT userId, MAX(score) AS best FROM battle_attempts
           WHERE book_slug = ${book} AND lesson_slug = ${page}
-          GROUP BY user_id
+          GROUP BY userId
         ) WHERE best > ${parsed.data.score}`
   );
   return NextResponse.json({ id, rank: Number(bestRows[0]?.n ?? 0) + 1 });

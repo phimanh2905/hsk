@@ -13,6 +13,8 @@ import { useLesson, type LessonItem } from "../lesson-provider";
 import { shuffle } from "@/lib/pinyin-utils";
 import { progressStore } from "@/lib/store/progress-store";
 import { useLoginModal } from "@/components/shell/login-modal";
+import { useSession } from "@/lib/use-session";
+import { clearLeaderboardCache } from "@/lib/battle/leaderboard-client";
 import { useToastSafe } from "@/components/shell/toast-provider";
 import { checkTyped } from "./typing";
 import { computeBattleScore } from "@/lib/battle/score";
@@ -145,6 +147,8 @@ export default function BattleMode() {
 
   /* fail loud nếu thiếu LoginProvider — tránh nút Đăng nhập no-op im lặng */
   const openLogin = useLoginModal().openLogin;
+  /* đã đăng nhập → kết thúc ván tự POST /api/v1/battle/attempts (W6.2) */
+  const { loggedIn } = useSession();
 
   const ctx = book && page ? `${book}.${page}` : "";
   const [phase, setPhase] = useState<"intro" | "running" | "done">("intro");
@@ -158,6 +162,8 @@ export default function BattleMode() {
   const [result, setResult] = useState<{ correct: number; timeMs: number; isRecord: boolean; score: number } | null>(
     null
   );
+  /* đang lưu attempt lên server (disable nút "Thi lại" trong lúc gửi) */
+  const [saving, setSaving] = useState(false);
 
   const startRef = useRef(0);
   const qStartRef = useRef(0);
@@ -205,6 +211,28 @@ export default function BattleMode() {
     if (isRecord) toast("Kỷ lục mới của bài này!");
     setResult({ correct: finalCorrect, timeMs, isRecord, score });
     setPhase("done");
+    /* W6.2 — đã đăng nhập: lưu attempt lên server (fail im lặng, không phá UI kết quả).
+       Xong gọi clearLeaderboardCache() để /leaderboard bỏ cache 60s và hiện ngay kết quả. */
+    if (loggedIn && book && page) {
+      setSaving(true);
+      fetch("/api/v1/battle/attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          book,
+          page,
+          correctCount: finalCorrect,
+          totalCount: questions.length,
+          durationMs: timeMs,
+          score,
+        }),
+      })
+        .then((res) => {
+          if (res.ok) clearLeaderboardCache();
+        })
+        .catch(() => {})
+        .finally(() => setSaving(false));
+    }
   };
 
   const settle = (ok: boolean) => {
@@ -332,8 +360,8 @@ export default function BattleMode() {
             {result.isRecord ? " (mới!)" : ""}
           </p>
           <div className="flex flex-wrap justify-center items-center gap-2 mt-5">
-            <Button type="button" data-again onClick={beginBattle}>
-              Thi lại
+            <Button type="button" data-again onClick={beginBattle} disabled={saving}>
+              {saving ? "Đang lưu..." : "Thi lại"}
             </Button>
             <Button
               type="button"
