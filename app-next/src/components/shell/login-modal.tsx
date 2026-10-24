@@ -5,7 +5,7 @@
    better-auth: chỉ còn Google (spec 00 §1 — Apple ở site gốc là bịa, đã bỏ). */
 
 import Link from "next/link";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { X } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,15 @@ export function useLoginModal(): LoginCtx {
 
 export function LoginProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // W4.4: server gate redirect "/?login=1" thay Card lock client → modal tự mở.
+  // Chạy 1 lần khi mount, đọc window.location.search (không dùng useSearchParams
+  // để tránh ép toàn layout về dynamic); giữ URL sạch để reload không mở lại.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (new URLSearchParams(window.location.search).get("login") === "1") setIsOpen(true);
+  }, []);
+
   return (
     <LoginContext.Provider
       value={{ isOpen, openLogin: () => setIsOpen(true), close: () => setIsOpen(false) }}

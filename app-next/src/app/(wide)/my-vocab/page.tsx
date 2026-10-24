@@ -1,17 +1,16 @@
-/* /my-vocab — Sổ tay từ vựng (port opendesign_hsk/my-vocab.html, spec 2026-10-05).
-   LoginGate giữ nguyên (e2e gate test); data thật trong MyVocabRoot. */
+/* W4.4 — server gate thật: check session ở server component, bỏ LoginGate
+   client-only làm outer gate (spec 2026-10-24 Wave 4). */
 
 import type { Metadata } from "next";
-import { LoginGate } from "@/components/personal/login-gate";
-import { notebookSubGate } from "@/content/notebooks";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { getAuth } from "@/lib/auth";
 import MyVocabRoot from "@/components/my-vocab/my-vocab-root";
 
 export const metadata: Metadata = { title: "Sổ tay từ vựng" };
 
-export default function MyVocabPage() {
-  return (
-    <LoginGate pageSub={notebookSubGate.vocab}>
-      <MyVocabRoot />
-    </LoginGate>
-  );
+export default async function MyVocabPage() {
+  const session = await getAuth().api.getSession({ headers: await headers() });
+  if (!session) redirect("/?login=1");
+  return <MyVocabRoot />;
 }

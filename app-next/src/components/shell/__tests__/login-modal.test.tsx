@@ -36,4 +36,14 @@ describe("LoginModal (UPG-2 — better-auth)", () => {
     await act(async () => screen.getByRole("button", { name: /Google/ }).click());
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Google từ chối"));
   });
+
+  it("W4.4: URL ?login=1 → modal tự mở lúc mount (server gate redirect)", () => {
+    window.history.replaceState(null, "", "/?login=1");
+    try {
+      render(<LoginProvider><LoginModal /></LoginProvider>);
+      expect(screen.getByRole("dialog", { name: "Đăng nhập" })).toBeInTheDocument();
+    } finally {
+      window.history.replaceState(null, "", "/");
+    }
+  });
 });
