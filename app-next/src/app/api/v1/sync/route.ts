@@ -4,15 +4,17 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
+  SRS_STATUSES,
   type SrsSyncStatus,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
   type SyncLessonRecord,
+  type SyncReviewLogRecord,
 } from "@/lib/store/sync-merge";
 
 const bodySchema = z.object({
@@ -20,10 +22,14 @@ const bodySchema = z.object({
     .array(
       z.object({
         key: z.string().min(1).max(200),
-        status: z.enum(["new", "learning", "review", "relearning", "learned", "known"]), // learned/known: payload cũ
+        status: z.enum(SRS_STATUSES), // learned/known: payload cũ
         dueAt: z.number().int().nullable(),
         reviewCount: z.number().int().min(0),
         lastReviewedAt: z.number().int().nullable(),
+        // SM-2 (Wave 5) — optional để nhận payload legacy chưa có 3 trường
+        ease: z.number().min(1.3).max(3).optional(),
+        intervalDays: z.number().int().min(0).optional(),
+        lapses: z.number().int().min(0).optional(),
         updatedAt: z.number().int().positive(),
         deletedAt: z.number().int().nullable(),
       })
@@ -54,7 +60,32 @@ const bodySchema = z.object({
     )
     .max(500)
     .default([]),
+  reviewLogs: z
+    .array(
+      z.object({
+        itemKey: z.string().min(1).max(200),
+        cardType: z.enum(["vocab", "grammar"]),
+        rating: z.number().int().min(1).max(4),
+        durationMs: z.number().int().min(0),
+        reviewedAt: z.number().int().positive(),
+      })
+    )
+    .max(1000)
+    .default([]),
 });
+
+/* Payload legacy chưa có SM-2: ease 2.5, lapses 0, interval map theo status
+   (learned→7, known→21 — cùng mapping backfill migration 0007). */
+const LEGACY_INTERVAL: Partial<Record<SrsSyncStatus, number>> = { learned: 7, known: 21 };
+
+function normalizeSrsInc(inc: z.infer<typeof bodySchema>["srs"][number]): SyncSrsRecord {
+  return {
+    ...inc,
+    ease: inc.ease ?? 2.5,
+    intervalDays: inc.intervalDays ?? LEGACY_INTERVAL[inc.status] ?? 0,
+    lapses: inc.lapses ?? 0,
+  };
+}
 
 const TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000;
 
@@ -73,7 +104,8 @@ export async function POST(req: NextRequest) {
   // Dedupe trong batch: 2 bản cùng key phải merge trước, nếu không
   // ON CONFLICT sẽ raise do trùng conflict target trong cùng statement.
   const incSrsMap = new Map<string, SyncSrsRecord>();
-  for (const inc of body.srs) {
+  for (const raw of body.srs) {
+    const inc = normalizeSrsInc(raw);
     const prev = incSrsMap.get(inc.key);
     incSrsMap.set(inc.key, prev ? mergeSrs(prev, inc) : inc);
   }
@@ -88,6 +120,9 @@ export async function POST(req: NextRequest) {
       dueAt: ex.dueAt,
       reviewCount: ex.reviewCount,
       lastReviewedAt: ex.lastReviewedAt,
+      ease: ex.ease,
+      intervalDays: ex.intervalDays,
+      lapses: ex.lapses,
       updatedAt: ex.updatedAt,
       deletedAt: ex.deletedAt,
     };
@@ -108,6 +143,9 @@ export async function POST(req: NextRequest) {
           dueAt: r.dueAt,
           reviewCount: r.reviewCount,
           lastReviewedAt: r.lastReviewedAt,
+          ease: r.ease,
+          intervalDays: r.intervalDays,
+          lapses: r.lapses,
           updatedAt: r.updatedAt,
           deletedAt: r.deletedAt,
         }))
@@ -120,6 +158,9 @@ export async function POST(req: NextRequest) {
           dueAt: sql`excluded.due_at`,
           reviewCount: sql`excluded.review_count`,
           lastReviewedAt: sql`excluded.last_reviewed_at`,
+          ease: sql`excluded.ease`,
+          intervalDays: sql`excluded.interval_days`,
+          lapses: sql`excluded.lapses`,
           updatedAt: sql`excluded.updated_at`,
           deletedAt: sql`excluded.deleted_at`,
         },
@@ -208,7 +249,37 @@ export async function POST(req: NextRequest) {
       });
   }
 
-  // 4) Purge tombstone >90 ngày
+  // 4) reviewLogs (W5.2 — append-only, không merge: upsert excluded thuần).
+  // Dedupe trong batch theo khóa tự nhiên (itemKey, reviewedAt) — giữ bản đầu.
+  const incLogMap = new Map<string, SyncReviewLogRecord>();
+  for (const inc of body.reviewLogs) {
+    const k = `${inc.itemKey}@${inc.reviewedAt}`;
+    if (!incLogMap.has(k)) incLogMap.set(k, { ...inc, rating: inc.rating as 1 | 2 | 3 | 4 });
+  }
+  if (incLogMap.size) {
+    await db
+      .insert(reviewLogs)
+      .values(
+        [...incLogMap.values()].map((r) => ({
+          userId,
+          itemKey: r.itemKey,
+          cardType: r.cardType,
+          rating: r.rating,
+          durationMs: r.durationMs,
+          reviewedAt: r.reviewedAt,
+        }))
+      )
+      .onConflictDoUpdate({
+        target: [reviewLogs.userId, reviewLogs.itemKey, reviewLogs.reviewedAt],
+        set: {
+          cardType: sql`excluded.card_type`,
+          rating: sql`excluded.rating`,
+          durationMs: sql`excluded.duration_ms`,
+        },
+      });
+  }
+
+  // 5) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -222,11 +293,12 @@ export async function POST(req: NextRequest) {
       )
     );
 
-  // 5) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons] = await Promise.all([
+  // 6) Trả về toàn bộ state server của user sau merge
+  const [finalSrs, finalDays, finalLessons, finalLogs] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
+    db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -235,6 +307,9 @@ export async function POST(req: NextRequest) {
     dueAt: r.dueAt,
     reviewCount: r.reviewCount,
     lastReviewedAt: r.lastReviewedAt,
+    ease: r.ease,
+    intervalDays: r.intervalDays,
+    lapses: r.lapses,
     updatedAt: r.updatedAt,
     deletedAt: r.deletedAt,
   }));
@@ -252,11 +327,19 @@ export async function POST(req: NextRequest) {
     updatedAt: r.updatedAt,
     deletedAt: r.deletedAt,
   }));
+  const reviewLogsOut: SyncReviewLogRecord[] = finalLogs.map((r) => ({
+    itemKey: r.itemKey,
+    cardType: r.cardType,
+    rating: r.rating as 1 | 2 | 3 | 4,
+    durationMs: r.durationMs,
+    reviewedAt: r.reviewedAt,
+  }));
 
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
     studyDay: studyDayOut,
     lessonProgress: lessonOut,
+    reviewLogs: reviewLogsOut,
   });
 }

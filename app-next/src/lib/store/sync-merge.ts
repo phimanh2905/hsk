@@ -2,13 +2,18 @@
    (hybrid-store) và server (route /api/v1/sync). Thuần: không I/O, không mutate input.
    - Counter (reviewCount/xp/correct/knownCount): max.
    - modes: per-key max.
-   - Trường còn lại: của bản có updatedAt lớn hơn.
+   - Trường còn lại (bao gồm ease/intervalDays/lapses — Constraint 4 Wave 4):
+     của bản có updatedAt lớn hơn.
    - Tombstone: thắng bản sống khi deletedAt <= updatedAt của bản sống; chỉ ghi
-     có updatedAt > updatedAt của bản tombstone mới hồi sinh (deletedAt: null). */
+     có updatedAt > updatedAt của bản tombstone mới hồi sinh (deletedAt: null).
+   - reviewLogs: append-only, union theo khóa (itemKey, reviewedAt) — không
+     field-wise merge, giữ bản bên a khi trùng. */
 
 /* W5.1 SM-2: thêm review/relearning (format 4); learned/known giữ lại chỉ để
    merge dữ liệu server/payload cũ — client luôn ghi status SM-2 mới. */
-export type SrsSyncStatus = "new" | "learning" | "review" | "relearning" | "learned" | "known";
+export const SRS_STATUSES = ["new", "learning", "review", "relearning", "learned", "known"] as const;
+
+export type SrsSyncStatus = (typeof SRS_STATUSES)[number];
 
 export type SyncSrsRecord = {
   key: string;
@@ -16,6 +21,9 @@ export type SyncSrsRecord = {
   dueAt: number | null;
   reviewCount: number;
   lastReviewedAt: number | null;
+  ease: number;
+  intervalDays: number;
+  lapses: number;
   updatedAt: number;
   deletedAt: number | null;
 };
@@ -31,10 +39,20 @@ export type SyncLessonRecord = {
   deletedAt: number | null;
 };
 
+/* W5.2 — domain sync thứ 4: review log append-only. */
+export type SyncReviewLogRecord = {
+  itemKey: string;
+  cardType: "vocab" | "grammar";
+  rating: 1 | 2 | 3 | 4;
+  durationMs: number;
+  reviewedAt: number;
+};
+
 export type SyncPayload = {
   srs: SyncSrsRecord[];
   studyDay: SyncStudyDayRecord[];
   lessonProgress: SyncLessonRecord[];
+  reviewLogs: SyncReviewLogRecord[];
 };
 
 /** Tombstone thắng bản sống khi xóa xảy ra tại/sau lần ghi cuối của bản sống. */
@@ -56,6 +74,10 @@ export function mergeSrs(a: SyncSrsRecord, b: SyncSrsRecord): SyncSrsRecord {
     dueAt: winner.dueAt,
     reviewCount: Math.max(a.reviewCount, b.reviewCount),
     lastReviewedAt: winner.lastReviewedAt,
+    // SM-2: trường đo lường hiện trạng, gắn chặt status/dueAt → theo bản updatedAt lớn hơn
+    ease: winner.ease,
+    intervalDays: winner.intervalDays,
+    lapses: winner.lapses,
     updatedAt: Math.max(a.updatedAt, b.updatedAt),
     deletedAt: resolveTombstone(winner, loser),
   };
@@ -83,4 +105,16 @@ export function mergeLesson(a: SyncLessonRecord, b: SyncLessonRecord): SyncLesso
     updatedAt: Math.max(a.updatedAt, b.updatedAt),
     deletedAt: resolveTombstone(winner, loser),
   };
+}
+
+/** W5.2 — reviewLogs: union theo khóa `${itemKey}@${reviewedAt}`, giữ bản a khi
+    trùng (append-only). Output sort theo khóa → tính xác định 2 chiều. */
+export function mergeReviewLogs(a: SyncReviewLogRecord[], b: SyncReviewLogRecord[]): SyncReviewLogRecord[] {
+  const byKey = new Map<string, SyncReviewLogRecord>();
+  for (const rec of a) byKey.set(`${rec.itemKey}@${rec.reviewedAt}`, rec);
+  for (const rec of b) {
+    const k = `${rec.itemKey}@${rec.reviewedAt}`;
+    if (!byKey.has(k)) byKey.set(k, rec);
+  }
+  return [...byKey.entries()].sort(([x], [y]) => (x < y ? -1 : x > y ? 1 : 0)).map(([, rec]) => rec);
 }

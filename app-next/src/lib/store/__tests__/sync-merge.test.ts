@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   mergeLesson,
+  mergeReviewLogs,
   mergeSrs,
   mergeStudyDay,
   type SyncLessonRecord,
+  type SyncReviewLogRecord,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
 } from "../sync-merge";
@@ -15,8 +17,20 @@ const srs = (over: Partial<SyncSrsRecord>): SyncSrsRecord => ({
   dueAt: null,
   reviewCount: 0,
   lastReviewedAt: null,
+  ease: 2.5,
+  intervalDays: 0,
+  lapses: 0,
   updatedAt: 1000,
   deletedAt: null,
+  ...over,
+});
+
+const rlog = (over: Partial<SyncReviewLogRecord>): SyncReviewLogRecord => ({
+  itemKey: "hsk1.u1.3",
+  cardType: "vocab",
+  rating: 3,
+  durationMs: 1200,
+  reviewedAt: 5000,
   ...over,
 });
 
@@ -54,6 +68,27 @@ describe("mergeSrs", () => {
     const b = srs({ reviewCount: 3, updatedAt: 1000 });
     expect(mergeSrs(a, b).reviewCount).toBe(5);
     expect(mergeSrs(b, a).reviewCount).toBe(5);
+  });
+
+  it("SM-2: ease/intervalDays/lapses theo bản updatedAt lớn hơn (cùng nhóm status/dueAt), reviewCount vẫn max", () => {
+    const a = srs({ ease: 2.5, intervalDays: 0, lapses: 0, updatedAt: 1000 });
+    const b = srs({ ease: 1.9, intervalDays: 6, lapses: 2, updatedAt: 2000 });
+    const m = mergeSrs(a, b);
+    expect(m.ease).toBe(1.9);
+    expect(m.intervalDays).toBe(6);
+    expect(m.lapses).toBe(2);
+    expect(m.updatedAt).toBe(2000);
+    // chiều ngược — bản mới hơn vẫn thắng cả 3 trường
+    const m2 = mergeSrs(b, a);
+    expect(m2.ease).toBe(1.9);
+    expect(m2.intervalDays).toBe(6);
+    expect(m2.lapses).toBe(2);
+    // reviewCount là counter — vẫn max dù nằm ở bản cũ
+    const old = srs({ reviewCount: 9, ease: 1.3, intervalDays: 1, lapses: 5, updatedAt: 1000 });
+    const cur = srs({ reviewCount: 2, ease: 2.6, intervalDays: 10, lapses: 0, updatedAt: 3000 });
+    const m3 = mergeSrs(old, cur);
+    expect(m3.reviewCount).toBe(9);
+    expect(m3.ease).toBe(2.6);
   });
 
   it("tombstone thắng bản sống khi deletedAt <= updatedAt của bản sống", () => {
@@ -142,5 +177,47 @@ describe("mergeLesson", () => {
     const a = lesson({ modes: { flash: 1 }, knownCount: 2, updatedAt: 1000 });
     const b = lesson({ modes: { flash: 3, quiz: 1 }, knownCount: 5, updatedAt: 1500 });
     expect(mergeLesson(a, b)).toEqual(mergeLesson(b, a));
+  });
+});
+
+describe("mergeReviewLogs", () => {
+  it("union theo khóa itemKey@reviewedAt — log mới ở cả 2 bên đều xuất hiện", () => {
+    const a = [rlog({ itemKey: "k1", reviewedAt: 100 })];
+    const b = [rlog({ itemKey: "k2", reviewedAt: 200 })];
+    expect(mergeReviewLogs(a, b)).toHaveLength(2);
+    expect(mergeReviewLogs(a, b)).toEqual(mergeReviewLogs(b, a));
+  });
+
+  it("dedupe trùng khóa — giữ bản a, không nhân đôi", () => {
+    const a = [rlog({ itemKey: "k1", reviewedAt: 100, rating: 3, durationMs: 900 })];
+    const b = [rlog({ itemKey: "k1", reviewedAt: 100, rating: 4, durationMs: 1500 })];
+    const m = mergeReviewLogs(a, b);
+    expect(m).toHaveLength(1);
+    expect(m[0].rating).toBe(3);
+    expect(m[0].durationMs).toBe(900);
+  });
+
+  it("append-only: không merge field-wise — mọi log trùng khóa giữ nguyên bản a", () => {
+    const a = [rlog({ itemKey: "k1", reviewedAt: 100, durationMs: 100 })];
+    const b = [rlog({ itemKey: "k1", reviewedAt: 100, durationMs: 999 }), rlog({ itemKey: "k3", reviewedAt: 300 })];
+    const m = mergeReviewLogs(a, b);
+    expect(m.find((l) => l.itemKey === "k1")!.durationMs).toBe(100);
+    expect(m).toHaveLength(2);
+  });
+
+  it("tính xác định: thứ tự output độc lập với thứ tự input", () => {
+    const a = [rlog({ itemKey: "k2", reviewedAt: 200 }), rlog({ itemKey: "k1", reviewedAt: 100 })];
+    const b = [rlog({ itemKey: "k3", reviewedAt: 300 }), rlog({ itemKey: "k1", reviewedAt: 50 })];
+    expect(mergeReviewLogs(a, b)).toEqual(mergeReviewLogs(b, a));
+  });
+
+  it("input không bị mutate", () => {
+    const a = [rlog({ itemKey: "k1" })];
+    const b = [rlog({ itemKey: "k2" })];
+    const aCopy = structuredClone(a);
+    const bCopy = structuredClone(b);
+    mergeReviewLogs(a, b);
+    expect(a).toEqual(aCopy);
+    expect(b).toEqual(bCopy);
   });
 });

@@ -343,11 +343,104 @@ describe("hybrid-store", () => {
     await settle();
     fetchMock.mockClear();
     fetchMock.mockResolvedValue(
-      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
     );
     progressStore.addXp(1);
     await vi.advanceTimersByTimeAsync(5000);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     cleanup();
+  });
+
+  it("recordReview → dirty srs + studyDay + reviewLogs; payload reviewLogs đúng shape, studyDay.correct = 1", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
+    );
+
+    progressStore.toggleSrs("hsk1.1.0"); // tạo item
+    const NOW = Date.now();
+    const out = progressStore.recordReview("hsk1.1.0", "good", NOW, 1500);
+    expect(out).toBeTruthy();
+    const dirty = JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}");
+    expect(dirty.srs).toBe(1);
+    expect(dirty.studyDay).toBe(1);
+    expect(dirty.reviewLogs).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    expect(body.reviewLogs).toEqual([
+      { itemKey: "hsk1.1.0", cardType: "vocab", rating: 3, durationMs: 1500, reviewedAt: NOW },
+    ]);
+    const day = (body.studyDay as Array<Record<string, unknown>>).find((d) => d.date === "2026-10-24");
+    expect(day).toBeTruthy();
+    expect(day!.correct).toBe(1);
+    // sau flush dirty cleared cả 3 domain
+    const after = JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}");
+    expect(after.reviewLogs).toBeUndefined();
+    expect(after.srs).toBeUndefined();
+  });
+
+  it("server trả log trùng khóa (itemKey, reviewedAt) → local không đúp; log mới từ server được thêm", async () => {
+    const NOW = Date.now() - 5000;
+    progressStore.toggleSrs("hsk1.1.0");
+    progressStore.recordReview("hsk1.1.0", "good", NOW, 100);
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          srs: [],
+          studyDay: [],
+          lessonProgress: [],
+          reviewLogs: [
+            { itemKey: "hsk1.1.0", cardType: "vocab", rating: 4, durationMs: 999, reviewedAt: NOW }, // trùng khóa
+            { itemKey: "hsk1.1.9", cardType: "grammar", rating: 2, durationMs: 42, reviewedAt: NOW + 1 }, // mới
+          ],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const logs = JSON.parse(localStorage.getItem("bye.review.logs") || "[]") as Array<Record<string, unknown>>;
+    expect(logs.filter((l) => l.itemKey === "hsk1.1.0" && l.reviewedAt === NOW)).toHaveLength(1);
+    // append-only: bản local giữ nguyên, không bị server ghi đè field-wise
+    expect(logs.find((l) => l.itemKey === "hsk1.1.0")!.durationMs).toBe(100);
+    expect(logs.find((l) => l.itemKey === "hsk1.1.9")).toBeTruthy();
+  });
+
+  it("reviewLogs > 1000 entry: gửi 1000 mới nhất, giữ domain dirty để lần flush sau gửi nốt", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
+    );
+
+    // ghi 1050 log trực tiếp localStorage (cap store 2000 nên không bị cắt)
+    const logs = [];
+    for (let i = 0; i < 1050; i++) {
+      logs.push({ cardType: "vocab", itemKey: `k${i}`, rating: 3, durationMs: 1, reviewedAt: 1000 + i });
+    }
+    localStorage.setItem("bye.review.logs", JSON.stringify(logs));
+    hybridMarkDirtyFn("reviewLogs");
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const sent = body.reviewLogs as Array<Record<string, unknown>>;
+    expect(sent).toHaveLength(1000);
+    expect(sent[0].itemKey).toBe("k50"); // 1000 mới nhất (theo reviewedAt)
+    expect(sent[999].itemKey).toBe("k1049");
+    // còn 50 entry chưa gửi → reviewLogs vẫn dirty
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBe(1);
   });
 });

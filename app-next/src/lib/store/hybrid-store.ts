@@ -9,38 +9,43 @@
 
 import {
   mergeLesson,
+  mergeReviewLogs,
   mergeSrs,
   mergeStudyDay,
   type SyncLessonRecord,
   type SyncPayload,
+  type SyncReviewLogRecord,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
 } from "./sync-merge";
 import { isMature } from "@/lib/stats/review";
 import { normalizeSrsItem, progressStore, type SrsItem } from "./progress-store";
 
-export type SyncDomain = "srs" | "studyDay" | "lessonProgress";
+export type SyncDomain = "srs" | "studyDay" | "lessonProgress" | "reviewLogs";
 
 const DIRTY_KEY = "bye.sync.dirty";
 const TOMBSTONE_KEY = "bye.sync.tombstones";
 const DEBOUNCE_MS = 5000;
 const TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000;
+const REVIEW_LOGS_KEY = "bye.review.logs";
+const HEAT_CORRECT_KEY = "bye.heat.correct";
+const REVIEW_LOGS_BATCH = 1000; // cap server 1000/batch (zod max)
 
 const SRS_ITEMS_KEY = "bye.srs.items";
 const HEAT_KEY = "bye.heat";
 const PAGE_DONE_KEY = "bye.pageDone";
 const STATIONS_KEY = "bye.roadmap.stations.v1";
 
-/* Method → domain: chỉ những method ghi data thuộc 3 bảng sync. setWordNote/
-   toggleWordStar... nằm ngoài phạm vi Wave 4 (wordMeta chưa có bảng) — KHÔNG patch. */
-const PATCHES: Array<[keyof typeof progressStore, SyncDomain]> = [
-  ["toggleSrs", "srs"],
-  ["addSrsBatch", "srs"],
-  ["recordReview", "srs"],
-  ["migrateLegacySrs", "srs"],
-  ["addXp", "studyDay"],
-  ["markPageDone", "lessonProgress"],
-  ["setStationProgress", "lessonProgress"],
+/* Method → domain: chỉ những method ghi data thuộc 4 bảng sync. setWordNote/
+   toggleWordStar... nằm ngoài phạm vi (wordMeta chưa có bảng) — KHÔNG patch. */
+const PATCHES: Array<[keyof typeof progressStore, SyncDomain[]]> = [
+  ["toggleSrs", ["srs"]],
+  ["addSrsBatch", ["srs"]],
+  ["recordReview", ["srs", "studyDay", "reviewLogs"]], // SM-2 item + correct counter + review log
+  ["migrateLegacySrs", ["srs"]],
+  ["addXp", ["studyDay"]],
+  ["markPageDone", ["lessonProgress"]],
+  ["setStationProgress", ["lessonProgress"]],
 ];
 
 let inited = false;
@@ -107,7 +112,7 @@ function persistDirty(): void {
 
 function restoreDirty(): void {
   const obj = readJSON<Partial<Record<SyncDomain, 1>>>(DIRTY_KEY, {});
-  for (const d of ["srs", "studyDay", "lessonProgress"] as const) {
+  for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs"] as const) {
     if (obj[d]) dirty.add(d);
   }
 }
@@ -148,6 +153,9 @@ function computePayload(): SyncPayload {
           dueAt: it.dueAt,
           reviewCount: it.reviewCount,
           lastReviewedAt: it.lastReviewedAt,
+          ease: it.ease,
+          intervalDays: it.intervalDays,
+          lapses: it.lapses,
           updatedAt: it.updatedAt,
           deletedAt: tombs.srs[it.key] ?? null,
         }))
@@ -161,19 +169,26 @@ function computePayload(): SyncPayload {
               dueAt: null,
               reviewCount: 0,
               lastReviewedAt: null,
+              ease: 2.5,
+              intervalDays: 0,
+              lapses: 0,
               updatedAt: deletedAt,
               deletedAt,
             }))
         )
     : [];
-  const studyDay: SyncStudyDayRecord[] = dirty.has("studyDay")
-    ? Object.entries(progressStore.getHeat() ?? {}).map(([date, xp]) => ({
-        date,
-        xp,
-        correct: 0,
-        updatedAt: Date.now(),
-      }))
-    : [];
+  const studyDay: SyncStudyDayRecord[] = [];
+  if (dirty.has("studyDay")) {
+    // union ngày có xp (bye.heat) và ngày có correct (bye.heat.correct) —
+    // recordReview ghi correct không nhất thiết kèm xp
+    const heat = progressStore.getHeat() ?? {};
+    const correct = progressStore.getHeatCorrect() ?? {};
+    const dates = new Set([...Object.keys(heat), ...Object.keys(correct)]);
+    const now = Date.now();
+    for (const date of dates) {
+      studyDay.push({ date, xp: heat[date] ?? 0, correct: correct[date] ?? 0, updatedAt: now });
+    }
+  }
   const lessonProgress: SyncLessonRecord[] = [];
   if (dirty.has("lessonProgress")) {
     for (const bp of progressStore.listPageDone()) {
@@ -206,7 +221,20 @@ function computePayload(): SyncPayload {
       }
     }
   }
-  return { srs, studyDay, lessonProgress };
+  // W5.2: reviewLogs — gửi 1000 entry mới nhất/batch (cap server), phần cũ giữ dirty
+  const reviewLogs: SyncReviewLogRecord[] = dirty.has("reviewLogs")
+    ? progressStore
+        .getReviewLogs()
+        .slice(-REVIEW_LOGS_BATCH)
+        .map((l) => ({
+          itemKey: l.itemKey,
+          cardType: l.cardType,
+          rating: l.rating,
+          durationMs: l.durationMs,
+          reviewedAt: l.reviewedAt,
+        }))
+    : [];
+  return { srs, studyDay, lessonProgress, reviewLogs };
 }
 
 /* ---- merge ngược server → local (ghi TRỰC TIẾP localStorage, KHÔNG qua
@@ -219,6 +247,9 @@ function srsItemToSync(it: SrsItem, deletedAt: number | null): SyncSrsRecord {
     dueAt: it.dueAt,
     reviewCount: it.reviewCount,
     lastReviewedAt: it.lastReviewedAt,
+    ease: it.ease,
+    intervalDays: it.intervalDays,
+    lapses: it.lapses,
     updatedAt: it.updatedAt,
     deletedAt,
   };
@@ -241,6 +272,9 @@ function applyServerPayload(server: SyncPayload): void {
             dueAt: null,
             reviewCount: 0,
             lastReviewedAt: null,
+            ease: 2.5,
+            intervalDays: 0,
+            lapses: 0,
             updatedAt: tombAt,
             deletedAt: tombAt,
           }
@@ -267,6 +301,9 @@ function applyServerPayload(server: SyncPayload): void {
         dueAt: merged.dueAt,
         reviewCount: merged.reviewCount,
         lastReviewedAt: merged.lastReviewedAt,
+        ease: merged.ease,
+        intervalDays: merged.intervalDays,
+        lapses: merged.lapses,
         updatedAt: merged.updatedAt,
       } as SrsItem).item;
       writeJSON(SRS_ITEMS_KEY, items);
@@ -341,7 +378,19 @@ function applyServerPayload(server: SyncPayload): void {
     writeJSON(PAGE_DONE_KEY, pageDone);
     writeJSON(STATIONS_KEY, stations);
   }
-  if (srsDirty || pageDirty || heatDirty) {
+
+  // W5.2: reviewLogs — merge ngược append-only (union theo khóa), ghi thẳng localStorage
+  let logsDirty = false;
+  if (Array.isArray(server.reviewLogs) && server.reviewLogs.length) {
+    const local = progressStore.getReviewLogs();
+    const merged = mergeReviewLogs(local, server.reviewLogs); // local thắng khi trùng khóa
+    if (merged.length !== local.length) {
+      writeJSON(REVIEW_LOGS_KEY, merged.slice(-2000)); // cap như progress-store
+      logsDirty = true;
+    }
+  }
+
+  if (srsDirty || pageDirty || heatDirty || logsDirty) {
     // merge ngược đổi dữ liệu local → bắn event để heatmap/my-vocab... re-render
     try {
       window.dispatchEvent(new CustomEvent("bye:progress"));
@@ -376,7 +425,11 @@ async function doFlush(): Promise<void> {
     if (!res.ok) throw new Error(String(res.status));
     const server = (await res.json()) as SyncPayload & { serverTime: number };
     applyServerPayload(server);
-    for (const d of domains) dirty.delete(d);
+    for (const d of domains) {
+      // reviewLogs > batch cap: chỉ gửi được 1 phần — giữ dirty để flush sau gửi nốt
+      if (d === "reviewLogs" && progressStore.getReviewLogs().length > REVIEW_LOGS_BATCH) continue;
+      dirty.delete(d);
+    }
     persistDirty();
   } catch {
     schedule(); // giữ dirty, thử lại sau 5s nữa
@@ -407,7 +460,7 @@ function onVisibility(): void {
 export function initHybridStore(): () => void {
   if (inited) return () => {};
   inited = true;
-  for (const [method, domain] of PATCHES) {
+  for (const [method, domains] of PATCHES) {
     const original = (progressStore[method] as (...a: unknown[]) => unknown).bind(progressStore);
     (progressStore as unknown as Record<string, unknown>)[method] = (...args: unknown[]) => {
       const out = original(...args);
@@ -418,7 +471,7 @@ export function initHybridStore(): () => void {
           recordTombstone("srs", args[0] as string); // toggle OFF → tombstone
         }
       }
-      markDirty(domain);
+      for (const domain of domains) markDirty(domain);
       return out;
     };
   }
@@ -457,6 +510,7 @@ export async function hybridMergeOnLogin(): Promise<void> {
   dirty.add("srs");
   dirty.add("studyDay");
   dirty.add("lessonProgress"); // push toàn bộ 2 chiều
+  dirty.add("reviewLogs");
   persistDirty();
   await flush();
 }
