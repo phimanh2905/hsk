@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ReadingClient from "../reading-client";
+import { progressStore } from "@/lib/store/progress-store";
 
 const speakMock = vi.fn();
 
@@ -71,5 +72,38 @@ describe("ReadingClient (G3)", () => {
     await user.type(ta, "好".repeat(3010));
     expect(ta.value.length).toBe(3000);
     expect(screen.getByText("3000/3000")).toBeInTheDocument();
+  });
+});
+
+describe("ReadingClient — bản nháp tự lưu (W0.4)", () => {
+  it("Tạo bài đọc → draft lưu vào bye.reading.drafts", async () => {
+    const user = userEvent.setup();
+    render(<ReadingClient />);
+    await user.type(screen.getByLabelText("Nội dung bài đọc"), "第一篇测试文章。");
+    await user.click(screen.getByText("Tạo bài đọc"));
+    const drafts = progressStore.getReadingDrafts();
+    expect(drafts.length).toBe(1);
+    expect(drafts[0].text).toContain("第一篇测试文章");
+  });
+
+  it("mount lại → textarea khôi phục draft mới nhất", async () => {
+    progressStore.saveReadingDraft("昨天的旧文章。今天很好。");
+    progressStore.saveReadingDraft("最新的一篇文章。今天很好。");
+    render(<ReadingClient />);
+    const input = screen.getByLabelText("Nội dung bài đọc") as HTMLTextAreaElement;
+    await waitFor(() => expect(input.value).toBe("最新的一篇文章。今天很好。"));
+    expect(screen.getByText("Bản nháp đã lưu")).toBeTruthy();
+    // text xuất hiện ở cả sidebar span lẫn textarea value → getAllByText
+    expect(screen.getAllByText("最新的一篇文章。今天很好。").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("bấm draft cũ trong sidebar → nạp lại vào textarea", async () => {
+    progressStore.saveReadingDraft("文章甲。内容很长很好。");
+    progressStore.saveReadingDraft("文章乙。内容也很长。");
+    const user = userEvent.setup();
+    render(<ReadingClient />);
+    await user.click(screen.getByText("文章甲。内容很长很好。"));
+    const input = screen.getByLabelText("Nội dung bài đọc") as HTMLTextAreaElement;
+    expect(input.value).toBe("文章甲。内容很长很好。");
   });
 });

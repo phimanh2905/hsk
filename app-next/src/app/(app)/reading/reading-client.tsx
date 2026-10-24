@@ -4,7 +4,7 @@
    Karaoke: TTS từng câu + highlight span ký tự (onboundary nếu có, fallback timer 260ms/ký tự/rate,
    grace 2500ms). Dán đoạn văn ≤ 3000 ký tự; demo doc + MCQ + từ vựng (demo). */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { readingData, type ReadingSentence } from "@/content/reading";
 import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "@/components/reading/karaoke";
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
@@ -18,6 +18,7 @@ import { Chip } from "@/components/ui/chip";
 import { Select } from "@/components/ui/select";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
+import { progressStore, type ReadingDraft } from "@/lib/store/progress-store";
 
 const MAX = 3000;
 
@@ -157,6 +158,14 @@ function ReadingClientInner() {
   const [showPy, setShowPy] = useState(false);
   const k = useKaraoke(doc?.sentences ?? []);
 
+  /* W0.4: bản nháp tự lưu — khôi phục sau mount (hydration), sidebar liệt kê để mở lại */
+  const [drafts, setDrafts] = useState<ReadingDraft[]>([]);
+  useEffect(() => {
+    const list = progressStore.getReadingDrafts();
+    setDrafts(list);
+    if (list[0]) setText(list[0].text);
+  }, []);
+
   const syncCounter = (v: string) => (v.length > MAX ? v.slice(0, MAX) : v);
 
   const fillSample = () => {
@@ -164,12 +173,9 @@ function ReadingClientInner() {
     toast("Đã điền văn bản mẫu — bấm “Tạo bài đọc” nhé!");
   };
 
-  const createDoc = () => {
-    const raw = text.trim();
-    if (!raw) {
-      toast("Hãy dán văn bản tiếng Trung vào ô trước nhé!");
-      return;
-    }
+  const createDocFromText = (rawFull: string) => {
+    const raw = rawFull.trim();
+    if (!raw) return;
     k.stop();
     const sliced = raw.slice(0, MAX);
     const { title, body } = extractTitle(sliced);
@@ -178,10 +184,7 @@ function ReadingClientInner() {
       sentenceMap[s.zh] = s;
     });
     const sentences = buildSentences(body, sentenceMap);
-    if (!sentences.length) {
-      toast("Không tìm thấy câu tiếng Trung nào trong văn bản.");
-      return;
-    }
+    if (!sentences.length) return false;
     const isDemoFull = normalize(body) === normalize(zhFull(readingData.demoDoc));
     setDoc({
       title: title || sentences[0].zh,
@@ -189,6 +192,20 @@ function ReadingClientInner() {
       sentences,
       extras: isDemoFull ? readingData.demoDoc : null,
     });
+    return true;
+  };
+
+  const createDoc = () => {
+    if (!text.trim()) {
+      toast("Hãy dán văn bản tiếng Trung vào ô trước nhé!");
+      return;
+    }
+    if (createDocFromText(text)) {
+      progressStore.saveReadingDraft(text.slice(0, MAX));
+      setDrafts(progressStore.getReadingDrafts());
+    } else {
+      toast("Không tìm thấy câu tiếng Trung nào trong văn bản.");
+    }
   };
 
   const openDemo = () => {
@@ -200,6 +217,12 @@ function ReadingClientInner() {
       sentences: d.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
       extras: d,
     });
+  };
+
+  const openDraft = (d: ReadingDraft) => {
+    k.stop();
+    setText(syncCounter(d.text));
+    createDocFromText(d.text); // tái dùng pipeline tạo doc
   };
 
   return (
@@ -216,6 +239,26 @@ function ReadingClientInner() {
               </span>
             </button>
           </Card>
+          {drafts.length > 0 && (
+            <Card className="p-4">
+              <h2 className="font-extrabold mb-2">Bản nháp đã lưu</h2>
+              <div className="space-y-1">
+                {drafts.map((d, i) => (
+                  <button
+                    key={`${d.at}-${i}`}
+                    type="button"
+                    onClick={() => openDraft(d)}
+                    className="w-full text-left px-3 py-2.5 rounded-control hover:bg-surface-paper"
+                  >
+                    <span className="zh font-bold text-sm line-clamp-2">{d.text.slice(0, 60)}</span>
+                    <span className="block text-xs text-text-secondary mt-0.5">
+                      {new Date(d.at).toLocaleString("vi-VN")}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </Card>
+          )}
           <Card className="p-4">
             <AccountBox />
           </Card>
