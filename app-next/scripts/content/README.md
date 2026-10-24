@@ -109,3 +109,37 @@ Env: `.env.local` (app-next) cung cấp `CONTENT_LLM_BASE_URL` / `CONTENT_LLM_KE
 3. Dịch Việt tự nhiên, đúng nghĩa; câu không máy móc/lặp cấu trúc.
 4. Từ trong câu nằm trong độ phủ vocab của bài + level trước (cột OOV trong log chỉ là warning — xem có đáng bỏ qua không).
 5. Nội dung bám chủ đề bài; không dính nội dung có bản quyền.
+
+### Kokoro render dialogue audio (W3.2)
+
+TTS offline (Kokoro, CPU darwin arm64) từng câu dialogue → mp3 24kHz mono + timing JSON.
+
+Voice map theo speaker: `A` → `zf_001` (nữ), `B` → `zm_009` (nam).
+
+Cài đặt (một lần):
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next/scripts/content
+python3 -m venv .venv && .venv/bin/pip install 'kokoro>=0.8' soundfile
+brew list espeak-ng >/dev/null 2>&1 || brew install espeak-ng   # misaki G2P fallback
+brew list ffmpeg >/dev/null 2>&1 || brew install ffmpeg          # mp3 + ffprobe
+# Smoke test (lần đầu tải model về ~/.cache/hexgrad):
+./.venv/bin/python -c "from kokoro import KPipeline; p=KPipeline(lang_code='zh'); print('ok')"
+```
+
+Render (cần `data/dialogues/dialogues-hskN.json` từ gen-dialogues trước; KHÔNG chạy trong build/CI):
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next/scripts/content
+./.venv/bin/python render-dialogue-audio.py --lesson hsk1/lesson-1   # smoke 1 bài, nghe thử mp3
+./.venv/bin/python render-dialogue-audio.py --level 1                # batch cả level
+./.venv/bin/python render-dialogue-audio.py --level 2
+./.venv/bin/python render-dialogue-audio.py --level 3
+# --force render lại cả khi mp3 đã có; --dry-run chỉ liệt kê (không cần kokoro)
+```
+
+Output: `public/audio/<book>/<lesson>-<n>.mp3` (32kbps mono 24kHz) + `data/dialogues/timing-hskN.json`
+dạng `{ "<book>/<lesson>": [{ "n": 1, "durSec": 3.42 }] }` — durSec làm tròn 2 chữ số, đo bằng ffprobe.
+Idempotent: line đã có mp3 thì skip; timing luôn tính lại toàn bộ từ file trên đĩa.
+
+Verify sau render: mỗi dialogue đủ số file = số dòng; `ffprobe -v error -show_entries stream=sample_rate,channels -of csv=p=0 public/audio/hsk1/lesson-1-1.mp3` → `24000, 1`.
