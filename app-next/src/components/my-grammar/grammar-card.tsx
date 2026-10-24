@@ -2,10 +2,11 @@
 
 /* Card điểm ngữ pháp — port .gcard của mock: lvl pill, title, ★/⋮, def, formula
    blocks, pitfall (Bẫy người Việt), examples + 🔊, footer link review. */
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToastSafe } from "@/components/shell/toast-provider";
+import { askAi } from "@/lib/ai-client";
 import type { GrammarPoint } from "@/content/grammar-points";
 import { cn } from "@/lib/cn";
 
@@ -19,10 +20,31 @@ export function GrammarCard({
 }) {
   const { speak } = useTts();
   const toast = useToastSafe();
+  const [explain, setExplain] = useState<string | null>(null);
+  const [explainLoading, setExplainLoading] = useState(false);
   const playExample = (hz: string) => {
     // Mock hiển thị "Đang phát âm: {sent}" mỗi lần bấm 🔊
     toast(`Đang phát âm: ${hz}`);
     speak(hz, { rate: 0.95 });
+  };
+  const explainPoint = async () => {
+    if (explainLoading) return;
+    setExplainLoading(true);
+    try {
+      const text = await askAi([
+        {
+          role: "user",
+          content:
+            `Giải thích điểm ngữ pháp "${point.title}" (${point.hz}, ${point.level}) cho người Việt: ` +
+            `công thức, cách dùng, 3 ví dụ có pinyin, và bẫy thường gặp. Ngữ cảnh hiện có: ${point.def}`,
+        },
+      ]);
+      setExplain(text);
+    } catch {
+      toast("Giải thích AI đang bận, thử lại sau nhé!");
+    } finally {
+      setExplainLoading(false);
+    }
   };
 
   return (
@@ -96,7 +118,26 @@ export function GrammarCard({
       </div>
 
       <div className="flex flex-col gap-2.5 border-t border-border-subtle pt-2.5">
-        <span className="text-[11px] font-bold tracking-[0.08em] text-text-secondary/70">VÍ DỤ NGỮ CẢNH</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold tracking-[0.08em] text-text-secondary/70">VÍ DỤ NGỮ CẢNH</span>
+          <button
+            type="button"
+            onClick={explainPoint}
+            disabled={explainLoading}
+            className="ml-auto rounded-full border border-border-subtle bg-surface-elevated px-3 py-1 text-[11.5px] font-bold text-text-primary hover:border-border-strong disabled:opacity-60"
+          >
+            🤖 Giải thích
+          </button>
+        </div>
+        {explainLoading ? (
+          <p className="text-[13px] text-text-secondary" aria-busy="true">…</p>
+        ) : null}
+        {explain !== null && !explainLoading ? (
+          <details open className="rounded-xl border border-border-subtle bg-surface-paper px-3 py-2.5 text-[13px] text-text-primary">
+            <summary className="cursor-pointer text-[12px] font-bold text-text-secondary">Giải thích bởi AI</summary>
+            <div className="mt-1.5 whitespace-pre-wrap">{explain}</div>
+          </details>
+        ) : null}
         {point.ex.map((e, i) => (
           <div key={e.hz} className="grid grid-cols-[1fr_auto] items-center gap-x-2.5 gap-y-1">
             <div>
