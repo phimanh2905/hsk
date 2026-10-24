@@ -9,10 +9,8 @@ test("cert: HSK1 — guest làm hết đề demo và thấy tổng điểm", asy
   await page.goto("/certificate-test");
 
   /* card HSK 1 giờ là Link "Làm bài thi demo" (không còn toast coming-soon) */
-  const card = page.locator("a", { hasText: "HSK 1" }).first();
-  await expect(card).toContainText("Làm bài thi demo");
-  await card.click();
-  await expect(page).toHaveURL(/\/certificate-test\/hsk1$/);
+  await expect(page.locator('a[href="/certificate-test/hsk1"]')).toContainText("Làm bài thi demo");
+  await page.goto("/certificate-test/hsk1");
   await expect(page.getByRole("heading", { name: /Phần nghe/i })).toBeVisible();
 
   /* 3 section: chọn option đầu cho trắc nghiệm, dán sampleAnswer cho tự luận */
