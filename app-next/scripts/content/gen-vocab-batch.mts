@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseHsk30Csv, wordsForLevels } from "./src/hsk-list";
 import { llmConfigFromEnv, chatJson } from "./src/llm";
-import { buildVocabPrompt, parseVocabResponse, CHUNK_SIZE, type ChunkItem } from "./src/vocab-draft";
+import { buildVocabPrompt, parseVocabResponse, rederiveWords, CHUNK_SIZE, type ChunkItem } from "./src/vocab-draft";
 import { loadState, saveState, type ChunkState } from "./src/batch-state";
 import { readEnvFile } from "./src/read-env";
 import type { VocabWord } from "../src/content/vocab";
@@ -62,23 +62,27 @@ for (let i = 0; i < chunks.length; i++) {
   // chatJson đã parse JSON + retry; parseVocabResponse nhận content string ->
   // round-trip qua JSON.stringify (lossless) để tái sử dụng validation của T3.
   const data = await chatJson<unknown>(cfg, buildVocabPrompt(level, chunk));
-  const words = parseVocabResponse(level, chunk, JSON.stringify(data));
+  const words = await parseVocabResponse(chunk, JSON.stringify(data));
   const state: ChunkState = { level, chunkIndex: i, status: "done", words };
   saveState(stateDir, state);
   console.log(`ok (${words.length} từ, saved ${level}-${i}.json)`);
 }
 
 // Gộp các chunk done của level -> draft-hsk<level>.json
+// Chunk done trước Ruling 1+2 có pinyin/hanViet/pinyinPerChar LLM-sinh -> re-derive
+// deterministic (pinyin từ dataset CSV, per-char pypinyin, hanViet từ hanvietData).
 const allDone = loadState(stateDir);
-const draft: VocabWord[] = [];
+const rawDraft: VocabWord[] = [];
 for (const key of [...allDone].filter((k) => k.startsWith(`${level}:`)).sort((a, b) => {
   const [, ca] = a.split(":"); const [, cb] = b.split(":");
   return parseInt(ca!, 10) - parseInt(cb!, 10);
 })) {
   const [, ci] = key.split(":");
   const state = JSON.parse(readFileSync(path.join(stateDir, `${level}-${ci}.json`), "utf8")) as ChunkState;
-  draft.push(...state.words);
+  rawDraft.push(...state.words);
 }
+const pinyinByHanzi = new Map(levelEntries.map((e) => [e.hanzi, e.pinyin]));
+const draft = await rederiveWords(rawDraft, pinyinByHanzi);
 mkdirSync(outDir, { recursive: true });
 const draftPath = path.join(outDir, `draft-hsk${level}.json`);
 writeFileSync(draftPath, JSON.stringify(draft, null, 2));
