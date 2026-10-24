@@ -69,9 +69,16 @@ export async function POST(req: NextRequest) {
   const now = Date.now();
 
   // 1) SRS
+  // Dedupe trong batch: 2 bản cùng key phải merge trước, nếu không
+  // ON CONFLICT sẽ raise do trùng conflict target trong cùng statement.
+  const incSrsMap = new Map<string, SyncSrsRecord>();
+  for (const inc of body.srs) {
+    const prev = incSrsMap.get(inc.key);
+    incSrsMap.set(inc.key, prev ? mergeSrs(prev, inc) : inc);
+  }
   const existingSrs = await db.select().from(srsCards).where(eq(srsCards.userId, userId));
   const srsMap = new Map(existingSrs.map((r) => [r.key, r]));
-  const mergedSrs: SyncSrsRecord[] = body.srs.map((inc) => {
+  const mergedSrs: SyncSrsRecord[] = [...incSrsMap.values()].map((inc) => {
     const ex = srsMap.get(inc.key);
     if (!ex) return inc;
     const serverRec: SyncSrsRecord = {
@@ -114,10 +121,15 @@ export async function POST(req: NextRequest) {
       });
   }
 
-  // 2) studyDay
+  // 2) studyDay (dedupe cùng date trước khi merge với server)
+  const incDayMap = new Map<string, SyncStudyDayRecord>();
+  for (const inc of body.studyDay) {
+    const prev = incDayMap.get(inc.date);
+    incDayMap.set(inc.date, prev ? mergeStudyDay(prev, inc) : inc);
+  }
   const existingDays = await db.select().from(studyDay).where(eq(studyDay.userId, userId));
   const dayMap = new Map(existingDays.map((r) => [r.date, r]));
-  const mergedDays: SyncStudyDayRecord[] = body.studyDay.map((inc) => {
+  const mergedDays: SyncStudyDayRecord[] = [...incDayMap.values()].map((inc) => {
     const ex = dayMap.get(inc.date);
     if (!ex) return inc;
     return mergeStudyDay({ date: ex.date, xp: ex.xp, correct: ex.correct, updatedAt: ex.updatedAt }, inc);
@@ -144,10 +156,16 @@ export async function POST(req: NextRequest) {
       });
   }
 
-  // 3) lessonProgress
+  // 3) lessonProgress (dedupe cùng book+lesson trước khi merge với server)
+  const incLessonMap = new Map<string, SyncLessonRecord>();
+  for (const inc of body.lessonProgress) {
+    const k = `${inc.book}/${inc.lesson}`;
+    const prev = incLessonMap.get(k);
+    incLessonMap.set(k, prev ? mergeLesson(prev, inc) : inc);
+  }
   const existingLessons = await db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId));
   const lessonMap = new Map(existingLessons.map((r) => [`${r.book}/${r.lesson}`, r]));
-  const mergedLessons: SyncLessonRecord[] = body.lessonProgress.map((inc) => {
+  const mergedLessons: SyncLessonRecord[] = [...incLessonMap.values()].map((inc) => {
     const ex = lessonMap.get(`${inc.book}/${inc.lesson}`);
     if (!ex) return inc;
     const serverRec: SyncLessonRecord = {

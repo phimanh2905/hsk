@@ -122,4 +122,27 @@ describe("POST /api/v1/sync", () => {
     }));
     expect(deleteWhere).toHaveBeenCalledTimes(2);
   });
+
+  it("batch có 2 bản cùng key không throw — values nhận bản đã merge (dedupe)", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    queueSelects({ srs: [] }, { srs: [], studyDay: [], lessonProgress: [] });
+    const res = await POST(req({
+      srs: [
+        { key: "k1", status: "learning", dueAt: 50, reviewCount: 3, lastReviewedAt: 90, updatedAt: 100, deletedAt: null },
+        { key: "k1", status: "learned", dueAt: 250, reviewCount: 5, lastReviewedAt: 200, updatedAt: 200, deletedAt: null },
+      ],
+      studyDay: [
+        { date: "2026-10-24", xp: 10, correct: 2, updatedAt: 100 },
+        { date: "2026-10-24", xp: 30, correct: 8, updatedAt: 200 },
+      ],
+      lessonProgress: [],
+    }));
+    expect(res.status).toBe(200);
+    const srsArg = insertChain.values.mock.calls[0][0];
+    expect(srsArg).toHaveLength(1); // dedupe: 1 row thay vì 2 (tránh 500 ON CONFLICT)
+    expect(srsArg[0]).toMatchObject({ key: "k1", status: "learned", reviewCount: 5, updatedAt: 200 });
+    const dayArg = insertChain.values.mock.calls[1][0];
+    expect(dayArg).toHaveLength(1);
+    expect(dayArg[0]).toMatchObject({ date: "2026-10-24", xp: 30, correct: 8, updatedAt: 200 });
+  });
 });
