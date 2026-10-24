@@ -11,10 +11,10 @@ import type { WordPinyin } from "./pinyin-parts";
 export type TokenizedSentence = { zh: string; start: number; end: number; words: WordPinyin };
 
 export const PY_SEGMENT_SNIPPET = `import sys, json
-from pypinyin import lazy_pinyin
+from pypinyin import lazy_pinyin, Style
 with open(sys.argv[1], encoding="utf-8") as f:
     words = json.load(f)
-print(json.dumps([{"zh": w["zh"], "py": lazy_pinyin(w["zh"], errors="ignore")} for w in words], ensure_ascii=False))`;
+print(json.dumps([{"zh": w["zh"], "py": lazy_pinyin(w["zh"], style=Style.TONE, errors="ignore")} for w in words], ensure_ascii=False))`;
 
 const RUN = (cmd: string, args: string[], cwd: string) =>
   new Promise<string>((res, rej) =>

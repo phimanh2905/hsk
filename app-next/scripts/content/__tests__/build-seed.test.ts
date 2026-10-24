@@ -52,8 +52,13 @@ describe("buildSeedSql", () => {
     expect(sql).toBe(
       `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('EA3rwvr99Q0', '${json}');\n`
     );
-    // escape dấu ' trong chuỗi SQL (trường hợp videoId/pinyin chứa nháy đơn)
+    // escape dấu ' trong chuỗi SQL: ' → '' (doubling)
     const tricky = buildSeedSql([{ videoId: "abc", sentences: [] }]);
     expect(tricky).toContain("VALUES ('abc', '[]')");
+    const apostrophe = buildSeedSql([
+      { videoId: "x'y", sentences: [{ n: 1, start: 0, end: 1, parts: [{ zh: "好's" }], pinyin: "Nǐ hǎo's", vi: "" }] },
+    ]);
+    expect(apostrophe).toContain("'x''y'");
+    expect(apostrophe).toContain("Nǐ hǎo''s");
   });
 });

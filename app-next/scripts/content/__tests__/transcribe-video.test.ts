@@ -42,6 +42,7 @@ describe("flattenWhisperJson", () => {
 describe("PY_SEGMENT_SNIPPET", () => {
   it("dùng lazy_pinyin và đọc file từ argv", () => {
     expect(PY_SEGMENT_SNIPPET).toContain("lazy_pinyin");
+    expect(PY_SEGMENT_SNIPPET).toContain("Style.TONE");
     expect(PY_SEGMENT_SNIPPET).toContain("argv");
   });
 });
