@@ -35,6 +35,13 @@ export type GrammarMeta = { saved?: 1 };
 /* Meta theo từng Hán tự (Sổ tay từ vựng — spec 2026-10-05 §2.2), key bye.wordMeta */
 export type WordMeta = { star?: 1; note?: string };
 
+/* Kết quả luyện viết 1 Hán tự (Wave 0 W0.2 — Hanzi Studio draw quiz), key bye.hanzi.quiz */
+export type HanziQuizRec = {
+  attempts: number; // tổng số lần hoàn thành quiz
+  best: number;     // điểm tốt nhất 0-100 (% nét đúng); Wave 0 caller chưa truyền score → best 0
+  last: number;     // epoch ms lần hoàn thành gần nhất
+};
+
 export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
@@ -79,6 +86,9 @@ export interface ProgressStoreApi {
   getWordMeta(): Record<string, WordMeta>;
   toggleWordStar(hanzi: string): boolean;
   setWordNote(hanzi: string, note: string): void;
+  getHanziQuiz(ch: string): HanziQuizRec | null;
+  listHanziQuiz(): Record<string, HanziQuizRec>;
+  recordHanziQuiz(ch: string, score?: number): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -584,6 +594,35 @@ export class ProgressStore implements ProgressStoreApi {
     if (!next.star && !next.note) delete all[hanzi];
     else all[hanzi] = next;
     writeJSON("bye.wordMeta", all);
+    dispatchProgress();
+  }
+
+  /* ---------- hanzi quiz (bye.hanzi.quiz — Wave 0 W0.2) ---------- */
+
+  private readHanziQuiz(): Record<string, HanziQuizRec> {
+    const v = readJSON<Record<string, HanziQuizRec>>("bye.hanzi.quiz", {});
+    return v && typeof v === "object" ? v : {};
+  }
+
+  getHanziQuiz(ch: string): HanziQuizRec | null {
+    const rec = this.readHanziQuiz()[ch];
+    return rec && typeof rec === "object" && typeof rec.attempts === "number" ? rec : null;
+  }
+
+  listHanziQuiz(): Record<string, HanziQuizRec> {
+    return this.readHanziQuiz();
+  }
+
+  recordHanziQuiz(ch: string, score?: number): void {
+    if (!ch) return;
+    const all = this.readHanziQuiz();
+    const cur = all[ch];
+    all[ch] = {
+      attempts: (typeof cur?.attempts === "number" ? cur.attempts : 0) + 1,
+      best: Math.max(typeof cur?.best === "number" ? cur.best : 0, typeof score === "number" && score >= 0 ? score : 0),
+      last: Date.now(),
+    };
+    writeJSON("bye.hanzi.quiz", all);
     dispatchProgress();
   }
 }
