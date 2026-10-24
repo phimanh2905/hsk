@@ -57,7 +57,7 @@ describe("FlashStage (port main.stage của opendesign lesson.html)", () => {
     act(() => {
       fireEvent.keyDown(window, { key: "1" });
     }); // grade 1 → recordReview + từ tiếp
-    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", "forgot");
+    expect(spy).toHaveBeenCalledWith("hsk1.lesson-4.0", "again");
     expect(screen.getByText("THẺ 2 / 2")).toBeInTheDocument(); // đã sang từ tiếp
     spy.mockRestore();
   });

@@ -16,7 +16,8 @@ import {
   type SyncSrsRecord,
   type SyncStudyDayRecord,
 } from "./sync-merge";
-import { progressStore, type SrsItem } from "./progress-store";
+import { isMature } from "@/lib/stats/review";
+import { normalizeSrsItem, progressStore, type SrsItem } from "./progress-store";
 
 export type SyncDomain = "srs" | "studyDay" | "lessonProgress";
 
@@ -129,10 +130,11 @@ function schedule(): void {
 /* ---- snapshot local → payload (chỉ domain dirty) ---- */
 
 function countKnown(book: string, lesson: string): number {
+  // W5.1 SM-2: knownCount = số từ đã mature trong bài (status known cũ đã chuẩn hóa thành review).
   const prefix = `${book}.${lesson}.`;
   return progressStore
     .getAllSrs()
-    .filter((it) => it.key.startsWith(prefix) && it.status === "known").length;
+    .filter((it) => it.key.startsWith(prefix) && isMature(it)).length;
 }
 
 function computePayload(): SyncPayload {
@@ -258,14 +260,15 @@ function applyServerPayload(server: SyncPayload): void {
       }
     } else if (!localItem || merged.updatedAt > localItem.updatedAt) {
       const items = readJSON<Record<string, SrsItem>>(SRS_ITEMS_KEY, {});
-      items[rec.key] = {
+      // status legacy (learned/known từ payload cũ) chuẩn hóa SM-2 trước khi ghi local
+      items[rec.key] = normalizeSrsItem({
         key: rec.key,
         status: merged.status,
         dueAt: merged.dueAt,
         reviewCount: merged.reviewCount,
         lastReviewedAt: merged.lastReviewedAt,
         updatedAt: merged.updatedAt,
-      };
+      } as SrsItem).item;
       writeJSON(SRS_ITEMS_KEY, items);
       srsDirty = true;
     }

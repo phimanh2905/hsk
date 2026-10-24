@@ -32,8 +32,7 @@ describe("ProgressMatrix (spec 2026-10-04)", () => {
       })
     );
     render(<ProgressMatrix />);
-    // TODO(T4 consumers): home-summary hiện vẫn đếm learned/known → tạm thời 0;
-    // T4 chuyển consumer sang status "review" thì bật lại assertion /2 \//
-    expect(screen.getAllByText(/0 \//).length).toBeGreaterThan(0);
+    // W5.1 SM-2: chỉ item b (review, interval 21) là mature → "1 / N từ đã nhớ"
+    expect(screen.getAllByText(/1 \//).length).toBeGreaterThan(0);
   });
 });

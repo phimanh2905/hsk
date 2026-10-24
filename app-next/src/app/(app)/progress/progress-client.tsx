@@ -4,6 +4,7 @@ import { LoginGate } from "@/components/personal/login-gate";
 import { Heatmap } from "@/components/stats/heatmap";
 import { useProgress, progressStore } from "@/lib/store/progress-store";
 import { computeStreak, vnDay } from "@/lib/stats/heatmap";
+import { isMature } from "@/lib/stats/review";
 import { Zap, Trophy, Flame, BookOpen, CircleCheck, Target, ICON_STROKE } from "@/components/ui/icon";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
@@ -22,7 +23,8 @@ export default function ProgressClient() {
   const rank = xp > 0 ? 14594 - xp : 14594;
   const heat = progressStore.getHeat() ?? {};
   const streak = Math.max(progressStore.getStreak(), computeStreak(heat, vnDay(new Date())));
-  const knownWords = progressStore.getAllSrs().filter((s) => s.status === "learned" || s.status === "known").length;
+  // W5.1 SM-2: "đã thuộc" = review đã mature (interval ≥ 21 ngày).
+  const knownWords = progressStore.getAllSrs().filter((s) => isMature(s)).length;
   // UPG-2: clone đếm page có page_dones ≥ 2 skill; SP1 đếm mỗi page đã done (value = 1 per <book>/<page>).
   const doneLessons = progressStore.listPageDone().length;
   const todayCount = readToday();

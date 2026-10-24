@@ -9,6 +9,7 @@ import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
+  type SrsSyncStatus,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
   type SyncLessonRecord,
@@ -19,7 +20,7 @@ const bodySchema = z.object({
     .array(
       z.object({
         key: z.string().min(1).max(200),
-        status: z.enum(["new", "learning", "learned", "known"]),
+        status: z.enum(["new", "learning", "review", "relearning", "learned", "known"]), // learned/known: payload cũ
         dueAt: z.number().int().nullable(),
         reviewCount: z.number().int().min(0),
         lastReviewedAt: z.number().int().nullable(),
@@ -92,6 +93,10 @@ export async function POST(req: NextRequest) {
     };
     return mergeSrs(serverRec, inc);
   });
+  // W5.1 SM-2: status legacy (learned/known từ payload cũ) → review trước khi ghi DB
+  // (migration 0007 đã backfill learned→review/7, known→review/21 cùng mapping).
+  const dbStatus = (st: SrsSyncStatus): "new" | "learning" | "review" | "relearning" =>
+    st === "learned" || st === "known" ? "review" : st;
   if (mergedSrs.length) {
     await db
       .insert(srsCards)
@@ -99,7 +104,7 @@ export async function POST(req: NextRequest) {
         mergedSrs.map((r) => ({
           userId,
           key: r.key,
-          status: r.status,
+          status: dbStatus(r.status),
           dueAt: r.dueAt,
           reviewCount: r.reviewCount,
           lastReviewedAt: r.lastReviewedAt,

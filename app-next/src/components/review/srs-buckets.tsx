@@ -58,8 +58,8 @@ export function SrsBuckets({ weak, cons, mast, onChipClick }: {
   return (
     <section aria-label="Trạng thái trí nhớ" className="grid gap-3 md:grid-cols-3">
       <Bucket tone="rose" title="Yếu · Dễ quên" desc="Cần ôn gấp trong hôm nay" data={weak} onChipClick={onChipClick} />
-      <Bucket tone="amber" title="Đang củng cố" desc="Ôn định kỳ 3 ngày một lần" data={cons} onChipClick={onChipClick} />
-      <Bucket tone="jade" title="Đã khắc sâu" desc="Ôn nhắc lại sau 7 ngày" data={mast} onChipClick={onChipClick} />
+      <Bucket tone="amber" title="Đang củng cố" desc="Ôn lại theo chu kỳ SM-2" data={cons} onChipClick={onChipClick} />
+      <Bucket tone="jade" title="Đã khắc sâu" desc="Chu kỳ SM-2 dài hạn" data={mast} onChipClick={onChipClick} />
     </section>
   );
 }

@@ -80,15 +80,15 @@ describe("computeReviewStats (chu kỳ 21 ngày)", () => {
   const now = 1_000_000_000_000;
   const hasVocab = (book: string, page: string) => book === "hsk1" && page === "lesson-1";
   function item(partial: Partial<SrsItem> & { key: string }): SrsItem {
-    return { status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null, updatedAt: now, ...partial };
+    return { status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null, updatedAt: now, ease: 2.5, intervalDays: 0, lapses: 0, ...partial };
   }
   it("phân loại đúng 5 nhóm theo status/dueAt/lastReviewedAt", () => {
     const items = [
       item({ key: "hsk1.lesson-1.0", status: "learning" }),                                  // learning → learning + due
       item({ key: "hsk1.lesson-1.1", status: "new" }),                                       // new, chưa đến hạn → không due
-      item({ key: "hsk1.lesson-1.2", status: "learned", lastReviewedAt: now - 20 * DAY }),   // recent (< 21 ngày)
-      item({ key: "hsk1.lesson-1.3", status: "known", lastReviewedAt: now - 22 * DAY, dueAt: now }), // dài hạn (biên 21 ngày) + đến hạn → due
-      item({ key: "hsk1.lesson-1.4", status: "learned", lastReviewedAt: null }),             // learned (lastReviewed null)
+      item({ key: "hsk1.lesson-1.2", status: "review", lastReviewedAt: now - 20 * DAY }),   // recent (< 21 ngày)
+      item({ key: "hsk1.lesson-1.3", status: "review", intervalDays: 21, lastReviewedAt: now - 22 * DAY, dueAt: now }), // dài hạn (biên 21 ngày) + đến hạn → due
+      item({ key: "hsk1.lesson-1.4", status: "review", lastReviewedAt: null }),             // learned (lastReviewed null)
       item({ key: "hsk2.lesson-1.0", status: "new" }),                                       // grammar kind → bị lọc
     ];
     const s = computeReviewStats(items, "vocab", now, hasVocab);

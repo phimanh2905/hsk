@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { courses } from "@/content/courses";
+import { isMature } from "@/lib/stats/review";
 import { progressStore, type SrsItem } from "@/lib/store/progress-store";
 import { loadVocabMeta } from "@/lib/content/vocab-client";
 import type { VocabMeta } from "@/lib/content/vocab";
@@ -62,8 +63,11 @@ function countVocabTotal(vocabMeta: VocabMeta | null): number {
   return vocabMeta?.reduce((n, b) => n + b.lessons.reduce((m, l) => m + l.wordCount, 0), 0) ?? 0;
 }
 
+/* W5.1 SM-2: new/learning/relearning đến hạn theo dueAt; review đã mature
+   (interval ≥ 21 ngày) coi như không cần ôn gấp. */
 function isDue(it: SrsItem): boolean {
-  return it.status !== "known" && it.dueAt != null && it.dueAt <= Date.now();
+  if (it.dueAt == null || it.dueAt > Date.now()) return false;
+  return it.status !== "review" || !isMature(it);
 }
 
 export function readHomeSummary(vocabMeta: VocabMeta | null = null): HomeSummary {
@@ -74,7 +78,9 @@ export function readHomeSummary(vocabMeta: VocabMeta | null = null): HomeSummary
     srs = [];
   }
   const reviewed = srs.filter((it) => it.reviewCount > 0);
-  const good = reviewed.filter((it) => it.status === "learned" || it.status === "known");
+  /* W5.1 SM-2: "nhớ tốt" = đã vào chu kỳ review (qua bước learning); "mastered"
+     = review đã mature (interval ≥ 21 ngày) — dùng isMature của lib/stats/review. */
+  const good = reviewed.filter((it) => it.status === "review");
   return {
     lesson: findNextLesson(vocabMeta),
     srsDue: srs.filter(isDue).length,
@@ -84,7 +90,7 @@ export function readHomeSummary(vocabMeta: VocabMeta | null = null): HomeSummary
     todayXp: progressStore.getToday(),
     lessonsDone: progressStore.listPageDone().length,
     lessonsTotal: Object.values(courses).reduce((n, c) => n + c.pages.length, 0),
-    vocabMastered: srs.filter((it) => it.status === "learned" || it.status === "known").length,
+    vocabMastered: srs.filter(isMature).length,
     vocabTotal: countVocabTotal(vocabMeta),
   };
 }

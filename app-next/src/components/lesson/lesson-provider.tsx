@@ -27,8 +27,10 @@ const GRADE_TOAST: Record<GradeLevel, string> = {
   3: "Đã thuộc — tuyệt vời!",
 };
 
-/* 1/2/3 của mockup → Grade của hệ review (applyGrade: forgot 60s · hard 5 phút · good 3/7 ngày) */
-const GRADE_LABEL: Record<GradeLevel, Grade> = { 1: "forgot", 2: "hard", 3: "good" };
+/* 1/2/3 của mockup → Grade của hệ review. W5.1 SM-2: lesson vẫn 3 mức —
+   again (Quên, 60s) · hard (Khó, 10 phút) · good (Nhớ, bước SM-2 đầu tiên);
+   mức easy (phím 4) chỉ có ở phiên ôn SRS (review-dashboard). */
+const GRADE_LABEL: Record<GradeLevel, Grade> = { 1: "again", 2: "hard", 3: "good" };
 
 type LessonCtx = {
   items: LessonItem[];

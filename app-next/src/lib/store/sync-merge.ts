@@ -6,7 +6,9 @@
    - Tombstone: thắng bản sống khi deletedAt <= updatedAt của bản sống; chỉ ghi
      có updatedAt > updatedAt của bản tombstone mới hồi sinh (deletedAt: null). */
 
-export type SrsSyncStatus = "new" | "learning" | "learned" | "known";
+/* W5.1 SM-2: thêm review/relearning (format 4); learned/known giữ lại chỉ để
+   merge dữ liệu server/payload cũ — client luôn ghi status SM-2 mới. */
+export type SrsSyncStatus = "new" | "learning" | "review" | "relearning" | "learned" | "known";
 
 export type SyncSrsRecord = {
   key: string;

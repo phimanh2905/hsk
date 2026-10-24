@@ -3,6 +3,7 @@
    Pure functions; resolveWord đọc progressStore (jsdom OK, như srs-session). */
 
 import { formatLastLabel, resolveWord, srsLevelFromKey } from "@/lib/srs-session";
+import { isMature } from "@/lib/stats/review";
 import type { DeckItem, SrsItem, VocabBookEntry, WordMeta } from "@/lib/store/progress-store";
 
 export type VocabStatus = "master" | "study" | "new";
@@ -28,12 +29,14 @@ export type VocabIndex = {
   hskTarget: string | null;
 };
 
-const STATUS_MAP: Record<SrsItem["status"], VocabStatus> = {
-  known: "master",
-  learned: "master",
-  learning: "study",
-  new: "new",
-};
+/* W5.1 SM-2: status mới (new/learning/relearning/review) → VocabStatus mock.
+   review + mature (interval ≥ 21 ngày) → master; review chu kỳ ngắn → study;
+   learning/relearning → study. (Status legacy learned/known đã chuẩn hóa
+   thành review ở progress-store format 4 — không còn xuất hiện ở runtime.) */
+function vocabStatusOf(it: SrsItem): VocabStatus {
+  if (it.status === "review") return isMature(it) ? "master" : "study";
+  return it.status === "new" ? "new" : "study";
+}
 
 function emptyRow(zh: string): VocabRow {
   return { zh, py: "", hv: "", vi: "", hsk: "—", status: "new", last: "Chưa ôn", star: false, note: "", hasSrs: false, deckIds: [] };
@@ -62,7 +65,7 @@ export function buildVocabIndex(input: {
       row.py = w.pinyin || row.py;
       row.vi = w.meaning || row.vi;
       row.hsk = srsLevelFromKey(it.key);
-      row.status = STATUS_MAP[it.status] ?? "new";
+      row.status = vocabStatusOf(it);
       row.last = formatLastLabel(it.lastReviewedAt ?? null, input.now);
       row.hasSrs = true;
     }

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { progressStore, normalizeSrsItem } from "../progress-store";
+import type { SrsItem } from "../progress-store";
 
 const NOW = 1_800_000_000_000;
 const DAY = 86_400_000;
@@ -37,7 +38,7 @@ describe("normalizeSrsItem — migration format 4 (thiếu ease/intervalDays/lap
     expect(out.item.intervalDays).toBe(21);
   });
   it("status new/learning giữ, giá trị lạ → new; đã chuẩn → changed false (idempotent)", () => {
-    const keep = { key: "k", status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null, updatedAt: NOW, ease: 2.5, intervalDays: 0, lapses: 0 };
+    const keep: SrsItem = { key: "k", status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null, updatedAt: NOW, ease: 2.5, intervalDays: 0, lapses: 0 };
     expect(normalizeSrsItem(keep).changed).toBe(false);
     expect(normalizeSrsItem(keep).item).toEqual(keep);
     const weird = normalizeSrsItem({ ...keep, status: "bananas" } as never);

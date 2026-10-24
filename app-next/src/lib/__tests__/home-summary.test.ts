@@ -54,10 +54,9 @@ describe("readHomeSummary", () => {
     expect(s.srsDue).toBe(2);                  // dueAt đã qua, kể cả status new
     expect(s.srsTotal).toBe(3);
     expect(s.lessonsDone).toBe(1);
-    // TODO(T4 consumers): format 4 (W5.1) chuẩn hóa learned/known → review, nhưng
-    // home-summary chưa chuyển sang đếm "review" — T4 sửa source thì cập nhật lại:
-    // recallPct 100 (reviewed = 2, good = 2), vocabMastered 2.
-    expect(s.recallPct).toBe(0);
-    expect(s.vocabMastered).toBe(0);
+    // W5.1 SM-2: good = status "review" (reviewed = 2) → recallPct 100;
+    // vocabMastered = isMature (chỉ item interval 21) → 1.
+    expect(s.recallPct).toBe(100);
+    expect(s.vocabMastered).toBe(1);
   });
 });

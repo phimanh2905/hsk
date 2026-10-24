@@ -76,7 +76,7 @@ describe("POST /api/v1/sync", () => {
     const arg = insertChain.values.mock.calls[0][0][0];
     expect(arg.reviewCount).toBe(5); // max(3,5)
     expect(arg.updatedAt).toBe(200); // incoming thắng
-    expect(arg.status).toBe("learned");
+    expect(arg.status).toBe("review"); // W5.1: status legacy learned → review khi ghi DB
   });
 
   it("row mới (server chưa có) upsert nguyên incoming", async () => {
@@ -140,7 +140,7 @@ describe("POST /api/v1/sync", () => {
     expect(res.status).toBe(200);
     const srsArg = insertChain.values.mock.calls[0][0];
     expect(srsArg).toHaveLength(1); // dedupe: 1 row thay vì 2 (tránh 500 ON CONFLICT)
-    expect(srsArg[0]).toMatchObject({ key: "k1", status: "learned", reviewCount: 5, updatedAt: 200 });
+    expect(srsArg[0]).toMatchObject({ key: "k1", status: "review", reviewCount: 5, updatedAt: 200 }); // learned → review (SM-2)
     const dayArg = insertChain.values.mock.calls[1][0];
     expect(dayArg).toHaveLength(1);
     expect(dayArg[0]).toMatchObject({ date: "2026-10-24", xp: 30, correct: 8, updatedAt: 200 });
