@@ -8,14 +8,14 @@ test("home → course → lesson → flip → star từ (luồng chính)", async
   await page.goto("/course");
   await page.getByRole("link", { name: /Bye HSK 1/ }).click();
   await expect(page).toHaveURL(/\/course\/hsk1/);
-  await page.getByRole("link", { name: /Xin chào!/ }).click();
+  await page.getByRole("link", { name: /Chào hỏi & xưng hô/ }).first().click();
   await expect(page).toHaveURL(/\/lesson\/hsk1\/lesson-1/);
   // flash mode mới (FlashStage): chạm thẻ để lật, nghĩa hiện trong panel reveal
   await page.getByRole("article", { name: "Thẻ ghi nhớ, chạm để xem nghĩa" }).click();
   await expect(
     page
       .getByRole("article", { name: "Thẻ đã lật, chấm điểm ghi nhớ bên dưới" })
-      .getByText("Xin chào", { exact: true })
+      .getByText("bạn, anh/chị", { exact: true })
   ).toBeVisible();
   // restyle: star giờ là IconButton (accessible name thay vì title)
   await page.getByRole("button", { name: "Thêm vào bộ thẻ ôn tập" }).first().click();
@@ -34,5 +34,5 @@ test("sitemap chứa đúng các route public", async ({ request }) => {
 
 test("metadata lesson chứa tên bài", async ({ page }) => {
   await page.goto("/lesson/hsk1/lesson-1");
-  await expect(page).toHaveTitle(/Xin chào!/);
+  await expect(page).toHaveTitle(/Chào hỏi/);
 });
