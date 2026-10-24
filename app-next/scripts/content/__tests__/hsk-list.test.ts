@@ -20,9 +20,9 @@ describe("parseHsk30Csv", () => {
   it("map cột theo tên header, bỏ level 7-9, giữ dấu pinyin", () => {
     const entries = parseHsk30Csv(SAMPLE);
     expect(entries).toHaveLength(3);
-    expect(entries[0]).toEqual({ hanzi: "爱", pinyin: "ài", level: 1 });
-    expect(entries[1]).toEqual({ hanzi: "爱好", pinyin: "àihào", level: 1 });
-    expect(entries[2]).toEqual({ hanzi: "爸爸", pinyin: "bàba", level: 2 });
+    expect(entries[0]).toEqual({ id: "L1-0001", hanzi: "爱", pinyin: "ài", level: 1 });
+    expect(entries[1]).toEqual({ id: "L1-0002", hanzi: "爱好", pinyin: "àihào", level: 1 });
+    expect(entries[2]).toEqual({ id: "L2-0001", hanzi: "爸爸", pinyin: "bàba", level: 2 });
   });
 
   it("không phụ thuộc thứ tự cột, trim hanzi, bỏ entry rỗng", () => {
@@ -46,7 +46,7 @@ describe("wordsForLevels", () => {
     { hanzi: "你", pinyin: "nǐ", level: 3 }
   ];
 
-  it("cumulative ≤ maxLevel, dedupe theo hanzi giữ level thấp nhất, giữ thứ tự", () => {
+  it("cumulative ≤ maxLevel, chỉ dedupe row trùng hoàn toàn (cả level), giữ thứ tự", () => {
     expect(wordsForLevels(entries, 1)).toEqual([
       { hanzi: "爱", pinyin: "ài", level: 1 },
       { hanzi: "好", pinyin: "hǎo", level: 1 }
@@ -54,31 +54,38 @@ describe("wordsForLevels", () => {
     expect(wordsForLevels(entries, 2)).toEqual([
       { hanzi: "爱", pinyin: "ài", level: 1 },
       { hanzi: "爸爸", pinyin: "bàba", level: 2 },
+      { hanzi: "爱", pinyin: "ài", level: 2 },
       { hanzi: "好", pinyin: "hǎo", level: 1 }
     ]);
-    expect(wordsForLevels(entries, 5)).toHaveLength(4);
+    expect(wordsForLevels(entries, 5)).toHaveLength(5);
+  });
+
+  it("row trùng hoàn toàn (hanzi+pinyin+level) bị loại, giữ lần đầu", () => {
+    const dups: HskEntry[] = [
+      { hanzi: "好", pinyin: "hǎo", level: 1 },
+      { hanzi: "好", pinyin: "hǎo", level: 1 }
+    ];
+    expect(wordsForLevels(dups, 5)).toEqual([{ hanzi: "好", pinyin: "hǎo", level: 1 }]);
   });
 });
 
-/* CONTROLLER RULING (2026-10-24): raw word counts của hsk30.csv khớp chuẩn HSK 3.0
-   (500/1272/2245/3245/4316); dedupe theo hanzi cho 497/1249/2199/3172/4231 vì một số
-   hanzi xuất hiện ở nhiều level. Integration test assert trên list đầy đủ (raw),
-   wordsForLevels (dedupe) vẫn theo spec cho chỗ cần unique hanzi. */
+/* Ruling controller: dedupe chỉ loại row trùng HOÀN TOÀN (hanzi+pinyin).
+   Integration assert QUA wordsForLevels — phải khớp đúng chuẩn HSK 3.0
+   500/1272/2245/3245/4316 (cùng hanzi khác pinyin = từ khác, giữ nguyên). */
 const VENDOR_CSV = path.join(__dirname, "..", "vendor", "hsk30.csv");
 
 describe.skipIf(!existsSync(VENDOR_CSV))("HSK 3.0 dataset chuẩn (integration)", () => {
   const csv = readFileSync(VENDOR_CSV, "utf-8");
   const entries = parseHsk30Csv(csv);
 
-  it.each([1, 2, 3, 4, 5])("cumulative level %i khớp chuẩn HSK 3.0", (n) => {
-    const words = entries.filter((e) => e.level <= n);
-    expect(words).toHaveLength(EXPECTED_CUMULATIVE[n as keyof typeof EXPECTED_CUMULATIVE]);
+  it.each([1, 2, 3, 4, 5])("wordsForLevels cumulative level %i khớp chuẩn HSK 3.0", (n) => {
+    expect(wordsForLevels(entries, n)).toHaveLength(EXPECTED_CUMULATIVE[n as keyof typeof EXPECTED_CUMULATIVE]);
   });
 
-  it("dedupe theo hanzi chỉ loại trùng giữa các level (không mất từ)", () => {
+  it("dedupe không mất từ (row identity duy nhất, kể cả trùng hanzi+pinyin cùng level)", () => {
     const deduped = wordsForLevels(entries, 5);
-    expect(deduped.length).toBeLessThanOrEqual(EXPECTED_CUMULATIVE[5]);
-    expect(new Set(deduped.map((w) => w.hanzi)).size).toBe(deduped.length);
+    const ids = deduped.map((w) => w.id ?? `${w.hanzi}\u0000${w.pinyin}\u0000${w.level}`);
+    expect(new Set(ids).size).toBe(deduped.length);
   });
 });
 

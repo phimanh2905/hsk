@@ -47,7 +47,7 @@ export function parseVocabResponse(level: number, chunk: ChunkItem[], content: s
   }
   if (rawWords.length !== chunk.length) {
     const got = rawWords.map((w) => (w as { hanzi?: string })?.hanzi ?? "?");
-    const missing = chunk.filter((c, i) => !got.slice(i).includes(c.hanzi) && !got.includes(c.hanzi));
+    const missing = chunk.filter((c) => !got.includes(c.hanzi));
     throw new Error(
       `parseVocabResponse: LLM trả ${rawWords.length}/${chunk.length} từ — thiếu: ${missing.map((m) => m.hanzi).join(", ")}`
     );

@@ -1,7 +1,10 @@
-/* Parser cho dataset HSK 3.0 (ivankra/hsk30, MIT — vendor/hsk30-expanded.csv, gitignored).
+/* Parser cho dataset HSK 3.0 (ivankra/hsk30, MIT — vendor/hsk30.csv, gitignored).
    Thuần, không I/O — test đọc file rồi truyền string vào. */
 
-export type HskEntry = { hanzi: string; pinyin: string; level: number };
+/* Row identity của dataset: ID duy nhất per row (kiểm chứng 11092/11092 unique).
+   Các entry trùng hanzi+pinyin cùng level là từ KHÁC của chuẩn (khác POS/nghĩa,
+   vd "省 shěng" L2 có 2 nghĩa) — không được gộp. */
+export type HskEntry = { id?: string; hanzi: string; pinyin: string; level: number };
 
 export const EXPECTED_CUMULATIVE = { 1: 500, 2: 1272, 3: 2245, 4: 3245, 5: 4316 } as const;
 
@@ -44,6 +47,7 @@ export function parseHsk30Csv(csv: string): HskEntry[] {
   const iSimplified = idx("simplified");
   const iPinyin = idx("pinyin");
   const iLevel = idx("level");
+  const iId = idx("id");
   if (iSimplified < 0 || iPinyin < 0 || iLevel < 0) {
     throw new Error("CSV thiếu cột simplified/pinyin/level");
   }
@@ -58,24 +62,26 @@ export function parseHsk30Csv(csv: string): HskEntry[] {
     if (!/^\d+$/.test(rawLevel)) continue; // "7-9", rỗng, rác -> bỏ
     const level = parseInt(rawLevel, 10);
     if (level < 1 || level > 6) continue;
-    entries.push({ hanzi, pinyin, level });
+    const id = iId >= 0 ? (f[iId] ?? "").trim() : undefined;
+    entries.push(id ? { id, hanzi, pinyin, level } : { hanzi, pinyin, level });
   }
   return entries;
 }
 
-/* Cumulative: level ≤ maxLevel, dedupe theo hanzi giữ lần xuất hiện level thấp nhất,
-   giữ nguyên thứ tự file. */
+/* Cumulative: level ≤ maxLevel; dedupe CHỈ row trùng hoàn toàn (row identity =
+   ID của dataset, fallback hanzi+pinyin+level khi entry không có ID). Các entry
+   trùng hanzi+pinyin ở level khác hoặc khác POS/nghĩa là từ khác của chuẩn
+   HSK 3.0 — giữ nguyên để cumulative khớp EXPECTED_CUMULATIVE. Giữ thứ tự file. */
 export function wordsForLevels(entries: HskEntry[], maxLevel: number): HskEntry[] {
-  const seen = new Map<string, number>(); // hanzi -> index trong output
+  const seen = new Map<string, number>(); // row identity -> index trong output
   const out: HskEntry[] = [];
   for (const e of entries) {
     if (e.level > maxLevel) continue;
-    const at = seen.get(e.hanzi);
+    const key = e.id ?? `${e.hanzi}\u0000${e.pinyin}\u0000${e.level}`;
+    const at = seen.get(key);
     if (at === undefined) {
-      seen.set(e.hanzi, out.length);
+      seen.set(key, out.length);
       out.push(e);
-    } else if (e.level < out[at].level) {
-      out[at] = e;
     }
   }
   return out;
