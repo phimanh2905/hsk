@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { distPercents, donutSlices, DIST_META, type Dist } from "../donut";
-import { mulberry32, vnDay, heatData, heatClass, computeStreak } from "../heatmap";
+import { vnDay, heatClass, computeStreak } from "../heatmap";
 import { computeReviewStats, itemKeyKind, SRS_DAYS } from "../review";
 import type { SrsItem } from "@/lib/store/progress-store";
 
@@ -38,21 +38,6 @@ describe("heatmap + streak (giờ VN +07)", () => {
     // 2026-01-31T17:30Z = 00:30 +07 ngày 1/2
     expect(vnDay(new Date("2026-01-31T17:30:00Z"))).toBe("2026-02-01");
     expect(vnDay(new Date("2026-09-30T00:00:00Z"))).toBe("2026-09-30"); // 07:00 +07
-  });
-  it("heatData đủ 12 tháng với đúng số ngày/tháng thực (28–31)", () => {
-    const now = new Date(2026, 8, 30); // tháng 9/2026 (index 8)
-    const map = heatData(null, now);
-    let cells = 0;
-    for (let back = 11; back >= 0; back--) {
-      const d = new Date(2026, 8 - back, 1);
-      cells += new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-    }
-    expect(Object.keys(map)).toHaveLength(cells);
-    expect(map["2026-09-30"]).toBeDefined();
-  });
-  it("real data thắng seeded", () => {
-    const map = heatData({ "2026-09-30": 42 }, new Date(2026, 8, 30));
-    expect(map["2026-09-30"]).toBe(42);
   });
   it("heatClass: alpha jade 20/40/60/80/100 theo mức xp", () => {
     expect(heatClass(0)).toBe("bg-border-subtle");

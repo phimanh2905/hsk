@@ -5,13 +5,12 @@ import { Heatmap } from "@/components/stats/heatmap";
 import { useProgress, progressStore } from "@/lib/store/progress-store";
 import { computeStreak, vnDay } from "@/lib/stats/heatmap";
 import { isMature } from "@/lib/stats/review";
-import { Zap, Trophy, Flame, BookOpen, CircleCheck, Target, ICON_STROKE } from "@/components/ui/icon";
+import { Zap, Flame, BookOpen, CircleCheck, Target, ICON_STROKE } from "@/components/ui/icon";
 import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
 import type { LucideIcon } from "@/components/ui/icon";
 
 /* Port renderLoggedIn từ clone/js/progress.js:155-212.
-   UPG-2: rank = 14594 − xp là công thức placeholder — sẽ thay bằng rank từ server. */
+   W5.2: bỏ rank placeholder (UPG-2: 14594 − xp) — Wave 6 sẽ thay bằng leaderboard thật. */
 
 const LINK_BTN =
   "inline-flex items-center justify-center rounded-control border font-semibold min-h-11 px-4 text-sm " +
@@ -20,7 +19,6 @@ const LINK_BTN =
 
 export default function ProgressClient() {
   const { xp } = useProgress();
-  const rank = xp > 0 ? 14594 - xp : 14594;
   const heat = progressStore.getHeat() ?? {};
   const streak = Math.max(progressStore.getStreak(), computeStreak(heat, vnDay(new Date())));
   // W5.1 SM-2: "đã thuộc" = review đã mature (interval ≥ 21 ngày).
@@ -46,13 +44,6 @@ export default function ProgressClient() {
             <p className="text-xs text-text-secondary">Mỗi câu trả lời đúng +1 điểm</p>
           </div>
           <div className="ml-auto flex flex-col items-end gap-2">
-            <div className="flex items-center gap-2">
-              <Trophy size={16} strokeWidth={ICON_STROKE} className="text-learning-streak" aria-hidden="true" />
-              <span className="text-sm font-semibold">Dạng xếp hạng</span>
-              <Chip className="bg-learning-streak/15 text-learning-streak border-learning-streak/40 font-extrabold">
-                #{rank}
-              </Chip>
-            </div>
             <Link href="/leaderboard" className={LINK_BTN}>
               Xem bảng xếp hạng →
             </Link>
