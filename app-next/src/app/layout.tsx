@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/shell/theme-provider";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
+import { HybridSyncProvider } from "@/components/shell/hybrid-sync-provider";
 import { ContentBridge } from "@/components/content/content-bridge";
 import SidebarNav from "@/components/shell/sidebar-nav";
 import Topbar from "@/components/shell/topbar";
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <ToastProvider>
             <LoginProvider>
+              <HybridSyncProvider />
               <ContentBridge />
               <SidebarNav />
               <div className="flex min-h-screen flex-col lg:ml-64">
