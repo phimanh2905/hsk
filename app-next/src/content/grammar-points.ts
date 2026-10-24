@@ -1,7 +1,11 @@
 // app-next/src/content/grammar-points.ts
 /* Sổ tay ngữ pháp — 6 điểm port 1:1 opendesign_hsk/my-grammar.html DATA array
    (spec 2026-10-05 §2.1). pitfall tách <b>…</b> của mock thành [lead, bold, rest].
-   Content giáo dục tĩnh; trạng thái ★ "Đã lưu" là user data (bye.grammarMeta). */
+   Content giáo dục tĩnh; trạng thái ★ "Đã lưu" là user data (bye.grammarMeta).
+   NOTE dehardcode (W2.5): GRAMMAR_POINTS giờ chỉ là STATIC FALLBACK — nguồn dữ
+   liệu chính là D1 (bảng content_grammars) qua src/lib/content/grammar.ts.
+   Component không import GRAMMAR_POINTS trực tiếp; chỉ dùng GRAMMAR_FALLBACK
+   khi API lỗi/offline. */
 
 export type GrammarTopic = "ba" | "bi" | "bongu" | "hutu";
 
@@ -28,6 +32,7 @@ export const GRAMMAR_TOPICS: [key: GrammarTopic | "all" | "saved", label: string
 
 export const GRAMMAR_LEVELS = ["all", "HSK 1", "HSK 2", "HSK 3", "HSK 4", "HSK 5", "HSK 6"] as const;
 
+/* STATIC FALLBACK — 6 điểm demo dùng khi D1 chưa seed hoặc API lỗi. */
 export const GRAMMAR_POINTS: GrammarPoint[] = [
   { id: "ba", title: "CÂU CHỮ 把", hz: "把字句", level: "HSK 3", topic: "ba",
     def: "Xử lý tân ngữ và kết quả hành động — nhấn mạnh cách xử lý sự vật.",
@@ -66,3 +71,5 @@ export const GRAMMAR_POINTS: GrammarPoint[] = [
     pitfall: ["Hai vế 越 ", "phải song hành cùng chủ ngữ logic", " — không đổi chủ ngữ giữa chừng."],
     ex: [{ hz: "越学越有意思。", py: "Yuè xué yuè yǒu yìsi.", vi: "Càng học càng thấy thú vị." }] },
 ];
+
+export const GRAMMAR_FALLBACK: GrammarPoint[] = GRAMMAR_POINTS;
