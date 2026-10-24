@@ -29,8 +29,15 @@ export class ContentNotFoundError extends Error {
   }
 }
 
-/* DB lưu topic là text — nới kiểu ở row, cast lại về union khi reshape. */
-type VideoRow = Omit<ShadowingVideo, "topic"> & { topic: string; ord: number };
+/* DB lưu topic/type là text — nới kiểu ở row, cast lại về union khi reshape.
+   type/audio_dir: cột mới W3.3 (migration 0008); row YouTube cũ không set
+   type → default "youtube" giữ tương thích DB cũ. */
+type VideoRow = Omit<ShadowingVideo, "topic" | "type" | "audioDir"> & {
+  topic: string;
+  type?: string;
+  audioDir?: string | null;
+  ord: number;
+};
 type SubRow = { videoId: string; sentences: SubtitleSentence[] };
 
 /* Pure function (test được): rows → shape app, sort ord, cast topic. */
@@ -40,7 +47,12 @@ export function rowsToShadowing(
 ): { videos: ShadowingVideo[]; subtitles: SubtitlesByVideo } {
   const videos = [...videoRows]
     .sort((a, b) => a.ord - b.ord)
-    .map(({ ord: _ord, ...v }) => ({ ...v, topic: v.topic as ShadowingTopic }));
+    .map(({ ord: _ord, ...v }) => ({
+      ...v,
+      topic: v.topic as ShadowingTopic,
+      type: v.type === "audio" ? ("audio" as const) : ("youtube" as const),
+      audioDir: v.audioDir ?? null,
+    }));
   const subtitles: SubtitlesByVideo = {};
   for (const r of subRows) subtitles[r.videoId] = r.sentences;
   return { videos, subtitles };

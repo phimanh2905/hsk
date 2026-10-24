@@ -143,3 +143,19 @@ dạng `{ "<book>/<lesson>": [{ "n": 1, "durSec": 3.42 }] }` — durSec làm tr�
 Idempotent: line đã có mp3 thì skip; timing luôn tính lại toàn bộ từ file trên đĩa.
 
 Verify sau render: mỗi dialogue đủ số file = số dòng; `ffprobe -v error -show_entries stream=sample_rate,channels -of csv=p=0 public/audio/hsk1/lesson-1-1.mp3` → `24000, 1`.
+
+## Seed playlist "Hội thoại theo bài" (W3.3)
+
+Sau khi `gen-dialogues` + `merge-audio-timing` đã có `data/dialogues/dialogues-hskN.json`
+(với `audio` + `durSec` từng line):
+
+```bash
+cd /Volumes/samsung512/Code/hsk/app-next
+pnpm dlx tsx scripts/content/gen-shadowing-dialogue-seed.mts   # ghi drizzle/seeds/content-shadowing-dialogues.sql
+pnpm wrangler d1 execute hsk-dev --remote --file=drizzle/seeds/content-shadowing-dialogues.sql -c wrangler.dev.jsonc   # dev
+pnpm wrangler d1 execute hsk --remote --file=drizzle/seeds/content-shadowing-dialogues.sql   # prod (chỉ owner chạy khi duyệt)
+pnpm wrangler d1 execute hsk --local --command "SELECT type, COUNT(*) FROM content_shadowing_videos GROUP BY type"   # verify
+```
+
+Migration cột (`type`, `audio_dir`) là `drizzle/0008_*.sql` — apply trước khi seed.
+Idempotent: INSERT OR REPLACE theo PK, chạy lại an toàn.

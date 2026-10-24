@@ -19,6 +19,18 @@ test.describe("content từ D1", () => {
     await expect(page.getByText("DaihuaXiyou").first()).toBeVisible();
   });
 
+  test("playlist Hội thoại theo bài render từ D1 (W3.3)", async ({ page }) => {
+    await page.goto("/shadowing");
+    await expect(page.getByText("Hội thoại theo bài").first()).toBeVisible();
+  });
+
+  test("video audio hội thoại hsk1/lesson-1 trả 200 và có <audio>", async ({ page }) => {
+    const res = await page.goto("/shadowing/hsk1/lesson-1");
+    expect(res?.status()).toBe(200);
+    const audio = page.locator('audio[data-testid="audio-player"]');
+    await expect(audio).toHaveCount(1);
+  });
+
   test("lesson sai key trả 404", async ({ page }) => {
     const res = await page.goto("/lesson/hsk9/khong-co");
     expect(res?.status()).toBe(404);
