@@ -195,6 +195,64 @@ describe("StudioCatalog", () => {
     expect(view.getByText("Không có chữ nào khớp.")).toBeTruthy();
   });
 
+  it("hsk: chữ có record practiced → badge 'Đã luyện' thay dòng level", () => {
+    const view = render(
+      <StudioCatalog
+        mode="hsk"
+        rads={[]}
+        chars={CHARS}
+        totalLabel="3 chữ"
+        page={1}
+        pages={1}
+        cur="没"
+        onSelect={vi.fn()}
+        onPage={vi.fn()}
+        practiced={{ 没: { attempts: 2, best: 0, last: 1 } }}
+      />,
+    );
+    const badge = view.getByTestId("practiced-没");
+    expect(badge.textContent).toContain("Đã luyện");
+    // badge thay dòng level trên card đã luyện
+    const card = view.getByRole("button", { name: /没/ });
+    expect(card.textContent).toContain("Đã luyện");
+  });
+
+  it("hsk: chưa luyện → không badge, vẫn hiện level", () => {
+    const view = render(
+      <StudioCatalog
+        mode="hsk"
+        rads={[]}
+        chars={CHARS}
+        totalLabel="3 chữ"
+        page={1}
+        pages={1}
+        cur="没"
+        onSelect={vi.fn()}
+        onPage={vi.fn()}
+      />,
+    );
+    expect(view.queryByTestId("practiced-没")).toBeNull();
+    expect(view.getByRole("button", { name: /没/ }).textContent).toContain("HSK");
+  });
+
+  it("rad mode: practiced không ảnh hưởng card bộ thủ", () => {
+    const view = render(
+      <StudioCatalog
+        mode="rad"
+        rads={RADS}
+        chars={[]}
+        totalLabel="8 bộ thủ · 1 trang"
+        page={1}
+        pages={1}
+        cur="水"
+        onSelect={vi.fn()}
+        onPage={vi.fn()}
+        practiced={{ 水: { attempts: 1, best: 0, last: 1 } }}
+      />,
+    );
+    expect(view.queryByTestId("practiced-水")).toBeNull();
+  });
+
   it("pager giữ nguyên: label, onPage, disable ở biên", () => {
     const onPage = vi.fn();
     const view = render(

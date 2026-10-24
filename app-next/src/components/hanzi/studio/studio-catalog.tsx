@@ -6,6 +6,7 @@
    (workbench hiện fallback "chưa có data nét" — xử lý ở Task 8). */
 import { BookOpen, Puzzle } from "@/components/ui/icon";
 import type { StudioRadical, StudioCharMeta } from "@/content/hanzi-studio/radical-index";
+import type { HanziQuizRec } from "@/lib/store/progress-store";
 import { cn } from "@/lib/cn";
 
 const PAGER_BTN =
@@ -63,7 +64,7 @@ function ModeSwitch({
 }
 
 export function StudioCatalog({
-  mode, rads, chars, totalLabel, page, pages, cur, onSelect, onPage, onModeChange,
+  mode, rads, chars, totalLabel, page, pages, cur, onSelect, onPage, onModeChange, practiced,
 }: {
   mode: "rad" | "hsk";
   rads: StudioRadical[];
@@ -76,6 +77,8 @@ export function StudioCatalog({
   onPage: (p: number) => void;
   /* Task 9: page gọi setCatalogMode + setPage(1) khi đổi mode. */
   onModeChange?: (m: "rad" | "hsk") => void;
+  /* W0.2: map chữ → HanziQuizRec — cha (hanzi-studio) đọc store, catalog chỉ render. */
+  practiced?: Record<string, HanziQuizRec>;
 }) {
   return (
     <section
@@ -142,7 +145,16 @@ export function StudioCatalog({
               >
                 <span className="zh text-[34px] leading-[1.25] text-text-primary">{c.ch}</span>
                 <span className="text-[11px] font-bold text-text-secondary">{c.py}</span>
-                <span className="whitespace-nowrap text-[10.5px] text-text-secondary">{c.level}</span>
+                {practiced?.[c.ch] ? (
+                  <span
+                    data-testid={`practiced-${c.ch}`}
+                    className="text-[9.5px] font-extrabold text-feedback-success"
+                  >
+                    ✓ Đã luyện
+                  </span>
+                ) : (
+                  <span className="whitespace-nowrap text-[10.5px] text-text-secondary">{c.level}</span>
+                )}
               </button>
             ))}
           </div>
