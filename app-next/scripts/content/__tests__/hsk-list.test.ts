@@ -72,7 +72,7 @@ describe.skipIf(!existsSync(VENDOR_CSV))("HSK 3.0 dataset chuẩn (integration)"
 
   it.each([1, 2, 3, 4, 5])("cumulative level %i khớp chuẩn HSK 3.0", (n) => {
     const words = entries.filter((e) => e.level <= n);
-    expect(words).toHaveLength(EXPECTED_CUMULATIVE[n]);
+    expect(words).toHaveLength(EXPECTED_CUMULATIVE[n as keyof typeof EXPECTED_CUMULATIVE]);
   });
 
   it("dedupe theo hanzi chỉ loại trùng giữa các level (không mất từ)", () => {
