@@ -89,6 +89,8 @@ export interface ProgressStoreApi {
   getHanziQuiz(ch: string): HanziQuizRec | null;
   listHanziQuiz(): Record<string, HanziQuizRec>;
   recordHanziQuiz(ch: string, score?: number): void;
+  getSoundRulesBest(): number;
+  recordSoundRulesResult(correct: number): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -623,6 +625,18 @@ export class ProgressStore implements ProgressStoreApi {
       last: Date.now(),
     };
     writeJSON("bye.hanzi.quiz", all);
+    dispatchProgress();
+  }
+
+  /* ---------- sound rules best (bye.soundrules.best — Wave 0 W0.3) ---------- */
+
+  getSoundRulesBest(): number {
+    return readNum("bye.soundrules.best");
+  }
+
+  recordSoundRulesResult(correct: number): void {
+    if (correct <= this.getSoundRulesBest()) return;
+    writeNum("bye.soundrules.best", correct);
     dispatchProgress();
   }
 }
