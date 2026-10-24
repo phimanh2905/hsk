@@ -50,7 +50,8 @@ describe("ReviewDashboard (redesign 2026-10-04)", () => {
     // 1 từ → hết phiên, overlay đóng + toast hiện
     expect(container.querySelector('[role="dialog"][aria-label="Phiên ôn tập"]')).toBeNull();
     expect(progressStore.getSrs("hsk1.lesson-1.0")!.reviewCount).toBe(1);
-    expect(progressStore.getSrs("hsk1.lesson-1.0")!.status).toBe("learning");
+    // SM-2 W5.1: good từ new → thẳng review (interval 1 ngày)
+    expect(progressStore.getSrs("hsk1.lesson-1.0")!.status).toBe("review");
   });
   it("grade forgot -> captureWrong với resolveWord (spec §3.4.3)", () => {
     progressStore.toggleSrs("hsk1.lesson-1.0"); // resolveWord -> 你好 / nǐ hǎo

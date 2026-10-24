@@ -218,7 +218,9 @@ describe("hybrid-store", () => {
     await vi.advanceTimersByTimeAsync(5000);
 
     const items = JSON.parse(localStorage.getItem("bye.srs.items") || "{}");
-    expect(items["hsk1.c.3"].status).toBe("known");
+    // format 4 (W5.1): status cũ "known" được chuẩn hóa thành "review" (interval 21) khi store đọc/ghi lại
+    expect(items["hsk1.c.3"].status).toBe("review");
+    expect(items["hsk1.c.3"].intervalDays).toBe(21);
     expect(items["hsk1.c.3"].reviewCount).toBe(5);
     expect(items["hsk1.d.4"]).toBeUndefined();
     const tombs = JSON.parse(localStorage.getItem(TOMBSTONE_KEY) || "{}");
