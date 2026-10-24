@@ -154,6 +154,27 @@ type VocabWordRow = {
   example: { zh: string; pinyinPerChar: { c: string; py: string }[]; vi: string };
 };
 
+export const contentGrammars = sqliteTable(
+  "content_grammars",
+  {
+    id: text("id").primaryKey(),
+    level: text("level").notNull(), // "HSK 1".."HSK 5"
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    hz: text("hz").notNull(),
+    topic: text("topic").notNull(),
+    def: text("def").notNull(),
+    formula: text("formula", { mode: "json" }).$type<GrammarFormulaRow[]>().notNull(),
+    pitfall: text("pitfall", { mode: "json" }).$type<[string, string, string]>().notNull(),
+    ex: text("ex", { mode: "json" }).$type<{ hz: string; py: string; vi: string }[]>().notNull(),
+  },
+  (t) => [index("content_grammars_level_idx").on(t.level)]
+);
+
+/* Shape khớp GrammarPoint (src/content/grammar-points.ts) — khai báo structurally
+   thay vì import để schema.ts không phụ thuộc content module. */
+type GrammarFormulaRow = [label: string, isKey?: "key"];
+
 export const contentShadowingPlaylists = sqliteTable("content_shadowing_playlists", {
   id: text("id").primaryKey(),
   ord: integer("ord").notNull(),
