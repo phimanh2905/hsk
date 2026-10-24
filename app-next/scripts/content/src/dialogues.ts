@@ -77,7 +77,8 @@ export function validateDialogue(
       continue;
     }
     const label = `dòng ${i + 1}`;
-    if (!Number.isInteger(ln.n) || (ln.n as number) < 1) errors.push(`${label}: "n" phải là số nguyên >= 1`);
+    if (!Number.isInteger(ln.n) || (ln.n as number) !== i + 1)
+      errors.push(`${label}: "n" phải là số nguyên đánh số liên tiếp từ 1 (nhận "${String(ln.n)}")`);
     const sp = ln.speaker;
     if (sp !== "A" && sp !== "B") {
       errors.push(`${label}: speaker phải là "A"/"B", nhận "${String(sp)}"`);
@@ -98,4 +99,13 @@ export function validateDialogue(
     }
   }
   return { ok: errors.length === 0, errors, oov };
+}
+
+/* Upsert theo id: record cùng id bị THAY BỞI bản mới (không giữ bản cũ đầu mảng —
+   --retry phải đảm bảo nội dung regenerate thắng). */
+export function upsertDialogue(
+  records: DialogueRecord[],
+  rec: DialogueRecord
+): DialogueRecord[] {
+  return [...records.filter((d) => d.id !== rec.id), rec];
 }

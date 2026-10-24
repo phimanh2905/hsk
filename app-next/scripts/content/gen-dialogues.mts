@@ -11,7 +11,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chatJson, llmConfigFromEnv, type ChatMessage, type LlmConfig } from "./src/llm";
-import { dialogueId, validateDialogue, type DialogueRecord } from "./src/dialogues";
+import { dialogueId, upsertDialogue, validateDialogue, type DialogueRecord } from "./src/dialogues";
 import { readEnvFile } from "./src/read-env";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -43,6 +43,10 @@ if (!existsSync(lessonsPath)) {
   process.exit(1);
 }
 const lessons = JSON.parse(readFileSync(lessonsPath, "utf8")) as Lesson[];
+if (onlyLesson !== undefined && !lessons.some((_, i) => `lesson-${i + 1}` === onlyLesson)) {
+  console.error(`--lesson ${onlyLesson}: không tìm thấy bài nào khớp trong ${lessonsPath} (${lessons.length} bài)`);
+  process.exit(1);
+}
 
 // vocabSet: cumulative hanzi hsk1..level (điều kiện OOV warning) + vocab chi tiết cho prompt
 const vocabByHanzi = new Map<string, VocabEntry>();
@@ -149,9 +153,11 @@ for (let idx = 0; idx < lessons.length; idx++) {
       messages = [...basePrompt, { role: "user", content: `Lần trước hội thoại vi phạm: ${parsed.errors.join("; ")}. Sửa lại cho đúng yêu cầu.` }];
       continue;
     }
-    existing.push(parsed.record);
+    const merged = upsertDialogue(existing, parsed.record);
+    existing.length = 0;
+    existing.push(...merged);
     doneIds.add(id);
-    writeFileSync(outPath, JSON.stringify(existing.filter((d, i, arr) => arr.findIndex((x) => x.id === d.id) === i), null, 2));
+    writeFileSync(outPath, JSON.stringify(merged, null, 2));
     console.log(`ok (${parsed.record.lines.length} câu${parsed.oov.length > 0 ? `, OOV: ${parsed.oov.join("")}` : ""})`);
     saved = true;
     break;
