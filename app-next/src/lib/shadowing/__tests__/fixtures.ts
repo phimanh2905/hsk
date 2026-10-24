@@ -15,6 +15,8 @@ export const videosFixture: ShadowingVideo[] = [
     plays: 366,
     topic: "film",
     spd: 0.9,
+    type: "youtube",
+    audioDir: null,
   },
   {
     id: "fixture-hsk1",
@@ -28,6 +30,8 @@ export const videosFixture: ShadowingVideo[] = [
     plays: 10,
     topic: "life",
     spd: 0.8,
+    type: "youtube",
+    audioDir: null,
   },
 ];
 

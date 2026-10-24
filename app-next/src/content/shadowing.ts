@@ -32,6 +32,8 @@ export type ShadowingVideo = {
   plays: number;
   topic: ShadowingTopic;
   spd: number;
+  type: "youtube" | "audio";
+  audioDir: string | null;
 };
 export type SubtitleSentence = {
   n: number;
@@ -99,7 +101,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     duration: "2:46",
     durSec: 166,
     plays: 366,
-    topic: "film",
+    topic: "film", type: "youtube", audioDir: null,
     spd: 0.9,
   },
   {
@@ -111,7 +113,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:06",
     durSec: 66,
-    plays: 74,  topic: "film",
+    plays: 74,  topic: "film", type: "youtube", audioDir: null,
   spd: 0.9,
   },
 
@@ -124,7 +126,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "2:21",
     durSec: 141,
-    plays: 25,  topic: "film",
+    plays: 25,  topic: "film", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -137,7 +139,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:01",
     durSec: 61,
-    plays: 11,  topic: "film",
+    plays: 11,  topic: "film", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -151,7 +153,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:18",
     durSec: 78,
-    plays: 44,  topic: "film",
+    plays: 44,  topic: "film", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -164,7 +166,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "3:04",
     durSec: 184,
-    plays: 12,  topic: "film",
+    plays: 12,  topic: "film", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -177,7 +179,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "1:44",
     durSec: 104,
-    plays: 10,  topic: "film",
+    plays: 10,  topic: "film", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -190,7 +192,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "2:08",
     durSec: 128,
-    plays: 5,  topic: "film",
+    plays: 5,  topic: "film", type: "youtube", audioDir: null,
   spd: 0.9,
   },
 
@@ -204,7 +206,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "5:00",
     durSec: 300,
-    plays: 3100,  topic: "life",
+    plays: 3100,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.75,
   },
 
@@ -217,7 +219,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:52",
     durSec: 292,
-    plays: 235,  topic: "food",
+    plays: 235,  topic: "food", type: "youtube", audioDir: null,
   spd: 0.75,
   },
 
@@ -230,7 +232,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "7:05",
     durSec: 425,
-    plays: 114,  topic: "life",
+    plays: 114,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.75,
   },
 
@@ -243,7 +245,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:42",
     durSec: 282,
-    plays: 215,  topic: "life",
+    plays: 215,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.75,
   },
 
@@ -257,7 +259,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:29",
     durSec: 269,
-    plays: 80,  topic: "life",
+    plays: 80,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.75,
   },
 
@@ -270,7 +272,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:29",
     durSec: 269,
-    plays: 7,  topic: "life",
+    plays: 7,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.85,
   },
 
@@ -283,7 +285,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:35",
     durSec: 275,
-    plays: 8,  topic: "life",
+    plays: 8,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.85,
   },
 
@@ -296,7 +298,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "4:28",
     durSec: 268,
-    plays: 10,  topic: "food",
+    plays: 10,  topic: "food", type: "youtube", audioDir: null,
   spd: 0.85,
   },
 
@@ -310,7 +312,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "15:48",
     durSec: 948,
-    plays: 16,  topic: "life",
+    plays: 16,  topic: "life", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -323,7 +325,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "16:19",
     durSec: 979,
-    plays: 3,  topic: "food",
+    plays: 3,  topic: "food", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -336,7 +338,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "14:27",
     durSec: 867,
-    plays: 1,  topic: "life",
+    plays: 1,  topic: "life", type: "youtube", audioDir: null,
   spd: 1.0,
   },
 
@@ -349,7 +351,7 @@ export const shadowingVideos: ShadowingVideo[] = [
     viewsSuffix: "",
     duration: "14:19",
     durSec: 859,
-    plays: 8,  topic: "life",
+    plays: 8,  topic: "life", type: "youtube", audioDir: null,
   spd: 0.85,
   },
 

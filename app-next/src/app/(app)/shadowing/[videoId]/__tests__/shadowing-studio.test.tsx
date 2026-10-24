@@ -8,7 +8,7 @@ vi.mock("@/components/shell/toast-provider", () => ({ useToast: () => vi.fn(), u
 
 const video: ShadowingVideo = {
   id: "EA3rwvr99Q0", title: "墓碑上的QR碼", playlistId: "daihuaxiyou", hsk: "HSK3",
-  views: 0, viewsSuffix: "", duration: "2:46", durSec: 166, plays: 0, topic: "film", spd: 0.9,
+  views: 0, viewsSuffix: "", duration: "2:46", durSec: 166, plays: 0, topic: "film", spd: 0.9, type: "youtube", audioDir: null,
 };
 const subs: SubtitleSentence[] = [
   { n: 1, start: 0, end: 8, parts: [{ zh: "你好" }], pinyin: "Nǐ hǎo", vi: "Xin chào" },

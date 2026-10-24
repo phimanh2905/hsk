@@ -201,6 +201,8 @@ export const contentShadowingVideos = sqliteTable(
     plays: integer("plays").notNull(),
     topic: text("topic").notNull(),
     spd: integer("spd").notNull(),
+    type: text("type").notNull().default("youtube"),
+    audioDir: text("audio_dir"),
   },
   (t) => [index("csv_playlist_idx").on(t.playlistId)]
 );
