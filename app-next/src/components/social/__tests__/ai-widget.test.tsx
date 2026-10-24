@@ -178,4 +178,32 @@ describe("AiWidget", () => {
     expect(screen.queryByRole("button", { name: "Gửi" })).toBeNull();
     expect(fetch).not.toHaveBeenCalled();
   });
+
+  // Khôi phục test mount-gate + Ủng hộ (mất trong T3 — ruling Wave 7)
+  it("mount-gate: localStorage bye.chatBubble=0 → ẩn mascot (nút Hỏi AI), sau mount", async () => {
+    localStorage.setItem("bye.chatBubble", "0");
+    renderWidget();
+    // trước effect: vẫn render (không hydration mismatch) — check sau effect là đủ ở đây
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: /Hỏi AI/ })).toBeNull()
+    );
+    // các nút khác vẫn hiện
+    expect(screen.getByRole("button", { name: /Ủng hộ Bye HSK/ })).toBeInTheDocument();
+  });
+
+  it("bye.chatBubble khác '0' → mascot vẫn hiện", async () => {
+    localStorage.setItem("bye.chatBubble", "1");
+    renderWidget();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /Hỏi AI/ })).toBeInTheDocument()
+    );
+  });
+
+  it("bấm 'Ủng hộ Bye HSK' → toast cảm ơn", () => {
+    renderWidget();
+    fireEvent.click(screen.getByRole("button", { name: /Ủng hộ Bye HSK/ }));
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Cảm ơn bạn đã ủng hộ Bye HSK!"
+    );
+  });
 });
