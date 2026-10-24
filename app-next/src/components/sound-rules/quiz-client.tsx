@@ -3,8 +3,9 @@
    Chọn 1 đáp án: đúng/sai mã hóa kép (token + icon CircleCheck/CircleX + label), ≥52px;
    không cho chọn lại; hiện giải thích + counter. */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { soundRulesData } from "@/content/soundrules";
+import { progressStore } from "@/lib/store/progress-store";
 import { useTts } from "@/lib/tts/use-tts";
 import { CircleCheck, CircleX } from "@/components/ui/icon";
 
@@ -14,7 +15,19 @@ export default function SoundQuiz() {
   const [picked, setPicked] = useState<Record<number, number>>({});
   const { speak } = useTts();
 
+  /* W0.3: đủ câu → lưu best; best đọc sau mount + re-sync qua bye:progress */
+  const [best, setBest] = useState(0);
+  const answered = Object.keys(picked).length;
   const correct = Object.entries(picked).filter(([qi, oi]) => quiz[Number(qi)].answer === oi).length;
+  useEffect(() => {
+    setBest(progressStore.getSoundRulesBest());
+  }, []);
+  useEffect(() => {
+    if (answered === quiz.length) {
+      progressStore.recordSoundRulesResult(correct);
+      setBest(progressStore.getSoundRulesBest());
+    }
+  }, [answered, correct]);
 
   return (
     <div>
@@ -85,6 +98,9 @@ export default function SoundQuiz() {
       </div>
       <p className="mt-4 text-sm font-bold text-text-secondary" data-quiz-result>
         Kết quả: Đúng {correct}/{quiz.length} câu đúng
+      </p>
+      <p className="mt-1 text-xs font-bold text-text-secondary" data-testid="sound-quiz-best">
+        Kỷ lục: {best}/{quiz.length} câu đúng
       </p>
     </div>
   );

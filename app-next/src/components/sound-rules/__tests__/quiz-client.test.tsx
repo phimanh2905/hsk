@@ -13,3 +13,39 @@ describe("SoundQuiz (D4)", () => {
     expect(screen.getByText(soundRulesData.quiz[0].explain)).toBeInTheDocument();
   });
 });
+
+import { beforeEach, vi } from "vitest";
+import { progressStore } from "@/lib/store/progress-store";
+
+vi.stubGlobal("speechSynthesis", { speak: vi.fn(), cancel: vi.fn(), speaking: false, getVoices: vi.fn(() => []) });
+
+beforeEach(() => {
+  localStorage.clear();
+});
+
+function answerAll(correctIndexes: number[]) {
+  soundRulesData.quiz.forEach((q, qi) => {
+    const want = correctIndexes.includes(qi) ? q.answer : (q.answer + 1) % q.options.length;
+    act(() => screen.getByText(q.options[want]).click());
+  });
+}
+
+describe("SoundQuiz — lưu best (W0.3)", () => {
+  it("trả lời đủ câu → recordSoundRulesResult với số câu đúng", () => {
+    render(<SoundQuiz />);
+    answerAll([0]);
+    expect(progressStore.getSoundRulesBest()).toBe(1);
+    expect(screen.getByTestId("sound-quiz-best").textContent).toContain("1/5");
+  });
+
+  it("lượt sau điểm thấp hơn → best giữ nguyên", () => {
+    const { unmount } = render(<SoundQuiz />);
+    answerAll(soundRulesData.quiz.map((_, i) => i));
+    unmount();
+    expect(progressStore.getSoundRulesBest()).toBe(5);
+    render(<SoundQuiz />);
+    answerAll([0]);
+    expect(progressStore.getSoundRulesBest()).toBe(5);
+    expect(screen.getByTestId("sound-quiz-best").textContent).toContain("5/5");
+  });
+});
