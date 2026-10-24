@@ -70,7 +70,8 @@ const isSyncPost = (r: { url(): string; request(): { method(): string } }) =>
 
 test("hybrid sync: guest học → login push → session 2 pull → 2 chiều không mất dữ liệu", async ({ browser }) => {
   test.setTimeout(180_000);
-  const today = new Date().toISOString().slice(0, 10);
+  // ngày VN (Asia/Ho_Chi_Minh) khớp vnDay của app — UTC sẽ lệch từ 17:00 VN
+const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(new Date());
 
   /* ---- Context A (guest): học 1 thẻ + cộng 1 XP ---- */
   const ctxA = await browser.newContext();
