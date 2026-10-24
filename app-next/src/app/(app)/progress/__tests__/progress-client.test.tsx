@@ -20,7 +20,7 @@ beforeEach(() => {
 
 function srsItem(partial: Partial<SrsItem>): SrsItem {
   return {
-    status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null,
+    key: "hsk1.lesson-1.0", status: "new", dueAt: null, reviewCount: 0, lastReviewedAt: null,
     updatedAt: 0, ease: 2.5, intervalDays: 0, lapses: 0, ...partial,
   };
 }
