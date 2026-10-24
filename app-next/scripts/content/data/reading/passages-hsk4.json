@@ -1,0 +1,456 @@
+[
+  {
+    "id": "hsk4-reading-1",
+    "book": "hsk4",
+    "lesson": "lesson-1",
+    "title": "找工作",
+    "titleVi": "Tìm việc",
+    "sentences": [
+      {
+        "zh": "大学毕业以后，我开始认真地找工作。",
+        "vi": "Sau khi tốt nghiệp đại học, tôi bắt đầu nghiêm túc tìm việc.",
+        "py": "dàxué bìyè yǐhòu, wǒ kāishǐ rènzhēn de zhǎo gōngzuò."
+      },
+      {
+        "zh": "我在网上看到一家公司的招聘信息。",
+        "vi": "Tôi thấy trên mạng thông tin tuyển dụng của một công ty.",
+        "py": "wǒ zài wǎngshàng kàndào yī jiā gōngsī de zhāopìn xìnxī."
+      },
+      {
+        "zh": "那家公司想招一名翻译，我马上发了简历。",
+        "vi": "Công ty đó muốn tuyển một phiên dịch, tôi lập tức gửi sơ yếu lý lịch.",
+        "py": "nà jiā gōngsī xiǎng zhāo yī míng fānyì, wǒ mǎshàng fā le jiǎnlì."
+      },
+      {
+        "zh": "星期三上午，我去公司参加了面试。",
+        "vi": "Sáng thứ tư, tôi đến công ty tham gia phỏng vấn.",
+        "py": "xīngqīsān shàngwǔ, wǒ qù gōngsī cānjiā le miànshì."
+      },
+      {
+        "zh": "面试官先让我做了一个简单的自我介绍。",
+        "vi": "Người phỏng vấn trước tiên cho tôi giới thiệu bản thân ngắn gọn.",
+        "py": "miànshìguān xiān ràng wǒ zuò le yī ge jiǎndān de zìwǒ jièshào."
+      },
+      {
+        "zh": "我说我大学学的是中文，还做过两年翻译。",
+        "vi": "Tôi nói tôi học tiếng Trung ở đại học, còn làm phiên dịch hai năm.",
+        "py": "wǒ shuō wǒ dàxué xué de shì zhōngwén, hái zuò guo liǎng nián fānyì."
+      },
+      {
+        "zh": "面试官问我为什么想做这份工作。",
+        "vi": "Người phỏng vấn hỏi tôi vì sao muốn làm công việc này.",
+        "py": "miànshìguān wèn wǒ wèishénme xiǎng zuò zhè fèn gōngzuò."
+      },
+      {
+        "zh": "我说我一直在努力提高自己的水平。",
+        "vi": "Tôi nói tôi luôn nỗ lực nâng cao trình độ của mình.",
+        "py": "wǒ shuō wǒ yīzhí zài nǔlì tígāo zìjǐ de shuǐpíng."
+      },
+      {
+        "zh": "他还问，如果顾客不满意，我会怎么办。",
+        "vi": "Ông ấy còn hỏi, nếu khách hàng không hài lòng thì tôi sẽ làm sao.",
+        "py": "tā hái wèn, rúguǒ gùkè bù mǎnyì, wǒ huì zěnme bàn."
+      },
+      {
+        "zh": "我说我会先听清楚对方的意见，再想办法解决。",
+        "vi": "Tôi nói tôi sẽ trước tiên lắng nghe rõ ý kiến của đối phương, rồi tìm cách giải quyết.",
+        "py": "wǒ shuō wǒ huì xiān tīng qīngchu duìfāng de yìjiàn, zài xiǎng bànfǎ jiějué."
+      },
+      {
+        "zh": "面试进行了半个小时，气氛还算轻松。",
+        "vi": "Cuộc phỏng vấn kéo dài nửa tiếng, không khí khá thoải mái.",
+        "py": "miànshì jìnxíng le bàn ge xiǎoshí, qìfēn hái suàn qīngsōng."
+      },
+      {
+        "zh": "两天以后，我收到了被录用的消息。",
+        "vi": "Hai ngày sau, tôi nhận được tin được nhận vào làm.",
+        "py": "liǎng tiān yǐhòu, wǒ shōudào le bèi lùyòng de xiāoxi."
+      },
+      {
+        "zh": "我把这件事告诉了父母，他们非常高兴。",
+        "vi": "Tôi kể chuyện này cho bố mẹ, họ đều rất vui.",
+        "py": "wǒ bǎ zhè jiàn shì gàosu le fùmǔ, tāmen fēicháng gāoxìng."
+      },
+      {
+        "zh": "我决定好好干，不放过这次难得的机会。",
+        "vi": "Tôi quyết định làm việc thật tốt, không bỏ lỡ cơ hội hiếm có lần này.",
+        "py": "wǒ juédìng hǎohǎo gàn, bù fàngguò zhè cì nándé de jīhuì."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "毕业",
+        "py": "bìyè",
+        "vi": "tốt nghiệp"
+      },
+      {
+        "word": "简历",
+        "py": "jiǎnlì",
+        "vi": "sơ yếu lý lịch"
+      },
+      {
+        "word": "面试",
+        "py": "miànshì",
+        "vi": "phỏng vấn"
+      },
+      {
+        "word": "翻译",
+        "py": "fānyì",
+        "vi": "phiên dịch; phiên dịch viên"
+      },
+      {
+        "word": "介绍",
+        "py": "jièshào",
+        "vi": "giới thiệu"
+      },
+      {
+        "word": "意见",
+        "py": "yìjiàn",
+        "vi": "ý kiến"
+      },
+      {
+        "word": "决定",
+        "py": "juédìng",
+        "vi": "quyết định"
+      },
+      {
+        "word": "机会",
+        "py": "jīhuì",
+        "vi": "cơ hội"
+      }
+    ],
+    "questions": [
+      {
+        "q": "那家公司想招什么人？",
+        "options": [
+          "翻译",
+          "经理",
+          "秘书"
+        ],
+        "answer": 0,
+        "qVi": "Công ty đó muốn tuyển người làm gì?"
+      },
+      {
+        "q": "顾客不满意的时候，\"我\"会先做什么？",
+        "options": [
+          "找经理帮助",
+          "听清楚对方的意见",
+          "向顾客道歉"
+        ],
+        "answer": 1,
+        "qVi": "Khi khách hàng không hài lòng, \"tôi\" sẽ làm gì trước?"
+      },
+      {
+        "q": "\"我\"对这份工作的态度是什么？",
+        "options": [
+          "先干几天看看",
+          "好好干，不放过机会",
+          "不太感兴趣"
+        ],
+        "answer": 1,
+        "qVi": "Thái độ của \"tôi\" đối với công việc này là gì?"
+      }
+    ]
+  },
+  {
+    "id": "hsk4-reading-2",
+    "book": "hsk4",
+    "lesson": "lesson-2",
+    "title": "网上购物",
+    "titleVi": "Mua sắm trên mạng",
+    "sentences": [
+      {
+        "zh": "这几年，网上购物变得越来越普遍。",
+        "vi": "Vài năm gần đây, mua sắm trên mạng ngày càng phổ biến.",
+        "py": "zhè jǐ nián, wǎngshàng gòuwù biàn de yuèláiyuè pǔbiàn."
+      },
+      {
+        "zh": "人们只要用手机下订单，东西就会送到家里。",
+        "vi": "Người ta chỉ cần đặt hàng bằng điện thoại, đồ sẽ được giao đến nhà.",
+        "py": "rénmen zhǐyào yòng shǒujī xià dìngdān, dōngxi jiù huì sòngdào jiālǐ."
+      },
+      {
+        "zh": "不管是衣服、食品还是日用品，都能在网上买到。",
+        "vi": "Dù là quần áo, thực phẩm hay đồ dùng hằng ngày, đều có thể mua trên mạng.",
+        "py": "bùguǎn shì yīfu, shípǐn háishì rìyòngpǐn, dōu néng zài wǎngshàng mǎidào."
+      },
+      {
+        "zh": "我妈妈以前喜欢逛百货商店，现在也常常网上购物。",
+        "vi": "Mẹ tôi trước thích đi các cửa hàng bách hóa, giờ cũng thường mua sắm online.",
+        "py": "wǒ māma yǐqián xǐhuan guàng bǎihuò shāngdiàn, xiànzài yě chángcháng wǎngshàng gòuwù."
+      },
+      {
+        "zh": "她说网上的东西便宜，还可以比较几家再决定。",
+        "vi": "Bà nói đồ trên mạng rẻ, còn có thể so sánh vài nơi rồi mới quyết định.",
+        "py": "tā shuō wǎngshàng de dōngxi piányi, hái kěyǐ bǐjiào jǐ jiā zài juédìng."
+      },
+      {
+        "zh": "不过，网上购物也有一些问题。",
+        "vi": "Tuy nhiên, mua sắm online cũng có một số vấn đề.",
+        "py": "búguò, wǎngshàng gòuwù yě yǒu yīxiē wèntí."
+      },
+      {
+        "zh": "有时候收到的货物和照片上的不一样。",
+        "vi": "Đôi khi hàng nhận được khác với hình trong ảnh.",
+        "py": "yǒushíhou shōudào de huòwù hé zhàopiàn shàng de bù yīyàng."
+      },
+      {
+        "zh": "遇到这种情况，买家可以联系商家退货。",
+        "vi": "Gặp trường hợp này, người mua có thể liên hệ người bán để trả lại hàng.",
+        "py": "yùdào zhè zhǒng qíngkuàng, mǎijiā kěyǐ liánxì shāngjiā tuìhuò."
+      },
+      {
+        "zh": "另外，快递太多也会造成污染。",
+        "vi": "Ngoài ra, quá nhiều bưu kiện cũng gây ra ô nhiễm.",
+        "py": "lìngwài, kuàidì tài duō yě huì zàochéng wūrǎn."
+      },
+      {
+        "zh": "很多人建议少用塑料袋，一起保护环境。",
+        "vi": "Nhiều người khuyên ít dùng túi ni lông, cùng nhau bảo vệ môi trường.",
+        "py": "hěn duō rén jiànyì shǎo yòng sùliàodài, yīqǐ bǎohù huánjìng."
+      },
+      {
+        "zh": "我觉得网上购物确实方便，但不能乱花钱。",
+        "vi": "Tôi thấy mua sắm online quả thật tiện, nhưng không được tiêu tiền tùy tiện.",
+        "py": "wǒ juéde wǎngshàng gòuwù quèshí fāngbiàn, dàn bùnéng luàn huā qián."
+      },
+      {
+        "zh": "买东西之前，最好先看看别人的评价。",
+        "vi": "Trước khi mua đồ, tốt nhất nên xem đánh giá của người khác.",
+        "py": "mǎi dōngxi zhīqián, zuìhǎo xiān kànkan biérén de píngjià."
+      },
+      {
+        "zh": "合理消费，我们的生活才会更好。",
+        "vi": "Tiêu dùng hợp lý, cuộc sống của chúng ta mới tốt hơn.",
+        "py": "hélǐ xiāofèi, wǒmen de shēnghuó cái huì gèng hǎo."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "普遍",
+        "py": "pǔbiàn",
+        "vi": "phổ biến"
+      },
+      {
+        "word": "百货",
+        "py": "bǎihuò",
+        "vi": "hàng bách hóa"
+      },
+      {
+        "word": "比较",
+        "py": "bǐjiào",
+        "vi": "so sánh; khá, tương đối"
+      },
+      {
+        "word": "网络",
+        "py": "wǎngluò",
+        "vi": "mạng, mạng internet"
+      },
+      {
+        "word": "保护",
+        "py": "bǎohù",
+        "vi": "bảo vệ"
+      },
+      {
+        "word": "建议",
+        "py": "jiànyì",
+        "vi": "đề nghị, khuyên"
+      },
+      {
+        "word": "评价",
+        "py": "píngjià",
+        "vi": "đánh giá"
+      },
+      {
+        "word": "消费",
+        "py": "xiāofèi",
+        "vi": "tiêu dùng, tiêu phí"
+      }
+    ],
+    "questions": [
+      {
+        "q": "妈妈为什么也常常网上购物？",
+        "options": [
+          "因为商店太远",
+          "因为网上东西便宜，还能比较",
+          "因为网上没有假货"
+        ],
+        "answer": 1,
+        "qVi": "Vì sao mẹ tôi cũng thường mua sắm trên mạng?"
+      },
+      {
+        "q": "收到和照片不一样的货物怎么办？",
+        "options": [
+          "只能自己用",
+          "联系商家退货",
+          "在网上骂商家"
+        ],
+        "answer": 1,
+        "qVi": "Nhận được hàng khác với hình trong ảnh thì phải làm sao?"
+      },
+      {
+        "q": "作者认为网上购物应该注意什么？",
+        "options": [
+          "不能乱花钱",
+          "只买贵的",
+          "每天都买东西"
+        ],
+        "answer": 0,
+        "qVi": "Theo tác giả, mua sắm trên mạng nên chú ý điều gì?"
+      }
+    ]
+  },
+  {
+    "id": "hsk4-reading-3",
+    "book": "hsk4",
+    "lesson": "lesson-3",
+    "title": "团队合作",
+    "titleVi": "Hợp tác trong nhóm",
+    "sentences": [
+      {
+        "zh": "今年我在公司负责一个新的项目。",
+        "vi": "Năm nay tôi phụ trách một dự án mới ở công ty.",
+        "py": "jīnnián wǒ zài gōngsī fùzé yī ge xīn de xiàngmù."
+      },
+      {
+        "zh": "这个项目时间紧，任务重，需要五个人一起做。",
+        "vi": "Dự án này thời gian gấp, nhiệm vụ nặng, cần năm người cùng làm.",
+        "py": "zhè ge xiàngmù shíjiān jǐn, rènwu zhòng, xūyào wǔ ge rén yīqǐ zuò."
+      },
+      {
+        "zh": "刚开始的时候，大家的意见不太一样。",
+        "vi": "Lúc mới bắt đầu, ý kiến của mọi người không thống nhất.",
+        "py": "gāng kāishǐ de shíhou, dàjiā de yìjiàn bù tài yīyàng."
+      },
+      {
+        "zh": "有人觉得应该先做调查，有人想直接开始设计。",
+        "vi": "Người thì cho rằng nên khảo sát trước, người thì muốn thiết kế luôn.",
+        "py": "yǒu rén juéde yīnggāi xiān zuò diàochá, yǒu rén xiǎng zhíjiē kāishǐ shèjì."
+      },
+      {
+        "zh": "我们开了三次会，最后决定先了解客户的需要。",
+        "vi": "Chúng tôi họp ba lần, cuối cùng quyết định tìm hiểu nhu cầu của khách hàng trước.",
+        "py": "wǒmen kāi le sān cì huì, zuìhòu juédìng xiān liǎojiě kèhù de xūyào."
+      },
+      {
+        "zh": "团队里的每个人工作都很努力。",
+        "vi": "Mỗi người trong nhóm đều làm việc rất nỗ lực.",
+        "py": "tuánduì lǐ de měi ge rén gōngzuò dōu hěn nǔlì."
+      },
+      {
+        "zh": "遇到困难的时候，我们互相帮助，互相鼓励。",
+        "vi": "Khi gặp khó khăn, chúng tôi giúp đỡ và động viên lẫn nhau.",
+        "py": "yùdào kùnnán de shíhou, wǒmen hùxiāng bāngzhù, hùxiāng gǔlì."
+      },
+      {
+        "zh": "小王负责写报告，小李负责联系客户。",
+        "vi": "Tiểu Vương phụ trách viết báo cáo, Tiểu Lý phụ trách liên hệ khách hàng.",
+        "py": "xiǎo wáng fùzé xiě bàogào, xiǎo lǐ fùzé liánxì kèhù."
+      },
+      {
+        "zh": "我每天记录工作的进度，发现问题马上解决。",
+        "vi": "Tôi mỗi ngày ghi lại tiến độ công việc, phát hiện vấn đề thì giải quyết ngay.",
+        "py": "wǒ měitiān jìlù gōngzuò de jìndù, fāxiàn wèntí mǎshàng jiějué."
+      },
+      {
+        "zh": "有一次客户突然改变要求，大家只好重新做。",
+        "vi": "Có lần khách hàng đột nhiên thay đổi yêu cầu, cả nhóm đành phải làm lại.",
+        "py": "yǒu yī cì kèhù tūrán gǎibiàn yāoqiú, dàjiā zhǐhǎo chóngxīn zuò."
+      },
+      {
+        "zh": "虽然辛苦，但是没有人抱怨，也没有人放弃。",
+        "vi": "Tuy vất vả, nhưng không ai than phiền, cũng không ai bỏ cuộc.",
+        "py": "suīrán xīnkǔ, dànshì méiyǒu rén bào yuàn, yě méiyǒu rén fàngqì."
+      },
+      {
+        "zh": "三个星期以后，我们按时完成了项目。",
+        "vi": "Ba tuần sau, chúng tôi hoàn thành dự án đúng thời hạn.",
+        "py": "sān ge xīngqī yǐhòu, wǒmen ànshí wánchéng le xiàngmù."
+      },
+      {
+        "zh": "客户对结果非常满意，还说要和我们长期合作。",
+        "vi": "Khách hàng rất hài lòng với kết quả, còn nói muốn hợp tác lâu dài với chúng tôi.",
+        "py": "kèhù duì jiéguǒ fēicháng mǎnyì, hái shuō yào hé wǒmen chángqī hézuò."
+      },
+      {
+        "zh": "这件事让我明白，成功离不开团队的合作。",
+        "vi": "Chuyện này khiến tôi hiểu rằng, thành công không thể thiếu sự hợp tác của cả nhóm.",
+        "py": "zhè jiàn shì ràng wǒ míngbai, chénggōng líbùkāi tuánduì de hézuò."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "项目",
+        "py": "xiàngmù",
+        "vi": "dự án"
+      },
+      {
+        "word": "负责",
+        "py": "fùzé",
+        "vi": "phụ trách, chịu trách nhiệm"
+      },
+      {
+        "word": "调查",
+        "py": "diàochá",
+        "vi": "điều tra, khảo sát"
+      },
+      {
+        "word": "报告",
+        "py": "bàogào",
+        "vi": "báo cáo"
+      },
+      {
+        "word": "记录",
+        "py": "jìlù",
+        "vi": "ghi chép, ghi lại"
+      },
+      {
+        "word": "按时",
+        "py": "ànshí",
+        "vi": "đúng giờ, đúng hạn"
+      },
+      {
+        "word": "满意",
+        "py": "mǎnyì",
+        "vi": "hài lòng"
+      },
+      {
+        "word": "合作",
+        "py": "hézuò",
+        "vi": "hợp tác"
+      }
+    ],
+    "questions": [
+      {
+        "q": "团队最后决定先做什么？",
+        "options": [
+          "直接开始设计",
+          "了解客户的需要",
+          "开五次会"
+        ],
+        "answer": 1,
+        "qVi": "Cuối cùng nhóm quyết định làm gì trước?"
+      },
+      {
+        "q": "客户突然改变要求以后，大家怎么样？",
+        "options": [
+          "有人放弃了",
+          "抱怨了很多",
+          "只好重新做"
+        ],
+        "answer": 2,
+        "qVi": "Sau khi khách hàng đột nhiên thay đổi yêu cầu, mọi người thế nào?"
+      },
+      {
+        "q": "作者从这件事中明白了什么？",
+        "options": [
+          "成功离不开合作",
+          "开会没有用",
+          "工作很辛苦"
+        ],
+        "answer": 0,
+        "qVi": "Tác giả hiểu được điều gì từ chuyện này?"
+      }
+    ]
+  }
+]

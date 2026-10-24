@@ -1,0 +1,3290 @@
+[
+  {
+    "id": "hsk3/lesson-1",
+    "book": "hsk3",
+    "lesson": "lesson-1",
+    "title": "报告",
+    "titleVi": "Báo cáo và gia đình",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你今天为什么这么不安？",
+        "pinyin": "nǐ jīntiān wèishénme zhème bù'ān?",
+        "vi": "Hôm nay sao bạn bất an thế?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我不得不给父母打一个电话，报告我的成绩。",
+        "pinyin": "wǒ bùdébù gěi fùmǔ dǎ yí ge diànhuà, bàogào wǒ de chéngjì.",
+        "vi": "Mình phải gọi điện cho bố mẹ, báo cáo thành tích của mình."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "这是个好事情啊，你不必紧张。",
+        "pinyin": "zhè shì ge hǎo shìqing a, nǐ búbì jǐnzhāng.",
+        "vi": "Đây là chuyện tốt mà, bạn không cần lo lắng."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "不光是成绩，我还要告诉他们，我在东部地区订了房子。",
+        "pinyin": "bùguāng shì chéngjì, wǒ hái yào gàosu tāmen, wǒ zài dōngbù dìqū dìng le fángzi.",
+        "vi": "Không chỉ có thành tích, mình còn phải nói với họ là mình đã đặt nhà ở khu vực phía đông."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "真的？房东是个什么样的人？",
+        "pinyin": "zhēn de? fángdōng shì ge shénmeyàng de rén?",
+        "vi": "Thật à? Chủ nhà là người thế nào?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "除了周末，他每周都定期来收房租。",
+        "pinyin": "chúle zhōumò, tā měi zhōu dōu dìngqī lái shōu fángzū.",
+        "vi": "Ngoài cuối tuần, mỗi tuần anh ấy đều đến thu tiền nhà định kỳ."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "那你的衬衫买了吗？在这个场合，白衬衫最重要。",
+        "pinyin": "nà nǐ de chènshān mǎi le ma? zài zhège chǎnghé, bái chènshān zuì zhòngyào.",
+        "vi": "Vậy bạn mua áo sơ mi chưa? Trong dịp này, áo sơ mi trắng quan trọng nhất."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "买了，我等待这一天已经很久了。",
+        "pinyin": "mǎi le, wǒ děngdài zhè yìtiān yǐjīng hěn jiǔ le.",
+        "vi": "Rồi, mình đã chờ ngày này rất lâu rồi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "你的成功是大家都能看到的成就。",
+        "pinyin": "nǐ de chénggōng shì dàjiā dōu néng kàndào de chéngjiù.",
+        "vi": "Thành công của bạn là thành tựu ai cũng nhìn thấy được."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "谢谢，我不会否认自己很努力，但我还要发表一篇报告。",
+        "pinyin": "xièxie, wǒ bú huì fǒurèn zìjǐ hěn nǔlì, dàn wǒ hái yào fābiǎo yì piān bàogào.",
+        "vi": "Cảm ơn, tôi không phủ nhận mình rất cố gắng, nhưng tôi còn phải trình bày một bản báo cáo."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-2",
+    "book": "hsk3",
+    "lesson": "lesson-2",
+    "title": "结婚",
+    "titleVi": "Tin vui của gia đình",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "听说你父亲要来我们这里工作？",
+        "pinyin": "tīngshuō nǐ fùqīn yào lái wǒmen zhèlǐ gōngzuò?",
+        "vi": "Nghe nói bố bạn sẽ đến đây làm việc?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "对，各地都有他的学生，他基本上每个月都去一个地方。",
+        "pinyin": "duì, gèdì dōu yǒu tā de xuésheng, tā jīběnshàng měi ge yuè dōu qù yí ge dìfang.",
+        "vi": "Đúng vậy, ở đâu cũng có học trò của ông, về cơ bản mỗi tháng ông đến một nơi."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "那今年的结婚计划呢？",
+        "pinyin": "nà jīnnián de jiéhūn jìhuà ne?",
+        "vi": "Thế kế hoạch kết hôn năm nay thì sao?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "我们决定举办一个简单的婚礼，只请家属和几个朋友。",
+        "pinyin": "wǒmen juédìng jǔbàn yí ge jiǎndān de hūnlǐ, zhǐ qǐng jiāshǔ hé jǐ ge péngyou.",
+        "vi": "Chúng tôi quyết định tổ chức đám cưới đơn giản, chỉ mời người nhà và vài người bạn."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "这个规定很好，公共的场合不用花太多钱。",
+        "pinyin": "zhège guīdìng hěn hǎo, gōnggòng de chǎnghé bú yòng huā tài duō qián.",
+        "vi": "Quy định này hay đấy, ở nơi công cộng không cần tốn nhiều tiền."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "我父亲有很多工夫，他说他会公开地帮助我们。",
+        "pinyin": "wǒ fùqīn yǒu hěn duō gōngfu, tā shuō tā huì gōngkāi de bāngzhù wǒmen.",
+        "vi": "Bố tôi có nhiều thời gian, ông nói ông sẽ công khai giúp chúng tôi."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "电视上会广播这个消息吗？",
+        "pinyin": "diànshì shàng huì guǎngbō zhège xiāoxi ma?",
+        "vi": "Trên TV có phát tin này không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "不会，我们是普通公民，不是公务员。",
+        "pinyin": "bú huì, wǒmen shì pǔtōng gōngmín, bú shì gōngwùyuán.",
+        "vi": "Không, chúng tôi là công dân bình thường, không phải công chức."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "旧的东西就不用买了，用你的工具自己做一个吧。",
+        "pinyin": "jiù de dōngxi jiù bú yòng mǎi le, yòng nǐ de gōngjù zìjǐ zuò yí ge ba.",
+        "vi": "Đồ cũ thì khỏi mua, dùng dụng cụ của bạn tự làm một cái đi."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好啊，我有这个技术！",
+        "pinyin": "hǎo a, wǒ yǒu zhège jìshù!",
+        "vi": "Được chứ, tôi có kỹ năng này!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-3",
+    "book": "hsk3",
+    "lesson": "lesson-3",
+    "title": "决定",
+    "titleVi": "Quyết định khó khăn",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "老太太看起来不太高兴，她怎么了？",
+        "pinyin": "lǎotàitai kànqǐlái bú tài gāoxìng, tā zěnme le?",
+        "vi": "Bà lão trông không vui lắm, bà bị sao thế?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "她和老头儿在讨论儿子离婚的问题，都很难决定。",
+        "pinyin": "tā hé lǎotóur zài tǎolùn érzi líhūn de wèntí, dōu hěn nán juédìng.",
+        "vi": "Bà và ông lão đang bàn chuyện con trai ly hôn, rất khó quyết định."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "据说现在农村的年轻人缺少工作机会，是不是这个原因？",
+        "pinyin": "jùshuō xiànzài nóngcūn de niánqīngrén quēshǎo gōngzuò jīhuì, shì bú shì zhège yuányīn?",
+        "vi": "Nghe nói hiện nay thanh niên ở nông thôn thiếu cơ hội việc làm, có phải vì lý do đó không?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "有这个可能。媒体上常常报道，很多男子去城市工作，母亲和亲人都在农村。",
+        "pinyin": "yǒu zhège kěnéng. méitǐ shàng chángcháng bàodào, hěn duō nánzǐ qù chéngshì gōngzuò, mǔqīn hé qīnrén dōu zài nóngcūn.",
+        "vi": "Có thể vậy. Trên truyền thông hay đưa tin, nhiều đàn ông vào thành phố làm việc, mẹ và người thân đều ở nông thôn."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那面对这样的问题，他们能不能早点说清楚呢？",
+        "pinyin": "nà miànduì zhèyàng de wèntí, tāmen néng bu néng zǎodiǎn shuō qīngchu ne?",
+        "vi": "Vậy trước vấn đề như vậy, họ có thể nói rõ sớm hơn không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "说清楚不容易，生活里有很多看起来简单、实际上很难的事。",
+        "pinyin": "shuō qīngchu bù róngyì, shēnghuó lǐ yǒu hěn duō kànqǐlái jiǎndān, shíjì shàng hěn nán de shì.",
+        "vi": "Nói rõ không dễ, trong cuộc sống có nhiều việc nhìn thì đơn giản mà thực tế rất khó."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "科技发展得这么快，农活也有机器帮忙了吧？",
+        "pinyin": "kējì fāzhǎn de zhème kuài, nónghuó yě yǒu jīqì bāngmáng le ba?",
+        "vi": "Công nghệ phát triển nhanh thế, việc đồng áng cũng có máy giúp rồi chứ?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "是啊，可是机器再好，也不能代替亲人。",
+        "pinyin": "shì a, kěshì jīqì zài hǎo, yě bù néng dàitì qīnrén.",
+        "vi": "Ừ, nhưng máy móc tốt đến đâu cũng không thay thế được người thân."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "我明白。希望他们能确定一个好的方向。",
+        "pinyin": "wǒ míngbai. xīwàng tāmen néng quèdìng yí ge hǎo de fāngxiàng.",
+        "vi": "Tôi hiểu rồi. Hy vọng họ xác định được hướng đi tốt."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "我也是。这个房子太空了，人少了就显得没有生气。",
+        "pinyin": "wǒ yě shì. zhège fángzi tài kōng le, rén shǎo le jiù xiǎn de méiyǒu shēngqì.",
+        "vi": "Tôi cũng vậy. Căn nhà này trống quá, ít người trông chẳng có sức sống."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-4",
+    "book": "hsk3",
+    "lesson": "lesson-4",
+    "title": "预报",
+    "titleVi": "Tin tức và đời sống",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你昨天收看天气预报了吗？",
+        "pinyin": "nǐ zuótiān shōukàn tiānqì yùbào le ma?",
+        "vi": "Hôm qua bạn xem dự báo thời tiết chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "看了，突然降温，我只好穿上厚的衣服。",
+        "pinyin": "kàn le, tūrán jiàngwēn, wǒ zhǐhǎo chuān shàng hòu de yīfu.",
+        "vi": "Xem rồi, trời đột nhiên lạnh xuống, tôi đành phải mặc áo dày."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "我爸爸退休以后，每天都准时收看新闻。",
+        "pinyin": "wǒ bàba tuìxiū yǐhòu, měitiān dōu zhǔnshí shōukàn xīnwén.",
+        "vi": "Bố tôi nghỉ hưu xong, mỗi ngày đều xem tin tức đúng giờ."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "老人喜欢完整的信息，不喜欢题目太简单的文章。",
+        "pinyin": "lǎorén xǐhuan wánzhěng de xìnxī, bù xǐhuan tímù tài jiǎndān de wénzhāng.",
+        "vi": "Người già thích thông tin đầy đủ, không thích bài viết có tiêu đề quá đơn giản."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "他还会外文吗？听说他以前学过。",
+        "pinyin": "tā hái huì wàiwén ma? tīngshuō tā yǐqián xué guo.",
+        "vi": "Ông ấy còn biết ngoại ngữ không? Nghe nói trước đây ông học rồi."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "会一点，但是没有真实的机会用，慢慢就消失了。",
+        "pinyin": "huì yìdiǎn, dànshì méiyǒu zhēnshí de jīhuì yòng, mànmàn jiù xiāoshī le.",
+        "vi": "Biết chút ít, nhưng không có cơ hội thật để dùng, dần dần cũng quên mất."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "现在通信这么方便，可以从网上学习。",
+        "pinyin": "xiànzài tōngxìn zhème fāngbiàn, kěyǐ cóng wǎngshàng xuéxí.",
+        "vi": "Giờ liên lạc tiện thế mà, có thể học trên mạng."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "他试过，但是他更喜欢真实的接触，比如收集邮票。",
+        "pinyin": "tā shì guo, dànshì tā gèng xǐhuan zhēnshí de jiēchù, bǐrú shōují yóupiào.",
+        "vi": "Ông thử rồi, nhưng ông thích tiếp xúc thật hơn, như sưu tầm tem."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "人群里到处都是他这样的人吧？",
+        "pinyin": "rénqún lǐ dàochù dōu shì tā zhèyàng de rén ba?",
+        "vi": "Trong đám đông chắc toàn những người như ông ấy nhỉ?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "有的是！他自己声明过：退休不是结束，是新的事业。",
+        "pinyin": "yǒu de shì! tā zìjǐ shēngmíng guo: tuìxiū bú shì jiéshù, shì xīn de shìyè.",
+        "vi": "Nhiều lắm! Ông ấy từng tuyên bố: nghỉ hưu không phải kết thúc mà là sự nghiệp mới."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-5",
+    "book": "hsk3",
+    "lesson": "lesson-5",
+    "title": "心情",
+    "titleVi": "Cảm xúc và tâm trạng",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "哈哈，你今天的精神真好！",
+        "pinyin": "hāhā, nǐ jīntiān de jīngshén zhēn hǎo!",
+        "vi": "Haha, hôm nay tinh thần bạn tốt thật!"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "因为我终于完成了一个长期的工作，内心特别欢乐。",
+        "pinyin": "yīnwèi wǒ zhōngyú wánchéng le yí ge chángqī de gōngzuò, nèixīn tèbié huānlè.",
+        "vi": "Vì tôi cuối cùng cũng hoàn thành công việc dài hạn, trong lòng đặc biệt vui vẻ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "怪不得！你平时遇到困难会不会害怕？",
+        "pinyin": "guàibudé! nǐ píngshí yùdào kùnnán huì bú huì hàipà?",
+        "vi": "Chả trách! Bình thường gặp khó khăn bạn có sợ không?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "会紧张，但是我很乐观，相信事情会变好。",
+        "pinyin": "huì jǐnzhāng, dànshì wǒ hěn lèguān, xiāngxìn shìqing huì biàn hǎo.",
+        "vi": "Có hồi hộp, nhưng tôi lạc quan, tin mọi việc sẽ tốt lên."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "上次你受伤的时候，我恐怕你伤心了好几天。",
+        "pinyin": "shàng cì nǐ shòushāng de shíhou, wǒ kǒngpà nǐ shāngxīn le hǎo jǐ tiān.",
+        "vi": "Hôm trước khi bạn bị thương, tôi e là bạn buồn mấy ngày."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "是啊，身体上的伤不可怕，感情上的伤才难过。",
+        "pinyin": "shì a, shēntǐ shàng de shāng bù kěpà, gǎnqíng shàng de shāng cái nánguò.",
+        "vi": "Ừ, vết thương trên thân thể không đáng sợ, vết thương trong tình cảm mới buồn."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "现在呢？商业上的事还让你紧张吗？",
+        "pinyin": "xiànzài ne? shāngyè shàng de shì hái ràng nǐ jǐnzhāng ma?",
+        "vi": "Còn bây giờ? Chuyện làm ăn còn khiến bạn căng thẳng không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "好多了。日常的生活很美好，我热爱每一天。",
+        "pinyin": "hǎo duō le. rìcháng de shēnghuó hěn měihǎo, wǒ rè'ài měi yì tiān.",
+        "vi": "Khá hơn nhiều rồi. Cuộc sống thường ngày thật đẹp, tôi yêu mỗi ngày."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "你能说说自己的长处吗？",
+        "pinyin": "nǐ néng shuōshuo zìjǐ de chángchù ma?",
+        "vi": "Bạn có thể nói về ưu điểm của mình không?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "我情感丰富，还很巧，什么难事到我手里都变简单了。",
+        "pinyin": "wǒ qínggǎn fēngfù, hái hěn qiǎo, shénme nán shì dào wǒ shǒu lǐ dōu biàn jiǎndān le.",
+        "vi": "Tôi giàu cảm xúc, lại khéo tay, việc khó gì đến tay tôi cũng trở nên đơn giản."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-6",
+    "book": "hsk3",
+    "lesson": "lesson-6",
+    "title": "性格",
+    "titleVi": "Tính cách và phẩm chất",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你觉得什么样的人最可靠？",
+        "pinyin": "nǐ juéde shénmeyàng de rén zuì kěkào?",
+        "vi": "Bạn thấy người thế nào nhất đáng tin cậy?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我觉得有个性的、能坚持的人最可靠。",
+        "pinyin": "wǒ juéde yǒu gèxìng de, néng jiānchí de rén zuì kěkào.",
+        "vi": "Tôi thấy người có cá tính, biết kiên trì mới đáng tin nhất."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "你说得对。我弟弟就是这样，他总是争取做得最好。",
+        "pinyin": "nǐ shuō de duì. wǒ dìdi jiù shì zhèyàng, tā zǒng shì zhēngqǔ zuò de zuì hǎo.",
+        "vi": "Bạn nói đúng. Em trai tôi là vậy, nó luôn cố gắng làm tốt nhất."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "他现在成熟多了吧？",
+        "pinyin": "tā xiànzài chéngshú duō le ba?",
+        "vi": "Giờ nó trưởng thành hơn nhiều rồi chứ?"
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "是的，他的成长让我很放心。虽然他还年轻，但有本事。",
+        "pinyin": "shì de, tā de chéngzhǎng ràng wǒ hěn fàngxīn. suīrán tā hái niánqīng, dàn yǒu běnshi.",
+        "vi": "Đúng vậy, sự trưởng thành của nó khiến tôi yên tâm. Dù còn trẻ nhưng có bản lĩnh."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "那你呢？你有什么好性格？",
+        "pinyin": "nà nǐ ne? nǐ yǒu shénme hǎo xìnggé?",
+        "vi": "Còn bạn? Bạn có tính cách nào tốt?"
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "我做事尽量节约时间，也尽量帮助别人。",
+        "pinyin": "wǒ zuòshì jìnliàng jiéyuē shíjiān, yě jìnliàng bāngzhù biérén.",
+        "vi": "Tôi làm việc cố gắng tiết kiệm thời gian, cũng cố gắng giúp người khác."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "这确实是你的积极性。所以大家都信任你。",
+        "pinyin": "zhè quèshí shì nǐ de jījíxìng. suǒyǐ dàjiā dōu xìnrèn nǐ.",
+        "vi": "Đây quả thật là tính tích cực của bạn. Nên ai cũng tin tưởng bạn."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "谢谢。好好努力，我们都会进步的。",
+        "pinyin": "xièxie. hǎohāo nǔlì, wǒmen dōu huì jìnbù de.",
+        "vi": "Cảm ơn. Cố gắng tốt lên, chúng ta đều sẽ tiến bộ."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "终于有人这么说了！我们一起加油吧。",
+        "pinyin": "zhōngyú yǒu rén zhème shuō le! wǒmen yìqǐ jiāyóu ba.",
+        "vi": "Cuối cùng cũng có người nói thế! Mình cùng cố gắng nhé."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-7",
+    "book": "hsk3",
+    "lesson": "lesson-7",
+    "title": "生意",
+    "titleVi": "Công việc và văn phòng",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "部长今天安排了一个重要的会议。",
+        "pinyin": "bùzhǎng jīntiān ānpái le yí ge zhòngyào de huìyì.",
+        "vi": "Bộ trưởng hôm nay đã sắp xếp một cuộc họp quan trọng."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我知道，是关于经济合作的事情吧？",
+        "pinyin": "wǒ zhīdào, shì guānyú jīngjì hézuò de shìqing ba?",
+        "vi": "Tôi biết, là chuyện hợp tác kinh tế đúng không?"
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "对。老板要我负责谈判，压力很大。",
+        "pinyin": "duì. lǎobǎn yào wǒ fùzé tánpàn, yālì hěn dà.",
+        "vi": "Đúng. Sếp bảo tôi phụ trách đàm phán, áp lực rất lớn."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "别乱想，你的任务很简单：把市场的情况说清楚。",
+        "pinyin": "bié luàn xiǎng, nǐ de rènwù hěn jiǎndān: bǎ shìchǎng de qíngkuàng shuō qīngchu.",
+        "vi": "Đừng nghĩ lung tung, nhiệm vụ của bạn rất đơn giản: nói rõ tình hình thị trường."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "可是人员不够，事情太多了。",
+        "pinyin": "kěshì rényuán bú gòu, shìqing tài duō le.",
+        "vi": "Nhưng nhân sự không đủ, việc quá nhiều."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "你可以和所长联合起来，大家一起做。",
+        "pinyin": "nǐ kěyǐ hé suǒzhǎng liánhé qǐlái, dàjiā yìqǐ zuò.",
+        "vi": "Bạn có thể liên kết với trưởng phòng, mọi người cùng làm."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "好主意！他们公司最近开业了，正需要生意伙伴。",
+        "pinyin": "hǎo zhǔyi! tāmen gōngsī zuìjìn kāiyè le, zhèng xūyào shēngyi huǒbàn.",
+        "vi": "Ý hay! Công ty họ mới khai trương, đang cần đối tác kinh doanh."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "那就这样安排。工资方面，做完这个项目会有奖励。",
+        "pinyin": "nà jiù zhèyàng ānpái. gōngzī fāngmiàn, zuò wán zhège xiàngmù huì yǒu jiǎnglì.",
+        "vi": "Vậy sắp xếp thế nhé. Về lương, làm xong dự án này sẽ có thưởng."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "太好了！我下午就去海关办手续。",
+        "pinyin": "tài hǎo le! wǒ xiàwǔ jiù qù hǎiguān bàn shǒuxù.",
+        "vi": "Tốt quá! Chiều nay tôi đi hải quan làm thủ tục ngay."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "加油，我相信你会成功的。",
+        "pinyin": "jiāyóu, wǒ xiāngxìn nǐ huì chénggōng de.",
+        "vi": "Cố lên, tôi tin bạn sẽ thành công."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-8",
+    "book": "hsk3",
+    "lesson": "lesson-8",
+    "title": "实验",
+    "titleVi": "Học tập và trường lớp",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "我们班级的比赛成绩怎么样？",
+        "pinyin": "wǒmen bānjí de bǐsài chéngjì zěnmeyàng?",
+        "vi": "Kết quả thi đấu của lớp mình thế nào rồi?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我们班的得分最高！大家都高兴极了。",
+        "pinyin": "wǒmen bān de défēn zuì gāo! dàjiā dōu gāoxìng jí le.",
+        "vi": "Lớp mình có số điểm cao nhất! Ai cũng vui lắm."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "真棒！那功课呢，跟得上吗？",
+        "pinyin": "zhēn bàng! nà gōngkè ne, gēn de shàng ma?",
+        "vi": "Giỏi thế! Còn bài vở thì theo kịp không?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "初中虽然忙，但是必要的内容我都复习了。",
+        "pinyin": "chūzhōng suīrán máng, dànshì bìyào de nèiróng wǒ dōu fùxí le.",
+        "vi": "Trung học cơ sở tuy bận nhưng những nội dung cần thiết tôi đều ôn lại."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "听说新的教材做了改进，你觉得怎么样？",
+        "pinyin": "tīngshuō xīn de jiàocái zuò le gǎijìn, nǐ juéde zěnmeyàng?",
+        "vi": "Nghe nói giáo trình mới đã được cải tiến, bạn thấy thế nào?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "好多了，课程更有经验，也更容易懂。",
+        "pinyin": "hǎo duō le, kèchéng gèng yǒu jīngyàn, yě gèng róngyì dǒng.",
+        "vi": "Khá hơn nhiều, chương trình học có kinh nghiệm hơn cũng dễ hiểu hơn."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "你想从事什么工作？留学的经验对你有帮助吗？",
+        "pinyin": "nǐ xiǎng cóngshì shénme gōngzuò? liúxué de jīngyàn duì nǐ yǒu bāngzhù ma?",
+        "vi": "Bạn muốn theo nghề gì? Kinh nghiệm du học có giúp ích cho bạn không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "我想当教练，或者设计新的设备。",
+        "pinyin": "wǒ xiǎng dāng jiàoliàn, huòzhě shèjì xīn de shèbèi.",
+        "vi": "Tôi muốn làm huấn luyện viên, hoặc thiết kế thiết bị mới."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那你可以去实验室做试验，缺什么设备跟老师说。",
+        "pinyin": "nà nǐ kěyǐ qù shíyànshì zuò shìyàn, quē shénme shèbèi gēn lǎoshī shuō.",
+        "vi": "Thế bạn có thể vào phòng thí nghiệm làm thí nghiệm, thiếu thiết bị gì thì nói với thầy."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好！全场的人都说我有想法，我一定努力。",
+        "pinyin": "hǎo! quánchǎng de rén dōu shuō wǒ yǒu xiǎngfǎ, wǒ yídìng nǔlì.",
+        "vi": "Được! Cả khán phòng ai cũng nói tôi có ý tưởng, tôi nhất định cố gắng."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-9",
+    "book": "hsk3",
+    "lesson": "lesson-9",
+    "title": "美食",
+    "titleVi": "Ăn uống và ẩm thực (1)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "按照这个地图，长城附近有一家不错的餐厅。",
+        "pinyin": "ànzhào zhège dìtú, Chángchéng fùjìn yǒu yì jiā búcuò de cāntīng.",
+        "vi": "Theo tấm bản đồ này, gần Vạn Lý Trường Thành có một nhà hàng khá ổn."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "太好了！我大概饿了，咱们赶紧走吧。",
+        "pinyin": "tài hǎo le! wǒ dàgài è le, zánmen gǎnjǐn zǒu ba.",
+        "vi": "Tốt quá! Tôi cũng đói rồi, mình đi nhanh nào."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "你报了团吗？导游会在报到的地方等我们。",
+        "pinyin": "nǐ bào le tuán ma? dǎoyóu huì zài bàodào de dìfang děng wǒmen.",
+        "vi": "Bạn đã đăng ký tour chưa? Hướng dẫn viên sẽ đợi chúng ta ở nơi tập kết."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "报了，这个团员大概有二十个人，大家来自不同的城市。",
+        "pinyin": "bào le, zhège tuányuán dàgài yǒu èrshí ge rén, dàjiā láizì bùtóng de chéngshì.",
+        "vi": "Rồi, đoàn này khoảng hai mươi người, mọi người đến từ các thành phố khác nhau."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "听说这个导演拍了一部关于美食的电影。",
+        "pinyin": "tīngshuō zhège dǎoyǎn pāi le yí bù guānyú měishí de diànyǐng.",
+        "vi": "Nghe nói đạo diễn này quay một bộ phim về ẩm thực."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "对，电影里说，好的饭菜能把人变为朋友。",
+        "pinyin": "duì, diànyǐng lǐ shuō, hǎo de fàncài néng bǎ rén biàn wéi péngyou.",
+        "vi": "Đúng, trong phim nói món ăn ngon có thể biến người ta thành bạn bè."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "有道理！为了吃到好东西，我们才能走这么远的路。",
+        "pinyin": "yǒu dàolǐ! wèile chī dào hǎo dōngxi, wǒmen cái néng zǒu zhème yuǎn de lù.",
+        "vi": "Có lý! Để ăn được món ngon, chúng ta mới đi xa như vậy."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "今天的队员都很喜欢吃，晚上点菜的时候要防止浪费。",
+        "pinyin": "jīntiān de duìyuán dōu hěn xǐhuan chī, wǎnshang diǎn cài de shíhou yào fángzhǐ làngfèi.",
+        "vi": "Hôm nay các thành viên trong đoàn đều thích ăn, tối gọi món phải đề phòng lãng phí."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "放心，我们的方式是一人点一个菜，大家一起吃。",
+        "pinyin": "fàngxīn, wǒmen de fāngshì shì yì rén diǎn yí ge cài, dàjiā yìqǐ chī.",
+        "vi": "Yên tâm, cách của chúng ta là mỗi người gọi một món, cả nhóm cùng ăn."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，干吗想那么多？先吃再说！",
+        "pinyin": "hǎo, gànmá xiǎng nàme duō? xiān chī zài shuō!",
+        "vi": "Được, việc gì phải nghĩ nhiều thế? Ăn trước đã!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-10",
+    "book": "hsk3",
+    "lesson": "lesson-10",
+    "title": "奶茶",
+    "titleVi": "Ăn uống và ẩm thực (2)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你要红茶还是绿茶？",
+        "pinyin": "nǐ yào hóngchá háishì lǜchá?",
+        "vi": "Bạn muốn trà đỏ hay trà xanh?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我要一杯奶茶，再加一些果汁，谢谢。",
+        "pinyin": "wǒ yào yì bēi nǎichá, zài jiā yìxiē guǒzhī, xièxie.",
+        "vi": "Cho tôi một ly trà sữa, thêm chút nước trái cây, cảm ơn."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "你怎么不喝咖啡或者可乐呢？",
+        "pinyin": "nǐ zěnme bù hē kāfēi huòzhě kělè ne?",
+        "vi": "Sao bạn không uống cà phê hay nước có ga?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "我胃有毛病，不能喝那些。这儿的会员卡能打折吗？",
+        "pinyin": "wǒ wèi yǒu máobìng, bù néng hē nàxiē. zhèr de huìyuán kǎ néng dǎzhé ma?",
+        "vi": "Dạ tôi dạ dày có vấn đề, không uống được mấy thứ đó. Thẻ hội viên ở đây có được giảm giá không?"
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "当然可以。你办个会员卡吧，管理得很方便。",
+        "pinyin": "dāngrán kěyǐ. nǐ bàn ge huìyuán kǎ ba, guǎnlǐ de hěn fāngbiàn.",
+        "vi": "Đương nhiên được. Bạn làm thẻ hội viên đi, quản lý rất tiện."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "好。我家乡也有这样的店，功能差不多。",
+        "pinyin": "hǎo. wǒ jiāxiāng yě yǒu zhèyàng de diàn, gōngnéng chàbuduō.",
+        "vi": "Được. Quê tôi cũng có tiệm như thế này, chức năng tương tự."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "加强休息也很重要，别太困难的事都自己扛。",
+        "pinyin": "jiāqiáng xiūxi yě hěn zhòngyào, bié tài kùnnán de shì dōu zìjǐ káng.",
+        "vi": "Nghỉ ngơi nhiều cũng quan trọng lắm, việc gì quá khó cũng đừng tự gánh một mình."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "谢谢你的关心。各位朋友都说，我最近瘦了。",
+        "pinyin": "xièxie nǐ de guānxīn. gè wèi péngyou dōu shuō, wǒ zuìjìn shòu le.",
+        "vi": "Cảm ơn bạn quan tâm. Các bạn đều nói dạo này tôi gầy đi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那就更要照顾自己了。这些美食都能保存多久？",
+        "pinyin": "nà jiù gèng yào zhàogù zìjǐ le. zhèxiē měishí dōu néng bǎocún duō jiǔ?",
+        "vi": "Vậy càng phải chăm sóc bản thân. Mấy món ngon này giữ được bao lâu?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "两三天吧。告别之前，我把奶茶喝完！",
+        "pinyin": "liǎng sān tiān ba. gàobié zhīqián, wǒ bǎ nǎichá hē wán!",
+        "vi": "Hai ba ngày. Trước khi chia tay, tôi uống hết ly trà sữa này đã!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-11",
+    "book": "hsk3",
+    "lesson": "lesson-11",
+    "title": "命",
+    "titleVi": "Ăn uống và ẩm thực (3)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "今天天气上升了十度，我们喝点凉的吧。",
+        "pinyin": "jīntiān tiānqì shàngshēng le shí dù, wǒmen hē diǎn liáng de ba.",
+        "vi": "Hôm nay nhiệt độ tăng mười độ, mình uống chút đồ mát đi."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "好啊，我要啤酒，你呢？",
+        "pinyin": "hǎo a, wǒ yào píjiǔ, nǐ ne?",
+        "vi": "Được, tôi uống bia, còn bạn?"
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "我不要酒，我要一碗汤和一杯奶茶。",
+        "pinyin": "wǒ bú yào jiǔ, wǒ yào yì wǎn tāng hé yì bēi nǎichá.",
+        "vi": "Tôi không uống rượu, tôi muốn một bát canh và một ly trà sữa."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "这里的汤很甜，是用沙子地里的白菜做的。",
+        "pinyin": "zhèlǐ de tāng hěn tián, shì yòng shāzi dì lǐ de báicài zuò de.",
+        "vi": "Canh ở đây rất ngọt, nấu từ cải trắng trồng trên đất cát."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "听说糖吃多了，生命会有危险。",
+        "pinyin": "tīngshuō táng chī duō le, shēngmìng huì yǒu wēixiǎn.",
+        "vi": "Nghe nói ăn nhiều đường thì sức khỏe có nguy hiểm."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "其次才是糖的问题，主要是要全面地吃饭。",
+        "pinyin": "qícì cái shì táng de wèntí, zhǔyào shì yào quánmiàn de chīfàn.",
+        "vi": "Đường chỉ là vấn đề thứ yếu, chủ yếu là phải ăn uống đầy đủ."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "你能力真强，什么都懂。以前是不是在铁路上工作过？",
+        "pinyin": "nǐ nénglì zhēn qiáng, shénme dōu dǒng. yǐqián shì bu shì zài tiělù shàng gōngzuò guo?",
+        "vi": "Bạn năng lực thật mạnh, hiểu biết mọi thứ. Trước đây bạn từng làm trên đường sắt à?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "对，我以前是铁路工人，现在做石油生意。",
+        "pinyin": "duì, wǒ yǐqián shì tiělù gōngrén, xiànzài zuò shíyóu shēngyi.",
+        "vi": "Đúng, trước tôi là công nhân đường sắt, giờ làm ăn về dầu mỏ."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "怪不得你的实力这么好，老板们都很认可你。",
+        "pinyin": "guàibudé nǐ de shílì zhème hǎo, lǎobǎnmen dōu hěn rènkě nǐ.",
+        "vi": "Chả vậy thực lực của bạn tốt thế, các ông chủ đều công nhận bạn."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "哪里，都是随大家帮忙。我的命运才刚刚开始呢。",
+        "pinyin": "nǎlǐ, dōu shì suí dàjiā bāngmáng. wǒ de mìngyùn cái gānggāng kāishǐ ne.",
+        "vi": "Đâu có, là nhờ mọi người giúp. Số phận của tôi mới chỉ bắt đầu thôi."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-12",
+    "book": "hsk3",
+    "lesson": "lesson-12",
+    "title": "文化",
+    "titleVi": "Ăn uống và ẩm thực (4)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你的听力进步很大，是怎么练习的？",
+        "pinyin": "nǐ de tīnglì jìnbù hěn dà, shì zěnme liànxí de?",
+        "vi": "Kỹ năng nghe của bạn tiến bộ nhiều, bạn luyện thế nào?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我每天听广播，也从网上下载文化节目。",
+        "pinyin": "wǒ měitiān tīng guǎngbō, yě cóng wǎngshàng xiàzǎi wénhuà jiémù.",
+        "vi": "Mỗi ngày tôi nghe đài, cũng tải các chương trình văn hóa trên mạng."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "看来学习效果不错。写作呢？",
+        "pinyin": "kànlái xuéxí xiàoguǒ búcuò. xiězuò ne?",
+        "vi": "Xem ra học có hiệu quả. Còn viết thì sao?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "写作难一点儿，汉字太多了。我整天都在练习。",
+        "pinyin": "xiězuò nán yìdiǎnr, hànzì tài duō le. wǒ zhěngtiān dōu zài liànxí.",
+        "vi": "Viết hơi khó, chữ Hán nhiều quá. Cả ngày tôi đều luyện tập."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你有没有形成自己的学习方法？",
+        "pinyin": "nǐ yǒu méiyǒu xíngchéng zìjǐ de xuéxí fāngfǎ?",
+        "vi": "Bạn đã hình thành cách học riêng cho mình chưa?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "有了，我把生词写在线上卡片里，随时复习。",
+        "pinyin": "yǒu le, wǒ bǎ shēngcí xiě zài xiànshang kǎpiàn lǐ, suíshí fùxí.",
+        "vi": "Rồi, tôi ghi từ mới vào thẻ trên mạng, ôn bất cứ lúc nào."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "这样增加词汇量，成绩肯定提高得快。",
+        "pinyin": "zhèyàng zēngjiā cíhuì liàng, chéngjì kěndìng tígāo de kuài.",
+        "vi": "Vậy tăng thêm lượng từ vựng, thành tích chắc chắn tiến bộ nhanh."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "对。等我行李收拾好，我要去图书馆学文学。",
+        "pinyin": "duì. děng wǒ xíngli shōushi hǎo, wǒ yào qù túshūguǎn xué wénxué.",
+        "vi": "Đúng. Xếp hành lý xong, tôi sẽ đến thư viện học văn học."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "文明的语言也很重要，说话整齐一些，别太快。",
+        "pinyin": "wénmíng de yǔyán yě hěn zhòngyào, shuōhuà zhěngqí yìxiē, bié tài kuài.",
+        "vi": "Ngôn ngữ văn minh cũng quan trọng, nói trau truốt một chút, đừng nói quá nhanh."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，我记住了。从今天开始，一步一步来。",
+        "pinyin": "hǎo, wǒ jìzhù le. cóng jīntiān kāishǐ, yíbù yíbù lái.",
+        "vi": "Được, tôi nhớ rồi. Từ hôm nay, từng bước một."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-13",
+    "book": "hsk3",
+    "lesson": "lesson-13",
+    "title": "价格",
+    "titleVi": "Mua sắm và tiền bạc",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这个商品的价格太贵了，能便宜点儿吗？",
+        "pinyin": "zhège shāngpǐn de jiàgé tài guì le, néng piányi diǎnr ma?",
+        "vi": "Giá món hàng này đắt quá, giảm bớt được không?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "不能。我们的价钱是固定的，收费很公开。",
+        "pinyin": "bù néng. wǒmen de jiàqián shì gùdìng de, shōufèi hěn gōngkāi.",
+        "vi": "Không được. Giá của chúng tôi cố định, thu phí rất công khai."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "那用现金还是刷卡支付？",
+        "pinyin": "nà yòng xiànjīn háishì shuākǎ zhīfù?",
+        "vi": "Vậy thanh toán bằng tiền mặt hay quẹt thẻ?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "都可以。不过人民币要交现金，美元也行。",
+        "pinyin": "dōu kěyǐ. búguò rénmínbì yào jiāo xiànjīn, měiyuán yě xíng.",
+        "vi": "Đều được. Nhưng nhân dân tệ thì phải nộp tiền mặt, đô la Mỹ cũng được."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "好的。我还要交费吗？听说票价比网上高。",
+        "pinyin": "hǎo de. wǒ hái yào jiāofèi ma? tīngshuō piàojià bǐ wǎngshàng gāo.",
+        "vi": "Được. Tôi còn phải nộp thêm phí gì không? Nghe nói giá vé cao hơn trên mạng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "网上的交易一般便宜一些，但是得自己排队取票。",
+        "pinyin": "wǎngshàng de jiāoyì yìbān piányi yìxiē, dànshì děi zìjǐ páiduì qǔ piào.",
+        "vi": "Giao dịch trên mạng thường rẻ hơn, nhưng phải tự xếp hàng lấy vé."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "这样太浪费我的时间了。上面那个柜子有包吗？",
+        "pinyin": "zhèyàng tài làngfèi wǒ de shíjiān le. shàngmiàn nàge guìzi yǒu bāo ma?",
+        "vi": "Vậy phí thời gian tôi quá. Trên kệ có túi không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "有，那个包很值，里面还能装东西，很实用。",
+        "pinyin": "yǒu, nàge bāo hěn zhí, lǐmiàn hái néng zhuāng dōngxi, hěn shíyòng.",
+        "vi": "Có, chiếc túi đó rất đáng tiền, bên trong còn đựng được đồ, rất tiện dụng."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "你们店里的商品真丰富，西部和南部的特产都有。",
+        "pinyin": "nǐmen diàn lǐ de shāngpǐn zhēn fēngfù, xībù hé nánbù de tèchǎn dōu yǒu.",
+        "vi": "Hàng hóa trong cửa hàng phong phú thật, đặc sản Tây Nam và miền Nam đều có."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "对，我们主动为客人想办法，资金上也支持大家。",
+        "pinyin": "duì, wǒmen zhǔdòng wèi kèrén xiǎng bànfǎ, zījīn shàng yě zhīchí dàjiā.",
+        "vi": "Đúng vậy, chúng tôi chủ động nghĩ cách cho khách, về vốn cũng hỗ trợ."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-14",
+    "book": "hsk3",
+    "lesson": "lesson-14",
+    "title": "旅行",
+    "titleVi": "Du lịch và giao thông",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "咱们赶紧走吧，旅行社的车马上就到了。",
+        "pinyin": "zánmen gǎnjǐn zǒu ba, lǚxíngshè de chē mǎshàng jiù dào le.",
+        "vi": "Mình đi nhanh lên, xe của công ty du lịch sắp đến rồi."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "等等我，我 map 上的路线还没看明白。",
+        "pinyin": "děngděng wǒ, wǒ tú shàng de lùxiàn hái méi kàn míngbai.",
+        "vi": "Chờ tôi chút, tuyến đường trên bản đồ tôi còn chưa xem rõ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "不用看，我们走高速公路，速度很快。",
+        "pinyin": "bú yòng kàn, wǒmen zǒu gāosù gōnglù, sùdù hěn kuài.",
+        "vi": "Không cần xem, chúng ta đi đường cao tốc, tốc độ rất nhanh."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "好。我还需要休息，昨天散步走了太多路。",
+        "pinyin": "hǎo. wǒ hái xūyào xiūxi, zuótiān sànbù zǒu le tài duō lù.",
+        "vi": "Được. Tôi vẫn cần nghỉ, hôm qua đi bộ quá nhiều."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那正好，车上你可以睡觉。到了旅馆再活动。",
+        "pinyin": "nà zhènghǎo, chē shàng nǐ kěyǐ shuìjiào. dào le lǚguǎn zài huódòng.",
+        "vi": "Thế càng tốt, trên xe bạn có thể ngủ. Đến khách sạn rồi hãy hoạt động."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "好主意。这次旅行有重大意义，我一定要好好配合。",
+        "pinyin": "hǎo zhǔyi. zhè cì lǚxíng yǒu zhòngdà yìyì, wǒ yídìng yào hǎohǎo pèihé.",
+        "vi": "Ý hay. Chuyến đi này có ý nghĩa lớn, tôi nhất định phải phối hợp tốt."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "你飞行的时候害怕吗？强烈的风有时候让人紧张。",
+        "pinyin": "nǐ fēixíng de shíhou hàipà ma? qiángliè de fēng yǒushíhou ràng rén jǐnzhāng.",
+        "vi": "Khi bay bạn có sợ không? Gió mạnh đôi khi khiến người ta lo lắng."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "不怕，我倒觉得飞行很有意思。",
+        "pinyin": "bú pà, wǒ dào juéde fēixíng hěn yǒu yìsi.",
+        "vi": "Không sợ, tôi lại thấy bay rất thú vị."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那太好了。听说这里的风景特别美，爱心游客都来了。",
+        "pinyin": "nà tài hǎo le. tīngshuō zhèlǐ de fēngjǐng tèbié měi, àixīn yóukè dōu lái le.",
+        "vi": "Thế thì tốt. Nghe nói cảnh đẹp nơi này đặc biệt, du khách yêu mến đều đến."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "太棒了！我马上收拾东西出发。",
+        "pinyin": "tài bàng le! wǒ mǎshàng shōushi dōngxi chūfā.",
+        "vi": "Tuyệt vời! Tôi ngay lập tức thu dọn đồ xuất phát."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-15",
+    "book": "hsk3",
+    "lesson": "lesson-15",
+    "title": "国庆",
+    "titleVi": "Thời gian và lịch (1)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "国庆节你打算怎么过？",
+        "pinyin": "guóqìng jié nǐ dǎsuàn zěnme guò?",
+        "vi": "Lễ Quốc khánh bạn định ăn mừng thế nào?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我当初想回家，后来因为工作太忙，只好取消了。",
+        "pinyin": "wǒ dāngchū xiǎng huí jiā, hòulái yīnwèi gōngzuò tài máng, zhǐhǎo qǔxiāo le.",
+        "vi": "Ban đầu tôi muốn về quê, sau đó vì việc quá bận đành phải hủy."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "太可惜了！你以前曾经回国过吗？",
+        "pinyin": "tài kěxī le! nǐ yǐqián céngjīng huí guó guo ma?",
+        "vi": "Tiếc quá! Trước đây bạn từng về nước chưa?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "回国过一次，大概五年前吧。那次的光景我现在还记得。",
+        "pinyin": "huí guó guo yí cì, dàgài wǔ nián qián ba. nà cì de guāngjǐng wǒ xiànzài hái jìde.",
+        "vi": "Về nước một lần, khoảng năm năm trước. Cảnh tượng lúc đó giờ tôi vẫn nhớ."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "从那以后，你一直在国外吗？",
+        "pinyin": "cóng nà yǐhòu, nǐ yìzhí zài guówài ma?",
+        "vi": "Từ đó đến giờ, bạn luôn ở nước ngoài à?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "对，我从来没有那么长时间不在家。今年年初我打算回来。",
+        "pinyin": "duì, wǒ cónglái méiyǒu nàme cháng shíjiān bú zài jiā. jīnnián niánchū wǒ dǎsuàn huílái.",
+        "vi": "Đúng, tôi chưa bao giờ xa nhà lâu như vậy. Đầu năm nay tôi định về."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "那你现在有事儿吗？我有点儿空儿。",
+        "pinyin": "nà nǐ xiànzài yǒu shìr ma? wǒ yǒudiǎnr kòngr.",
+        "vi": "Vậy bây giờ bạn có bận gì không? Tôi có chút thời gian rảnh."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "正好，你帮我看一下这份创作，我赶紧要交给老师。",
+        "pinyin": "zhènghǎo, nǐ bāng wǒ kàn yíxià zhè fèn chuàngzuò, wǒ gǎnjǐn yào jiāo gěi lǎoshī.",
+        "vi": "Đúng lúc, bạn giúp tôi xem bài sáng tác này, tôi phải nộp cho thầy gấp."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "好，慢慢写，别着急。发明新的东西也需要时间。",
+        "pinyin": "hǎo, mànmàn xiě, bié zháojí. fāmíng xīn de dōngxi yě xūyào shíjiān.",
+        "vi": "Được, cứ từ từ, đừng vội. Sáng chế ra cái mới cũng cần thời gian."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "谢谢！以后我们光着脚也来不及的事，就提前安排。",
+        "pinyin": "xièxie! yǐhòu wǒmen guāngzhe jiǎo yě láibují de shì, jiù tíqián ānpái.",
+        "vi": "Cảm ơn! Sau này việc gấp đến mức chân không kịp thì cứ sắp trước."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-16",
+    "book": "hsk3",
+    "lesson": "lesson-16",
+    "title": "年底",
+    "titleVi": "Thời gian và lịch (2)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "还有一个月就到年底了，时间过得真快。",
+        "pinyin": "hái yǒu yí ge yuè jiù dào niándǐ le, shíjiān guò de zhēn kuài.",
+        "vi": "Còn một tháng nữa là đến cuối năm, thời gian trôi nhanh thật."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "是啊，我年纪越大，越觉得时间不够用。",
+        "pinyin": "shì a, wǒ niánjì yuè dà, yuè juéde shíjiān bú gòu yòng.",
+        "vi": "Ừ, tuổi càng lớn, tôi càng thấy thời gian không đủ dùng."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "你得提前做计划，不要等到最后一刻。",
+        "pinyin": "nǐ děi tíqián zuò jìhuà, bú yào děng dào zuìhòu yí kè.",
+        "vi": "Bạn phải lên kế hoạch trước, đừng đợi đến phút cuối."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "你说得对。我约了医生，下午三点在门诊见面。",
+        "pinyin": "nǐ shuō de duì. wǒ yuē le yīshēng, xiàwǔ sān diǎn zài ménzhěn jiànmiàn.",
+        "vi": "Bạn nói đúng. Tôi đã hẹn bác sĩ, ba giờ chiều gặp ở phòng khám."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那你最好在钟敲三点以前到。",
+        "pinyin": "nà nǐ zuìhǎo zài zhōng qiāo sān diǎn yǐqián dào.",
+        "vi": "Vậy tốt nhất bạn nên đến trước khi đồng hồ điểm ba."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "我总是提醒自己，可惜常常做不到。",
+        "pinyin": "wǒ zǒng shì tíxǐng zìjǐ, kěxī chángcháng zuò bú dào.",
+        "vi": "Tôi luôn tự nhắc mình, tiếc là thường không làm được."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "其实从现在开始也来得及，一直坚持就好。",
+        "pinyin": "qíshí cóng xiànzài kāishǐ yě láidejí, yìzhí jiānchí jiù hǎo.",
+        "vi": "Thật ra bắt đầu từ bây giờ vẫn kịp, chỉ cần kiên trì là được."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "好，我早就想改变了。从今天起，一直到年底，我都要早睡。",
+        "pinyin": "hǎo, wǒ zǎojiù xiǎng gǎibiàn le. cóng jīntiān qǐ, yìzhí dào niándǐ, wǒ dōu yào zǎo shuì.",
+        "vi": "Được, tôi sớm đã muốn thay đổi. Từ hôm nay đến hết năm, tôi sẽ ngủ sớm."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "太好了！那你眼睛里又有精神了。",
+        "pinyin": "tài hǎo le! nà nǐ yǎnjīng lǐ yòu yǒu jīngshén le.",
+        "vi": "Tốt quá! Vậy trong mắt bạn lại có tinh thần rồi."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "哈哈，但愿如此！",
+        "pinyin": "hāhā, dànyuàn rúcǐ!",
+        "vi": "Haha, mong là vậy!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-17",
+    "book": "hsk3",
+    "lesson": "lesson-17",
+    "title": "气候",
+    "titleVi": "Thời tiết và tự nhiên",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你感冒好点儿了吗？",
+        "pinyin": "nǐ gǎnmào hǎo diǎnr le ma?",
+        "vi": "Cảm cúm của bạn khá hơn chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "好多了。本来我想去上班，后来决定在家休息一天。",
+        "pinyin": "hǎo duō le. běnlái wǒ xiǎng qù shàngbān, hòulái juédìng zài jiā xiūxi yì tiān.",
+        "vi": "Khá hơn rồi. Lúc đầu tôi định đi làm, sau đó quyết định nghỉ ở nhà một ngày."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "这几天天气变化太大了，国内很多地方都在下雨。",
+        "pinyin": "zhè jǐ tiān tiānqì biànhuà tài dà le, guónèi hěn duō dìfang dōu zài xiàyǔ.",
+        "vi": "Vài ngày nay thời tiết biến động lớn, nhiều nơi trong nước đều mưa."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "是啊，这里的气候和我的家乡不一样，凉水太多了。",
+        "pinyin": "shì a, zhèlǐ de qìhòu hé wǒ de jiāxiāng bù yíyàng, liángshuǐ tài duō le.",
+        "vi": "Ừ, khí hậu ở đây khác quê tôi, nước lạnh nhiều quá."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你想不想去南方？那里的阳光特别好。",
+        "pinyin": "nǐ xiǎng bù xiǎng qù nánfāng? nàlǐ de yángguāng tèbié hǎo.",
+        "vi": "Bạn có muốn đi miền Nam không? Ở đó nắng đẹp lắm."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "想去！听说天空总是很蓝，人们还非常友好。",
+        "pinyin": "xiǎng qù! tīngshuō tiānkōng zǒngshì hěn lán, rénmen hái fēicháng yǒuhǎo.",
+        "vi": "Muốn lắm! Nghe nói bầu trời lúc nào cũng xanh, người dân lại rất thân thiện."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "那里的食品也好吃。很多华人住在那儿，吃饭很方便。",
+        "pinyin": "nàlǐ de shípǐn yě hǎochī. hěn duō huárén zhù zài nàr, chīfàn hěn fāngbiàn.",
+        "vi": "Đồ ăn ở đó cũng ngon. Nhiều người Hoa sống ở đó, ăn uống rất tiện."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "太好了，我想去看看美丽的景色。",
+        "pinyin": "tài hǎo le, wǒ xiǎng qù kànkàn měilì de jǐngsè.",
+        "vi": "Tốt quá, tôi muốn đi xem phong cảnh đẹp."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "快点儿好起来吧，到时候我们一起去！",
+        "pinyin": "kuài diǎnr hǎo qǐlái ba, dào shíhou wǒmen yìqǐ qù!",
+        "vi": "Mau khỏe lại đi, đến lúc đó mình cùng đi nhé!"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "一言为定！",
+        "pinyin": "yìyán wéi dìng!",
+        "vi": "Hẹn vậy nhé, nhất định!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-18",
+    "book": "hsk3",
+    "lesson": "lesson-18",
+    "title": "大夫",
+    "titleVi": "Sức khỏe và cơ thể (1)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "大夫今天怎么跟你说的？",
+        "pinyin": "dàifu jīntiān zěnme gēn nǐ shuō de?",
+        "vi": "Hôm nay bác sĩ nói với bạn thế nào?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "他说我的手指没问题，不用动刀。",
+        "pinyin": "tā shuō wǒ de shǒuzhǐ méi wèntí, bú yòng dòng dāo.",
+        "vi": "Ông nói ngón tay tôi không sao, không cần mổ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "太好了！那你平时喜欢做什么运动？",
+        "pinyin": "tài hǎo le! nà nǐ píngshí xǐhuan zuò shénme yùndòng?",
+        "vi": "Tốt quá! Vậy bình thường bạn thích vận động gì?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "我每天走一万步，身体感受很好。",
+        "pinyin": "wǒ měitiān zǒu yí wàn bù, shēntǐ gǎnshòu hěn hǎo.",
+        "vi": "Mỗi ngày tôi đi mười nghìn bước, cảm giác cơ thể rất tốt."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "真好。我呢，每天坐着，越来越胖了。",
+        "pinyin": "zhēn hǎo. wǒ ne, měitiān zuòzhe, yuèláiyuè pàng le.",
+        "vi": "Hay thật. Còn tôi ngày nào cũng ngồi, càng ngày càng béo."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "那不行，健康是最基本的。你可以穿短裤去跑步。",
+        "pinyin": "nà bù xíng, jiànkāng shì zuì jīběn de. nǐ kěyǐ chuān duǎnkù qù pǎobù.",
+        "vi": "Vậy không được, sức khỏe là điều cơ bản nhất. Bạn có thể mặc quần đùi đi chạy bộ."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "好主意。不过古代的人不是更健康吗？他们没有汽车。",
+        "pinyin": "hǎo zhǔyi. búguò gǔdài de rén bú shì gèng jiànkāng ma? tāmen méiyǒu qìchē.",
+        "vi": "Ý hay. Nhưng người thời cổ không phải khỏe hơn sao? Họ không có ô tô."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "也不一定，他们生病了很危险，没有好大夫。",
+        "pinyin": "yě bù yídìng, tāmen shēngbìng le hěn wēixiǎn, méiyǒu hǎo dàifu.",
+        "vi": "Cũng chưa chắc, họ ốm đau thì nguy hiểm, không có bác sĩ giỏi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "对，我们现在的生活和平又方便，要珍惜。",
+        "pinyin": "duì, wǒmen xiànzài de shēnghuó hépíng yòu fāngbiàn, yào zhēnxī.",
+        "vi": "Đúng, cuộc sống của chúng ta bây giờ hòa bình và tiện lợi, phải trân trọng."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "是的。明天早上我们一起去公园走路吧？",
+        "pinyin": "shì de. míngtiān zǎoshang wǒmen yìqǐ qù gōngyuán zǒulù ba?",
+        "vi": "Vậy nhé. Sáng mai mình cùng đến công viên đi bộ nhé?"
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "好，七点见！",
+        "pinyin": "hǎo, qī diǎn jiàn!",
+        "vi": "Được, gặp nhau lúc bảy giờ!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-19",
+    "book": "hsk3",
+    "lesson": "lesson-19",
+    "title": "健康",
+    "titleVi": "Sức khỏe và cơ thể (2)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你头上怎么有个包？",
+        "pinyin": "nǐ tóu shang zěnme yǒu ge bāo?",
+        "vi": "Đầu bạn sao lại có cục?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "昨天撞到门了，疼了好几个小时。",
+        "pinyin": "zuótiān zhuàng dào mén le, téng le hǎo jǐ ge xiǎoshí.",
+        "vi": "Hôm qua va vào cửa, đau mấy tiếng đồng hồ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "流血了吗？身体重要，别不在乎。",
+        "pinyin": "liúxiě le ma? shēntǐ zhòngyào, bié bú zàihu.",
+        "vi": "Có chảy máu không? Cơ thể quan trọng, đừng coi thường."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "没流血。不过这次让我体会到了健康的可贵。",
+        "pinyin": "méi liúxiě. búguò zhè cì ràng wǒ tǐhuì dào le jiànkāng de kěguì.",
+        "vi": "Không chảy máu. Nhưng lần này cho tôi cảm nhận được sức khỏe đáng quý."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "是的。你现在营养跟得上吗？",
+        "pinyin": "shì de. nǐ xiànzài yíngyǎng gēn de shàng ma?",
+        "vi": "Đúng vậy. Bây giờ dinh dưỡng của bạn đủ không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "还可以。医生说要注意营养，也要预防感冒。",
+        "pinyin": "hái kěyǐ. yīshēng shuō yào zhùyì yíngyǎng, yě yào yùfáng gǎnmào.",
+        "vi": "Cũng được. Bác sĩ dặn chú ý dinh dưỡng, cũng phải phòng cảm cúm."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "对。你最近是不是又抽烟了？",
+        "pinyin": "duì. nǐ zuìjìn shì bu shì yòu chōuyān le?",
+        "vi": "Đúng. Dạo này bạn có hút thuốc lại không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "抽了两次，被女朋友看见了，她很生气。",
+        "pinyin": "chōu le liǎng cì, bèi nǚpéngyou kànjian le, tā hěn shēngqì.",
+        "vi": "Hút hai lần, bị bạn gái thấy, cô ấy rất giận."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "她是对的。为了健康，烟一定要戒。",
+        "pinyin": "tā shì duì de. wèile jiànkāng, yān yídìng yào jiè.",
+        "vi": "Cô ấy đúng. Vì sức khỏe, thuốc nhất định phải bỏ."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "我知道。我给他留下了不好的印象，真不好意思。",
+        "pinyin": "wǒ zhīdào. wǒ gěi tā liúxià le bù hǎo de yìnxiàng, zhēn bù hǎoyìsi.",
+        "vi": "Tôi biết. Tôi đã để lại ấn tượng xấu cho cô ấy, thật ngại quá."
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "没关系，改了就好。整个周末你好好休息吧。",
+        "pinyin": "méi guānxì, gǎi le jiù hǎo. zhěng ge zhōumò nǐ hǎohāo xiūxi ba.",
+        "vi": "Không sao, sửa là được. Cả cuối tuần bạn cứ nghỉ ngơi cho khỏe."
+      },
+      {
+        "n": 12,
+        "speaker": "B",
+        "zh": "好，谢谢你，我一定照办。",
+        "pinyin": "hǎo, xièxie nǐ, wǒ yídìng zhàobàn.",
+        "vi": "Được, cảm ơn bạn, tôi nhất định làm theo."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-20",
+    "book": "hsk3",
+    "lesson": "lesson-20",
+    "title": "搬家",
+    "titleVi": "Nhà cửa và đồ vật",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "听说你要搬家了？",
+        "pinyin": "tīngshuō nǐ yào bānjiā le?",
+        "vi": "Nghe nói bạn sắp chuyển nhà?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "对，我找到了一个新的屋子，房租便宜一些。",
+        "pinyin": "duì, wǒ zhǎodào le yí ge xīn de wūzi, fángzū piányi yìxiē.",
+        "vi": "Đúng, tôi tìm được một căn phòng mới, tiền thuê rẻ hơn một chút."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "在首都吗？那儿的房租可贵了。",
+        "pinyin": "zài shǒudū ma? nàr de fángzū kě guì le.",
+        "vi": "Ở thủ đô à? Tiền thuê nhà ở đó đắt lắm."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "不在市中心，在郊区。坐地铁半个小时就到。",
+        "pinyin": "bú zài shìzhōngxīn, zài jiāoqū. zuò dìtiě bàn ge xiǎoshí jiù dào.",
+        "vi": "Không phải trung tâm, ở vùng ven. Đi tàu điện nửa tiếng là đến."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那不错。新家有什么家具吗？",
+        "pinyin": "nà búcuò. xīn jiā yǒu shénme jiājù ma?",
+        "vi": "Vậy được đấy. Nhà mới có nội thất gì không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "有沙发和书架，但是卫生间太小了。",
+        "pinyin": "yǒu shāfā hé shūjià, dànshì wèishēngjiān tài xiǎo le.",
+        "vi": "Có ghế sô pha và kệ sách, nhưng nhà vệ sinh quá nhỏ."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "慢慢来，东西可以一件一件地买。",
+        "pinyin": "mànmàn lái, dōngxi kěyǐ yí jiàn yí jiàn de mǎi.",
+        "vi": "Từ từ thôi, đồ đạc có thể mua từng món một."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "你说得对。我表姐在那儿的工厂工作，她会帮我。",
+        "pinyin": "nǐ shuō de duì. wǒ biǎojiě zài nàr de gōngchǎng gōngzuò, tā huì bāng wǒ.",
+        "vi": "Bạn nói đúng. Chị họ tôi làm ở nhà máy gần đó, chị sẽ giúp tôi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那就好。搬家的时候需要人手吗？",
+        "pinyin": "nà jiù hǎo. bānjiā de shíhou xūyào rénshǒu ma?",
+        "vi": "Vậy thì tốt. Ngày chuyển nhà có cần người giúp không?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "需要！到时候你可别批评我东西太多啊！",
+        "pinyin": "xūyào! dào shíhou nǐ kě bié pīpíng wǒ dōngxi tài duō a!",
+        "vi": "Có chứ! Đến lúc đó đừng chê tôi đồ nhiều quá nhé!"
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "哈哈，放心，我一定准时到。",
+        "pinyin": "hāhā, fàngxīn, wǒ yídìng zhǔnshí dào.",
+        "vi": "Haha, yên tâm, tôi nhất định đến đúng giờ."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-21",
+    "book": "hsk3",
+    "lesson": "lesson-21",
+    "title": "服装",
+    "titleVi": "Quần áo và màu sắc",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "明天决赛的服装你准备好了吗？",
+        "pinyin": "míngtiān juésài de fúzhuāng nǐ zhǔnbèi hǎo le ma?",
+        "vi": "Bạn chuẩn bị trang phục cho trận chung kết ngày mai chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "准备好了，金色的上衣，黑色的裤子。",
+        "pinyin": "zhǔnbèi hǎo le, jīnsè de shàngyī, hēisè de kùzi.",
+        "vi": "Sẵn sàng rồi, áo vàng kim, quần đen."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "颜色真好看！那你穿裙子还是裤子呢？",
+        "pinyin": "yánsè zhēn hǎokàn! nà nǐ chuān qúnzi háishì kùzi ne?",
+        "vi": "Màu đẹp thật! Vậy bạn mặc váy hay quần?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "裤子方便一些，比赛的时候活动自如。",
+        "pinyin": "kùzi fāngbiàn yìxiē, bǐsài de shíhou huódòng zìrú.",
+        "vi": "Quần tiện hơn, lúc thi đấu vận động thoải mái."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "对。不过你还得调整一下心理，别太紧张。",
+        "pinyin": "duì. búguò nǐ hái děi tiáozhěng yíxià xīnlǐ, bié tài jǐnzhāng.",
+        "vi": "Đúng. Nhưng bạn còn phải điều chỉnh tâm lý, đừng quá căng thẳng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "我保证不紧张。这次我一定要赢！",
+        "pinyin": "wǒ bǎozhèng bù jǐnzhāng. zhè cì wǒ yídìng yào yíng!",
+        "vi": "Tôi cam đoan không căng thẳng. Lần này tôi nhất định phải thắng!"
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "对，世界上的好事都是靠努力得来的。",
+        "pinyin": "duì, shìjiè shàng de hǎoshì dōu shì kào nǔlì délái de.",
+        "vi": "Đúng, những điều tốt đẹp trên đời đều đến từ nỗ lực."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "嗯，从比赛开始到结束，我都会尽全力。",
+        "pinyin": "ǹg, cóng bǐsài kāishǐ dào jiéshù, wǒ dōu huì jìn quánlì.",
+        "vi": "Ừ, từ đầu đến cuối trận, tôi sẽ dồn hết sức."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "加油！对了，衣服上的银色扣子掉了，得缝一下。",
+        "pinyin": "jiāyóu! duìle, yīfu shàng de yínsè kòuzi diào le, děi féng yíxià.",
+        "vi": "Cố lên! À, cúc bạc trên áo rơi mất rồi, phải khâu lại."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，我马上去整理。一切都会顺利的！",
+        "pinyin": "hǎo, wǒ mǎshàng qù zhěnglǐ. yíqiè dōu huì shùnlì de!",
+        "vi": "Được, tôi đi sắp xếp ngay. Mọi việc sẽ hanh thông!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-22",
+    "book": "hsk3",
+    "lesson": "lesson-22",
+    "title": "消息",
+    "titleVi": "Giao tiếp và lời nói",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你收到我的电子邮件了吗？",
+        "pinyin": "nǐ shōudào wǒ de diànzǐ yóujiàn le ma?",
+        "vi": "Bạn nhận được email của tôi chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "收到了，消息很重要，我马上就回复了。",
+        "pinyin": "shōudào le, xiāoxi hěn zhòngyào, wǒ mǎshàng jiù huífù le.",
+        "vi": "Rồi, tin quan trọng mà, tôi trả lời ngay."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "谢谢！我想向你请教一个问题，可以吗？",
+        "pinyin": "xièxie! wǒ xiǎng xiàng nǐ qǐngjiào yí ge wèntí, kěyǐ ma?",
+        "vi": "Cảm ơn! Tôi muốn hỏi bạn một vấn đề, được không?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "当然可以。什么话题？",
+        "pinyin": "dāngrán kěyǐ. shénme huàtí?",
+        "vi": "Đương nhiên được. Chủ đề gì vậy?"
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "我想访问一位记者，可是不知道怎么联系他。",
+        "pinyin": "wǒ xiǎng fǎngwèn yí wèi jìzhě, kěshì bù zhīdào zěnme liánxì tā.",
+        "vi": "Tôi muốn phỏng vấn một phóng viên, nhưng không biết cách liên hệ thế nào."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "你可以去电视台打听一下，他们办公室的人都知道。",
+        "pinyin": "nǐ kěyǐ qù diànshìtái dǎting yíxià, tāmen bàngōngshì de rén dōu zhīdào.",
+        "vi": "Bạn có thể đến đài truyền hình hỏi thăm, ai trong văn phòng họ cũng biết."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "好主意。听说他是个奇怪的人，不接受访问？",
+        "pinyin": "hǎo zhǔyi. tīngshuō tā shì ge qíguài de rén, bù jiēshòu fǎngwèn?",
+        "vi": "Ý hay. Nghe nói ông ấy là người kỳ lạ, không nhận phỏng vấn?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "其实不是，老百姓都愿意跟他谈话。他只是很忙。",
+        "pinyin": "qíshí bú shì, lǎobǎixìng dōu yuànyì gēn tā tánhuà. tā zhǐ shì hěn máng.",
+        "vi": "Thật ra không phải vậy, dân thường đều muốn nói chuyện với ông. Ông chỉ bận thôi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那就好。听说他每次发言都反对浪费。",
+        "pinyin": "nà jiù hǎo. tīngshuō tā měi cì fāyán dōu fǎnduì làngfèi.",
+        "vi": "Vậy tốt. Nghe nói lần nào ông phát biểu cũng phản đối lãng phí."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "对，他提的问题往往都很尖锐，大家确实喜欢他。",
+        "pinyin": "duì, tā tí de wèntí wǎngwǎng dōu hěn jiānruì, dàjiā quèshí xǐhuan tā.",
+        "vi": "Đúng, những câu hỏi ông đặt ra thường rất sắc bén, mọi người thật sự quý ông ấy."
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "明白了，我这就去联系。",
+        "pinyin": "míngbai le, wǒ zhè jiù qù liánxì.",
+        "vi": "Hiểu rồi, tôi đi liên hệ ngay đây."
+      },
+      {
+        "n": 12,
+        "speaker": "B",
+        "zh": "祝你好运！欢迎来我的邮箱留言。",
+        "pinyin": "zhù nǐ hǎoyùn! huānyíng lái wǒ de yóuxiāng liúyán.",
+        "vi": "Chúc bạn may mắn! Mời bạn để lại lời nhắn vào hộp thư của tôi."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-23",
+    "book": "hsk3",
+    "lesson": "lesson-23",
+    "title": "京剧",
+    "titleVi": "Giải trí và thể thao",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "今晚我们去看京剧表演好吗？",
+        "pinyin": "jīnwǎn wǒmen qù kàn jīngjù biǎoyǎn hǎo ma?",
+        "vi": "Tối nay đi xem biểu diễn kinh kịch nhé?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "好啊！剧场在哪儿？",
+        "pinyin": "hǎo a! jùchǎng zài nǎr?",
+        "vi": "Được chứ! Nhà hát ở đâu?"
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "在城市东边。先说好，我们可不能吵架了。",
+        "pinyin": "zài chéngshì dōngbian. xiān shuō hǎo, wǒmen kě bù néng chǎojià le.",
+        "vi": "Ở phía đông thành phố. Thống nhất trước nhé, mình đừng cãi nhau."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "放心，看演出的时候我很安静。",
+        "pinyin": "fàngxīn, kàn yǎnchū de shíhou wǒ hěn ānjìng.",
+        "vi": "Yên tâm, lúc xem biểu diễn tôi rất trật tự."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你是歌迷还是戏迷？",
+        "pinyin": "nǐ shì gēmí háishì xìmí?",
+        "vi": "Bạn là fan nhạc hay fan hát chèo?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "都是！我以前听过很多歌手的歌，也喜欢看话剧。",
+        "pinyin": "dōu shì! wǒ yǐqián tīng guo hěn duō gēshǒu de gē, yě xǐhuan kàn huàjù.",
+        "vi": "Đều là! Trước đây tôi nghe nhiều bài của các ca sĩ, cũng thích xem kịch nói."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "现在电视剧也发展得很好，我们还可以在家看连续剧。",
+        "pinyin": "xiànzài diànshìjù yě fāzhǎn de hěn hǎo, wǒmen hái kěyǐ zài jiā kàn liánxùjù.",
+        "vi": "Giờ phim truyền hình cũng phát triển tốt, còn có thể xem phim dài tập ở nhà."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "看电视不运动可不行，我周末还要跑步、跳高。",
+        "pinyin": "kàn diànshì bú yùndòng kě bù xíng, wǒ zhōumò hái yào pǎobù, tiàogāo.",
+        "vi": "Chỉ xem TV mà không vận động thì không được, cuối tuần tôi còn chạy bộ, nhảy cao."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "怪不得你的身体这么结实。",
+        "pinyin": "guàibudé nǐ de shēntǐ zhème jiēshi.",
+        "vi": "Chả vậy mà thân hình bạn vạm vỡ thế."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "我们代表团还经常比赛呢。走了，别让孩子们等我们。",
+        "pinyin": "wǒmen dàibiǎotuán hái jīngcháng bǐsài ne. zǒu le, bié ràng háizimen děng wǒmen.",
+        "vi": "Đoàn của chúng tôi còn hay thi đấu nữa. Đi thôi, đừng để lũ trẻ đợi."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-24",
+    "book": "hsk3",
+    "lesson": "lesson-24",
+    "title": "决心",
+    "titleVi": "Suy nghĩ và ý kiến",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你到底想不想去留学？做个决定吧。",
+        "pinyin": "nǐ dàodǐ xiǎng bù xiǎng qù liúxué? zuò ge juédìng ba.",
+        "vi": "Rốt cuộc bạn có muốn đi du học không? Quyết định đi."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我想去，但是问题很复杂，我比较犹豫。",
+        "pinyin": "wǒ xiǎng qù, dànshì wèntí hěn fùzá, wǒ bǐjiào yóuyù.",
+        "vi": "Tôi muốn đi, nhưng vấn đề phức tạp, tôi hơi phân vân."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "具体的困难是什么？说给我听听。",
+        "pinyin": "jùtǐ de kùnnán shì shénme? shuō gěi wǒ tīngting.",
+        "vi": "Khó khăn cụ thể là gì? Kể tôi nghe xem."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "费用太高了，而且我担心自己达不到要求。",
+        "pinyin": "fèiyòng tài gāo le, érqiě wǒ dānxīn zìjǐ dá bú dào yāoqiú.",
+        "vi": "Chi phí quá cao, nữa tôi lo mình không đạt yêu cầu."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你有把握吗？先看看事实再说。",
+        "pinyin": "nǐ yǒu bǎwò ma? xiān kànkàn shìshí zài shuō.",
+        "vi": "Bạn có tự tin không? Xem thực tế trước đã."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "其实我的成绩不错，理由还是有的。",
+        "pinyin": "qíshí wǒ de chéngjì búcuò, lǐyóu háishì yǒu de.",
+        "vi": "Thật ra thành tích của tôi không tệ, lý do vẫn có."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "那你还犹豫什么？学习的机会很有价值。",
+        "pinyin": "nà nǐ hái yóuyù shénme? xuéxí de jīhuì hěn yǒu jiàzhí.",
+        "vi": "Vậy còn do dự gì nữa? Cơ hội học tập rất có giá trị."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "你说得明确，我听清楚了。我坚决要去！",
+        "pinyin": "nǐ shuō de míngquè, wǒ tīng qīngchu le. wǒ jiānjué yào qù!",
+        "vi": "Bạn nói rõ ràng, tôi nghe hiểu rồi. Tôi quyết tâm đi!"
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "这才对！一个人的决心能带来明显的变化。",
+        "pinyin": "zhè cái duì! yí ge rén de juéxīn néng dàilái míngxiǎn de biànhuà.",
+        "vi": "Vậy mới đúng! Quyết tâm của một người có thể mang lại thay đổi rõ rệt."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "嗯，这件事让我对将来的计划更深刻了。",
+        "pinyin": "ǹg, zhè jiàn shì ràng wǒ duì jiānglái de jìhuà gèng shēnkè le.",
+        "vi": "Ừ, chuyện này khiến tôi hiểu sâu hơn về kế hoạch tương lai."
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "好，祝你成功！到时候别忘了告诉我。",
+        "pinyin": "hǎo, zhù nǐ chénggōng! dào shíhou bié wàngle gàosu wǒ.",
+        "vi": "Được, chúc bạn thành công! Đừng quên nói với tôi nhé."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-25",
+    "book": "hsk3",
+    "lesson": "lesson-25",
+    "title": "搬家",
+    "titleVi": "Hành động và vận động (1)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这台新空调安装好了吗？",
+        "pinyin": "zhè tái xīn kōngtiáo ānzhuāng hǎo le ma?",
+        "vi": "Máy điều hòa mới lắp đặt xong chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "快了，安装的师傅马上到。他们从城东赶到这儿。",
+        "pinyin": "kuài le, ānzhuāng de shīfu mǎshàng dào. tāmen cóng chéngdōng gǎndào zhèr.",
+        "vi": "Sắp rồi, thợ lắp đặt sắp đến. Họ chạy từ phía đông thành phố sang đây."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "好。搬家的事呢？我们先把东西放到车上。",
+        "pinyin": "hǎo. bānjiā de shì ne? wǒmen xiān bǎ dōngxi fàng dào chē shàng.",
+        "vi": "Được. Chuyện chuyển nhà thì sao? Mình先把 đồ lên xe trước."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "好。我搬了几次家，感觉一次比一次累。",
+        "pinyin": "hǎo. wǒ bān le jǐ cì jiā, gǎnjué yí cì bǐ yí cì lèi.",
+        "vi": "Được. Tôi chuyển nhà mấy lần, cảm giác lần nào cũng mệt hơn."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "搬家也是学习的过程，能了解自己有多少东西。",
+        "pinyin": "bānjiā yě shì xuéxí de guòchéng, néng liǎojiě zìjǐ yǒu duōshǎo dōngxi.",
+        "vi": "Chuyển nhà cũng là quá trình học hỏi, biết được mình có bao nhiêu đồ."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "哈哈，还发现了很多没用过的东西！",
+        "pinyin": "hāhā, hái fāxiàn le hěn duō méi yòng guo de dōngxi!",
+        "vi": "Haha, còn phát hiện ra nhiều thứ chưa từng dùng!"
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "分别的时候，别忘了告诉邻居们你的新地址。",
+        "pinyin": "fēnbié de shíhou, bié wàngle gàosu línjūmen nǐ de xīn dìzhǐ.",
+        "vi": "Khi chia tay, đừng quên nói cho hàng xóm địa chỉ mới của bạn."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "我会的。电话一发出，大家就都收到了。",
+        "pinyin": "wǒ huì de. diànhuà yì fāchū, dàjiā jiù dōu shōudào le.",
+        "vi": "Tôi sẽ thế. Tin nhắn vừa gửi đi là mọi người đều nhận được."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "对了，墙上那幅画要不要挂起来？",
+        "pinyin": "duìle, qiáng shang nà fú huà yào bu yào guà qǐlái?",
+        "vi": "À, bức tranh trên tường có cần treo lên không?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "挂吧！新家就要有个新样子，也产生点新气象。",
+        "pinyin": "guà ba! xīn jiā jiù yào yǒu ge xīn yàngzi, yě chǎnshēng diǎn xīn qìxiàng.",
+        "vi": "Treo đi! Nhà mới phải có dáng vẻ mới, cũng tạo chút khí sắc mới."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-26",
+    "book": "hsk3",
+    "lesson": "lesson-26",
+    "title": "交流",
+    "titleVi": "Hành động và vận động (2)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你最近在忙什么？好久没见面了。",
+        "pinyin": "nǐ zuìjìn zài máng shénme? hǎojiǔ méi jiànmiàn le.",
+        "vi": "Dạo này bạn bận gì thế? Lâu rồi không gặp."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "我在建立一个新的网站，开展在线交流的活动。",
+        "pinyin": "wǒ zài jiànlì yí ge xīn de wǎngzhàn, kāizhǎn zàixiàn jiāoliú de huódòng.",
+        "vi": "Tôi đang xây dựng một website mới, triển khai hoạt động giao tiếp trực tuyến."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "听起来不错！难道你不怕累吗？",
+        "pinyin": "tīng qǐlái búcuò! nándào nǐ bú pà lèi ma?",
+        "vi": "Nghe hay đấy! Chẳng lẽ bạn không sợ mệt à?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "其实很累，但是我不怕。经过考验才知道自己的能力。",
+        "pinyin": "qíshí hěn lèi, dànshì wǒ bú pà. jīngguò kǎoyàn cái zhīdào zìjǐ de nénglì.",
+        "vi": "Thật ra rất mệt, nhưng tôi không sợ. Trải qua thử thách mới biết năng lực của mình."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你的理论真不错。你怎么克服困难呢？",
+        "pinyin": "nǐ de lǐlùn zhēn búcuò. nǐ zěnme kèfú kùnnán ne?",
+        "vi": "Lý luận của bạn hay đấy. Bạn vượt qua khó khăn thế nào?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "一步一步来。另外，多向有经验的人请教也很重要。",
+        "pinyin": "yíbù yíbù lái. lìngwài, duō xiàng yǒu jīngyàn de rén qǐngjiào yě hěn zhòngyào.",
+        "vi": "Từng bước một. Ngoài ra, hỏi ý kiến người có kinh nghiệm cũng rất quan trọng."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "环境对人的影响也很大吧？",
+        "pinyin": "huánjìng duì rén de yǐngxiǎng yě hěn dà ba?",
+        "vi": "Môi trường ảnh hưởng đến con người cũng lớn lắm chứ?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "对。在城市里工作，交往的人多，机会也多。",
+        "pinyin": "duì. zài chéngshì lǐ gōngzuò, jiāowǎng de rén duō, jīhuì yě duō.",
+        "vi": "Đúng. Làm việc ở thành phố, người giao tiếp nhiều, cơ hội cũng nhiều."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那你有什么缺点吗？",
+        "pinyin": "nà nǐ yǒu shénme quēdiǎn ma?",
+        "vi": "Thế bạn có điểm yếu gì không?"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "我太容易分心，这是我最大的问题，我要进一步改进。",
+        "pinyin": "wǒ tài róngyì fēnxīn, zhè shì wǒ zuì dà de wèntí, wǒ yào jìnyíbù gǎijìn.",
+        "vi": "Tôi dễ bị mất tập trung, đó là vấn đề lớn nhất của tôi, tôi sẽ cải tiến thêm."
+      },
+      {
+        "n": 11,
+        "speaker": "A",
+        "zh": "能认识到这一点就很好了。加油！",
+        "pinyin": "néng rènshidào zhè yìdiǎn jiù hěn hǎo le. jiāyóu!",
+        "vi": "Nhận ra được điều này là rất tốt rồi. Cố lên!"
+      },
+      {
+        "n": 12,
+        "speaker": "B",
+        "zh": "谢谢，我会努力的。网站做好了请你来评价！",
+        "pinyin": "xièxie, wǒ huì nǔlì de. wǎngzhàn zuò hǎo le qǐng nǐ lái píngjià!",
+        "vi": "Cảm ơn, tôi sẽ cố gắng. Website làm xong mời bạn đến đánh giá!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-27",
+    "book": "hsk3",
+    "lesson": "lesson-27",
+    "title": "同意",
+    "titleVi": "Hành động và vận động (3)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "刚才收音机里说，这个地区的工厂收了不少废品。",
+        "pinyin": "gāngcái shōuyīnjī lǐ shuō, zhège dìqū de gōngchǎng shōu le bùshǎo fèipǐn.",
+        "vi": "Nãy giờ-radio nói nhà máy ở khu vực này thu không ít phế liệu."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "是啊，这是件好事，我同意他们的做法。",
+        "pinyin": "shì a, zhè shì jiàn hǎoshì, wǒ tóngyì tāmen de zuòfǎ.",
+        "vi": "Ừ, đây là việc tốt, tôi đồng ý với cách làm của họ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "不过他们扔石头进河里，这就不好了。",
+        "pinyin": "búguò tāmen rēng shítou jìn hé lǐ, zhè jiù bù hǎo le.",
+        "vi": "Nhưng họ ném đá xuống sông thì không hay."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "真的吗？那会造成环境问题。",
+        "pinyin": "zhēn de ma? nà huì zàochéng huánjìng wèntí.",
+        "vi": "Thật không? Vậy sẽ gây ra vấn đề môi trường."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "我们上去看看吧，把这事儿搞清楚。",
+        "pinyin": "wǒmen shàngqu qù kànkàn ba, bǎ zhè shìr gǎo qīngchu.",
+        "vi": "Mình lên xem thử đi, làm rõ chuyện này."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "好。实际上，保护环境是每个人的责任。",
+        "pinyin": "hǎo. shíjì shàng, bǎohù huánjìng shì měi ge rén de zérèn.",
+        "vi": "Được. Thực tế, bảo vệ môi trường là trách nhiệm của mỗi người."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "对。你们工厂属于哪个部门管？",
+        "pinyin": "duì. nǐmen gōngchǎng shǔyú nǎge bùmén guǎn?",
+        "vi": "Đúng. Nhà máy của các bạn thuộc bộ phận nào quản lý?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "属于市里的环保部门。我们可以打电话反映情况。",
+        "pinyin": "shǔyú shì lǐ de huánbǎo bùmén. wǒmen kěyǐ dǎ diànhuà fǎnyìng qíngkuàng.",
+        "vi": "Thuộc bộ phận môi trường của thành phố. Mình có thể gọi điện phản ánh tình hình."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "好主意。让我们把这个问题深入地讨论一下。",
+        "pinyin": "hǎo zhǔyi. ràng wǒmen bǎ zhège wèntí shēnrù de tǎolùn yíxià.",
+        "vi": "Ý hay. Cứ để chúng ta bàn bạc sâu vấn đề này."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "行。通过讨论，大家的思想就会更清楚。",
+        "pinyin": "xíng. tōngguò tǎolùn, dàjiā de sīxiǎng jiù huì gèng qīngchu.",
+        "vi": "Được. Qua bàn bạc, tư tưởng của mọi người sẽ rõ hơn."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-28",
+    "book": "hsk3",
+    "lesson": "lesson-28",
+    "title": "合作",
+    "titleVi": "Hành động và vận động (4)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这家工厂专门生产衣服，产品做得值得信赖。",
+        "pinyin": "zhè jiā gōngchǎng zhuānmén shēngchǎn yīfu, chǎnpǐn zuò de zhídé xìnlài.",
+        "vi": "Nhà máy này chuyên sản xuất quần áo, sản phẩm làm đáng tin."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "他们的运输也不错，货物左右都能送到。",
+        "pinyin": "tāmen de yùnshū yě búcuò, huòwù zuǒyòu dōu néng sòngdào.",
+        "vi": "Vận chuyển của họ cũng tốt, hàng hóa bên nào cũng giao đến được."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "听说周围的几个公司都想跟他们合作。",
+        "pinyin": "tīngshuō zhōuwéi de jǐ ge gōngsī dōu xiǎng gēn tāmen hézuò.",
+        "vi": "Nghe nói vài công ty xung quanh đều muốn hợp tác với họ."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "因为他们互相尊重，很讲究信用。",
+        "pinyin": "yīnwèi tāmen hùxiāng zūnzhòng, hěn jiǎngjiu xìnyòng.",
+        "vi": "Vì họ tôn trọng lẫn nhau, rất coi trọng uy tín."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "你认识他们的经理吗？能不能介绍一下？",
+        "pinyin": "nǐ rènshi tāmen de jīnglǐ ma? néng bu néng jièshào yíxià?",
+        "vi": "Bạn quen giám đốc của họ không? Giới thiệu giúp được không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "认识。他这个人抓工作很紧，对人却很客气。",
+        "pinyin": "rènshi. tā zhège rén zhuā gōngzuò hěn jǐn, duì rén què hěn kèqi.",
+        "vi": "Quen. Anh ấy bắt tay vào công việc rất chặt, nhưng với người lại rất lịch sự."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "那就好了。至少我们可以先去参观一下。",
+        "pinyin": "nà jiù hǎo le. zhìshǎo wǒmen kěyǐ xiān qù cānguān yíxià.",
+        "vi": "Vậy tốt. Ít nhất chúng ta có thể đi tham quan trước."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "对。他们生产的过程很现代化，值得学习。",
+        "pinyin": "duì. tāmen shēngchǎn de guòchéng hěn xiàndàihuà, zhídé xuéxí.",
+        "vi": "Đúng. Quy trình sản xuất của họ rất hiện đại, đáng học hỏi."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那你先帮我们约个时间，咱们转一圈再谈合作。",
+        "pinyin": "nà nǐ xiān bāng wǒmen yuē ge shíjiān, zánmen zhuàn yì quān zài tán hézuò.",
+        "vi": "Vậy bạn hẹn giúp thời gian trước, mình tham quan một vòng rồi mới bàn hợp tác."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，我马上打电话。",
+        "pinyin": "hǎo, wǒ mǎshàng dǎ diànhuà.",
+        "vi": "Được, tôi gọi điện ngay."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-29",
+    "book": "hsk3",
+    "lesson": "lesson-29",
+    "title": "世界",
+    "titleVi": "Bổ sung (1)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "互联网让世界变小了。",
+        "pinyin": "hùliánwǎng ràng shìjiè biàn xiǎo le.",
+        "vi": "Internet khiến thế giới thu nhỏ lại."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "对，一方面信息传播快，另一方面人也互相理解得更多了。",
+        "pinyin": "duì, yì fāngmiàn xìnxī chuánbō kuài, lìng yì fāngmiàn rén yě hùxiāng lǐjiě de gèng duō le.",
+        "vi": "Đúng, một mặt thông tin lan nhanh, mặt khác con người hiểu nhau nhiều hơn."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "你是专家，说说你的主意吧。",
+        "pinyin": "nǐ shì zhuānjiā, shuōshuo nǐ de zhǔyi ba.",
+        "vi": "Bạn là chuyên gia, nói ý kiến của bạn đi."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "我觉得人民的生活水平提高了，可是也要注意安全。",
+        "pinyin": "wǒ juéde rénmín de shēnghuó shuǐpíng tígāo le, kěshì yě yào zhùyì ānquán.",
+        "vi": "Tôi thấy đời sống của người dân nâng cao, nhưng cũng phải chú ý an toàn."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "对。现在网上的骗子不少，还是要亲自核对。",
+        "pinyin": "duì. xiànzài wǎngshàng de piànzǐ bù shǎo, háishì yào qīnzì héduì.",
+        "vi": "Đúng. Giờ lừa đảo trên mạng không ít, vẫn phải tự kiểm chứng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "说得好。人生里的经验，都是一件一件的事情学来的。",
+        "pinyin": "shuō de hǎo. rénshēng lǐ de jīngyàn, dōu shì yí jiàn yí jiàn de shìqing xué lái de.",
+        "vi": "Nói hay. Kinh nghiệm trong cuộc đời đều học từ từng việc một."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "人类就是这样进步的，不管科技怎么发展，人都得成长。",
+        "pinyin": "rénlèi jiù shì zhèyàng jìnbù de, bùguǎn kējì zěnme fāzhǎn, rén dōu děi chéngzhǎng.",
+        "vi": "Nhân loại tiến bộ như thế, bất kể công nghệ phát triển thế nào, con người vẫn phải lớn lên."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "我完全同意。这一件事让我们都学到了很多。",
+        "pinyin": "wǒ wánquán tóngyì. zhè yí jiàn shì ràng wǒmen dōu xuédào le hěn duō.",
+        "vi": "Tôi hoàn toàn đồng ý. Chuyện này giúp cả hai học được nhiều thứ."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-30",
+    "book": "hsk3",
+    "lesson": "lesson-30",
+    "title": "作品",
+    "titleVi": "Bổ sung (2)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这位作家的作品，你读过吗？",
+        "pinyin": "zhè wèi zuòjiā de zuòpǐn, nǐ dú guo ma?",
+        "vi": "Tác phẩm của nhà văn này bạn đọc chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "读过。他从前写的故事都很伟大，我很佩服。",
+        "pinyin": "dú guo. tā cóngqián xiě de gùshi dōu hěn wěidà, wǒ hěn pèifú.",
+        "vi": "Rồi. Chuyện ông viết trước kia đều rất vĩ đại, tôi rất khâm phục."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "听说他的代表作体现了那个时代的生活。",
+        "pinyin": "tīngshuō tā de dàibiǎo zuò tǐxiàn le nàge shídài de shēnghuó.",
+        "vi": "Nghe nói tác phẩm tiêu biểu của ông thể hiện cuộc sống của thời đại đó."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "是的，字里行间充满感情。我到现在还保留着他的书。",
+        "pinyin": "shì de, zì lǐ háng jiān chōngmǎn gǎnqíng. wǒ dào xiànzài hái bǎoliú zhe tā de shū.",
+        "vi": "Đúng vậy, trong từng chữ tràn đầy cảm xúc. Đến giờ tôi vẫn giữ sách của ông."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那我借来读读，可以吗？",
+        "pinyin": "nà wǒ jiè lái dú du, kěyǐ ma?",
+        "vi": "Thế tôi mượn đọc được không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "当然可以。不过你要小心，别把书弄坏了。",
+        "pinyin": "dāngrán kěyǐ. búguò nǐ yào xiǎoxīn, bié bǎ shū nòng huài le.",
+        "vi": "Đương nhiên được. Nhưng bạn phải cẩn thận, đừng làm hỏng sách."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "放心，我一定好好保护它。",
+        "pinyin": "fàngxīn, wǒ yídìng hǎohǎo bǎohù tā.",
+        "vi": "Yên tâm, tôi nhất định giữ gìn sách cẩn thận."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "好。对了，今天晚上我们去他家做客，你去不去？",
+        "pinyin": "hǎo. duìle, jīntiān wǎnshang wǒmen qù tā jiā zuòkè, nǐ qù bu qù?",
+        "vi": "Được. À, tối nay chúng tôi đến nhà ông ấy chơi, bạn đi không?"
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "去！这正是我想要的。",
+        "pinyin": "qù! zhè zhèng shì wǒ xiǎng yào de.",
+        "vi": "Đi! Đó chính là điều tôi mong muốn."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "那七点老地方见，我们保持联系。",
+        "pinyin": "nà qī diǎn lǎo dìfang jiàn, wǒmen bǎochí liánxì.",
+        "vi": "Vậy bảy giờ gặp chỗ cũ, giữ liên lạc nhé."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-31",
+    "book": "hsk3",
+    "lesson": "lesson-31",
+    "title": "创新",
+    "titleVi": "Bổ sung (3)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这个公司很有创新精神，产品一共有五十多种。",
+        "pinyin": "zhège gōngsī hěn yǒu chuàngxīn jīngshén, chǎnpǐn yígòng yǒu wǔshí duō zhǒng.",
+        "vi": "Công ty này rất có tinh thần sáng tạo, sản phẩm có hơn năm mươi loại."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "他们是怎么分配工作的？",
+        "pinyin": "tāmen shì zěnme fēnpèi gōngzuò de?",
+        "vi": "Họ phân công công việc thế nào?"
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "每个小组负责一部分，初步的计划已经做好了。",
+        "pinyin": "měi ge xiǎozǔ fùzé yí bùfen, chūbù de jìhuà yǐjīng zuò hǎo le.",
+        "vi": "Mỗi nhóm phụ trách một phần, kế hoạch ban đầu đã làm xong."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "那制度呢？他们的管理方法怎么样？",
+        "pinyin": "nà zhìdù ne? tāmen de guǎnlǐ fāngfǎ zěnmeyàng?",
+        "vi": "Còn chế độ thì sao? Cách quản lý của họ ra sao?"
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "制度很清楚，谁的责任就是谁的，前后都分得明白。",
+        "pinyin": "zhìdù hěn qīngchu, shéi de zérèn jiù shì shéi de, qiánhòu dōu fēn de míngbai.",
+        "vi": "Chế độ rất rõ ràng, trách nhiệm của ai là của người đó, trước sau phân biệt rõ ràng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "真不错。听说他们还利用新的技术来加快生产。",
+        "pinyin": "zhēn búcuò. tīngshuō tāmen hái lìyòng xīn de jìshù lái jiākuài shēngchǎn.",
+        "vi": "Hay thật. Nghe nói họ còn tận dụng công nghệ mới để đẩy nhanh sản xuất."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "对，他们北部的工厂力量最强，生产速度最快。",
+        "pinyin": "duì, tāmen běibù de gōngchǎng lìliàng zuì qiáng, shēngchǎn sùdù zuì kuài.",
+        "vi": "Đúng, nhà máy ở miền Bắc của họ có lực mạnh nhất, tốc độ sản xuất nhanh nhất."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "那我们向他们学习吧，千万不能落后。",
+        "pinyin": "nà wǒmen xiàng tāmen xuéxí ba, qiānwàn bù néng luòhòu.",
+        "vi": "Thế mình học hỏi họ nhé, nhất định không được tụt lại."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "好，回去以后我们一起讨论，看怎么改进。",
+        "pinyin": "hǎo, huíqù yǐhòu wǒmen yìqǐ tǎolùn, kàn zěnme gǎijìn.",
+        "vi": "Được, về sau mình cùng bàn bạc, xem cải tiến thế nào."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "一言为定。今天的收获真不少！",
+        "pinyin": "yìyán wéi dìng. jīntiān de shōuhuò zhēn bù shǎo!",
+        "vi": "Nhất trí. Hôm nay thu được nhiều thứ thật!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-32",
+    "book": "hsk3",
+    "lesson": "lesson-32",
+    "title": "合作",
+    "titleVi": "Bổ sung (4)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "咱们公司打算取消这个项目吗？",
+        "pinyin": "zánmen gōngsī dǎsuàn qǔxiāo zhège xiàngmù ma?",
+        "vi": "Công ty mình định hủy dự án này à?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "不管怎样，先听听大家的反应再说。",
+        "pinyin": "bùguǎn zěnyàng, xiān tīngting dàjiā de fǎnyìng zài shuō.",
+        "vi": "Dù thế nào, cứ nghe phản ứng của mọi người đã rồi tính."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "我觉得项目有很大变化，员工们都有点担心。",
+        "pinyin": "wǒ juéde xiàngmù yǒu hěn dà biànhuà, yuángōngmen dōu yǒudiǎn dānxīn.",
+        "vi": "Tôi thấy dự án có biến động lớn, nhân viên ai cũng hơi lo."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "因此，我们应该召开一次会议，让双方都说说想法。",
+        "pinyin": "yīncǐ, wǒmen yīnggāi zhàokāi yí cì huìyì, ràng shuāngfāng dōu shuōshuo xiǎngfǎ.",
+        "vi": "Vì vậy, chúng ta nên họp một buổi, để cả hai bên trình bày ý kiến."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "对。各家有各家的困难，互相理解最重要。",
+        "pinyin": "duì. gè jiā yǒu gè jiā de kùnnán, hùxiāng lǐjiě zuì zhòngyào.",
+        "vi": "Đúng. Nhà nào cũng có khó riêng, hiểu nhau là quan trọng nhất."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "只有大家团结起来，问题才能解决。",
+        "pinyin": "zhǐyǒu dàjiā tuánjié qǐlái, wèntí cái néng jiějué.",
+        "vi": "Chỉ khi mọi người đoàn kết, vấn đề mới giải quyết được."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "说得好。会议开完，我们再把文件整理一下。",
+        "pinyin": "shuō de hǎo. huìyì kāi wán, wǒmen zài bǎ wénjiàn zhěnglǐ yíxià.",
+        "vi": "Nói hay. Họp xong, mình lại sắp xếp lại hồ sơ."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "好。你负责复印，我负责处理合同。",
+        "pinyin": "hǎo. nǐ fùzé fùyìn, wǒ fùzé chǔlǐ hétong.",
+        "vi": "Được. Bạn phụ trách photo, tôi phụ trách xử lý hợp đồng."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "行。对了，这个会议室的窗户得开一开，外面太闷了。",
+        "pinyin": "xíng. duìle, zhège huìyìshì de chuānghu děi kāi yi kāi, wàimiàn tài mèn le.",
+        "vi": "Được. À, cửa sổ phòng họp phải mở ra, ngoài kia ngột ngạt quá."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，我现在就去开。反正大家马上就到了。",
+        "pinyin": "hǎo, wǒ xiànzài jiù qù kāi. fǎnzhèng dàjiā mǎshàng jiù dào le.",
+        "vi": "Được, tôi đi mở ngay. Dù sao mọi người cũng sắp đến rồi."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-33",
+    "book": "hsk3",
+    "lesson": "lesson-33",
+    "title": "子女",
+    "titleVi": "Bổ sung (5)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你子女的学习情况怎么样？",
+        "pinyin": "nǐ zǐnǚ de xuéxí qíngkuàng zěnmeyàng?",
+        "vi": "Tình hình học hành của con bạn thế nào?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "女儿很努力，儿子就差一些，总是不想预习。",
+        "pinyin": "nǚ'ér hěn nǔlì, érzi jiù chà yìxiē, zǒngshì bù xiǎng yùxí.",
+        "vi": "Con gái rất cố gắng, con trai kém hơn, lúc nào cũng không muốn ôn trước."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "那你怎么对待这个问题呢？",
+        "pinyin": "nà nǐ zěnme duìdài zhège wèntí ne?",
+        "vi": "Vậy bạn đối xử với vấn đề này thế nào?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "我带领他们一起学习，也告诉他们学习的重要意义。",
+        "pinyin": "wǒ dàilǐng tāmen yìqǐ xuéxí, yě gàosu tāmen xuéxí de zhòngyào yìyì.",
+        "vi": "Tôi dẫn dắt các con cùng học, cũng nói cho chúng ý nghĩa quan trọng của việc học."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "学费贵吗？要不要请老师？",
+        "pinyin": "xuéfèi guì ma? yào bu yào qǐng lǎoshī?",
+        "vi": "Học phí đắt không? Có cần thuê gia sư không?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "不便宜，不过只要孩子们学得好，就值得。",
+        "pinyin": "bù piányi, búguò zhǐyào háizimen xué de hǎo, jiù zhídé.",
+        "vi": "Không rẻ, nhưng miễn là các con học tốt là đáng."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "你说得对。孩子们将来幸福，比什么都重要。",
+        "pinyin": "nǐ shuō de duì. háizimen jiānglái xìngfú, bǐ shénme dōu zhòngyào.",
+        "vi": "Bạn nói đúng. Tương lai hạnh phúc của các con quan trọng hơn mọi thứ."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "是啊。为了这个，我们再辛苦也应该。",
+        "pinyin": "shì a. wèile zhège, wǒmen zài xīnkǔ yě yīnggāi.",
+        "vi": "Ừ. Vì điều đó, chúng tôi mệt đến đâu cũng đáng."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那就好。要是需要帮忙，随时找我。",
+        "pinyin": "nà jiù hǎo. yàoshi xūyào bāngmáng, suíshí zhǎo wǒ.",
+        "vi": "Vậy tốt. Nếu cần giúp đỡ, cứ tìm tôi bất cứ lúc nào."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "谢谢，我记住了。",
+        "pinyin": "xièxie, wǒ jìzhù le.",
+        "vi": "Cảm ơn, tôi nhớ rồi."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-34",
+    "book": "hsk3",
+    "lesson": "lesson-34",
+    "title": "志愿",
+    "titleVi": "Bổ sung (6)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "听说你当志愿者了？",
+        "pinyin": "tīngshuō nǐ dāng zhìyuànzhě le?",
+        "vi": "Nghe nói bạn làm tình nguyện viên?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "对，在社区帮忙，教孩子们画画。",
+        "pinyin": "duì, zài shèqū bāngmáng, jiāo háizimen huà huà.",
+        "vi": "Đúng, giúp việc ở khu dân cư, dạy trẻ em vẽ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "太有意义了！那怎么报名呢？",
+        "pinyin": "tài yǒu yìyì le! nà zěnme bàomíng ne?",
+        "vi": "Ý nghĩa quá! Vậy làm thế nào để đăng ký?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "先填个表格，再办一些手续，很快的。",
+        "pinyin": "xiān tián ge biǎogé, zài bàn yìxiē shǒuxù, hěn kuài de.",
+        "vi": "Trước tiên điền đơn, rồi làm vài thủ tục, nhanh lắm."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "好，我也要参加。可是我怕自己表达得不够清楚。",
+        "pinyin": "hǎo, wǒ yě yào cānjiā. kěshì wǒ pà zìjǐ biǎodá de bú gòu qīngchu.",
+        "vi": "Được, tôi cũng muốn tham gia. Nhưng tôi sợ diễn đạt không đủ rõ ràng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "别怕，慢慢练习就好了。你可以先录录音，听听自己怎么说。",
+        "pinyin": "bié pà, mànmàn liànxí jiù hǎo le. nǐ kěyǐ xiān lù lùyīn, tīngting zìjǐ zěnme shuō.",
+        "vi": "Đừng sợ, luyện tập từ từ là được. Bạn có thể thu âm trước, nghe xem mình nói thế nào."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "好主意！对了，教画画的时候要注意什么？",
+        "pinyin": "hǎo zhǔyi! duìle, jiāo huà huà de shíhou yào zhùyì shénme?",
+        "vi": "Ý hay! À, khi dạy vẽ phải chú ý gì?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "要有耐心，多鼓励他们。孩子的想象力很丰富。",
+        "pinyin": "yào yǒu nàixīn, duō gǔlì tāmen. háizi de xiǎngxiànglì hěn fēngfù.",
+        "vi": "Phải kiên nhẫn, nhiều khích lệ các con. Trí tưởng tượng của trẻ rất phong phú."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "明白了。有什么情况我随时联系你。",
+        "pinyin": "míngbai le. yǒu shénme qíngkuàng wǒ suíshí liánxì nǐ.",
+        "vi": "Hiểu rồi. Có tình huống gì tôi sẽ liên hệ bạn ngay."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好。周末大家一起加油！",
+        "pinyin": "hǎo. zhōumò dàjiā yìqǐ jiāyóu!",
+        "vi": "Được. Cuối tuần cả nhóm cùng cố gắng nhé!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-35",
+    "book": "hsk3",
+    "lesson": "lesson-35",
+    "title": "支持",
+    "titleVi": "Bổ sung (7)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "听说村里那条老路要改造了？",
+        "pinyin": "tīngshuō cūn lǐ nà tiáo lǎolù yào gǎizào le?",
+        "vi": "Nghe nói con đường cũ trong làng sắp được cải tạo?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "对，整个工程下个月开始，数量很大。",
+        "pinyin": "duì, zhěng ge gōngchéng xià ge yuè kāishǐ, shùliàng hěn dà.",
+        "vi": "Đúng, toàn bộ công trình bắt đầu tháng sau, khối lượng lớn."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "那太好了！我们一定支持。",
+        "pinyin": "nà tài hǎo le! wǒmen yídìng zhīchí.",
+        "vi": "Tốt quá! Chúng tôi nhất định ủng hộ."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "大家都很欢迎，有人说这是全村最大的好事。",
+        "pinyin": "dàjiā dōu hěn huānyíng, yǒurén shuō zhè shì quān cūn zuì dà de hǎoshì.",
+        "vi": "Ai cũng hoan nghênh, có người nói đây là việc tốt lớn nhất cả làng."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "路修好了，卡车也能进来了，农产品好卖多了。",
+        "pinyin": "lù xiū hǎo le, kǎchē yě néng jìn lái le, nóngchǎnpǐn hǎo mài duō le.",
+        "vi": "Đường sửa xong, xe tải cũng vào được, nông sản dễ bán hơn nhiều."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "是的。附近的人也都关心这个工程。",
+        "pinyin": "shì de. fùjìn de rén yě dōu guānxīn zhège gōngchéng.",
+        "vi": "Đúng vậy. Người lân cận cũng đều quan tâm công trình này."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "对了，工地上用的木头和机器准备好了吗？",
+        "pinyin": "duìle, gōngdì shàng yòng de mùtou hé jīqì zhǔnbèi hǎo le ma?",
+        "vi": "À, gỗ và máy móc dùng ở công trường chuẩn bị xong chưa?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "都准备好了，标准很高，显然要建一条好路。",
+        "pinyin": "dōu zhǔnbèi hǎo le, biāozhǔn hěn gāo, xiǎnrán yào jiàn yì tiáo hǎo lù.",
+        "vi": "Chuẩn bị xong hết rồi, tiêu chuẩn cao, rõ ràng là muốn xây một con đường tốt."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那我们就等着吧，比原来暖和的日子也快来了。",
+        "pinyin": "nà wǒmen jiù děngzhe ba, bǐ yuánlái nuǎnhuo de rìzi yě kuài lái le.",
+        "vi": "Thế mình chờ vậy, ngày tháng ấm hơn trước cũng sắp đến."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好日子越来越普遍，谁都会高兴的。",
+        "pinyin": "hǎo rìzi yuèláiyuè pǔbiàn, shéi dōu huì gāoxìng de.",
+        "vi": "Ngày tốt lành ngày càng phổ biến, ai cũng sẽ vui."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-36",
+    "book": "hsk3",
+    "lesson": "lesson-36",
+    "title": "演出",
+    "titleVi": "Bổ sung (8)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "周末去看那场演出吗？票你买好了吗？",
+        "pinyin": "zhōumò qù kàn nà chǎng yǎnchū ma? piào nǐ mǎi hǎo le ma?",
+        "vi": "Cuối tuần đi xem buổi diễn đó không? Bạn mua vé chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "买好了。听说演员都是高手，演出一定精彩。",
+        "pinyin": "mǎi hǎo le. tīngshuō yǎnyuán dōu shì gāoshǒu, yǎnchū yídìng jīngcǎi.",
+        "vi": "Mua rồi. Nghe nói diễn viên đều là tay nghề cao, biểu diễn chắc chắn xuất sắc."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "太好了！我还听说有个武术表演呢。",
+        "pinyin": "tài hǎo le! wǒ hái tīngshuō yǒu ge wǔshù biǎoyǎn ne.",
+        "vi": "Tốt quá! Tôi còn nghe nói có màn biểu diễn võ thuật."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "对，他们的动作又快又美，观众都说好。",
+        "pinyin": "duì, tāmen de dòngzuò yòu kuài yòu měi, guānzhòng dōu shuō hǎo.",
+        "vi": "Đúng, động tác của họ vừa nhanh vừa đẹp, khán giả ai cũng khen."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那歌声呢？听说还有位著名的歌手。",
+        "pinyin": "nà gēshēng ne? tīngshuō hái yǒu wèi zhùmíng de gēshǒu.",
+        "vi": "Còn tiếng hát thì sao? Nghe nói còn có một ca sĩ nổi tiếng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "有，他的歌声很温暖，每次演唱会都坐满了人。",
+        "pinyin": "yǒu, tā de gēshēng hěn wēnnuǎn, měi cì yǎnchànghuì dōu zuò mǎn le rén.",
+        "vi": "Có, giọng hát của anh ấy rất ấm áp, mỗi buổi hòa nhạc khán giả đều chật chỗ."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "怪不得票这么难买。对了，孩子们喜欢吗？",
+        "pinyin": "guàibudé piào zhème nán mǎi. duìle, háizimen xǐhuan ma?",
+        "vi": "Chả vậy mà vé khó mua thế. À, bọn trẻ thích không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "喜欢极了。不过看完演出，我们得提醒他们早点睡觉。",
+        "pinyin": "xǐhuan jí le. búguò kàn wán yǎnchū, wǒmen děi tíxǐng tāmen zǎodiǎn shuìjiào.",
+        "vi": "Thích lắm. Nhưng xem biểu diễn xong, chúng ta phải nhắc tụi nó ngủ sớm."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "对，别让孩子们太兴奋。",
+        "pinyin": "duì, bié ràng háizimen tài xīngfèn.",
+        "vi": "Đúng, đừng để tụi nhỏ quá hào hứng."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，那就这样说定了，周六下午见！",
+        "pinyin": "hǎo, nà jiù zhèyàng shuōdìng le, zhōuliù xiàwǔ jiàn!",
+        "vi": "Được, vậy quyết định như thế, chiều thứ Bảy gặp nhau!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-37",
+    "book": "hsk3",
+    "lesson": "lesson-37",
+    "title": "理解",
+    "titleVi": "Bổ sung (9)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "现在现场的球迷太多了，挤都挤不进去。",
+        "pinyin": "xiànzài xiànchǎng de qiúmí tài duō le, jǐ dōu jǐ bu jìnqù.",
+        "vi": "Bây giờ fan bóng đá ở hiện trường đông quá, chen cũng không chen vào nổi."
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "没关系，我们在外面看直播吧。",
+        "pinyin": "méi guānxì, wǒmen zài wàimiàn kàn zhíbò ba.",
+        "vi": "Không sao, mình ra ngoài xem phát trực tiếp nhé."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "好啊。不过我担心网络会不会出问题。",
+        "pinyin": "hǎo a. búguò wǒ dānxīn wǎngluò huì bú huì chū wèntí.",
+        "vi": "Được. Nhưng tôi lo mạng có trục trặc không."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "应该没问题。由于人太多，信号可能会慢一些。",
+        "pinyin": "yīnggāi méi wèntí. yóuyú rén tài duō, xìnhào kěnéng huì màn yìxiē.",
+        "vi": "Chắc không sao. Do người quá đông, tín hiệu có thể chậm một chút."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那也能理解。今天的比赛对两队都太重要了。",
+        "pinyin": "nà yě néng lǐjiě. jīntiān de bǐsài duì liǎng duì dōu tài zhòngyào le.",
+        "vi": "Vậy cũng hiểu được. Trận đấu hôm nay với cả hai đội đều quá quan trọng."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "是啊。谁输了，谁就会被淘汰。",
+        "pinyin": "shì a. shéi shū le, shéi jiù huì bèi táotài.",
+        "vi": "Ừ. Đội nào thua, đội đó bị loại."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "这么说，双方的压力都很大。",
+        "pinyin": "zhème shuō, shuāngfāng de yālì dōu hěn dà.",
+        "vi": "Nói vậy, áp lực của cả hai bên đều lớn."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "对。不过这正是比赛的乐趣，不知道结果才精彩。",
+        "pinyin": "duì. búguò zhè zhèng shì bǐsài de lèqù, bù zhīdào jiéguǒ cái jīngcǎi.",
+        "vi": "Đúng. Nhưng đây chính là thú vui của trận đấu, không biết kết quả mới thú vị."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "有道理。走吧，找个安静的地方看球。",
+        "pinyin": "yǒu dàolǐ. zǒu ba, zhǎo ge ānjìng de dìfang kàn qiú.",
+        "vi": "Có lý. Đi thôi, tìm chỗ yên tĩnh xem bóng đá."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，比赛马上就要开始了！",
+        "pinyin": "hǎo, bǐsài mǎshàng jiù yào kāishǐ le!",
+        "vi": "Được, trận đấu sắp bắt đầu rồi!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-38",
+    "book": "hsk3",
+    "lesson": "lesson-38",
+    "title": "继续",
+    "titleVi": "Bổ sung (10)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这份工作什么时候结束？",
+        "pinyin": "zhè fèn gōngzuò shénme shíhou jiéshù?",
+        "vi": "Công việc này khi nào kết thúc?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "下个月。做完以后，我想继续学习，考个证书。",
+        "pinyin": "xià ge yuè. zuò wán yǐhòu, wǒ xiǎng jìxù xuéxí, kǎo ge zhèngshū.",
+        "vi": "Tháng sau. Làm xong, tôi muốn tiếp tục học, thi lấy chứng chỉ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "好主意！你想考哪个方面的证书？",
+        "pinyin": "hǎo zhǔyi! nǐ xiǎng kǎo nǎge fāngmiàn de zhèngshū?",
+        "vi": "Ý hay! Bạn định thi chứng chỉ ngành nào?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "美术方面的。我从小就喜欢画画，这简直是我的梦想。",
+        "pinyin": "měishù fāngmiàn de. wǒ cóngxiǎo jiù xǐhuan huà huà, zhè jiǎnzhí shì wǒ de mèngxiǎng.",
+        "vi": "Về mĩ thuật. Từ nhỏ tôi đã thích vẽ, đây gần như là giấc mơ của tôi."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "那太好了。不过考试的时候可能很紧急，你得做好准备。",
+        "pinyin": "nà tài hǎo le. búguò kǎoshì de shíhou kěnéng hěn jǐnjí, nǐ děi zuò hǎo zhǔnbèi.",
+        "vi": "Tốt quá. Nhưng lúc thi có thể rất gấp, bạn phải chuẩn bị tốt."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "我会努力的。这个职业跟艺术有关，我很喜欢。",
+        "pinyin": "wǒ huì nǔlì de. zhège zhíyè gēn yìshù yǒu guān, wǒ hěn xǐhuan.",
+        "vi": "Tôi sẽ cố gắng. Nghề này liên quan đến nghệ thuật, tôi rất thích."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "有梦想就要去实现。万一失败了，也没关系。",
+        "pinyin": "yǒu mèngxiǎng jiù yào qù shíxiàn. wànyī shībài le, yě méi guānxì.",
+        "vi": "Có ước mơ thì phải thực hiện. Có lỡ thất bại cũng không sao."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "谢谢你。有了你的支持，我更有信心了。",
+        "pinyin": "xièxie nǐ. yǒu le nǐ de zhīchí, wǒ gèng yǒu xìnxīn le.",
+        "vi": "Cảm ơn bạn. Có bạn ủng hộ, tôi càng tự tin hơn."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那我们一起加油吧！",
+        "pinyin": "nà wǒmen yìqǐ jiāyóu ba!",
+        "vi": "Vậy cùng cố gắng nhé!"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，一言为定！",
+        "pinyin": "hǎo, yìyán wéi dìng!",
+        "vi": "Được, hẹn thế nhé!"
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-39",
+    "book": "hsk3",
+    "lesson": "lesson-39",
+    "title": "责任",
+    "titleVi": "Bổ sung (11)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "这份表格里需要填写什么内容？",
+        "pinyin": "zhè fèn biǎogé lǐ xūyào tiánxiě shénme nèiróng?",
+        "vi": "Trong đơn này cần điền nội dung gì?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "先写你的基本信息，再写联系方式。",
+        "pinyin": "xiān xiě nǐ de jīběn xìnxī, zài xiě liánxì fāngshì.",
+        "vi": "Trước viết thông tin cơ bản, sau đó viết cách liên hệ."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "还有别的吗？",
+        "pinyin": "hái yǒu biéde ma?",
+        "vi": "Còn gì nữa không?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "要写清楚你的责任，比如你负责的范围是什么。",
+        "pinyin": "yào xiě qīngchu nǐ de zérèn, bǐrú nǐ fùzé de fànwéi shì shénme.",
+        "vi": "Phải viết rõ trách nhiệm của bạn, ví dụ phạm vi bạn phụ trách là gì."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "明白了。那怎么证明我的身份呢？",
+        "pinyin": "míngbai le. nà zěnme zhèngmíng wǒ de shēnfèn ne?",
+        "vi": "Hiểu rồi. Vậy làm sao chứng minh danh tính của tôi?"
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "带上你的证件，复印件也可以。",
+        "pinyin": "dài shàng nǐ de zhèngjiàn, fùyìnjiàn yě kěyǐ.",
+        "vi": "Mang theo giấy tờ của bạn, bản photo cũng được."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "好的。要是格式不对怎么办？",
+        "pinyin": "hǎo de. yàoshi géshì bú duì zěnme bàn?",
+        "vi": "Được. Nếu định dạng không đúng thì sao?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "那就重新规范一下，按照上面的要求来。",
+        "pinyin": "nà jiù chóngxīn guīfàn yíxià, ànzhào shàngmiàn de yāoqiú lái.",
+        "vi": "Vậy chỉnh lại cho chuẩn, theo đúng yêu cầu ghi ở trên."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "谢谢你提醒。这次考试我一定要赢。",
+        "pinyin": "xièxie nǐ tíxǐng. zhè cì kǎoshì wǒ yídìng yào yíng.",
+        "vi": "Cảm ơn bạn nhắc nhở. Kỳ thi này tôi nhất định phải thắng."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "你肯定没问题，好好准备就行。",
+        "pinyin": "nǐ kěndìng méi wèntí, hǎohǎo zhǔnbèi jiù xíng.",
+        "vi": "Bạn chắc chắn không sao, chuẩn bị kỹ là được."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-40",
+    "book": "hsk3",
+    "lesson": "lesson-40",
+    "title": "足球",
+    "titleVi": "Bổ sung (12)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "周末的足球比赛你看了吗？",
+        "pinyin": "zhōumò de zúqiú bǐsài nǐ kàn le ma?",
+        "vi": "Cuối tuần bạn xem trận bóng đá chưa?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "看了，我们队输了，真可惜。",
+        "pinyin": "kàn le, wǒmen duì shū le, zhēn kěxī.",
+        "vi": "Xem rồi, đội mình thua, tiếc thật."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "是啊。不过他们的进步很明显，比以前强多了。",
+        "pinyin": "shì a. búguò tāmen de jìnbù hěn míngxiǎn, bǐ yǐqián qiáng duō le.",
+        "vi": "Ừ. Nhưng tiến bộ của họ rất rõ ràng, mạnh hơn trước nhiều."
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "对，新教练来了以后，训练方法也适合队员了。",
+        "pinyin": "duì, xīn jiàoliàn lái le yǐhòu, xùnliàn fāngfǎ yě shìhé duìyuán le.",
+        "vi": "Đúng, huấn luyện viên mới đến sau, phương pháp tập cũng hợp với các cầu thủ hơn."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "听说他们以前训练完了还要加班开会。",
+        "pinyin": "tīngshuō tāmen yǐqián xùnliàn wán le hái yào jiābān kāihuì.",
+        "vi": "Nghe nói trước đây tập xong còn phải tăng ca họp."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "现在好了，采取新的办法以后，队员们的状态好多了。",
+        "pinyin": "xiànzài hǎo le, cǎiqǔ xīn de bànfǎ yǐhòu, duìyuánmen de zhuàngtài hǎo duō le.",
+        "vi": "Giờ thì tốt rồi, sau khi áp dụng cách mới, trạng thái của các cầu thủ khá hơn nhiều."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "怪不得他们连赢了好几场。",
+        "pinyin": "guàibudé tāmen lián yíng le hǎo jǐ chǎng.",
+        "vi": "Chả vậy mà họ thắng liên tiếp mấy trận."
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "虽然这次输了，但是错误也能让队伍更集中。",
+        "pinyin": "suīrán zhè cì shū le, dànshì cuòwù yě néng ràng duìwǔ gèng jízhōng.",
+        "vi": "Tuy lần này thua, nhưng sai lầm cũng giúp đội tập trung hơn."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "说得好。我们一起去看下一场比赛吧！",
+        "pinyin": "shuō de hǎo. wǒmen yìqǐ qù kàn xià yì chǎng bǐsài ba!",
+        "vi": "Nói hay. Trận tới mình cùng đi xem nhé!"
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "好，到时候我们提前买票。",
+        "pinyin": "hǎo, dào shíhou wǒmen tíqián mǎi piào.",
+        "vi": "Được, đến lúc đó mua vé trước."
+      }
+    ]
+  },
+  {
+    "id": "hsk3/lesson-41",
+    "book": "hsk3",
+    "lesson": "lesson-41",
+    "title": "需要",
+    "titleVi": "Bổ sung (13)",
+    "lines": [
+      {
+        "n": 1,
+        "speaker": "A",
+        "zh": "你觉得这份工作最需要什么能力？",
+        "pinyin": "nǐ juéde zhè fèn gōngzuò zuì xūyào shénme nénglì?",
+        "vi": "Bạn thấy công việc này cần năng lực gì nhất?"
+      },
+      {
+        "n": 2,
+        "speaker": "B",
+        "zh": "首先要有耐心，其次要有好的沟通能力。",
+        "pinyin": "shǒuxiān yào yǒu nàixīn, qícì yào yǒu hǎo de gōutōng nénglì.",
+        "vi": "Trước hết phải kiên nhẫn, sau đó phải có khả năng giao tiếp tốt."
+      },
+      {
+        "n": 3,
+        "speaker": "A",
+        "zh": "有道理。那你为什么喜欢当老师呢？",
+        "pinyin": "yǒu dàolǐ. nà nǐ wèishénme xǐhuan dāng lǎoshī ne?",
+        "vi": "Có lý. Vậy sao bạn thích làm giáo viên?"
+      },
+      {
+        "n": 4,
+        "speaker": "B",
+        "zh": "因为能帮助孩子们，看到他们的进步，我心里特别高兴。",
+        "pinyin": "yīnwèi néng bāngzhù háizimen, kàndào tāmen de jìnbù, wǒ xīnlǐ tèbié gāoxìng.",
+        "vi": "Vì giúp được các em, nhìn thấy các em tiến bộ, trong lòng tôi đặc biệt vui."
+      },
+      {
+        "n": 5,
+        "speaker": "A",
+        "zh": "现在当老师紧张吗？听说压力不小。",
+        "pinyin": "xiànzài dāng lǎoshī jǐnzhāng ma? tīngshuō yālì bù xiǎo.",
+        "vi": "Giờ làm thầy giáo có căng thẳng không? Nghe nói áp lực không nhỏ."
+      },
+      {
+        "n": 6,
+        "speaker": "B",
+        "zh": "有点儿，不过习惯就好了。早上安静地喝杯奶茶，一天都有精神。",
+        "pinyin": "yǒudiǎnr, búguò xíguàn jiù hǎo le. zǎoshang ānjìng de hē bēi nǎichá, yì tiān dōu yǒu jīngshén.",
+        "vi": "Hơi chút, nhưng quen rồi là ổn. Sáng uống yên tĩnh một ly trà sữa, cả ngày đều có tinh thần."
+      },
+      {
+        "n": 7,
+        "speaker": "A",
+        "zh": "哈哈，这个办法好。对了，你的办公面积大吗？",
+        "pinyin": "hāhā, zhège bànfǎ hǎo. duìle, nǐ de bàngōng miànjī dà ma?",
+        "vi": "Haha, cách này hay. À, diện tích văn phòng của bạn rộng không?"
+      },
+      {
+        "n": 8,
+        "speaker": "B",
+        "zh": "不大，但是很安静，我喜欢安静的地方。",
+        "pinyin": "bú dà, dànshì hěn ānjìng, wǒ xǐhuan ānjìng de dìfang.",
+        "vi": "Không rộng, nhưng rất yên tĩnh, tôi thích nơi yên tĩnh."
+      },
+      {
+        "n": 9,
+        "speaker": "A",
+        "zh": "那就好。以后有麻烦的事情，随时找我商量。",
+        "pinyin": "nà jiù hǎo. yǐhòu yǒu máfan de shìqing, suíshí zhǎo wǒ shāngliang.",
+        "vi": "Vậy tốt. Sau này có chuyện rắc rối, cứ tìm tôi bàn bạc bất cứ lúc nào."
+      },
+      {
+        "n": 10,
+        "speaker": "B",
+        "zh": "谢谢！有你这样的朋友，真是我的幸运。",
+        "pinyin": "xièxie! yǒu nǐ zhèyàng de péngyou, zhēn shì wǒ de xìngyùn.",
+        "vi": "Cảm ơn! Có người bạn như bạn thật là may mắn của tôi."
+      }
+    ]
+  }
+]

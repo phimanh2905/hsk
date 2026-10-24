@@ -1,0 +1,601 @@
+[
+  {
+    "id": "hsk2-reading-1",
+    "book": "hsk2",
+    "lesson": "lesson-1",
+    "title": "第一次坐飞机",
+    "titleVi": "Lần đầu tiên đi máy bay",
+    "sentences": [
+      {
+        "zh": "王小红是北京的大学生。",
+        "vi": "Vương Tiểu Hồng là sinh viên đại học ở Bắc Kinh.",
+        "py": "Wáng Xiǎohóng shì Běijīng de dàxuéshēng."
+      },
+      {
+        "zh": "今年假期，她要和同学一起去上海旅行。",
+        "vi": "Kỳ nghỉ năm nay, cô ấy sẽ đi du lịch Thượng Hải cùng bạn học.",
+        "py": "Jīnnián jiàqī, tā yào hé tóngxué yìqǐ qù Shànghǎi lǚxíng."
+      },
+      {
+        "zh": "她们买了两张机票。",
+        "vi": "Các cô mua hai vé máy bay.",
+        "py": "Tāmen mǎi le liǎng zhāng jīpiào."
+      },
+      {
+        "zh": "这是王小红第一次坐飞机。",
+        "vi": "Đây là lần đầu tiên Vương Tiểu Hồng đi máy bay.",
+        "py": "Zhè shì Wáng Xiǎohóng dì yí cì zuò fēijī."
+      },
+      {
+        "zh": "早上六点，她来到机场。",
+        "vi": "Sáu giờ sáng, cô ấy đến sân bay.",
+        "py": "Zǎoshang liù diǎn, tā láidào jīchǎng."
+      },
+      {
+        "zh": "机场里人很多，她们排队取票。",
+        "vi": "Sân bay rất đông người, các cô xếp hàng lấy vé.",
+        "py": "Jīchǎng li rén hěn duō, tāmen páiduì qǔ piào."
+      },
+      {
+        "zh": "八点半，飞机要起飞了。",
+        "vi": "Tám giờ rưỡi, máy bay sắp cất cánh.",
+        "py": "Bā diǎn bàn, fēijī yào qǐfēi le."
+      },
+      {
+        "zh": "王小红有点儿高兴，也有点儿怕。",
+        "vi": "Vương Tiểu Hồng hơi vui, nhưng cũng hơi sợ.",
+        "py": "Wáng Xiǎohóng yǒudiǎnr gāoxìng, yě yǒudiǎnr pà."
+      },
+      {
+        "zh": "同学告诉她：\"别怕，坐飞机很安全。\"",
+        "vi": "Bạn học nói với cô ấy: \"Đừng sợ, đi máy bay rất an toàn.\"",
+        "py": "Tóngxué gàosu tā: \"Bié pà, zuò fēijī hěn ānquán.\""
+      },
+      {
+        "zh": "她的座位很好，能看到白云。",
+        "vi": "Chỗ ngồi của cô ấy rất đẹp, nhìn thấy được mây trắng.",
+        "py": "Tā de zuòwèi hěn hǎo, néng kàndào báiyún."
+      },
+      {
+        "zh": "天很蓝，云很白，真好看！",
+        "vi": "Trời rất xanh, mây rất trắng, đẹp thật!",
+        "py": "Tiān hěn lán, yún hěn bái, zhēn hǎokàn!"
+      },
+      {
+        "zh": "两个小时以后，飞机到了上海。",
+        "vi": "Hai tiếng sau, máy bay đến Thượng Hải.",
+        "py": "Liǎng ge xiǎoshí yǐhòu, fēijī dàole Shànghǎi."
+      },
+      {
+        "zh": "她们先到酒店放东西。",
+        "vi": "Các cô trước đến khách sạn để đồ.",
+        "py": "Tāmen xiān dào jiǔdiàn fàng dōngxi."
+      },
+      {
+        "zh": "下午，她们去海边玩儿。",
+        "vi": "Buổi chiều, các cô đi chơi ở biển.",
+        "py": "Xiàwǔ, tāmen qù hǎibiān wánr."
+      },
+      {
+        "zh": "上海非常漂亮，王小红照了很多照片。",
+        "vi": "Thượng Hải rất đẹp, Vương Tiểu Hồng chụp rất nhiều ảnh.",
+        "py": "Shànghǎi fēicháng piàoliang, Wáng Xiǎohóng zhào le hěn duō zhàopiàn."
+      },
+      {
+        "zh": "她还给妈妈打了电话：\"妈妈，上海真好！\"",
+        "vi": "Cô ấy còn gọi điện cho mẹ: \"Mẹ ơi, Thượng Hải đẹp thật!\"",
+        "py": "Tā hái gěi māma dǎ le diànhuà: \"Māma, Shànghǎi zhēn hǎo!\""
+      },
+      {
+        "zh": "妈妈说：\"玩得开心点儿。\"",
+        "vi": "Mẹ nói: \"Con chơi cho vui nhé.\"",
+        "py": "Māma shuō: \"Wán de kāixīn diǎnr.\""
+      },
+      {
+        "zh": "一个星期以后，她们坐飞机回北京了。",
+        "vi": "Một tuần sau, các cô đi máy bay về Bắc Kinh.",
+        "py": "Yí ge xīngqī yǐhòu, tāmen zuò fēijī huí Běijīng le."
+      },
+      {
+        "zh": "王小红觉得这次旅行很有意思。",
+        "vi": "Vương Tiểu Hồng thấy chuyến đi này rất thú vị.",
+        "py": "Wáng Xiǎohóng juéde zhè cì lǚxíng hěn yǒuyìsi."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "假期",
+        "py": "jiàqī",
+        "vi": "kỳ nghỉ, ngày nghỉ"
+      },
+      {
+        "word": "旅行",
+        "py": "lǚxíng",
+        "vi": "du lịch"
+      },
+      {
+        "word": "机场",
+        "py": "jīchǎng",
+        "vi": "sân bay"
+      },
+      {
+        "word": "起飞",
+        "py": "qǐfēi",
+        "vi": "cất cánh"
+      },
+      {
+        "word": "安全",
+        "py": "ānquán",
+        "vi": "an toàn"
+      },
+      {
+        "word": "座位",
+        "py": "zuòwèi",
+        "vi": "chỗ ngồi"
+      },
+      {
+        "word": "酒店",
+        "py": "jiǔdiàn",
+        "vi": "khách sạn"
+      },
+      {
+        "word": "有意思",
+        "py": "yǒuyìsi",
+        "vi": "thú vị, có ý nghĩa"
+      }
+    ],
+    "questions": [
+      {
+        "q": "王小红和同学要去哪里旅行？",
+        "options": [
+          "上海",
+          "北京",
+          "海边"
+        ],
+        "answer": 0,
+        "qVi": "Vương Tiểu Hồng và bạn học đi du lịch ở đâu?"
+      },
+      {
+        "q": "这是她第几次坐飞机？",
+        "options": [
+          "第二次",
+          "第一次",
+          "第三次"
+        ],
+        "answer": 1,
+        "qVi": "Đây là lần thứ mấy cô ấy đi máy bay?"
+      },
+      {
+        "q": "同学为什么让她别怕？",
+        "options": [
+          "因为飞机很大",
+          "因为坐飞机很安全",
+          "因为她坐过飞机"
+        ],
+        "answer": 1,
+        "qVi": "Vì sao bạn học bảo cô ấy đừng sợ?"
+      },
+      {
+        "q": "下午她们去哪里玩儿？",
+        "options": [
+          "商场",
+          "酒店",
+          "海边"
+        ],
+        "answer": 2,
+        "qVi": "Buổi chiều các cô đi chơi ở đâu?"
+      },
+      {
+        "q": "她们在上海待了多长时间？",
+        "options": [
+          "两天",
+          "一个星期",
+          "一个月"
+        ],
+        "answer": 1,
+        "qVi": "Các cô ở Thượng Hải bao lâu?"
+      }
+    ]
+  },
+  {
+    "id": "hsk2-reading-2",
+    "book": "hsk2",
+    "lesson": "lesson-2",
+    "title": "我的周末",
+    "titleVi": "Cuối tuần của tôi",
+    "sentences": [
+      {
+        "zh": "我叫李文，今年上高中。",
+        "vi": "Tôi tên là Lý Văn, năm nay học cấp ba.",
+        "py": "Wǒ jiào Lǐ Wén, jīnnián shàng gāozhōng."
+      },
+      {
+        "zh": "平时我要上课，很忙。",
+        "vi": "Ngày thường tôi phải đi học, rất bận.",
+        "py": "Píngshí wǒ yào shàngkè, hěn máng."
+      },
+      {
+        "zh": "所以我很喜欢周末。",
+        "vi": "Vì vậy tôi rất thích ngày cuối tuần.",
+        "py": "Suǒyǐ wǒ hěn xǐhuan zhōumò."
+      },
+      {
+        "zh": "星期六早上，我九点才起床。",
+        "vi": "Sáng thứ bảy, tôi chín giờ mới dậy.",
+        "py": "Xīngqīliù zǎoshang, wǒ jiǔ diǎn cái qǐchuáng."
+      },
+      {
+        "zh": "起床以后，我吃点儿面包，喝一杯牛奶。",
+        "vi": "Dậy xong, tôi ăn chút bánh mì, uống một cốc sữa.",
+        "py": "Qǐchuáng yǐhòu, wǒ chī diǎnr miànbāo, hē yì bēi niúnǎi."
+      },
+      {
+        "zh": "上午我在家写作业。",
+        "vi": "Buổi sáng tôi ở nhà làm bài tập.",
+        "py": "Shàngwǔ wǒ zài jiā xiě zuòyè."
+      },
+      {
+        "zh": "写完作业，我打网球或者打篮球。",
+        "vi": "Làm xong bài tập, tôi chơi tennis hoặc chơi bóng rổ.",
+        "py": "Xiě wán zuòyè, wǒ dǎ wǎngqiú huòzhě dǎ lánqiú."
+      },
+      {
+        "zh": "中午，妈妈做了好吃的饭。",
+        "vi": "Buổi trưa, mẹ nấu cơm rất ngon.",
+        "py": "Zhōngwǔ, māma zuò le hǎochī de fàn."
+      },
+      {
+        "zh": "我们全家一起吃午饭，很开心。",
+        "vi": "Cả nhà tôi cùng nhau ăn trưa, rất vui vẻ.",
+        "py": "Wǒmen quán jiā yìqǐ chī wǔfàn, hěn kāixīn."
+      },
+      {
+        "zh": "下午，我常常和同学去公园。",
+        "vi": "Buổi chiều, tôi thường đi công viên với bạn học.",
+        "py": "Xiàwǔ, wǒ chángcháng hé tóngxué qù gōngyuán."
+      },
+      {
+        "zh": "公园里有很多花，还有小河。",
+        "vi": "Trong công viên có rất nhiều hoa, còn có dòng sông nhỏ.",
+        "py": "Gōngyuán li yǒu hěn duō huā, hái yǒu xiǎo hé."
+      },
+      {
+        "zh": "我们坐在河边，说说学校里的事情。",
+        "vi": "Chúng tôi ngồi bên sông, nói chuyện những việc ở trường.",
+        "py": "Wǒmen zuò zài hé biān, shuōshuo xuéxiào li de shìqing."
+      },
+      {
+        "zh": "晚上我在家看小说。",
+        "vi": "Buổi tối tôi ở nhà đọc tiểu thuyết.",
+        "py": "Wǎnshang wǒ zài jiā kàn xiǎoshuō."
+      },
+      {
+        "zh": "我觉得看小说很有意思。",
+        "vi": "Tôi thấy đọc tiểu thuyết rất thú vị.",
+        "py": "Wǒ juéde kàn xiǎoshuō hěn yǒuyìsi."
+      },
+      {
+        "zh": "星期天，我们全家去看爷爷和奶奶。",
+        "vi": "Chủ nhật, cả nhà tôi đi thăm ông và bà.",
+        "py": "Xīngqītiān, wǒmen quán jiā qù kàn yéye hé nǎinai."
+      },
+      {
+        "zh": "奶奶给我们做了很多好吃的菜。",
+        "vi": "Bà nấu cho chúng tôi rất nhiều món ngon.",
+        "py": "Nǎinai gěi wǒmen zuò le hěn duō hǎochī de cài."
+      },
+      {
+        "zh": "她还让我带回去一些鸡蛋。",
+        "vi": "Bà còn cho tôi mang về mấy quả trứng gà.",
+        "py": "Tā hái ràng wǒ dài huíqù yìxiē jīdàn."
+      },
+      {
+        "zh": "晚上我准备下周的课。",
+        "vi": "Buổi tối tôi chuẩn bị bài cho tuần sau.",
+        "py": "Wǎnshang wǒ zhǔnbèi xià zhōu de kè."
+      },
+      {
+        "zh": "我的周末虽然很简单，但是很快乐。",
+        "vi": "Cuối tuần của tôi tuy rất đơn giản nhưng rất vui.",
+        "py": "Wǒ de zhōumò suīrán hěn jiǎndān, dànshì hěn kuàilè."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "平时",
+        "py": "píngshí",
+        "vi": "ngày thường"
+      },
+      {
+        "word": "周末",
+        "py": "zhōumò",
+        "vi": "cuối tuần"
+      },
+      {
+        "word": "作业",
+        "py": "zuòyè",
+        "vi": "bài tập"
+      },
+      {
+        "word": "或者",
+        "py": "huòzhě",
+        "vi": "hoặc"
+      },
+      {
+        "word": "公园",
+        "py": "gōngyuán",
+        "vi": "công viên"
+      },
+      {
+        "word": "事情",
+        "py": "shìqing",
+        "vi": "việc, chuyện"
+      },
+      {
+        "word": "小说",
+        "py": "xiǎoshuō",
+        "vi": "tiểu thuyết"
+      },
+      {
+        "word": "快乐",
+        "py": "kuàilè",
+        "vi": "vui vẻ, hạnh phúc"
+      }
+    ],
+    "questions": [
+      {
+        "q": "李文是做什么的？",
+        "options": [
+          "高中生",
+          "大学生",
+          "老师"
+        ],
+        "answer": 0,
+        "qVi": "Lý Văn làm nghề gì?"
+      },
+      {
+        "q": "星期六早上他几点起床？",
+        "options": [
+          "六点",
+          "九点",
+          "八点"
+        ],
+        "answer": 1,
+        "qVi": "Sáng thứ bảy cậu ấy mấy giờ dậy?"
+      },
+      {
+        "q": "写完作业以后他做什么？",
+        "options": [
+          "看电视",
+          "打球",
+          "看小说"
+        ],
+        "answer": 1,
+        "qVi": "Làm bài tập xong cậu ấy làm gì?"
+      },
+      {
+        "q": "星期天全家去看谁？",
+        "options": [
+          "爷爷和奶奶",
+          "外公和外婆",
+          "舅舅"
+        ],
+        "answer": 0,
+        "qVi": "Chủ nhật cả nhà đi thăm ai?"
+      },
+      {
+        "q": "奶奶让李文带什么回去？",
+        "options": [
+          "一些菜",
+          "一些水果",
+          "一些鸡蛋"
+        ],
+        "answer": 2,
+        "qVi": "Bà bảo Lý Văn mang gì về?"
+      }
+    ]
+  },
+  {
+    "id": "hsk2-reading-3",
+    "book": "hsk2",
+    "lesson": "lesson-3",
+    "title": "生病的一天",
+    "titleVi": "Ngày bị bệnh",
+    "sentences": [
+      {
+        "zh": "上周三的早上，我觉得不舒服。",
+        "vi": "Sáng thứ tư tuần trước, tôi thấy không khỏe.",
+        "py": "Shàng zhōusān de zǎoshang, wǒ juéde bù shūfu."
+      },
+      {
+        "zh": "我的头很疼，也很难受。",
+        "vi": "Đầu tôi rất đau, cũng rất khó chịu.",
+        "py": "Wǒ de tóu hěn téng, yě hěn nánshòu."
+      },
+      {
+        "zh": "妈妈说：\"你生病了，今天别去学校了。\"",
+        "vi": "Mẹ nói: \"Con bị bệnh rồi, hôm nay đừng đi học nữa.\"",
+        "py": "Māma shuō: \"Nǐ shēngbìng le, jīntiān bié qù xuéxiào le.\""
+      },
+      {
+        "zh": "妈妈带我去了医院。",
+        "vi": "Mẹ đưa tôi đến bệnh viện.",
+        "py": "Māma dài wǒ qù le yīyuàn."
+      },
+      {
+        "zh": "医院里人很多，我们先排队。",
+        "vi": "Trong bệnh viện rất đông người, chúng tôi xếp hàng trước.",
+        "py": "Yīyuàn li rén hěn duō, wǒmen xiān páiduì."
+      },
+      {
+        "zh": "医生问我：\"你哪里不舒服？\"",
+        "vi": "Bác sĩ hỏi tôi: \"Cậu thấy chỗ nào không khỏe?\"",
+        "py": "Yīshēng wèn wǒ: \"Nǐ nǎlǐ bù shūfu?\""
+      },
+      {
+        "zh": "我说：\"我头疼，还想睡觉。\"",
+        "vi": "Tôi nói: \"Con đau đầu, còn buồn ngủ nữa.\"",
+        "py": "Wǒ shuō: \"Wǒ tóuténg, hái xiǎng shuìjiào.\""
+      },
+      {
+        "zh": "医生给我检查了一下儿。",
+        "vi": "Bác sĩ khám cho tôi một chút.",
+        "py": "Yīshēng gěi wǒ jiǎnchá le yíxiàr."
+      },
+      {
+        "zh": "他说：\"吃点儿药就好了，不用怕。\"",
+        "vi": "Ông ấy nói: \"Uống chút thuốc là khỏi, đừng lo.\"",
+        "py": "Tā shuō: \"Chī diǎnr yào jiù hǎo le, bú yòng pà.\""
+      },
+      {
+        "zh": "妈妈去药店买了药。",
+        "vi": "Mẹ ra hiệu thuốc mua thuốc.",
+        "py": "Māma qù yàodiàn mǎi le yào."
+      },
+      {
+        "zh": "回家以后，我吃药，然后睡觉。",
+        "vi": "Về nhà xong, tôi uống thuốc, sau đó đi ngủ.",
+        "py": "Huí jiā yǐhòu, wǒ chī yào, ránhòu shuìjiào."
+      },
+      {
+        "zh": "睡了一觉，我觉得好多了。",
+        "vi": "Ngủ một giấc, tôi thấy đỡ nhiều rồi.",
+        "py": "Shuì le yí jiào, wǒ juéde hǎo duō le."
+      },
+      {
+        "zh": "妈妈给我做了鸡蛋和面条儿。",
+        "vi": "Mẹ làm cho tôi trứng và mì.",
+        "py": "Māma gěi wǒ zuò le jīdàn hé miàntiáor."
+      },
+      {
+        "zh": "她说：\"多喝水，很快就好了。\"",
+        "vi": "Bà ấy nói: \"Uống nhiều nước, sẽ nhanh khỏe thôi.\"",
+        "py": "Tā shuō: \"Duō hē shuǐ, hěn kuài jiù hǎo le.\""
+      },
+      {
+        "zh": "我在家里休息了两天。",
+        "vi": "Tôi nghỉ ngơi ở nhà hai ngày.",
+        "py": "Wǒ zài jiā li xiūxi le liǎng tiān."
+      },
+      {
+        "zh": "妈妈一直照顾我。",
+        "vi": "Mẹ luôn luôn chăm sóc tôi.",
+        "py": "Māma yìzhí zhàogù wǒ."
+      },
+      {
+        "zh": "我很感动，也很感谢妈妈。",
+        "vi": "Tôi rất cảm động, cũng rất cảm ơn mẹ.",
+        "py": "Wǒ hěn gǎndòng, yě hěn gǎnxiè māma."
+      },
+      {
+        "zh": "星期五，我的病好了，又可以去学校了。",
+        "vi": "Thứ sáu, bệnh của tôi khỏi rồi, lại có thể đi học được rồi.",
+        "py": "Xīngqīwǔ, wǒ de bìng hǎo le, yòu kěyǐ qù xuéxiào le."
+      },
+      {
+        "zh": "同学们看到我，都很高兴。",
+        "vi": "Các bạn học thấy tôi đều rất vui.",
+        "py": "Tóngxuémen kàndào wǒ, dōu hěn gāoxìng."
+      },
+      {
+        "zh": "从那以后，我明白了：身体健康最重要。",
+        "vi": "Từ đó, tôi hiểu rằng: sức khỏe là quan trọng nhất.",
+        "py": "Cóng nà yǐhòu, wǒ míngbái le: shēntǐ jiànkāng zuì zhòngyào."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "舒服",
+        "py": "shūfu",
+        "vi": "dễ chịu, khỏe khoắn"
+      },
+      {
+        "word": "头疼",
+        "py": "tóuténg",
+        "vi": "đau đầu"
+      },
+      {
+        "word": "检查",
+        "py": "jiǎnchá",
+        "vi": "kiểm tra, khám bệnh"
+      },
+      {
+        "word": "药",
+        "py": "yào",
+        "vi": "thuốc"
+      },
+      {
+        "word": "照顾",
+        "py": "zhàogù",
+        "vi": "chăm sóc"
+      },
+      {
+        "word": "感动",
+        "py": "gǎndòng",
+        "vi": "cảm động"
+      },
+      {
+        "word": "感谢",
+        "py": "gǎnxiè",
+        "vi": "cảm ơn, biết ơn"
+      },
+      {
+        "word": "健康",
+        "py": "jiànkāng",
+        "vi": "sức khỏe, khỏe mạnh"
+      }
+    ],
+    "questions": [
+      {
+        "q": "那天早上\"我\"觉得怎么样？",
+        "options": [
+          "很不舒服",
+          "非常高兴",
+          "很累但是很好"
+        ],
+        "answer": 0,
+        "qVi": "Sáng hôm đó \"tôi\" thấy thế nào?"
+      },
+      {
+        "q": "谁带\"我\"去了医院？",
+        "options": [
+          "爸爸",
+          "妈妈",
+          "同学"
+        ],
+        "answer": 1,
+        "qVi": "Ai đưa \"tôi\" đi bệnh viện?"
+      },
+      {
+        "q": "医生说\"我\"应该怎么做？",
+        "options": [
+          "住院",
+          "去学校",
+          "吃点儿药"
+        ],
+        "answer": 2,
+        "qVi": "Bác sĩ nói \"tôi\" nên làm gì?"
+      },
+      {
+        "q": "\"我\"在家里休息了几天？",
+        "options": [
+          "两天",
+          "一个星期",
+          "三天"
+        ],
+        "answer": 0,
+        "qVi": "\"Tôi\" nghỉ ngơi ở nhà mấy ngày?"
+      },
+      {
+        "q": "\"我\"从这件事明白了什么？",
+        "options": [
+          "学习最重要",
+          "身体健康最重要",
+          "钱最重要"
+        ],
+        "answer": 1,
+        "qVi": "Từ chuyện này \"tôi\" hiểu được điều gì?"
+      }
+    ]
+  }
+]

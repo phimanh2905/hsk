@@ -31,7 +31,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-VOICE_BY_SPEAKER = {"A": "zf_001", "B": "zm_009"}
+VOICE_BY_SPEAKER = {"A": "zf_xiaoxiao", "B": "zm_yunjian"}
 SAMPLE_RATE = 24000
 LESSON_RE = re.compile(r"^lesson-\d+$")
 

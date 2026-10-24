@@ -1,0 +1,461 @@
+[
+  {
+    "id": "hsk5-reading-1",
+    "book": "hsk5",
+    "lesson": "lesson-1",
+    "title": "茶文化",
+    "titleVi": "Văn hóa trà",
+    "sentences": [
+      {
+        "zh": "中国人喝茶已经有几千年的历史了。",
+        "vi": "Người Trung Quốc uống trà đã có lịch sử vài nghìn năm.",
+        "py": "zhōngguó rén hē chá yǐjīng yǒu jǐ qiān nián de lìshǐ le."
+      },
+      {
+        "zh": "对中国人来说，茶不仅仅是一种饮料，更是一种文化。",
+        "vi": "Đối với người Trung Quốc, trà không chỉ là một loại thức uống, mà còn là một nền văn hóa.",
+        "py": "duì zhōngguó rén lái shuō, chá bùjǐnjǐn shì yī zhǒng yǐnliào, gèng shì yī zhǒng wénhuà."
+      },
+      {
+        "zh": "传统的中国茶分为绿茶、红茶、乌龙茶等很多种类。",
+        "vi": "Trà Trung Quốc truyền thống chia thành trà xanh, trà đỏ, trà ô long v.v. nhiều loại.",
+        "py": "chuántǒng de zhōngguó chá fēn wéi lǜchá, hóngchá, wūlóngchá děng hěn duō zhǒnglèi."
+      },
+      {
+        "zh": "不同地区出产的茶叶，味道和香气也各不相同。",
+        "vi": "Trà sản xuất ở các vùng khác nhau, hương vị cũng khác nhau.",
+        "py": "bùtóng dìqū chūchǎn de cháyè, wèidào hé xiāngqì yě gè bù xiāngtóng."
+      },
+      {
+        "zh": "南方人喜欢喝绿茶，非常讲究茶叶的新鲜。",
+        "vi": "Người miền nam thích uống trà xanh, rất chú trọng độ tươi của trà.",
+        "py": "nánfāng rén xǐhuan hē lǜchá, fēicháng jiǎngjiu cháyè de xīnxiān."
+      },
+      {
+        "zh": "北方人则更喜欢香味浓的花茶。",
+        "vi": "Người miền bắc lại thích trà hoa có hương đậm hơn.",
+        "py": "běifāng rén zé gèng xǐhuan xiāngwèi nóng de huāchá."
+      },
+      {
+        "zh": "泡茶也是一门学问，水温和时间都会影响茶的味道。",
+        "vi": "Pha trà cũng là một môn học, nhiệt độ nước và thời gian đều ảnh hưởng đến vị trà.",
+        "py": "pào chá yě shì yī mén xuéwen, shuǐwēn hé shíjiān dōu huì yǐngxiǎng chá de wèidào."
+      },
+      {
+        "zh": "老年人常说，喝茶可以让人安静下来。",
+        "vi": "Người già thường nói, uống trà có thể khiến người ta bình tĩnh lại.",
+        "py": "lǎonián rén cháng shuō, hē chá kěyǐ ràng rén ānjìng xiàlái."
+      },
+      {
+        "zh": "现在，越来越多的年轻人对茶文化产生了兴趣。",
+        "vi": "Hiện nay, ngày càng nhiều bạn trẻ có hứng thú với văn hóa trà.",
+        "py": "xiànzài, yuèláiyuè duō de niánqīng rén duì chá wénhuà chǎnshēng le xìngqù."
+      },
+      {
+        "zh": "城市里出现了不少有特色的茶馆，生意相当不错。",
+        "vi": "Ở thành phố xuất hiện không ít quán trà có đặc sắc, việc làm ăn khá tốt.",
+        "py": "chéngshì lǐ chūxiàn le bù shǎo yǒu tèsè de cháguǎn, shēngyì xiāngdāng bùcuò."
+      },
+      {
+        "zh": "周末约上几位朋友，在茶馆里聊聊天，是一种享受。",
+        "vi": "Cuối tuần hẹn vài người bạn, ngồi trò chuyện trong quán trà, là một sự hưởng thụ.",
+        "py": "zhōumò yuē shàng jǐ wèi péngyou, zài cháguǎn lǐ liáo liáo tiān, shì yī zhǒng xiǎngshòu."
+      },
+      {
+        "zh": "有人认为，喝咖啡代表现代，喝茶代表传统。",
+        "vi": "Có người cho rằng, uống cà phê đại diện cho hiện đại, uống trà đại diện cho truyền thống.",
+        "py": "yǒu rén rènwéi, hē kāfēi dàibiǎo xiàndài, hē chá dàibiǎo chuántǒng."
+      },
+      {
+        "zh": "但我觉得，两者完全可以同时存在。",
+        "vi": "Nhưng tôi nghĩ, hai thứ này hoàn toàn có thể cùng tồn tại.",
+        "py": "dàn wǒ juéde, liǎng zhě wánquán kěyǐ tóngshí cúnzài."
+      },
+      {
+        "zh": "传统的文化只有融进现代生活，才能真正流传下去。",
+        "vi": "Văn hóa truyền thống chỉ có hòa vào cuộc sống hiện đại, mới có thể thực sự được lưu truyền.",
+        "py": "chuántǒng de wénhuà zhǐyǒu róng jìn xiàndài shēnghuó, cái néng zhēnzhèng liúchuán xiàqù."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "传统",
+        "py": "chuántǒng",
+        "vi": "truyền thống"
+      },
+      {
+        "word": "饮料",
+        "py": "yǐnliào",
+        "vi": "thức uống"
+      },
+      {
+        "word": "讲究",
+        "py": "jiǎngjiu",
+        "vi": "chú trọng, cầu kỳ"
+      },
+      {
+        "word": "学问",
+        "py": "xuéwen",
+        "vi": "học vấn, kiến thức"
+      },
+      {
+        "word": "兴趣",
+        "py": "xìngqù",
+        "vi": "hứng thú, sở thích"
+      },
+      {
+        "word": "特色",
+        "py": "tèsè",
+        "vi": "đặc sắc"
+      },
+      {
+        "word": "享受",
+        "py": "xiǎngshòu",
+        "vi": "hưởng thụ"
+      },
+      {
+        "word": "流传",
+        "py": "liúchuán",
+        "vi": "lưu truyền"
+      }
+    ],
+    "questions": [
+      {
+        "q": "对中国人来说，茶是什么？",
+        "options": [
+          "只是一种饮料",
+          "一种饮料，也是一种文化",
+          "一种药"
+        ],
+        "answer": 1,
+        "qVi": "Đối với người Trung Quốc, trà là gì?"
+      },
+      {
+        "q": "北方人更喜欢什么茶？",
+        "options": [
+          "香味浓的花茶",
+          "新鲜的绿茶",
+          "苦的红茶"
+        ],
+        "answer": 0,
+        "qVi": "Người miền bắc thích loại trà nào hơn?"
+      },
+      {
+        "q": "作者认为传统文化怎样才能流传下去？",
+        "options": [
+          "靠老年人保护",
+          "不和现代生活混合",
+          "融进现代生活"
+        ],
+        "answer": 2,
+        "qVi": "Theo tác giả, văn hóa truyền thống phải thế nào mới được lưu truyền?"
+      }
+    ]
+  },
+  {
+    "id": "hsk5-reading-2",
+    "book": "hsk5",
+    "lesson": "lesson-2",
+    "title": "谈谈读书",
+    "titleVi": "Nói về việc đọc sách",
+    "sentences": [
+      {
+        "zh": "现在很多人习惯用手机看新闻、看小说，读书的人似乎越来越少。",
+        "vi": "Hiện nay nhiều người quen dùng điện thoại xem tin tức, xem tiểu thuyết, người đọc sách có vẻ ngày càng ít.",
+        "py": "xiànzài hěn duō rén xíguàn yòng shǒujī kàn xīnwén, kàn xiǎoshuō, dú shū de rén sìhū yuèláiyuè shǎo."
+      },
+      {
+        "zh": "有人说，纸质书早晚会被电子书代替。",
+        "vi": "Có người nói, sách giấy sớm muộn sẽ bị sách điện tử thay thế.",
+        "py": "yǒu rén shuō, zhǐzhì shū zǎowǎn huì bèi diànzǐshū dàitì."
+      },
+      {
+        "zh": "但我认为，两种阅读方式各有优点，谁也代替不了谁。",
+        "vi": "Nhưng tôi cho rằng, hai cách đọc này mỗi cái có ưu điểm riêng, cái nào cũng không thay thế được cái nào.",
+        "py": "dàn wǒ rènwéi, liǎng zhǒng yuèdú fāngshì gè yǒu yōudiǎn, shéi yě dàitì bù liǎo shéi."
+      },
+      {
+        "zh": "电子书方便携带，价格也往往更便宜。",
+        "vi": "Sách điện tử tiện mang theo, giá cũng thường rẻ hơn.",
+        "py": "diànzǐshū fāngbiàn xiédài, jiàgé yě wǎngwǎng gèng piányi."
+      },
+      {
+        "zh": "而读纸质书更容易让人静下心来，体验也更深刻。",
+        "vi": "Còn đọc sách giấy dễ khiến người ta tĩnh tâm hơn, trải nghiệm cũng sâu sắc hơn.",
+        "py": "ér dú zhǐzhì shū gèng róngyì ràng rén jìng xià xīn lái, tǐyàn yě gèng shēnkè."
+      },
+      {
+        "zh": "我认识一位老教授，他家里收藏了几千本书。",
+        "vi": "Tôi quen một giáo sư già, nhà ông ấy sưu tầm vài nghìn cuốn sách.",
+        "py": "wǒ rènshi yī wèi lǎo jiàoshòu, tā jiā lǐ shōucáng le jǐ qiān běn shū."
+      },
+      {
+        "zh": "他说，读书不能只为了考试，更是为了思考。",
+        "vi": "Ông nói, đọc sách không thể chỉ vì thi cử, mà quan trọng hơn là để tư duy.",
+        "py": "tā shuō, dú shū bù néng zhǐ wèile kǎoshì, gèng shì wèile sīkǎo."
+      },
+      {
+        "zh": "一本好书就像一位好朋友，会影响你一辈子。",
+        "vi": "Một cuốn sách hay giống như một người bạn tốt, sẽ ảnh hưởng đến bạn cả đời.",
+        "py": "yī běn hǎo shū jiù xiàng yī wèi hǎo péngyou, huì yǐngxiǎng nǐ yībèizi."
+      },
+      {
+        "zh": "当然，读什么书也很重要，要选择对自己有帮助的。",
+        "vi": "Tất nhiên, đọc sách gì cũng rất quan trọng, phải chọn sách có lợi cho mình.",
+        "py": "dāngrán, dú shénme shū yě hěn zhòngyào, yào xuǎnzé duì zìjǐ yǒu bāngzhù de."
+      },
+      {
+        "zh": "现在不少城市开设了二十四小时图书馆，鼓励市民多读书。",
+        "vi": "Hiện nay không ít thành phố mở thư viện hai mươi bốn giờ, khuyến khích dân chúng đọc sách nhiều hơn.",
+        "py": "xiànzài bù shǎo chéngshì kāishè le èrshísì xiǎoshí túshūguǎn, gǔlì shìmín duō dú shū."
+      },
+      {
+        "zh": "图书馆里的气氛，能让人的心态自然而然地安静下来。",
+        "vi": "Không khí trong thư viện có thể khiến tâm trạng người ta tự nhiên bình tĩnh lại.",
+        "py": "túshūguǎn lǐ de qìfēn, néng ràng rén de xīntài zìrán ér rán de ānjìng xiàlái."
+      },
+      {
+        "zh": "我建议每个星期至少抽出一个小时，关掉手机，认真读点书。",
+        "vi": "Tôi đề nghị mỗi tuần ít nhất dành ra một tiếng, tắt điện thoại, nghiêm túc đọc chút sách.",
+        "py": "wǒ jiànyì měi ge xīngqī zhìshǎo chōuchū yī ge xiǎoshí, guān diào shǒujī, rènzhēn dú diǎn shū."
+      },
+      {
+        "zh": "长期坚持下来，你会发现自己的视野宽了，想法也成熟了。",
+        "vi": "Kiên trì lâu dài, bạn sẽ phát hiện tầm nhìn của mình rộng hơn, suy nghĩ cũng chín chắn hơn.",
+        "py": "chángqī jiānchí xiàlái, nǐ huì fāxiàn zìjǐ de shìyě kuān le, xiǎngfǎ yě chéngshú le."
+      },
+      {
+        "zh": "读书是一种习惯，更是一种生活态度。",
+        "vi": "Đọc sách là một thói quen, mà quan trọng hơn là một thái độ sống.",
+        "py": "dú shū shì yī zhǒng xíguàn, gèng shì yī zhǒng shēnghuó tàidù."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "习惯",
+        "py": "xíguàn",
+        "vi": "thói quen; quen"
+      },
+      {
+        "word": "代替",
+        "py": "dàitì",
+        "vi": "thay thế"
+      },
+      {
+        "word": "优点",
+        "py": "yōudiǎn",
+        "vi": "ưu điểm"
+      },
+      {
+        "word": "体验",
+        "py": "tǐyàn",
+        "vi": "trải nghiệm"
+      },
+      {
+        "word": "深刻",
+        "py": "shēnkè",
+        "vi": "sâu sắc"
+      },
+      {
+        "word": "图书馆",
+        "py": "túshūguǎn",
+        "vi": "thư viện"
+      },
+      {
+        "word": "坚持",
+        "py": "jiānchí",
+        "vi": "kiên trì"
+      },
+      {
+        "word": "态度",
+        "py": "tàidù",
+        "vi": "thái độ"
+      }
+    ],
+    "questions": [
+      {
+        "q": "作者怎样看电子书和纸质书？",
+        "options": [
+          "电子书会完全代替纸质书",
+          "两种方式各有优点",
+          "纸质书没有优点"
+        ],
+        "answer": 1,
+        "qVi": "Tác giả nhìn nhận sách điện tử và sách giấy thế nào?"
+      },
+      {
+        "q": "老教授认为读书是为了什么？",
+        "options": [
+          "只为了考试",
+          "为了思考",
+          "为了收藏书"
+        ],
+        "answer": 1,
+        "qVi": "Giáo sư già cho rằng đọc sách là để làm gì?"
+      },
+      {
+        "q": "作者建议大家每星期做什么？",
+        "options": [
+          "买一本书",
+          "去一次图书馆",
+          "抽一个小时认真读书"
+        ],
+        "answer": 2,
+        "qVi": "Tác giả khuyên mỗi tuần nên làm gì?"
+      }
+    ]
+  },
+  {
+    "id": "hsk5-reading-3",
+    "book": "hsk5",
+    "lesson": "lesson-3",
+    "title": "春节",
+    "titleVi": "Tết Nguyên Đán",
+    "sentences": [
+      {
+        "zh": "春节是中国最重要的传统节日。",
+        "vi": "Tết Nguyên Đán là ngày lễ truyền thống quan trọng nhất của Trung Quốc.",
+        "py": "chūnjié shì zhōngguó zuì zhòngyào de chuántǒng jiérì."
+      },
+      {
+        "zh": "每年春节前，家家户户都忙着买年货、打扫房子。",
+        "vi": "Mỗi năm trước Tết, nhà nào cũng bận rộn mua đồ Tết, dọn dẹp nhà cửa.",
+        "py": "měi nián chūnjié qián, jiājiāhùhù dōu mángzhe mǎi niánhuò, dǎsǎo fángzi."
+      },
+      {
+        "zh": "在外地工作的人也纷纷赶回家，和家人团聚。",
+        "vi": "Những người làm việc ở xa cũng nối nhau vội về nhà, đoàn tụ với gia đình.",
+        "py": "zài wàidì gōngzuò de rén yě fēnfēn gǎn huí jiā, hé jiārén tuánjù."
+      },
+      {
+        "zh": "除夕那天晚上，全家人一起吃年夜饭，气氛特别热闹。",
+        "vi": "Tối giao thừa, cả gia đình cùng ăn bữa cơm tất niên, không khí đặc biệt náo nhiệt.",
+        "py": "chúxī nà tiān wǎnshang, quán jiā rén yīqǐ chī niányèfàn, qìfēn tèbié rènao."
+      },
+      {
+        "zh": "北方人习惯吃饺子，南方人则常吃年糕。",
+        "vi": "Người miền bắc quen ăn sủi cảo, người miền nam thường ăn bánh chưng năm.",
+        "py": "běifāng rén xíguàn chī jiǎozi, nánfāng rén zé cháng chī niángāo."
+      },
+      {
+        "zh": "吃完饭，大家一边看节目，一边聊天，一直到半夜。",
+        "vi": "Ăn cơm xong, mọi người vừa xem chương trình vừa nói chuyện, cho đến nửa đêm.",
+        "py": "chī wán fàn, dàjiā yībiān kàn jiémù, yībiān liáotiān, yīzhí dào bànyè."
+      },
+      {
+        "zh": "大年初一，孩子们给长辈拜年，还能收到红包。",
+        "vi": "Mùng một Tết, các cháu chúc Tết người lớn, còn nhận được bao lì xì.",
+        "py": "dà nián chūyī, háizimen gěi zhǎngbèi bàinián, hái néng shōudào hóngbāo."
+      },
+      {
+        "zh": "很多地方还会放鞭炮，据说这样可以赶走坏运气。",
+        "vi": "Nhiều nơi còn đốt pháo, theo như lời kể thì làm vậy có thể xua đuổi vận xui.",
+        "py": "hěn duō dìfang hái huì fàng biānpào, jùshuō zhèyàng kěyǐ gǎnzǒu huài yùnqì."
+      },
+      {
+        "zh": "近年来，为了保护环境，不少城市禁止放鞭炮。",
+        "vi": "Những năm gần đây, để bảo vệ môi trường, không ít thành phố cấm đốt pháo.",
+        "py": "jìnnián lái, wèile bǎohù huánjìng, bù shǎo chéngshì jìnzhǐ fàng biānpào."
+      },
+      {
+        "zh": "有些人觉得这样少了节日气氛，有些人则表示理解。",
+        "vi": "Có người thấy vậy làm mất bớt không khí lễ hội, có người lại tỏ ra thông cảm.",
+        "py": "yǒuxiē rén juéde zhèyàng shǎo le jiérì qìfēn, yǒuxiē rén zé biǎoshì lǐjiě."
+      },
+      {
+        "zh": "我认为，节日的核心是亲情，形式可以慢慢变化。",
+        "vi": "Tôi cho rằng, cốt lõi của lễ Tết là tình thân, hình thức có thể dần thay đổi.",
+        "py": "wǒ rènwéi, jiérì de héxīn shì qīnqíng, xíngshì kěyǐ mànmàn biànhuà."
+      },
+      {
+        "zh": "比如现在流行用手机发红包、视频拜年，同样能表达心意。",
+        "vi": "Chẳng hạn nay thịnh hành gửi lì xì bằng điện thoại, chúc Tết qua video, vẫn thể hiện được tấm lòng.",
+        "py": "bǐrú xiànzài liúxíng yòng shǒujī fā hóngbāo, shìpín bàinián, tóngyàng néng biǎodá xīnyì."
+      },
+      {
+        "zh": "春节让人们暂时放下工作，回到家庭，这本身就是它的意义。",
+        "vi": "Tết khiến mọi người tạm thời gác lại công việc, trở về với gia đình, điều đó tự nó đã là ý nghĩa của Tết.",
+        "py": "chūnjié ràng rénmen zànshí fàngxià gōngzuò, huídào jiātíng, zhè běnshēn jiù shì tā de yìyì."
+      },
+      {
+        "zh": "无论时代怎么变，团圆永远是中国人心里最深的感情。",
+        "vi": "Dù thời đại thay đổi thế nào, đoàn viên mãi mãi là tình cảm sâu nhất trong lòng người Trung Quốc.",
+        "py": "wúlùn shídài zěnme biàn, tuányuán yǒngyuǎn shì zhōngguó rén xīnlǐ zuì shēn de gǎnqíng."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "节日",
+        "py": "jiérì",
+        "vi": "ngày lễ, ngày hội"
+      },
+      {
+        "word": "热闹",
+        "py": "rènao",
+        "vi": "náo nhiệt"
+      },
+      {
+        "word": "饺子",
+        "py": "jiǎozi",
+        "vi": "sủi cảo, bánh chẻo"
+      },
+      {
+        "word": "红包",
+        "py": "hóngbāo",
+        "vi": "bao lì xì"
+      },
+      {
+        "word": "禁止",
+        "py": "jìnzhǐ",
+        "vi": "cấm chỉ, cấm"
+      },
+      {
+        "word": "意义",
+        "py": "yìyì",
+        "vi": "ý nghĩa"
+      },
+      {
+        "word": "表达",
+        "py": "biǎodá",
+        "vi": "biểu đạt, bày tỏ"
+      },
+      {
+        "word": "感情",
+        "py": "gǎnqíng",
+        "vi": "tình cảm"
+      }
+    ],
+    "questions": [
+      {
+        "q": "为什么不少城市禁止放鞭炮？",
+        "options": [
+          "因为鞭炮太贵",
+          "为了保护环境",
+          "因为大家不喜欢"
+        ],
+        "answer": 1,
+        "qVi": "Vì sao không ít thành phố cấm đốt pháo?"
+      },
+      {
+        "q": "作者认为节日的核心是什么？",
+        "options": [
+          "吃年夜饭",
+          "收红包",
+          "亲情"
+        ],
+        "answer": 2,
+        "qVi": "Tác giả cho rằng cốt lõi của ngày lễ là gì?"
+      },
+      {
+        "q": "用手机发红包、视频拜年能表达心意吗？",
+        "options": [
+          "作者认为同样能",
+          "完全不能",
+          "文章没有提到"
+        ],
+        "answer": 0,
+        "qVi": "Gửi lì xì bằng điện thoại, chúc Tết qua video có thể thể hiện tấm lòng không?"
+      }
+    ]
+  }
+]
