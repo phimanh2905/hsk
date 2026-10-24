@@ -29,10 +29,12 @@ function parseJson<T>(v: unknown): T {
   return v as T;
 }
 
-/* Pure function (test được): sort theo ord, map JSON field về đúng tuple. */
+/* Pure function (test được): sort theo (level, ord) — ord reset per level theo
+   seed nên sort chỉ theo ord phụ thuộc scan order D1. Level chỉ "HSK 1".."HSK 5"
+   nên string sort đúng thứ tự. */
 export function rowsToGrammarPoints(rows: GrammarRow[]): GrammarPoint[] {
   return [...rows]
-    .sort((a, b) => a.ord - b.ord)
+    .sort((a, b) => a.level.localeCompare(b.level) || a.ord - b.ord)
     .map((r) => ({
       id: r.id,
       level: r.level,
@@ -47,7 +49,10 @@ export function rowsToGrammarPoints(rows: GrammarRow[]): GrammarPoint[] {
 }
 
 export async function getGrammar(): Promise<GrammarPoint[]> {
-  const rows = await createDb().select().from(contentGrammars).orderBy(asc(contentGrammars.ord));
+  const rows = await createDb()
+    .select()
+    .from(contentGrammars)
+    .orderBy(asc(contentGrammars.level), asc(contentGrammars.ord));
   if (rows.length === 0) throw new ContentNotFoundError("content_grammars");
   return rowsToGrammarPoints(rows);
 }

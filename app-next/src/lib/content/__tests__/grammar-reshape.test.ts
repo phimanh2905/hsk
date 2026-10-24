@@ -24,6 +24,19 @@ describe("rowsToGrammarPoints", () => {
     expect(out.map((p) => p.id)).toEqual(["bi", "ba"]);
   });
 
+  it("sort theo (level, ord): ord thấp hơn nhưng level cao hơn vẫn đứng sau", () => {
+    const rows = [
+      { id: "x", level: "HSK 2", ord: 0, title: "x", hz: "x", topic: "x", def: "x",
+        formula: "[]", pitfall: "[]", ex: "[]" },
+      { id: point.id, level: "HSK 1", ord: 5, title: point.title, hz: point.hz,
+        topic: point.topic, def: point.def,
+        formula: JSON.stringify(point.formula), pitfall: JSON.stringify(point.pitfall),
+        ex: JSON.stringify(point.ex) },
+    ];
+    // ord=0 của HSK 2 không được nhảy lên trước ord=5 của HSK 1
+    expect(rowsToGrammarPoints(rows as never).map((p) => p.level)).toEqual(["HSK 1", "HSK 2"]);
+  });
+
   it("JSON string field parse đúng tuple formula/pitfall/ex", () => {
     const ba = rowsToGrammarPoints(grammarRows as never).find((p) => p.id === "ba")!;
     expect(ba.formula).toEqual(point.formula);
@@ -32,9 +45,11 @@ describe("rowsToGrammarPoints", () => {
     expect(ba.pitfall.length).toBe(3);
   });
 
-  it("parity: rows đã parse từ static tái tạo đúng shape static", () => {
+  it("parity: rows đã parse từ static tái tạo đúng shape static (sort theo level, ord=i)", () => {
     const rows = staticPoints.map((p, i) => ({ ...p, ord: i }));
-    expect(rowsToGrammarPoints(rows)).toEqual(staticPoints);
+    // ord=i unique toàn cục nên thứ tự = stable sort theo level
+    const expected = [...staticPoints].sort((a, b) => a.level.localeCompare(b.level));
+    expect(rowsToGrammarPoints(rows)).toEqual(expected);
   });
 
   it("pitfall luôn 3 phần giữ nguyên", () => {
