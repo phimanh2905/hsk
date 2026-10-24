@@ -30,6 +30,7 @@ const TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000;
 const REVIEW_LOGS_KEY = "bye.review.logs";
 const HEAT_CORRECT_KEY = "bye.heat.correct";
 const REVIEW_LOGS_BATCH = 1000; // cap server 1000/batch (zod max)
+const LOGSENT_KEY = "bye.sync.logsent"; // con trỏ: max reviewedAt đã POST thành công
 
 const SRS_ITEMS_KEY = "bye.srs.items";
 const HEAT_KEY = "bye.heat";
@@ -102,6 +103,15 @@ function clearTombstone(domain: "srs" | "lessonProgress", key: string): void {
   if (!(key in tombs[domain])) return;
   delete tombs[domain][key];
   writeJSON(TOMBSTONE_KEY, tombs);
+}
+
+function readLastSentLogAt(): number {
+  const v = readJSON<number>(LOGSENT_KEY, 0);
+  return typeof v === "number" && Number.isFinite(v) && v > 0 ? v : 0;
+}
+
+function writeLastSentLogAt(at: number): void {
+  writeJSON(LOGSENT_KEY, at);
 }
 
 function persistDirty(): void {
@@ -221,11 +231,15 @@ function computePayload(): SyncPayload {
       }
     }
   }
-  // W5.2: reviewLogs — gửi 1000 entry mới nhất/batch (cap server), phần cũ giữ dirty
+  // W5.2: reviewLogs — gửi OLDEST-FIRST tối đa 1000 entry/batch (cap server zod),
+  // chỉ những log CHƯA gửi (reviewedAt > con trỏ bye.sync.logsent); phần còn lại
+  // giữ dirty → flush sau gửi nốt (tránh vòng lặp vô hạn khi local > 1000).
   const reviewLogs: SyncReviewLogRecord[] = dirty.has("reviewLogs")
     ? progressStore
         .getReviewLogs()
-        .slice(-REVIEW_LOGS_BATCH)
+        .filter((l) => l.reviewedAt > readLastSentLogAt())
+        .sort((a, b) => a.reviewedAt - b.reviewedAt)
+        .slice(0, REVIEW_LOGS_BATCH)
         .map((l) => ({
           itemKey: l.itemKey,
           cardType: l.cardType,
@@ -425,12 +439,24 @@ async function doFlush(): Promise<void> {
     if (!res.ok) throw new Error(String(res.status));
     const server = (await res.json()) as SyncPayload & { serverTime: number };
     applyServerPayload(server);
+    // reviewLogs: con trỏ chỉ tiến theo max reviewedAt ĐÃ gửi trong POST này
+    // (KHÔNG theo max local/server — tránh bỏ sót log local chưa gửi dưới con trỏ).
+    // Log server-merge cũ hơn con trỏ không bao giờ pending lại; log server-merge
+    // mới hơn con trỏ được gửi lại đúng 1 lần (upsert idempotent, vô hại).
+    const sent = payload.reviewLogs;
+    if (sent.length) {
+      writeLastSentLogAt(Math.max(readLastSentLogAt(), sent[sent.length - 1].reviewedAt));
+    }
     for (const d of domains) {
-      // reviewLogs > batch cap: chỉ gửi được 1 phần — giữ dirty để flush sau gửi nốt
-      if (d === "reviewLogs" && progressStore.getReviewLogs().length > REVIEW_LOGS_BATCH) continue;
+      // reviewLogs: chỉ clear dirty khi KHÔNG còn log chưa gửi (so với con trỏ,
+      // không so với tổng local — tránh flush vô hạn khi local > batch cap)
+      if (d === "reviewLogs" && progressStore.getReviewLogs().some((l) => l.reviewedAt > readLastSentLogAt())) {
+        continue;
+      }
       dirty.delete(d);
     }
     persistDirty();
+    if (dirty.size) schedule(); // còn dirty (vd reviewLogs quá batch) → tự hẹn flush tiếp
   } catch {
     schedule(); // giữ dirty, thử lại sau 5s nữa
   }

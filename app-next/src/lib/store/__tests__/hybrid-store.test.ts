@@ -32,6 +32,11 @@ function lastBody(): Record<string, unknown> {
   return JSON.parse(call[1].body as string);
 }
 
+/** Response mới mỗi lần gọi — cùng object bị đọc body 2 lần sẽ throw. */
+function okRes(payload: Record<string, unknown> = { srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }) {
+  return new Response(JSON.stringify(payload), { status: 200 });
+}
+
 function sse(key: string, over: Partial<Record<string, unknown>> = {}) {
   return {
     key,
@@ -417,14 +422,12 @@ describe("hybrid-store", () => {
     expect(logs.find((l) => l.itemKey === "hsk1.1.9")).toBeTruthy();
   });
 
-  it("reviewLogs > 1000 entry: gửi 1000 mới nhất, giữ domain dirty để lần flush sau gửi nốt", async () => {
+  it("reviewLogs > 1000: flush 1 gửi 1000 OLDEST (không gửi 50 newest) → dirty còn; flush 2 gửi 50 còn lại → clear; KHÔNG flush 3", async () => {
     initHybridStoreFn();
     hybridOnAuthChangeFn(true);
     await settle();
     fetchMock.mockClear();
-    fetchMock.mockResolvedValue(
-      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
-    );
+    fetchMock.mockImplementation(() => Promise.resolve(okRes()));
 
     // ghi 1050 log trực tiếp localStorage (cap store 2000 nên không bị cắt)
     const logs = [];
@@ -434,13 +437,65 @@ describe("hybrid-store", () => {
     localStorage.setItem("bye.review.logs", JSON.stringify(logs));
     hybridMarkDirtyFn("reviewLogs");
 
+    // flush 1: 1000 oldest (k0..k999), KHÔNG chứa 50 newest
     await vi.advanceTimersByTimeAsync(5000);
-    const body = lastBody();
-    const sent = body.reviewLogs as Array<Record<string, unknown>>;
-    expect(sent).toHaveLength(1000);
-    expect(sent[0].itemKey).toBe("k50"); // 1000 mới nhất (theo reviewedAt)
-    expect(sent[999].itemKey).toBe("k1049");
+    const body1 = lastBody();
+    const sent1 = body1.reviewLogs as Array<Record<string, unknown>>;
+    expect(sent1).toHaveLength(1000);
+    expect(sent1[0].itemKey).toBe("k0"); // oldest-first
+    expect(sent1[999].itemKey).toBe("k999");
+    expect(sent1.find((l) => l.itemKey === "k1049")).toBeUndefined();
     // còn 50 entry chưa gửi → reviewLogs vẫn dirty
     expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBe(1);
+
+    // flush 2: 50 còn lại (k1000..k1049)
+    fetchMock.mockClear();
+    await vi.advanceTimersByTimeAsync(5000);
+    const sent2 = lastBody().reviewLogs as Array<Record<string, unknown>>;
+    expect(sent2).toHaveLength(50);
+    expect(sent2[0].itemKey).toBe("k1000");
+    expect(sent2[49].itemKey).toBe("k1049");
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBeUndefined();
+
+    // flush 3: không còn log chưa gửi → không POST nữa
+    fetchMock.mockClear();
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("merge ngược server logs cũ hơn con trỏ → không bị gửi lại; payload rỗng vẫn clear dirty", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    // flush đầu: gửi 1 log mới (reviewedAt = NOW) → con trỏ = NOW
+    const NOW = Date.now();
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
+    );
+    progressStore.toggleSrs("hsk1.1.0");
+    progressStore.recordReview("hsk1.1.0", "good", NOW, 100);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBeUndefined();
+
+    // server trả log CŨ hơn con trỏ (đồng bộ chéo thiết bị) → merge vào local
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(
+        okRes({
+          srs: [],
+          studyDay: [],
+          lessonProgress: [],
+          reviewLogs: [{ itemKey: "hsk1.old.1", cardType: "vocab", rating: 2, durationMs: 5, reviewedAt: NOW - 60_000 }],
+          serverTime: 1,
+        })
+      )
+    );
+    hybridMarkDirtyFn("reviewLogs"); // đánh dirty lại để xem payload lần flush tới
+    await vi.advanceTimersByTimeAsync(5000);
+    // log cũ hơn con trỏ KHÔNG được gửi lại
+    expect(lastBody().reviewLogs).toEqual([]);
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBeUndefined();
   });
 });
