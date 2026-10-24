@@ -2,6 +2,7 @@
    CHỈ chạy trên máy dev (cần brew whisper-cli + venv). Audio/JSON trung gian ở out/
    (gitignored) — pháp lý: không commit, không dùng dữ liệu ngoài curated list. */
 import { execFile } from "node:child_process";
+import { existsSync } from "node:fs";
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { splitSentences, type WhisperToken } from "./split-sentences";
@@ -36,8 +37,11 @@ export async function transcribeVideo(videoId: string, opts?: { outDir?: string 
   const venv = join(import.meta.dirname, ".venv", "bin");
   const yt = join(venv, "yt-dlp");
   const py = join(venv, "python");
-  await RUN(yt, ["-x", "--audio-format", "wav", "-o", join(dir, "audio.%(ext)s"), `https://www.youtube.com/watch?v=${videoId}`], import.meta.dirname);
-  await RUN(
+  // skip: audio.wav/whisper.json đã có từ lần chạy trước → bỏ yt-dlp/whisper (--resume)
+  if (!existsSync(join(dir, "audio.wav")))
+    await RUN(yt, ["-x", "--audio-format", "wav", "-o", join(dir, "audio.%(ext)s"), `https://www.youtube.com/watch?v=${videoId}`], import.meta.dirname);
+  if (!existsSync(join(dir, "whisper.json")))
+    await RUN(
     "whisper-cli",
     ["-m", join(import.meta.dirname, "models", "ggml-medium.bin"), "-l", "zh", "-ml", "1", "-ojf", "-f", join(dir, "audio.wav"), "-of", join(dir, "whisper")],
     import.meta.dirname
