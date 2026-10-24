@@ -85,8 +85,9 @@ test.describe("G6–G9 create-file + certificate smoke", () => {
     const code = await page.evaluate(() => localStorage.getItem("bye.fileCode"));
     expect(code).toBe("1");
   });
-  test("certificate-test prerender 10 card", async ({ page }) => {
+  test("certificate-test prerender 10 card (9 coming-soon + 1 link demo HSK1)", async ({ page }) => {
     await page.goto("/certificate-test");
-    await expect(page.getByText("Sắp ra mắt")).toHaveCount(10);
+    await expect(page.getByText("Sắp ra mắt")).toHaveCount(9);
+    await expect(page.getByText("Làm bài thi demo")).toHaveCount(1);
   });
 });

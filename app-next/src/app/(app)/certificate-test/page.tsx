@@ -20,7 +20,12 @@ export default function CertificateTestPage() {
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {certificateData.hsk.map((c) => (
-            <CertificateCardItem key={c.logo} {...c} />
+            <CertificateCardItem
+              key={c.logo}
+              {...c}
+              /* W6.3 — HSK 1 đã có đề demo; các cấp khác giữ coming-soon */
+              href={c.logo === "H1" ? "/certificate-test/hsk1" : undefined}
+            />
           ))}
         </div>
       </section>
