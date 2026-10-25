@@ -26,12 +26,15 @@ for (const level of [1, 2, 3, 4, 5]) {
       JSON.stringify({ level, chunkIndex: i / CHUNK_SIZE, status: "done", points }, null, 2));
     all.push(...points);
   }
-  // id uniqueness: slug pinyin trùng (了1/了2) -> suffix -2, -3…
+  // id uniqueness GLOBAL: slug pinyin trùng giữa các level (了 HSK1 vs HSK2 → "le")
+  // và trong level (điểm khác nghĩa) → prefix book + suffix số.
+  const prefix = `hsk${level}-`;
   const seenIds = new Map<string, number>();
   for (const p of all) {
-    const n = seenIds.get(p.id) ?? 0;
-    seenIds.set(p.id, n + 1);
-    if (n > 0) p.id = `${p.id}-${n + 1}`;
+    const base = `${prefix}${p.id}`;
+    const n = seenIds.get(base) ?? 0;
+    seenIds.set(base, n + 1);
+    p.id = n > 0 ? `${base}-${n + 1}` : base;
   }
   writeFileSync(path.join(dataDir, `grammar-hsk${level}.json`), JSON.stringify(all, null, 2));
   console.log(`hsk${level}: ${all.length} điểm OK`);

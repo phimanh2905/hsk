@@ -38,7 +38,7 @@
         "vi": "Bạn là giáo viên à?"
       }
     ],
-    "id": "shi",
+    "id": "hsk1-shi",
     "level": "HSK 1"
   },
   {
@@ -80,7 +80,7 @@
         "vi": "Bạn có uống cà phê không?"
       }
     ],
-    "id": "ma",
+    "id": "hsk1-ma",
     "level": "HSK 1"
   },
   {
@@ -122,7 +122,7 @@
         "vi": "Bạn tên là gì?"
       }
     ],
-    "id": "shen-me",
+    "id": "hsk1-shen-me",
     "level": "HSK 1"
   },
   {
@@ -164,7 +164,7 @@
         "vi": "Cái nào là của bạn?"
       }
     ],
-    "id": "na",
+    "id": "hsk1-na",
     "level": "HSK 1"
   },
   {
@@ -206,7 +206,7 @@
         "vi": "Bạn đợi ai?"
       }
     ],
-    "id": "shui",
+    "id": "hsk1-shui",
     "level": "HSK 1"
   },
   {
@@ -248,7 +248,7 @@
         "vi": "Bạn có mấy người em trai?"
       }
     ],
-    "id": "ji",
+    "id": "hsk1-ji",
     "level": "HSK 1"
   },
   {
@@ -293,7 +293,7 @@
         "vi": "Lớp các bạn có bao nhiêu học sinh?"
       }
     ],
-    "id": "duo-shao",
+    "id": "hsk1-duo-shao",
     "level": "HSK 1"
   },
   {
@@ -332,7 +332,7 @@
         "vi": "Chú chó của bạn mấy tuổi?"
       }
     ],
-    "id": "duo-da",
+    "id": "hsk1-duo-da",
     "level": "HSK 1"
   },
   {
@@ -374,7 +374,7 @@
         "vi": "Bạn đi trường bằng cách nào?"
       }
     ],
-    "id": "zen-me",
+    "id": "hsk1-zen-me",
     "level": "HSK 1"
   },
   {
@@ -413,7 +413,7 @@
         "vi": "Tiếng Trung của bạn thế nào rồi?"
       }
     ],
-    "id": "zen-me-yang",
+    "id": "hsk1-zen-me-yang",
     "level": "HSK 1"
   },
   {
@@ -455,7 +455,7 @@
         "vi": "Tôi uống cà phê, còn bạn?"
       }
     ],
-    "id": "ne",
+    "id": "hsk1-ne",
     "level": "HSK 1"
   },
   {
@@ -497,7 +497,7 @@
         "vi": "Anh ấy là học sinh chứ?"
       }
     ],
-    "id": "ba",
+    "id": "hsk1-ba",
     "level": "HSK 1"
   },
   {
@@ -539,7 +539,7 @@
         "vi": "Chúng ta xem tivi nhé?"
       }
     ],
-    "id": "hao-ma",
+    "id": "hsk1-hao-ma",
     "level": "HSK 1"
   },
   {
@@ -581,7 +581,7 @@
         "vi": "Tôi không bận."
       }
     ],
-    "id": "bu",
+    "id": "hsk1-bu",
     "level": "HSK 1"
   },
   {
@@ -623,7 +623,7 @@
         "vi": "Tôi đã không đi trường."
       }
     ],
-    "id": "mei",
+    "id": "hsk1-mei",
     "level": "HSK 1"
   },
   {
@@ -665,7 +665,7 @@
         "vi": "Táo và chuối đều rất ngon."
       }
     ],
-    "id": "dou",
+    "id": "hsk1-dou",
     "level": "HSK 1"
   },
   {
@@ -707,7 +707,7 @@
         "vi": "Anh ấy cũng không phải học sinh."
       }
     ],
-    "id": "ye",
+    "id": "hsk1-ye",
     "level": "HSK 1"
   },
   {
@@ -749,7 +749,7 @@
         "vi": "Trường rất lớn."
       }
     ],
-    "id": "hen",
+    "id": "hsk1-hen",
     "level": "HSK 1"
   },
   {
@@ -792,7 +792,7 @@
         "vi": "Món này ngon quá!"
       }
     ],
-    "id": "tai-le",
+    "id": "hsk1-tai-le",
     "level": "HSK 1"
   },
   {
@@ -834,7 +834,7 @@
         "vi": "Bạn biết viết chữ Trung không?"
       }
     ],
-    "id": "hui",
+    "id": "hsk1-hui",
     "level": "HSK 1"
   },
   {
@@ -876,7 +876,7 @@
         "vi": "Hôm nay tôi không thể đi trường."
       }
     ],
-    "id": "neng",
+    "id": "hsk1-neng",
     "level": "HSK 1"
   },
   {
@@ -918,7 +918,7 @@
         "vi": "Bạn muốn ăn gì?"
       }
     ],
-    "id": "xiang",
+    "id": "hsk1-xiang",
     "level": "HSK 1"
   },
   {
@@ -960,7 +960,7 @@
         "vi": "Ngày mai tôi sẽ đi trường."
       }
     ],
-    "id": "yao",
+    "id": "hsk1-yao",
     "level": "HSK 1"
   },
   {
@@ -1002,7 +1002,7 @@
         "vi": "Bố ở cửa hàng."
       }
     ],
-    "id": "zai",
+    "id": "hsk1-zai",
     "level": "HSK 1"
   },
   {
@@ -1044,7 +1044,7 @@
         "vi": "Mẹ đang xem tivi."
       }
     ],
-    "id": "zheng-zai",
+    "id": "hsk1-zheng-zai",
     "level": "HSK 1"
   },
   {
@@ -1089,7 +1089,7 @@
         "vi": "Chúng tôi mua táo ở cửa hàng."
       }
     ],
-    "id": "zai-+-V-P",
+    "id": "hsk1-zai-+-V-P",
     "level": "HSK 1"
   },
   {
@@ -1131,7 +1131,7 @@
         "vi": "Trên bàn có một cuốn sách."
       }
     ],
-    "id": "you",
+    "id": "hsk1-you",
     "level": "HSK 1"
   },
   {
@@ -1173,7 +1173,7 @@
         "vi": "Anh ấy đã uống cà phê."
       }
     ],
-    "id": "le",
+    "id": "hsk1-le",
     "level": "HSK 1"
   },
   {
@@ -1215,7 +1215,7 @@
         "vi": "Cô ấy là giáo viên của chúng tôi."
       }
     ],
-    "id": "de",
+    "id": "hsk1-de",
     "level": "HSK 1"
   },
   {
@@ -1257,7 +1257,7 @@
         "vi": "Nhà tôi có ba người."
       }
     ],
-    "id": "ge",
+    "id": "hsk1-ge",
     "level": "HSK 1"
   },
   {
@@ -1299,7 +1299,7 @@
         "vi": "Nhà tôi có bốn nhân khẩu."
       }
     ],
-    "id": "ben",
+    "id": "hsk1-ben",
     "level": "HSK 1"
   },
   {
@@ -1338,7 +1338,7 @@
         "vi": "Một cốc nước hai tệ."
       }
     ],
-    "id": "kuai",
+    "id": "hsk1-kuai",
     "level": "HSK 1"
   },
   {
@@ -1377,7 +1377,7 @@
         "vi": "Em gái tôi mười tám tuổi."
       }
     ],
-    "id": "sui",
+    "id": "hsk1-sui",
     "level": "HSK 1"
   },
   {
@@ -1416,7 +1416,7 @@
         "vi": "Anh ấy đã học nửa tiếng tiếng Trung."
       }
     ],
-    "id": "ban",
+    "id": "hsk1-ban",
     "level": "HSK 1"
   },
   {
@@ -1455,7 +1455,7 @@
         "vi": "Mười giờ rưỡi."
       }
     ],
-    "id": "dian",
+    "id": "hsk1-dian",
     "level": "HSK 1"
   },
   {
@@ -1497,7 +1497,7 @@
         "vi": "Chủ nhật tôi ở nhà."
       }
     ],
-    "id": "ming-tian",
+    "id": "hsk1-ming-tian",
     "level": "HSK 1"
   },
   {
@@ -1539,7 +1539,7 @@
         "vi": "Ngày mùng 1 tháng 9 tôi đi học."
       }
     ],
-    "id": "yue",
+    "id": "hsk1-yue",
     "level": "HSK 1"
   },
   {
@@ -1581,7 +1581,7 @@
         "vi": "Quả táo này rất ngon."
       }
     ],
-    "id": "zhe",
+    "id": "hsk1-zhe",
     "level": "HSK 1"
   },
   {
@@ -1623,7 +1623,7 @@
         "vi": "Ở đây người rất đông."
       }
     ],
-    "id": "zhe-er",
+    "id": "hsk1-zhe-er",
     "level": "HSK 1"
   },
   {
@@ -1665,7 +1665,7 @@
         "vi": "Trong lớp toàn là học sinh."
       }
     ],
-    "id": "li",
+    "id": "hsk1-li",
     "level": "HSK 1"
   },
   {
@@ -1707,7 +1707,7 @@
         "vi": "Sách ở dưới giường."
       }
     ],
-    "id": "shang",
+    "id": "hsk1-shang",
     "level": "HSK 1"
   },
   {
@@ -1749,7 +1749,7 @@
         "vi": "Sau nhà tôi là trường học."
       }
     ],
-    "id": "hou-mian",
+    "id": "hsk1-hou-mian",
     "level": "HSK 1"
   },
   {
@@ -1791,7 +1791,7 @@
         "vi": "Anh ấy uống cà phê và sữa."
       }
     ],
-    "id": "he",
+    "id": "hsk1-he",
     "level": "HSK 1"
   },
   {
@@ -1839,7 +1839,7 @@
         "vi": "Giáo viên đưa học sinh sách."
       }
     ],
-    "id": "gei",
+    "id": "hsk1-gei",
     "level": "HSK 1"
   },
   {
@@ -1878,7 +1878,7 @@
         "vi": "Xin nhìn đây."
       }
     ],
-    "id": "qing",
+    "id": "hsk1-qing",
     "level": "HSK 1"
   },
   {
@@ -1920,7 +1920,7 @@
         "vi": "Cho tôi một chút cà phê."
       }
     ],
-    "id": "yi-dian-er",
+    "id": "hsk1-yi-dian-er",
     "level": "HSK 1"
   },
   {
@@ -1962,7 +1962,7 @@
         "vi": "Tôi xem một chút sách của bạn."
       }
     ],
-    "id": "yi-xia",
+    "id": "hsk1-yi-xia",
     "level": "HSK 1"
   },
   {
@@ -2004,7 +2004,7 @@
         "vi": "Em xin lỗi, thầy ạ."
       }
     ],
-    "id": "dui-bu-qi",
+    "id": "hsk1-dui-bu-qi",
     "level": "HSK 1"
   },
   {
@@ -2046,7 +2046,7 @@
         "vi": "Bạn đi đâu thế?"
       }
     ],
-    "id": "qu",
+    "id": "hsk1-qu",
     "level": "HSK 1"
   },
   {
@@ -2091,7 +2091,7 @@
         "vi": "Chúng ta đi bằng xe nhé."
       }
     ],
-    "id": "zuo",
+    "id": "hsk1-zuo",
     "level": "HSK 1"
   },
   {
@@ -2133,7 +2133,7 @@
         "vi": "Anh ấy họ Lý."
       }
     ],
-    "id": "xing",
+    "id": "hsk1-xing",
     "level": "HSK 1"
   },
   {
@@ -2175,7 +2175,7 @@
         "vi": "Mẹ tôi tên Trương Lệ."
       }
     ],
-    "id": "jiao",
+    "id": "hsk1-jiao",
     "level": "HSK 1"
   },
   {
@@ -2217,7 +2217,7 @@
         "vi": "Bạn thấy thế nào?"
       }
     ],
-    "id": "jue-de",
+    "id": "hsk1-jue-de",
     "level": "HSK 1"
   },
   {
@@ -2259,7 +2259,7 @@
         "vi": "Cho hỏi, nhà vệ sinh ở đâu?"
       }
     ],
-    "id": "qing-wen",
+    "id": "hsk1-qing-wen",
     "level": "HSK 1"
   },
   {
@@ -2298,7 +2298,7 @@
         "vi": "Một ngày."
       }
     ],
-    "id": "yi",
+    "id": "hsk1-yi",
     "level": "HSK 1"
   },
   {
@@ -2337,7 +2337,7 @@
         "vi": "Chúng ta xem thử cái này."
       }
     ],
-    "id": "kan-kan",
+    "id": "hsk1-kan-kan",
     "level": "HSK 1"
   },
   {
@@ -2376,7 +2376,7 @@
         "vi": "Nhà bạn ở đâu?"
       }
     ],
-    "id": "zai-na-er",
+    "id": "hsk1-zai-na-er",
     "level": "HSK 1"
   },
   {
@@ -2418,7 +2418,7 @@
         "vi": "Chúng tôi học tiếng Trung."
       }
     ],
-    "id": "chi",
+    "id": "hsk1-chi",
     "level": "HSK 1"
   },
   {
@@ -2457,7 +2457,7 @@
         "vi": "Cảm ơn cuốn sách của bạn."
       }
     ],
-    "id": "xie-xie",
+    "id": "hsk1-xie-xie",
     "level": "HSK 1"
   },
   {
@@ -2496,7 +2496,7 @@
         "vi": "Anh ấy không vui."
       }
     ],
-    "id": "mang",
+    "id": "hsk1-mang",
     "level": "HSK 1"
   }
 ]

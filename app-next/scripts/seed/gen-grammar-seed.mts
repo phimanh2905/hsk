@@ -5,6 +5,11 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 
 const esc = (s: string) => s.replace(/'/g, "''");
+
+/* JSON column: escape ' như SQL, đồng thời mã hoá ';' thành \u003b — wrangler/executor
+   chia statement theo ';' nên ';' trong chuỗi JSON làm đứt statement (bug seed 243/300). */
+const jsonCol = (v: unknown) =>
+  JSON.stringify(v).replace(/'/g, "\\u0027").replace(/;/g, "\\u003b");
 const lines: string[] = [
   "-- Seed content_grammars — sinh tự động, đừng sửa tay. Chạy lại gen-grammar-seed.mts để cập nhật.",
 ];
@@ -22,7 +27,7 @@ for (let level = 1; level <= 5; level++) {
   }[];
   points.forEach((p, i) => {
     lines.push(
-      `INSERT OR REPLACE INTO content_grammars (id, level, ord, title, hz, topic, def, formula, pitfall, ex) VALUES ('${esc(p.id)}', '${esc(p.level)}', ${i}, '${esc(p.title)}', '${esc(p.hz)}', '${esc(p.topic)}', '${esc(p.def)}', '${esc(JSON.stringify(p.formula))}', '${esc(JSON.stringify(p.pitfall))}', '${esc(JSON.stringify(p.ex))}');`
+      `INSERT OR REPLACE INTO content_grammars (id, level, ord, title, hz, topic, def, formula, pitfall, ex) VALUES ('${esc(p.id)}', '${esc(p.level)}', ${i}, '${esc(p.title)}', '${esc(p.hz)}', '${esc(p.topic)}', '${esc(p.def)}', '${esc(jsonCol(p.formula))}', '${esc(jsonCol(p.pitfall))}', '${esc(jsonCol(p.ex))}');`
     );
   });
   total += points.length;

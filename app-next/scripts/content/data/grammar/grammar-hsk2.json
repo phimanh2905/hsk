@@ -36,7 +36,7 @@
         "vi": "Anh ấy đã ăn ba quả táo."
       }
     ],
-    "id": "le",
+    "id": "hsk2-le",
     "level": "HSK 2"
   },
   {
@@ -73,7 +73,7 @@
         "vi": "Anh ấy giờ đã biết nói tiếng Trung rồi."
       }
     ],
-    "id": "le-2",
+    "id": "hsk2-le-2",
     "level": "HSK 2"
   },
   {
@@ -113,7 +113,7 @@
         "vi": "Bạn chưa từng học tiếng Trung à?"
       }
     ],
-    "id": "guo",
+    "id": "hsk2-guo",
     "level": "HSK 2"
   },
   {
@@ -153,7 +153,7 @@
         "vi": "Bạn mua nhiều quá rồi."
       }
     ],
-    "id": "guo-2",
+    "id": "hsk2-guo-2",
     "level": "HSK 2"
   },
   {
@@ -193,7 +193,7 @@
         "vi": "Anh ấy mặc một chiếc áo sơ mi trắng."
       }
     ],
-    "id": "zhe",
+    "id": "hsk2-zhe",
     "level": "HSK 2"
   },
   {
@@ -233,7 +233,7 @@
         "vi": "Mẹ đang nấu ăn."
       }
     ],
-    "id": "zai",
+    "id": "hsk2-zai",
     "level": "HSK 2"
   },
   {
@@ -273,7 +273,7 @@
         "vi": "Chúng tôi đang học bài."
       }
     ],
-    "id": "zheng-zai",
+    "id": "hsk2-zheng-zai",
     "level": "HSK 2"
   },
   {
@@ -310,7 +310,7 @@
         "vi": "Hôm nay có mưa không?"
       }
     ],
-    "id": "ma",
+    "id": "hsk2-ma",
     "level": "HSK 2"
   },
   {
@@ -347,7 +347,7 @@
         "vi": "Anh ấy đi học rồi, còn em gái bạn thì sao?"
       }
     ],
-    "id": "ne",
+    "id": "hsk2-ne",
     "level": "HSK 2"
   },
   {
@@ -384,7 +384,7 @@
         "vi": "Uống một cốc trà nhé."
       }
     ],
-    "id": "ba",
+    "id": "hsk2-ba",
     "level": "HSK 2"
   },
   {
@@ -424,7 +424,7 @@
         "vi": "Chúng ta đi tàu hay đi máy bay?"
       }
     ],
-    "id": "hai-shi",
+    "id": "hsk2-hai-shi",
     "level": "HSK 2"
   },
   {
@@ -464,7 +464,7 @@
         "vi": "Tối tôi đọc sách hoặc xem tivi."
       }
     ],
-    "id": "huo-zhe",
+    "id": "hsk2-huo-zhe",
     "level": "HSK 2"
   },
   {
@@ -501,7 +501,7 @@
         "vi": "Chúng tôi đi ngay bây giờ."
       }
     ],
-    "id": "jiu",
+    "id": "hsk2-jiu",
     "level": "HSK 2"
   },
   {
@@ -538,7 +538,7 @@
         "vi": "Hết lớp tôi sẽ đi tìm bạn ngay."
       }
     ],
-    "id": "jiu-2",
+    "id": "hsk2-jiu-2",
     "level": "HSK 2"
   },
   {
@@ -575,7 +575,7 @@
         "vi": "Chiều tôi mới về nhà."
       }
     ],
-    "id": "cai",
+    "id": "hsk2-cai",
     "level": "HSK 2"
   },
   {
@@ -612,7 +612,7 @@
         "vi": "Họ đều nói tiếng Trung."
       }
     ],
-    "id": "dou",
+    "id": "hsk2-dou",
     "level": "HSK 2"
   },
   {
@@ -649,7 +649,7 @@
         "vi": "Mai tôi cũng đi."
       }
     ],
-    "id": "ye",
+    "id": "hsk2-ye",
     "level": "HSK 2"
   },
   {
@@ -689,7 +689,7 @@
         "vi": "Mai tôi sẽ đến lần nữa."
       }
     ],
-    "id": "zai-2",
+    "id": "hsk2-zai-2",
     "level": "HSK 2"
   },
   {
@@ -726,7 +726,7 @@
         "vi": "Hôm qua tôi lại mua thêm một bộ quần áo."
       }
     ],
-    "id": "you",
+    "id": "hsk2-you",
     "level": "HSK 2"
   },
   {
@@ -766,7 +766,7 @@
         "vi": "Hôm nay nóng quá."
       }
     ],
-    "id": "tai",
+    "id": "hsk2-tai",
     "level": "HSK 2"
   },
   {
@@ -803,7 +803,7 @@
         "vi": "Quả táo này ngọt lắm."
       }
     ],
-    "id": "hen",
+    "id": "hsk2-hen",
     "level": "HSK 2"
   },
   {
@@ -840,7 +840,7 @@
         "vi": "Anh ấy biết bơi."
       }
     ],
-    "id": "hui",
+    "id": "hsk2-hui",
     "level": "HSK 2"
   },
   {
@@ -880,7 +880,7 @@
         "vi": "Anh ấy sẽ đến mà."
       }
     ],
-    "id": "hui-2",
+    "id": "hsk2-hui-2",
     "level": "HSK 2"
   },
   {
@@ -917,7 +917,7 @@
         "vi": "Hôm nay tôi không thể đi."
       }
     ],
-    "id": "neng",
+    "id": "hsk2-neng",
     "level": "HSK 2"
   },
   {
@@ -954,7 +954,7 @@
         "vi": "Bạn có thể dùng sách của tôi."
       }
     ],
-    "id": "ke-yi",
+    "id": "hsk2-ke-yi",
     "level": "HSK 2"
   },
   {
@@ -991,7 +991,7 @@
         "vi": "Chúng ta nên ngủ sớm hơn."
       }
     ],
-    "id": "ying-gai",
+    "id": "hsk2-ying-gai",
     "level": "HSK 2"
   },
   {
@@ -1028,7 +1028,7 @@
         "vi": "Mai tôi phải dậy sớm."
       }
     ],
-    "id": "de",
+    "id": "hsk2-de",
     "level": "HSK 2"
   },
   {
@@ -1065,7 +1065,7 @@
         "vi": "Anh ấy muốn ăn cơm."
       }
     ],
-    "id": "xiang",
+    "id": "hsk2-xiang",
     "level": "HSK 2"
   },
   {
@@ -1102,7 +1102,7 @@
         "vi": "Bạn muốn gì?"
       }
     ],
-    "id": "yao",
+    "id": "hsk2-yao",
     "level": "HSK 2"
   },
   {
@@ -1142,7 +1142,7 @@
         "vi": "Tàu sắp chạy rồi."
       }
     ],
-    "id": "yao-2",
+    "id": "hsk2-yao-2",
     "level": "HSK 2"
   },
   {
@@ -1176,7 +1176,7 @@
         "vi": "Đừng lo, tôi sẽ giúp bạn."
       }
     ],
-    "id": "bie",
+    "id": "hsk2-bie",
     "level": "HSK 2"
   },
   {
@@ -1216,7 +1216,7 @@
         "vi": "Xin hãy đóng cửa lại."
       }
     ],
-    "id": "ba-2",
+    "id": "hsk2-ba-2",
     "level": "HSK 2"
   },
   {
@@ -1256,7 +1256,7 @@
         "vi": "Anh ấy làm việc ở nhà."
       }
     ],
-    "id": "zai-3",
+    "id": "hsk2-zai-3",
     "level": "HSK 2"
   },
   {
@@ -1296,7 +1296,7 @@
         "vi": "Anh ấy mua cho tôi một cuốn sách."
       }
     ],
-    "id": "gei",
+    "id": "hsk2-gei",
     "level": "HSK 2"
   },
   {
@@ -1336,7 +1336,7 @@
         "vi": "Thầy cô đối với học sinh rất tốt."
       }
     ],
-    "id": "dui",
+    "id": "hsk2-dui",
     "level": "HSK 2"
   },
   {
@@ -1376,7 +1376,7 @@
         "vi": "Tôi nói tiếng Trung với thầy."
       }
     ],
-    "id": "he-/-gen",
+    "id": "hsk2-he-/-gen",
     "level": "HSK 2"
   },
   {
@@ -1416,7 +1416,7 @@
         "vi": "Tôi làm việc từ tám giờ sáng."
       }
     ],
-    "id": "cong",
+    "id": "hsk2-cong",
     "level": "HSK 2"
   },
   {
@@ -1456,7 +1456,7 @@
         "vi": "Ngày nào anh ấy đến trường cũng sớm."
       }
     ],
-    "id": "dao",
+    "id": "hsk2-dao",
     "level": "HSK 2"
   },
   {
@@ -1496,7 +1496,7 @@
         "vi": "Bến xe cách đây xa không?"
       }
     ],
-    "id": "li",
+    "id": "hsk2-li",
     "level": "HSK 2"
   },
   {
@@ -1536,7 +1536,7 @@
         "vi": "Hôm nay nóng hơn hôm qua."
       }
     ],
-    "id": "bi",
+    "id": "hsk2-bi",
     "level": "HSK 2"
   },
   {
@@ -1573,7 +1573,7 @@
         "vi": "Bạn tìm thấy chưa?"
       }
     ],
-    "id": "dao-2",
+    "id": "hsk2-dao-2",
     "level": "HSK 2"
   },
   {
@@ -1610,7 +1610,7 @@
         "vi": "Anh ấy ăn xong hai quả táo."
       }
     ],
-    "id": "wan",
+    "id": "hsk2-wan",
     "level": "HSK 2"
   },
   {
@@ -1647,7 +1647,7 @@
         "vi": "Cơm nấu xong rồi."
       }
     ],
-    "id": "hao",
+    "id": "hsk2-hao",
     "level": "HSK 2"
   },
   {
@@ -1684,7 +1684,7 @@
         "vi": "Anh ấy mang cuốn sách đi rồi."
       }
     ],
-    "id": "lai-/-qu",
+    "id": "hsk2-lai-/-qu",
     "level": "HSK 2"
   },
   {
@@ -1721,7 +1721,7 @@
         "vi": "Bạn viết hay thật!"
       }
     ],
-    "id": "de-2",
+    "id": "hsk2-de-2",
     "level": "HSK 2"
   },
   {
@@ -1758,7 +1758,7 @@
         "vi": "Xa quá, đi không tới."
       }
     ],
-    "id": "de-/-bu",
+    "id": "hsk2-de-/-bu",
     "level": "HSK 2"
   },
   {
@@ -1795,7 +1795,7 @@
         "vi": "Xin cho tôi một quả táo."
       }
     ],
-    "id": "ge",
+    "id": "hsk2-ge",
     "level": "HSK 2"
   },
   {
@@ -1832,7 +1832,7 @@
         "vi": "Xin cho tôi một cốc nước."
       }
     ],
-    "id": "ben-/-zhang-/-bei-/-jian",
+    "id": "hsk2-ben-/-zhang-/-bei-/-jian",
     "level": "HSK 2"
   },
   {
@@ -1869,7 +1869,7 @@
         "vi": "Cái này bao nhiêu tiền?"
       }
     ],
-    "id": "ji-/-duo-shao",
+    "id": "hsk2-ji-/-duo-shao",
     "level": "HSK 2"
   },
   {
@@ -1906,7 +1906,7 @@
         "vi": "Tôi muốn hai cốc trà."
       }
     ],
-    "id": "liang",
+    "id": "hsk2-liang",
     "level": "HSK 2"
   },
   {
@@ -1943,7 +1943,7 @@
         "vi": "Tám giờ chúng ta học."
       }
     ],
-    "id": "dian",
+    "id": "hsk2-dian",
     "level": "HSK 2"
   },
   {
@@ -1983,7 +1983,7 @@
         "vi": "Anh ấy đến Trung Quốc vào tháng hai."
       }
     ],
-    "id": "ri",
+    "id": "hsk2-ri",
     "level": "HSK 2"
   },
   {
@@ -2020,7 +2020,7 @@
         "vi": "Lúc nhỏ tôi rất thích bơi."
       }
     ],
-    "id": "de-shi-hou",
+    "id": "hsk2-de-shi-hou",
     "level": "HSK 2"
   },
   {
@@ -2057,7 +2057,7 @@
         "vi": "Trước khi sang Trung Quốc tôi không biết nói tiếng Trung."
       }
     ],
-    "id": "yi-qian-/-yi-hou",
+    "id": "hsk2-yi-qian-/-yi-hou",
     "level": "HSK 2"
   },
   {
@@ -2097,7 +2097,7 @@
         "vi": "Chúng ta vừa đi vừa nói."
       }
     ],
-    "id": "yi-bian",
+    "id": "hsk2-yi-bian",
     "level": "HSK 2"
   },
   {
@@ -2137,7 +2137,7 @@
         "vi": "Vì anh ấy bận nên không đến."
       }
     ],
-    "id": "yin-wei",
+    "id": "hsk2-yin-wei",
     "level": "HSK 2"
   },
   {
@@ -2177,7 +2177,7 @@
         "vi": "Tuy anh ấy bé nhưng chạy rất nhanh."
       }
     ],
-    "id": "sui-ran",
+    "id": "hsk2-sui-ran",
     "level": "HSK 2"
   },
   {
@@ -2214,7 +2214,7 @@
         "vi": "Xin nói chậm một chút."
       }
     ],
-    "id": "you-dian-er-/-yi-dian-er",
+    "id": "hsk2-you-dian-er-/-yi-dian-er",
     "level": "HSK 2"
   },
   {
@@ -2251,7 +2251,7 @@
         "vi": "Thời tiết hôm nay thế nào?"
       }
     ],
-    "id": "zen-me-/-zen-me-yang",
+    "id": "hsk2-zen-me-/-zen-me-yang",
     "level": "HSK 2"
   },
   {
@@ -2294,7 +2294,7 @@
         "vi": "Anh ấy đi bằng tàu hỏa (nhấn mạnh cách đi)."
       }
     ],
-    "id": "shi",
+    "id": "hsk2-shi",
     "level": "HSK 2"
   }
 ]

@@ -44,7 +44,7 @@
         "vi": "Tôi đã đặt sách lên bàn."
       }
     ],
-    "id": "ba",
+    "id": "hsk3-ba",
     "level": "HSK 3"
   },
   {
@@ -87,7 +87,7 @@
         "vi": "Bánh ngọt đều bị chúng tôi ăn hết rồi."
       }
     ],
-    "id": "bei",
+    "id": "hsk3-bei",
     "level": "HSK 3"
   },
   {
@@ -130,7 +130,7 @@
         "vi": "Cậu ấy đi lúc nào thế?"
       }
     ],
-    "id": "shi",
+    "id": "hsk3-shi",
     "level": "HSK 3"
   },
   {
@@ -173,7 +173,7 @@
         "vi": "Mẹ bảo em trai nhanh đi ngủ."
       }
     ],
-    "id": "qing",
+    "id": "hsk3-qing",
     "level": "HSK 3"
   },
   {
@@ -216,7 +216,7 @@
         "vi": "Cô ấy bận đến mức cơm cũng không ăn."
       }
     ],
-    "id": "lian",
+    "id": "hsk3-lian",
     "level": "HSK 3"
   },
   {
@@ -259,7 +259,7 @@
         "vi": "Ngoại trừ chủ nhật, ngày nào tôi cũng đi làm."
       }
     ],
-    "id": "chu",
+    "id": "hsk3-chu",
     "level": "HSK 3"
   },
   {
@@ -302,7 +302,7 @@
         "vi": "Cô ấy vừa nghe nhạc vừa làm bài tập."
       }
     ],
-    "id": "bian",
+    "id": "hsk3-bian",
     "level": "HSK 3"
   },
   {
@@ -345,7 +345,7 @@
         "vi": "Nó càng nói càng vui."
       }
     ],
-    "id": "yue",
+    "id": "hsk3-yue",
     "level": "HSK 3"
   },
   {
@@ -388,7 +388,7 @@
         "vi": "Nó vừa nói vừa cười, vui lắm."
       }
     ],
-    "id": "you",
+    "id": "hsk3-you",
     "level": "HSK 3"
   },
   {
@@ -431,7 +431,7 @@
         "vi": "Tàu sắp đến rồi."
       }
     ],
-    "id": "kuai",
+    "id": "hsk3-kuai",
     "level": "HSK 3"
   },
   {
@@ -474,7 +474,7 @@
         "vi": "Tôi sắp tốt nghiệp rồi."
       }
     ],
-    "id": "yao",
+    "id": "hsk3-yao",
     "level": "HSK 3"
   },
   {
@@ -517,7 +517,7 @@
         "vi": "Nó vừa nghe nhạc là muốn nhảy ngay."
       }
     ],
-    "id": "yi",
+    "id": "hsk3-yi",
     "level": "HSK 3"
   },
   {
@@ -560,7 +560,7 @@
         "vi": "Nó vì ốm nên không đến học."
       }
     ],
-    "id": "yin",
+    "id": "hsk3-yin",
     "level": "HSK 3"
   },
   {
@@ -603,7 +603,7 @@
         "vi": "Tuy nó nhỏ tuổi nhưng chạy nhanh lắm."
       }
     ],
-    "id": "sui",
+    "id": "hsk3-sui",
     "level": "HSK 3"
   },
   {
@@ -646,7 +646,7 @@
         "vi": "Bạn có nghe thấy tin đó không?"
       }
     ],
-    "id": "dao",
+    "id": "hsk3-dao",
     "level": "HSK 3"
   },
   {
@@ -689,7 +689,7 @@
         "vi": "Bạn làm xong bài tập chưa?"
       }
     ],
-    "id": "wan",
+    "id": "hsk3-wan",
     "level": "HSK 3"
   },
   {
@@ -732,7 +732,7 @@
         "vi": "Tôi đã dọn phòng gọn gàng rồi."
       }
     ],
-    "id": "hao",
+    "id": "hsk3-hao",
     "level": "HSK 3"
   },
   {
@@ -775,7 +775,7 @@
         "vi": "Câu hỏi này tôi nghe hiểu rồi."
       }
     ],
-    "id": "cuo",
+    "id": "hsk3-cuo",
     "level": "HSK 3"
   },
   {
@@ -818,7 +818,7 @@
         "vi": "Bạn mang cuốn sách của tôi đi nhé."
       }
     ],
-    "id": "lai",
+    "id": "hsk3-lai",
     "level": "HSK 3"
   },
   {
@@ -861,7 +861,7 @@
         "vi": "Xin hãy lái xe vào trong."
       }
     ],
-    "id": "shang",
+    "id": "hsk3-shang",
     "level": "HSK 3"
   },
   {
@@ -904,7 +904,7 @@
         "vi": "Tôi nhớ ra rồi, nó là Tiểu Vương."
       }
     ],
-    "id": "qi",
+    "id": "hsk3-qi",
     "level": "HSK 3"
   },
   {
@@ -947,7 +947,7 @@
         "vi": "Cơm nhiều thế này, tôi ăn không hết."
       }
     ],
-    "id": "de",
+    "id": "hsk3-de",
     "level": "HSK 3"
   },
   {
@@ -990,7 +990,7 @@
         "vi": "Nhiều món thế này chúng tôi ăn không hết."
       }
     ],
-    "id": "bu-le",
+    "id": "hsk3-bu-le",
     "level": "HSK 3"
   },
   {
@@ -1033,7 +1033,7 @@
         "vi": "Bọn trẻ chơi rất vui."
       }
     ],
-    "id": "de-2",
+    "id": "hsk3-de-2",
     "level": "HSK 3"
   },
   {
@@ -1076,7 +1076,7 @@
         "vi": "Nó ngủ tám tiếng."
       }
     ],
-    "id": "le",
+    "id": "hsk3-le",
     "level": "HSK 3"
   },
   {
@@ -1119,7 +1119,7 @@
         "vi": "Xin hãy đọc lại câu này một lượt nữa."
       }
     ],
-    "id": "bian-2",
+    "id": "hsk3-bian-2",
     "level": "HSK 3"
   },
   {
@@ -1162,7 +1162,7 @@
         "vi": "Tôi nhường chỗ cho cụ già rồi."
       }
     ],
-    "id": "zai",
+    "id": "hsk3-zai",
     "level": "HSK 3"
   },
   {
@@ -1205,7 +1205,7 @@
         "vi": "Tháng trước tôi đã đi Bắc Kinh."
       }
     ],
-    "id": "le-2",
+    "id": "hsk3-le-2",
     "level": "HSK 3"
   },
   {
@@ -1248,7 +1248,7 @@
         "vi": "Bụng tôi đau rồi."
       }
     ],
-    "id": "le-3",
+    "id": "hsk3-le-3",
     "level": "HSK 3"
   },
   {
@@ -1291,7 +1291,7 @@
         "vi": "Tôi chưa bao giờ thấy con vật như vậy."
       }
     ],
-    "id": "guo",
+    "id": "hsk3-guo",
     "level": "HSK 3"
   },
   {
@@ -1334,7 +1334,7 @@
         "vi": "Trên bàn để rất nhiều sách."
       }
     ],
-    "id": "zhe",
+    "id": "hsk3-zhe",
     "level": "HSK 3"
   },
   {
@@ -1377,7 +1377,7 @@
         "vi": "Đừng làm ồn, bọn trẻ đang ngủ."
       }
     ],
-    "id": "zheng",
+    "id": "hsk3-zheng",
     "level": "HSK 3"
   },
   {
@@ -1420,7 +1420,7 @@
         "vi": "Nó chỉ năm phút đã làm xong."
       }
     ],
-    "id": "jiu",
+    "id": "hsk3-jiu",
     "level": "HSK 3"
   },
   {
@@ -1463,7 +1463,7 @@
         "vi": "Bài này khó quá, tôi mới làm được nửa."
       }
     ],
-    "id": "cai",
+    "id": "hsk3-cai",
     "level": "HSK 3"
   },
   {
@@ -1506,7 +1506,7 @@
         "vi": "Sao bạn lại hỏi câu này nữa?"
       }
     ],
-    "id": "you-2",
+    "id": "hsk3-you-2",
     "level": "HSK 3"
   },
   {
@@ -1549,7 +1549,7 @@
         "vi": "Chờ một chút, tôi xem lại."
       }
     ],
-    "id": "zai-2",
+    "id": "hsk3-zai-2",
     "level": "HSK 3"
   },
   {
@@ -1592,7 +1592,7 @@
         "vi": "Chúng ta đi tàu hay đi máy bay?"
       }
     ],
-    "id": "hai",
+    "id": "hsk3-hai",
     "level": "HSK 3"
   },
   {
@@ -1635,7 +1635,7 @@
         "vi": "Chủ nhật chúng ta leo núi hoặc câu cá."
       }
     ],
-    "id": "huo",
+    "id": "hsk3-huo",
     "level": "HSK 3"
   },
   {
@@ -1678,7 +1678,7 @@
         "vi": "Chúng tôi đã chờ bạn nửa tiếng rồi."
       }
     ],
-    "id": "yi-2",
+    "id": "hsk3-yi-2",
     "level": "HSK 3"
   },
   {
@@ -1721,7 +1721,7 @@
         "vi": "Nó cái gì cũng không muốn ăn."
       }
     ],
-    "id": "dou",
+    "id": "hsk3-dou",
     "level": "HSK 3"
   },
   {
@@ -1764,7 +1764,7 @@
         "vi": "Tôi không biết nó, nó cũng không biết tôi."
       }
     ],
-    "id": "ye",
+    "id": "hsk3-ye",
     "level": "HSK 3"
   },
   {
@@ -1807,7 +1807,7 @@
         "vi": "Món này hơi mặn."
       }
     ],
-    "id": "dian",
+    "id": "hsk3-dian",
     "level": "HSK 3"
   },
   {
@@ -1850,7 +1850,7 @@
         "vi": "Xin bạn nói chậm một chút."
       }
     ],
-    "id": "dian-2",
+    "id": "hsk3-dian-2",
     "level": "HSK 3"
   },
   {
@@ -1893,7 +1893,7 @@
         "vi": "Chừng mười giờ rồi, mình đi thôi."
       }
     ],
-    "id": "cha",
+    "id": "hsk3-cha",
     "level": "HSK 3"
   },
   {
@@ -1936,7 +1936,7 @@
         "vi": "Từ Bắc Kinh đến Thượng Hải đi máy bay mất hai tiếng."
       }
     ],
-    "id": "cong",
+    "id": "hsk3-cong",
     "level": "HSK 3"
   },
   {
@@ -1979,7 +1979,7 @@
         "vi": "Tôi càng ngày càng thích thú với tiếng Trung."
       }
     ],
-    "id": "dui",
+    "id": "hsk3-dui",
     "level": "HSK 3"
   },
   {
@@ -2022,7 +2022,7 @@
         "vi": "Xin bạn rót một cốc trà cho khách."
       }
     ],
-    "id": "gei",
+    "id": "hsk3-gei",
     "level": "HSK 3"
   },
   {
@@ -2065,7 +2065,7 @@
         "vi": "Nó vẫy tay về phía tôi."
       }
     ],
-    "id": "wang",
+    "id": "hsk3-wang",
     "level": "HSK 3"
   },
   {
@@ -2108,7 +2108,7 @@
         "vi": "Còn hai tuần nữa là đến Giáng sinh."
       }
     ],
-    "id": "li",
+    "id": "hsk3-li",
     "level": "HSK 3"
   },
   {
@@ -2151,7 +2151,7 @@
         "vi": "Nó đang xem tivi đấy, đừng làm phiền nó."
       }
     ],
-    "id": "ne",
+    "id": "hsk3-ne",
     "level": "HSK 3"
   },
   {
@@ -2194,7 +2194,7 @@
         "vi": "Rẽ trái trước, rồi đi thẳng."
       }
     ],
-    "id": "xian",
+    "id": "hsk3-xian",
     "level": "HSK 3"
   },
   {
@@ -2237,7 +2237,7 @@
         "vi": "Câu nào nó cũng làm đúng."
       }
     ],
-    "id": "mei",
+    "id": "hsk3-mei",
     "level": "HSK 3"
   },
   {
@@ -2280,7 +2280,7 @@
         "vi": "Cái thùng này nặng quá, tôi khiêng không nổi."
       }
     ],
-    "id": "tai",
+    "id": "hsk3-tai",
     "level": "HSK 3"
   },
   {
@@ -2323,7 +2323,7 @@
         "vi": "Chỉ đi taxi mới kịp máy bay."
       }
     ],
-    "id": "zhi",
+    "id": "hsk3-zhi",
     "level": "HSK 3"
   },
   {
@@ -2366,7 +2366,7 @@
         "vi": "Thầy ơi, em có thể hỏi một câu được không?"
       }
     ],
-    "id": "hui",
+    "id": "hsk3-hui",
     "level": "HSK 3"
   },
   {
@@ -2409,7 +2409,7 @@
         "vi": "Tôi muốn một cốc cà phê."
       }
     ],
-    "id": "xiang",
+    "id": "hsk3-xiang",
     "level": "HSK 3"
   },
   {
@@ -2452,7 +2452,7 @@
         "vi": "Nó tắm một cái rồi đi ngủ."
       }
     ],
-    "id": "jian",
+    "id": "hsk3-jian",
     "level": "HSK 3"
   },
   {
@@ -2495,7 +2495,7 @@
         "vi": "Bên cạnh ngân hàng có một bưu điện."
       }
     ],
-    "id": "mian",
+    "id": "hsk3-mian",
     "level": "HSK 3"
   },
   {
@@ -2538,7 +2538,7 @@
         "vi": "Con chó con chốc chốc chạy, chốc chốc nhảy."
       }
     ],
-    "id": "hui-2",
+    "id": "hsk3-hui-2",
     "level": "HSK 3"
   },
   {
@@ -2581,7 +2581,7 @@
         "vi": "Tuần sau chúng ta có một buổi thi."
       }
     ],
-    "id": "shang-2",
+    "id": "hsk3-shang-2",
     "level": "HSK 3"
   }
 ]
