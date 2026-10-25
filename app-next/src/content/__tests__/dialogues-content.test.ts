@@ -4,11 +4,11 @@ import { dialogueByLesson, type DialogueRecord } from "../dialogues";
 /* Data thật do pipeline thủ công sinh (gen-dialogues -> render-dialogue-audio.py
    -> merge-audio-timing.mts). Khi chưa chạy merge (data rỗng) các assertion chỉ
    chạy trên record có sẵn; khi data đã gen đủ hsk1-3, kiểm tra đầy đủ. */
-const records = Object.values(dialogueByLesson) as DialogueRecord[];
+const records = Object.values(dialogueByLesson) as unknown as DialogueRecord[];
 
 describe("dialogues static content", () => {
   it("có data cho hsk1/lesson-1, 8–15 dòng", () => {
-    const rec = dialogueByLesson["hsk1/lesson-1" as keyof typeof dialogueByLesson] as
+    const rec = dialogueByLesson["hsk1/lesson-1" as keyof typeof dialogueByLesson] as unknown as
       | DialogueRecord
       | undefined;
     if (records.length === 0) {
@@ -41,7 +41,7 @@ describe("dialogues static content", () => {
 
   it("id của record khớp key trong dialogueByLesson", () => {
     for (const [key, value] of Object.entries(dialogueByLesson)) {
-      const rec = value as DialogueRecord;
+      const rec = value as unknown as DialogueRecord;
       expect(rec.id).toBe(key);
       expect(rec.book).toBe(key.split("/")[0]);
       expect(rec.lesson).toBe(key.split("/")[1]);

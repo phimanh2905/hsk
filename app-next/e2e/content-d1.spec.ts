@@ -44,7 +44,7 @@ test.describe("content từ D1", () => {
     // API /api/v1/content/shadowing không đổi — trả playlist "Hội thoại theo bài".
     const api = await request.get("/api/v1/content/shadowing");
     expect(api.ok()).toBeTruthy();
-    const body = (await api.json()) as { playlists?: Array<{ title?: string }> };
+    const body = (await api.json()) as { playlists?: Array<{ name?: string }> };
     const list = body.playlists ?? [];
     expect(list.some((p) => (p.name ?? "").includes("Hội thoại theo bài"))).toBeTruthy();
     // Studio chứa <audio data-testid="audio-player"> (hsk2/lesson-1).

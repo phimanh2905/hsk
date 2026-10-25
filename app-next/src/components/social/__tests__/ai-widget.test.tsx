@@ -23,10 +23,14 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-function fetchOk(text: string) {
+function fetchOk(text: string): Promise<Response> {
   return Promise.resolve(
     new Response(JSON.stringify({ text }), { status: 200 })
   );
+}
+
+function fetchOkResponse(text: string): Response {
+  return new Response(JSON.stringify({ text }), { status: 200 });
 }
 
 function renderWidget() {
@@ -199,7 +203,7 @@ describe("AiWidget", () => {
     renderWidget();
     await openAndAsk("Hỏi chậm");
     expect(screen.getByText("…")).toBeInTheDocument();
-    resolveFetch(fetchOk("Trả lời"));
+    resolveFetch(fetchOkResponse("Trả lời"));
     await waitFor(() =>
       expect(screen.getByText("Trả lời")).toBeInTheDocument()
     );

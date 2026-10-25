@@ -74,7 +74,7 @@ export default function ShadowingStudio({
   useEffect(() => { setAudioMissing(false); }, [eng.cur]);
   // vai A/B trong transcript (hội thoại theo bài) — map rỗng → không label
   const dialogue = isAudio
-    ? (dialogueByLesson as Record<string, DialogueRecord | undefined>)[video.id]
+    ? (dialogueByLesson as unknown as Record<string, DialogueRecord | undefined>)[video.id]
     : undefined;
   const toast = useToast();
   const { speak } = useTts();

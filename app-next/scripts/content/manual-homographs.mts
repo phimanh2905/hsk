@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseVocabResponse, type ChunkItem } from "./src/vocab-draft";
-import type { VocabWord } from "../src/content/vocab";
+import type { VocabWord } from "../../src/content/vocab";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const raw = JSON.parse(readFileSync(path.join(scriptDir, "out/vocab-batch/raw-homographs.json"), "utf8"));

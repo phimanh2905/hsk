@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseHsk30Csv, wordsForLevels } from "./src/hsk-list";
 import { rederiveWords } from "./src/vocab-draft";
-import type { VocabWord } from "../src/content/vocab";
+import type { VocabWord } from "../../src/content/vocab";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const csv = readFileSync(path.join(scriptDir, "vendor/hsk30.csv"), "utf8");

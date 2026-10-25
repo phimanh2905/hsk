@@ -11,7 +11,7 @@ import { llmConfigFromEnv, chatJson } from "./src/llm";
 import { buildVocabPrompt, parseVocabResponse, rederiveWords, CHUNK_SIZE, type ChunkItem } from "./src/vocab-draft";
 import { loadState, saveState, type ChunkState } from "./src/batch-state";
 import { readEnvFile } from "./src/read-env";
-import type { VocabWord } from "../src/content/vocab";
+import type { VocabWord } from "../../src/content/vocab";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(scriptDir, "../..");

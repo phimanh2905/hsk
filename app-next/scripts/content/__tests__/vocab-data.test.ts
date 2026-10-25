@@ -10,7 +10,7 @@ import { vocabWordSchema } from "../../../src/content/schema";
 import { EXPECTED_CUMULATIVE } from "../src/hsk-list";
 // unique (hanzi+pinyin) per level — chuẩn HSK 3.0 có vài row trùng cặp (2 nghĩa)
 const EXPECTED_PER_LEVEL_UNIQUE = { 1: 500, 2: 771, 3: 970, 4: 999, 5: 1071 } as const;
-import type { VocabWord } from "../../src/content/vocab";
+import type { VocabWord } from "../../../src/content/vocab";
 
 const HAN_VIET_UPPER =
   /^([A-ZÀ-ỸỲỆỨỬỮỰĂÂÊÔƠƯĐ][A-ZÀ-ỸỲỆỨỬỮỰĂÂÊÔƠƯĐ\s,()/…-]*)?$/; // rỗng cho phép (chữ ngoài map, Ruling 2)

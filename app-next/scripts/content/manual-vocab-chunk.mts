@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 import { parseHsk30Csv, wordsForLevels } from "./src/hsk-list";
 import { parseVocabResponse, CHUNK_SIZE, type ChunkItem } from "./src/vocab-draft";
 import { loadState, saveState } from "./src/batch-state";
-import type { VocabWord } from "../src/content/vocab";
+import type { VocabWord } from "../../src/content/vocab";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 
