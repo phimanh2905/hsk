@@ -235,6 +235,22 @@ describe("POST /api/v1/sync", () => {
     expect(deleteWhere).toHaveBeenCalledTimes(2);
   });
 
+  it("payload > 9 cards: insert chunk ≤ 8 rows/statement (D1 100 bind params)", async () => {
+    // D1 giới hạn 100 biến/query; srs_cards 11 cột → >9 rows phải chunk (bug 500
+    // "too many SQL variables" phát hiện qua browser QA 2026-10-25).
+    const srs = Array.from({ length: 28 }, (_, i) => ({
+      key: `chunk-${i}`, status: "review", dueAt: 1, reviewCount: 1, lastReviewedAt: 1,
+      updatedAt: 1, ease: 2.5, intervalDays: 1, lapses: 0, deletedAt: null,
+    }));
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    queueSelects({ srs: [] }, { srs: [], studyDay: [], lessonProgress: [] });
+    const res = await POST(req({ srs, studyDay: [], lessonProgress: [], reviewLogs: [] }));
+    expect(res.status).toBe(200);
+    const insertCalls = insertChain.values.mock.calls.map((c) => c[0].length);
+    expect(insertCalls.length).toBeGreaterThanOrEqual(4); // 28 cards → ≥ 4 statement
+    for (const n of insertCalls) expect(n).toBeLessThanOrEqual(8);
+  });
+
   it("batch có 2 bản cùng key không throw — values nhận bản đã merge (dedupe)", async () => {
     getSession.mockResolvedValue({ user: { id: "u1" } });
     queueSelects({ srs: [] }, { srs: [], studyDay: [], lessonProgress: [] });

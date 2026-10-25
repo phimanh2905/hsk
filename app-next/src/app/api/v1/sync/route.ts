@@ -89,6 +89,16 @@ function normalizeSrsInc(inc: z.infer<typeof bodySchema>["srs"][number]): SyncSr
 
 const TOMBSTONE_TTL_MS = 90 * 24 * 3600 * 1000;
 
+
+/* D1 giới hạn 100 bind parameters/query — mỗi row 5-11 cột nên chunk batch
+   insert ≤ 8 rows/statement (an toàn cho mọi domain, vượt limit sẽ 500
+   "too many SQL variables" — bug sync payload > 9 cards). */
+function chunk<T>(arr: T[], size = 8): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 export async function POST(req: NextRequest) {
   const session = await getAuth().api.getSession({ headers: req.headers });
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -133,10 +143,7 @@ export async function POST(req: NextRequest) {
   const dbStatus = (st: SrsSyncStatus): "new" | "learning" | "review" | "relearning" =>
     st === "learned" || st === "known" ? "review" : st;
   if (mergedSrs.length) {
-    await db
-      .insert(srsCards)
-      .values(
-        mergedSrs.map((r) => ({
+    for (const part of chunk(mergedSrs.map((r) => ({
           userId,
           key: r.key,
           status: dbStatus(r.status),
@@ -148,23 +155,26 @@ export async function POST(req: NextRequest) {
           lapses: r.lapses,
           updatedAt: r.updatedAt,
           deletedAt: r.deletedAt,
-        }))
-      )
-      .onConflictDoUpdate({
-        target: [srsCards.userId, srsCards.key],
-        // merge đã tính giá trị cuối ở bước map → ghi đè bằng excluded
-        set: {
-          status: sql`excluded.status`,
-          dueAt: sql`excluded.due_at`,
-          reviewCount: sql`excluded.review_count`,
-          lastReviewedAt: sql`excluded.last_reviewed_at`,
-          ease: sql`excluded.ease`,
-          intervalDays: sql`excluded.interval_days`,
-          lapses: sql`excluded.lapses`,
-          updatedAt: sql`excluded.updated_at`,
-          deletedAt: sql`excluded.deleted_at`,
-        },
-      });
+        })))) {
+        await db
+          .insert(srsCards)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [srsCards.userId, srsCards.key],
+          // merge đã tính giá trị cuối ở bước map → ghi đè bằng excluded
+          set: {
+            status: sql`excluded.status`,
+            dueAt: sql`excluded.due_at`,
+            reviewCount: sql`excluded.review_count`,
+            lastReviewedAt: sql`excluded.last_reviewed_at`,
+            ease: sql`excluded.ease`,
+            intervalDays: sql`excluded.interval_days`,
+            lapses: sql`excluded.lapses`,
+            updatedAt: sql`excluded.updated_at`,
+            deletedAt: sql`excluded.deleted_at`,
+          },
+        });
+      }
   }
 
   // 2) studyDay (dedupe cùng date trước khi merge với server)
@@ -181,25 +191,25 @@ export async function POST(req: NextRequest) {
     return mergeStudyDay({ date: ex.date, xp: ex.xp, correct: ex.correct, updatedAt: ex.updatedAt }, inc);
   });
   if (mergedDays.length) {
-    await db
-      .insert(studyDay)
-      .values(
-        mergedDays.map((r) => ({
+    for (const part of chunk(mergedDays.map((r) => ({
           userId,
           date: r.date,
           xp: r.xp,
           correct: r.correct,
           updatedAt: r.updatedAt,
-        }))
-      )
-      .onConflictDoUpdate({
-        target: [studyDay.userId, studyDay.date],
-        set: {
-          xp: sql`excluded.xp`,
-          correct: sql`excluded.correct`,
-          updatedAt: sql`excluded.updated_at`,
-        },
-      });
+        })))) {
+        await db
+          .insert(studyDay)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [studyDay.userId, studyDay.date],
+          set: {
+            xp: sql`excluded.xp`,
+            correct: sql`excluded.correct`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        });
+      }
   }
 
   // 3) lessonProgress (dedupe cùng book+lesson trước khi merge với server)
@@ -225,10 +235,7 @@ export async function POST(req: NextRequest) {
     return mergeLesson(serverRec, inc);
   });
   if (mergedLessons.length) {
-    await db
-      .insert(lessonProgress)
-      .values(
-        mergedLessons.map((r) => ({
+    for (const part of chunk(mergedLessons.map((r) => ({
           userId,
           book: r.book,
           lesson: r.lesson,
@@ -236,17 +243,20 @@ export async function POST(req: NextRequest) {
           knownCount: r.knownCount,
           updatedAt: r.updatedAt,
           deletedAt: r.deletedAt,
-        }))
-      )
-      .onConflictDoUpdate({
-        target: [lessonProgress.userId, lessonProgress.book, lessonProgress.lesson],
-        set: {
-          modes: sql`excluded.modes`,
-          knownCount: sql`excluded.known_count`,
-          updatedAt: sql`excluded.updated_at`,
-          deletedAt: sql`excluded.deleted_at`,
-        },
-      });
+        })))) {
+        await db
+          .insert(lessonProgress)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [lessonProgress.userId, lessonProgress.book, lessonProgress.lesson],
+          set: {
+            modes: sql`excluded.modes`,
+            knownCount: sql`excluded.known_count`,
+            updatedAt: sql`excluded.updated_at`,
+            deletedAt: sql`excluded.deleted_at`,
+          },
+        });
+      }
   }
 
   // 4) reviewLogs (W5.2 — append-only, không merge: upsert excluded thuần).
@@ -257,26 +267,26 @@ export async function POST(req: NextRequest) {
     if (!incLogMap.has(k)) incLogMap.set(k, { ...inc, rating: inc.rating as 1 | 2 | 3 | 4 });
   }
   if (incLogMap.size) {
-    await db
-      .insert(reviewLogs)
-      .values(
-        [...incLogMap.values()].map((r) => ({
+    for (const part of chunk([...incLogMap.values()].map((r) => ({
           userId,
           itemKey: r.itemKey,
           cardType: r.cardType,
           rating: r.rating,
           durationMs: r.durationMs,
           reviewedAt: r.reviewedAt,
-        }))
-      )
-      .onConflictDoUpdate({
-        target: [reviewLogs.userId, reviewLogs.itemKey, reviewLogs.reviewedAt],
-        set: {
-          cardType: sql`excluded.card_type`,
-          rating: sql`excluded.rating`,
-          durationMs: sql`excluded.duration_ms`,
-        },
-      });
+        })))) {
+        await db
+          .insert(reviewLogs)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [reviewLogs.userId, reviewLogs.itemKey, reviewLogs.reviewedAt],
+          set: {
+            cardType: sql`excluded.card_type`,
+            rating: sql`excluded.rating`,
+            durationMs: sql`excluded.duration_ms`,
+          },
+        });
+      }
   }
 
   // 5) Purge tombstone >90 ngày
