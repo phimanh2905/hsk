@@ -1,3 +1,7 @@
+/* Trang theo user (server gate W4) — KHÔNG prerender tĩnh: getAuth dùng
+   getCloudflareContext sync chỉ hợp lệ trong request context. */
+export const dynamic = "force-dynamic";
+
 /* W4.4 — server gate thật: check session ở server component, bỏ LoginGate
    client-only làm outer gate (spec 2026-10-24 Wave 4). */
 
