@@ -7,17 +7,20 @@
 
 import { useEffect, useState } from "react";
 
-import { applyGrade, type Grade } from "@/lib/stats/review";
+import { applyGrade, INIT_EASE } from "@/lib/stats/review";
 
-export type SrsStatus = "new" | "learning" | "learned" | "known";
+/* Nguồn sự thật của SrsItem/SrsStatus/Grade là lib/stats/review (W5.1) —
+   progress-store chỉ re-export để caller cũ không đổi import. */
+export type { SrsItem, SrsStatus, Grade } from "@/lib/stats/review";
+import type { SrsItem, SrsStatus, Grade } from "@/lib/stats/review";
 
-export type SrsItem = {
-  key: string;
-  status: SrsStatus;
-  dueAt: number | null;
-  reviewCount: number;
-  lastReviewedAt: number | null;
-  updatedAt: number;
+/* Review log (W5.1) — key bye.review.logs, cap 2000 entry (cũ nhất bị cắt). */
+export type ReviewLog = {
+  cardType: "vocab" | "grammar";
+  itemKey: string;
+  rating: 1 | 2 | 3 | 4; // 1 Again · 2 Hard · 3 Good · 4 Easy
+  durationMs: number;
+  reviewedAt: number;
 };
 
 export type FeedbackEntry = { text: string; at: string };
@@ -34,6 +37,16 @@ export type GrammarMeta = { saved?: 1 };
 
 /* Meta theo từng Hán tự (Sổ tay từ vựng — spec 2026-10-05 §2.2), key bye.wordMeta */
 export type WordMeta = { star?: 1; note?: string };
+
+/* Kết quả luyện viết 1 Hán tự (Wave 0 W0.2 — Hanzi Studio draw quiz), key bye.hanzi.quiz */
+export type HanziQuizRec = {
+  attempts: number; // tổng số lần hoàn thành quiz
+  best: number;     // điểm tốt nhất 0-100 (% nét đúng); Wave 0 caller chưa truyền score → best 0
+  last: number;     // epoch ms lần hoàn thành gần nhất
+};
+
+/* Bản nháp bài đọc (Wave 0 W0.4 — /reading auto-save), key bye.reading.drafts */
+export type ReadingDraft = { text: string; at: string };
 
 export type ProgressSnapshot = { xp: number };
 
@@ -52,7 +65,11 @@ export interface ProgressStoreApi {
   getAllSrs(): SrsItem[];
   toggleSrs(key: string): boolean;
   addSrsBatch(keys: string[]): number;
-  recordReview(key: string, grade: Grade, now?: number): SrsItem | null;
+  recordReview(key: string, grade: Grade, now?: number, durationMs?: number): SrsItem | null;
+  appendReviewLog(entry: ReviewLog): void;
+  getReviewLogs(): ReviewLog[];
+  addCorrect(n: number): void;
+  getHeatCorrect(): Record<string, number>;
   countSrsNew(): number;
   getBattleBest(ctx: string): { correct: number; timeMs: number } | null;
   saveBattleBest(ctx: string, correct: number, timeMs: number): boolean;
@@ -79,13 +96,59 @@ export interface ProgressStoreApi {
   getWordMeta(): Record<string, WordMeta>;
   toggleWordStar(hanzi: string): boolean;
   setWordNote(hanzi: string, note: string): void;
+  getHanziQuiz(ch: string): HanziQuizRec | null;
+  listHanziQuiz(): Record<string, HanziQuizRec>;
+  recordHanziQuiz(ch: string, score?: number): void;
+  getSoundRulesBest(): number;
+  recordSoundRulesResult(correct: number): void;
+  getReadingDrafts(): ReadingDraft[];
+  saveReadingDraft(text: string): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
 const SRS_ITEMS_KEY = "bye.srs.items";
 const SRS_NEW_KEY = "bye.srs.new";
+const REVIEW_LOGS_KEY = "bye.review.logs";
+const HEAT_CORRECT_KEY = "bye.heat.correct";
+const REVIEW_LOGS_CAP = 2000;
 const LEGACY_WORD_RE = /^bye\.srs\.w\.([a-z0-9-]+)\.(.+)\.(\d+)$/;
-const VALID_STATUS: SrsStatus[] = ["new", "learning", "learned", "known"];
+/* Status parse cho migration: gồm cả giá trị cũ (learned/known) — chuẩn hóa sang
+   format 4 diễn ra trong readSrsItems qua normalizeSrsItem. */
+const RAW_STATUS: readonly string[] = ["new", "learning", "learned", "known", "review", "relearning"];
+/* Mapping status cũ → format 4: learned = ôn vừa (7 ngày), known = ôn lâu (21 ngày). */
+const LEGACY_STATUS_INTERVAL: Partial<Record<string, { status: SrsStatus; intervalDays: number }>> = {
+  learned: { status: "review", intervalDays: 7 },
+  known: { status: "review", intervalDays: 21 },
+};
+
+/* Migration format 4 (W5.1) — hàm thuần: item thiếu ease/intervalDays/lapses hoặc
+   status cũ → chuẩn hóa; trả { item, changed } để caller chỉ ghi lại khi có đổi. */
+export function normalizeSrsItem(it: SrsItem): { item: SrsItem; changed: boolean } {
+  const statusRaw = typeof it.status === "string" ? it.status : "";
+  const legacy = LEGACY_STATUS_INTERVAL[statusRaw];
+  const status: SrsStatus = legacy ? legacy.status : (RAW_STATUS.includes(statusRaw) ? (statusRaw as SrsStatus) : "new");
+  const mappedInterval = legacy ? legacy.intervalDays : null;
+  const ease = typeof it.ease === "number" && Number.isFinite(it.ease) ? it.ease : INIT_EASE;
+  const intervalDays =
+    mappedInterval != null ? mappedInterval
+    : typeof it.intervalDays === "number" && Number.isFinite(it.intervalDays) ? it.intervalDays
+    : 0;
+  const lapses = typeof it.lapses === "number" && Number.isFinite(it.lapses) ? it.lapses : 0;
+  const item: SrsItem = { ...it, status, ease, intervalDays, lapses };
+  const changed =
+    item.status !== it.status || item.ease !== it.ease || item.intervalDays !== it.intervalDays || item.lapses !== it.lapses;
+  return { item, changed };
+}
+
+/* cardType heuristic cho review log (UPG-2): key có shape <book>.<page>.<i>
+   (regex như itemKeyKind) là vocab, trừ deck/notebook; còn lại grammar. */
+function cardTypeFromKey(key: string): "vocab" | "grammar" {
+  const m = /^([^.]+)\.([^.]+)\.\d+$/.exec(key);
+  if (!m || m[1] === "deck" || m[1] === "nb") return "grammar";
+  return "vocab";
+}
+
+const RATING_BY_GRADE: Record<Grade, 1 | 2 | 3 | 4> = { again: 1, hard: 2, good: 3, easy: 4 };
 
 /* ---------- helpers (an toàn đọc/ghi) ---------- */
 
@@ -174,11 +237,14 @@ function newSrsItem(key: string, status: SrsStatus = "new", lastReviewedAt: numb
     reviewCount: 0,
     lastReviewedAt,
     updatedAt: Date.now(),
+    ease: INIT_EASE,
+    intervalDays: 0,
+    lapses: 0,
   };
 }
 
 function toSrsStatus(v: unknown): SrsStatus | null {
-  return VALID_STATUS.includes(v as SrsStatus) ? (v as SrsStatus) : null;
+  return RAW_STATUS.includes(v as string) ? (v as SrsStatus) : null;
 }
 
 export class ProgressStore implements ProgressStoreApi {
@@ -265,7 +331,25 @@ export class ProgressStore implements ProgressStoreApi {
   /* ---------- SRS ---------- */
 
   private readSrsItems(): Record<string, SrsItem> {
-    return readJSON<Record<string, SrsItem>>(SRS_ITEMS_KEY, {});
+    const raw = readJSON<Record<string, SrsItem>>(SRS_ITEMS_KEY, {});
+    if (!raw || typeof raw !== "object") return {};
+    // Migration format 4 (W5.1): chuẩn hóa từng item, ghi lại khi có thay đổi (idempotent)
+    let changed = false;
+    const out: Record<string, SrsItem> = {};
+    for (const [key, it] of Object.entries(raw)) {
+      if (!it || typeof it !== "object") {
+        changed = true;
+        continue;
+      }
+      const { item, changed: c } = normalizeSrsItem(it as SrsItem);
+      if (c) changed = true;
+      out[key] = item;
+    }
+    if (changed) {
+      writeJSON(SRS_ITEMS_KEY, out);
+      this.syncSrsNewCounter(out);
+    }
+    return out;
   }
 
   private writeSrsItems(items: Record<string, SrsItem>): void {
@@ -284,11 +368,11 @@ export class ProgressStore implements ProgressStoreApi {
     return item && typeof item === "object" && typeof item.status === "string" ? item : null;
   }
 
-  /* sp1-personal-tools Task 5 — đọc toàn bộ SRS items cho dashboard /review. */
+  /* sp1-personal-tools Task 5 — đọc toàn bộ SRS items cho dashboard /review.
+     Đi qua readSrsItems để được chuẩn hóa format 4 như mọi đường đọc khác. */
   getAllSrs(): SrsItem[] {
     try {
-      const v = JSON.parse(localStorage.getItem("bye.srs.items") || "{}");
-      return v && typeof v === "object" ? Object.values(v as Record<string, SrsItem>) : [];
+      return Object.values(this.readSrsItems());
     } catch {
       return [];
     }
@@ -318,15 +402,54 @@ export class ProgressStore implements ProgressStoreApi {
     return added;
   }
 
-  /* Review redesign spec §2.2 — ghi grade ôn tập; key lạ → null, không ghi. */
-  recordReview(key: string, grade: Grade, now: number = Date.now()): SrsItem | null {
+  /* Review redesign §2.2 + W5.1 SM-2 — ghi grade ôn tập: SM-2 item + review log
+     (+ correct counter khi good/easy). Key lạ → null, không ghi gì. */
+  recordReview(key: string, grade: Grade, now: number = Date.now(), durationMs: number = 0): SrsItem | null {
     const items = this.readSrsItems();
     const cur = items[key];
     if (!cur) return null;
     items[key] = applyGrade(cur, grade, now);
     this.writeSrsItems(items);
-    dispatchProgress();
+    this.appendReviewLog({
+      cardType: cardTypeFromKey(key),
+      itemKey: key,
+      rating: RATING_BY_GRADE[grade],
+      durationMs,
+      reviewedAt: now,
+    });
+    if (grade === "good" || grade === "easy") this.addCorrect(1); // addCorrect tự bắn bye:progress
+    else dispatchProgress();
     return items[key];
+  }
+
+  /* ---------- review log + correct counter (W5.1) ---------- */
+
+  getReviewLogs(): ReviewLog[] {
+    const v = readJSON<ReviewLog[]>(REVIEW_LOGS_KEY, []);
+    if (!Array.isArray(v)) return [];
+    return v.filter(
+      (l): l is ReviewLog =>
+        !!l && typeof l === "object" && typeof l.itemKey === "string" && typeof l.reviewedAt === "number"
+    );
+  }
+
+  appendReviewLog(entry: ReviewLog): void {
+    const logs = this.getReviewLogs();
+    logs.push(entry);
+    writeJSON(REVIEW_LOGS_KEY, logs.slice(-REVIEW_LOGS_CAP));
+  }
+
+  addCorrect(n: number): void {
+    const map = this.getHeatCorrect();
+    const day = vnDayString();
+    map[day] = (map[day] || 0) + n;
+    writeJSON(HEAT_CORRECT_KEY, map);
+    dispatchProgress();
+  }
+
+  getHeatCorrect(): Record<string, number> {
+    const v = readJSON<Record<string, number>>(HEAT_CORRECT_KEY, {});
+    return v && typeof v === "object" ? v : {};
   }
 
   countSrsNew(): number {
@@ -584,6 +707,67 @@ export class ProgressStore implements ProgressStoreApi {
     if (!next.star && !next.note) delete all[hanzi];
     else all[hanzi] = next;
     writeJSON("bye.wordMeta", all);
+    dispatchProgress();
+  }
+
+  /* ---------- hanzi quiz (bye.hanzi.quiz — Wave 0 W0.2) ---------- */
+
+  private readHanziQuiz(): Record<string, HanziQuizRec> {
+    const v = readJSON<Record<string, HanziQuizRec>>("bye.hanzi.quiz", {});
+    return v && typeof v === "object" ? v : {};
+  }
+
+  getHanziQuiz(ch: string): HanziQuizRec | null {
+    const rec = this.readHanziQuiz()[ch];
+    return rec && typeof rec === "object" && typeof rec.attempts === "number" ? rec : null;
+  }
+
+  listHanziQuiz(): Record<string, HanziQuizRec> {
+    return this.readHanziQuiz();
+  }
+
+  recordHanziQuiz(ch: string, score?: number): void {
+    if (!ch) return;
+    const all = this.readHanziQuiz();
+    const cur = all[ch];
+    all[ch] = {
+      attempts: (typeof cur?.attempts === "number" ? cur.attempts : 0) + 1,
+      best: Math.max(typeof cur?.best === "number" ? cur.best : 0, typeof score === "number" && score >= 0 ? score : 0),
+      last: Date.now(),
+    };
+    writeJSON("bye.hanzi.quiz", all);
+    dispatchProgress();
+  }
+
+  /* ---------- sound rules best (bye.soundrules.best — Wave 0 W0.3) ---------- */
+
+  getSoundRulesBest(): number {
+    return readNum("bye.soundrules.best");
+  }
+
+  recordSoundRulesResult(correct: number): void {
+    if (correct <= this.getSoundRulesBest()) return;
+    writeNum("bye.soundrules.best", correct);
+    dispatchProgress();
+  }
+
+  /* ---------- reading drafts (bye.reading.drafts — Wave 0 W0.4) ---------- */
+
+  getReadingDrafts(): ReadingDraft[] {
+    const v = readJSON<ReadingDraft[]>("bye.reading.drafts", []);
+    if (!Array.isArray(v)) return [];
+    return v.filter(
+      (d): d is ReadingDraft => !!d && typeof d === "object" && typeof d.text === "string" && typeof d.at === "string"
+    );
+  }
+
+  saveReadingDraft(text: string): void {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    const drafts = this.getReadingDrafts();
+    if (drafts[0]?.text === trimmed) return; // dán lại đúng bài gần nhất — không nhân bản
+    drafts.unshift({ text: trimmed, at: new Date().toISOString() });
+    writeJSON("bye.reading.drafts", drafts.slice(0, 5));
     dispatchProgress();
   }
 }

@@ -12,7 +12,12 @@ export function ContentBridge() {
     let alive = true;
     loadVocab()
       .then((d) => {
-        if (alive) setVocabData(d);
+        if (!alive) return;
+        setVocabData(d);
+        /* Bắn tick store giống word-list/lesson-client — các view chỉ sync lại
+           qua bye:progress (review-dashboard, hanzi-studio...) cần re-render
+           sau khi vocab sẵn sàng, không phải chờ một event khác. */
+        window.dispatchEvent(new CustomEvent("bye:progress"));
       })
       .catch(() => {
         /* giữ null — như behavior defensive cũ */

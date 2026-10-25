@@ -2,9 +2,10 @@
 /* Port 1:1 từ clone/js/hanzi.js renderDetail (dòng 127-253) — /hanzi/[char] màn 2.
    Layout 3 cột desktop (tìm+vẽ | khung chữ + animation nét | từ vựng), xếp dọc mobile.
    Chữ không có data → fallback verbatim; animation nét qua useStrokePlayer (Task 11). */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { hanziChars, type HanziInfo } from "@/content/hanzi";
+import { progressStore, type HanziQuizRec } from "@/lib/store/progress-store";
 import { useStrokePlayer } from "@/components/hanzi/stroke-player";
 import { DrawPad } from "@/components/hanzi/draw-pad";
 import { useTts } from "@/lib/tts/use-tts";
@@ -67,6 +68,15 @@ export default function HanziDetail({ char }: { char: string }) {
   const [arrows, setArrows] = useState(false);
   const [zoom, setZoom] = useState(false);
   const [contains, setContains] = useState(false);
+
+  /* W0.2: trạng thái "đã luyện viết" — đọc sau mount để tránh lệch hydration */
+  const [quizRec, setQuizRec] = useState<HanziQuizRec | null>(null);
+  useEffect(() => {
+    const sync = () => setQuizRec(progressStore.getHanziQuiz(char));
+    sync();
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
+  }, [char]);
 
   const go = (ch: string) => {
     window.location.assign("/hanzi/" + encodeURIComponent(ch));
@@ -183,6 +193,14 @@ export default function HanziDetail({ char }: { char: string }) {
               <Volume2 size={20} strokeWidth={1.5} aria-hidden="true" />
             </IconButton>
           </div>
+          {quizRec ? (
+            <span
+              data-testid="practiced-detail"
+              className="text-xs font-extrabold text-feedback-success border border-feedback-success rounded-full px-3 py-1"
+            >
+              ✓ Đã luyện viết · {quizRec.attempts} lần
+            </span>
+          ) : null}
           <Link
             href="/sound-rules"
             className="inline-block mt-2 text-sm font-semibold text-action-primary hover:underline"

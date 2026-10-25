@@ -1,11 +1,14 @@
 "use client";
 
 /* Sổ tay ngữ pháp root — port 1:1 opendesign_hsk/my-grammar.html (spec 2026-10-05).
-   Content tĩnh GRAMMAR_POINTS + saved qua bye.grammarMeta. Default level "HSK 4" đúng mock.
-   Keyboard "/" focus search. Toast demo cho add/menu đúng copy mock. */
+   Nguồn data: loadGrammar() (content layer qua API); khi fetch lỗi → fallback
+   static GRAMMAR_FALLBACK (giữ nguyên UX offline). Saved qua bye.grammarMeta.
+   Default level "HSK 4" đúng mock. Keyboard "/" focus search. Toast demo cho add/menu đúng copy mock. */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { GRAMMAR_POINTS, GRAMMAR_TOPICS } from "@/content/grammar-points";
+import { GRAMMAR_FALLBACK, GRAMMAR_TOPICS } from "@/content/grammar-points";
+import type { GrammarPoint } from "@/content/grammar-points";
+import { loadGrammar } from "@/lib/content/grammar-client";
 import { filterPoints, grammarHero } from "@/lib/my-grammar";
 import { progressStore } from "@/lib/store/progress-store";
 import { useKeyboard } from "@/lib/use-keyboard";
@@ -22,6 +25,7 @@ export default function MyGrammarRoot() {
   const [topic, setTopic] = useState<string>("all");
   const [q, setQ] = useState("");
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [points, setPoints] = useState<GrammarPoint[]>(GRAMMAR_FALLBACK);
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -31,6 +35,13 @@ export default function MyGrammarRoot() {
         .filter(([, m]) => m.saved)
         .map(([id]) => id),
     );
+    /* Nguồn data D1 qua API; lỗi (offline / chưa seed) → fallback 6 điểm static. */
+    loadGrammar()
+      .then(setPoints)
+      .catch((err) => {
+        console.error("[my-grammar] loadGrammar fallback static", err);
+        setPoints(GRAMMAR_FALLBACK);
+      });
   }, []);
 
   /* sync khi toggle phát bye:progress */
@@ -46,12 +57,12 @@ export default function MyGrammarRoot() {
   }, []);
 
   const filtered = useMemo(
-    () => (mounted ? filterPoints(GRAMMAR_POINTS, { level, topic, q }, savedIds) : []),
-    [mounted, level, topic, q, savedIds],
+    () => (mounted ? filterPoints(points, { level, topic, q }, savedIds) : []),
+    [mounted, points, level, topic, q, savedIds],
   );
   const hero = useMemo(
-    () => (mounted ? grammarHero(GRAMMAR_POINTS, savedIds) : { total: 0, savedCount: 0, topLevel: null, topCount: 0 }),
-    [mounted, savedIds],
+    () => (mounted ? grammarHero(points, savedIds) : { total: 0, savedCount: 0, topLevel: null, topCount: 0 }),
+    [mounted, points, savedIds],
   );
 
   useKeyboard({
@@ -93,7 +104,7 @@ export default function MyGrammarRoot() {
               saved={savedIds.includes(p.id)}
               onToggleSave={(id) => {
                 const saved = progressStore.toggleGrammarSaved(id);
-                toast(saved ? `Đã lưu ★ ${GRAMMAR_POINTS.find((x) => x.id === id)!.title}` : `Đã bỏ lưu ${GRAMMAR_POINTS.find((x) => x.id === id)!.title}`);
+                toast(saved ? `Đã lưu ★ ${points.find((x) => x.id === id)!.title}` : `Đã bỏ lưu ${points.find((x) => x.id === id)!.title}`);
               }}
               onMenu={(id) => toast("Tùy chọn: ghim · ẩn ví dụ · báo lỗi công thức")}
             />

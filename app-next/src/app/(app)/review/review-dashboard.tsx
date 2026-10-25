@@ -5,7 +5,7 @@ import Link from "next/link";
 import { progressStore } from "@/lib/store/progress-store";
 import { buildQueue, srsLevelFromKey, resolveWord, type ReviewableWord } from "@/lib/srs-session";
 import { captureWrong } from "@/lib/notebook/capture";
-import { memTone } from "@/lib/stats/review";
+import { isMature, memTone } from "@/lib/stats/review";
 import type { BucketData } from "@/components/review/srs-buckets";
 import { MemoryHero } from "@/components/review/memory-hero";
 import { SrsBuckets } from "@/components/review/srs-buckets";
@@ -58,8 +58,9 @@ export default function ReviewDashboard() {
   const words = mounted ? buildQueue(srs, level, now) : [];
   const { weak, cons, mast } = bucketize(words);
   const avgMem = words.length ? Math.round(words.reduce((s, w) => s + w.mem, 0) / words.length) : 0;
+  /* W5.1 SM-2: due = chưa mature (review chu kỳ ngắn vẫn phải ôn) && dueAt <= now */
   const dueCount = srs.filter(
-    (it) => srsLevelFromKey(it.key) === level && it.status !== "known" && it.dueAt != null && it.dueAt <= now
+    (it) => srsLevelFromKey(it.key) === level && !isMature(it) && it.dueAt != null && it.dueAt <= now
   ).length;
   const estMinutes = Math.max(1, Math.ceil(dueCount / 3)); // ~20 giây/từ
   const urgent = weak.count;
@@ -113,10 +114,10 @@ export default function ReviewDashboard() {
       {sessionOpen && (
         <SrsSession
           words={queue}
-          onGrade={(key, grade) => {
-            progressStore.recordReview(key, grade);
+          onGrade={(key, grade, durationMs) => {
+            progressStore.recordReview(key, grade, undefined, durationMs);
             // auto-capture từ quên khi ôn SRS (spec §3.4.3) — resolve word tại chỗ gọi
-            if (grade === "forgot") {
+            if (grade === "again") {
               const word = resolveWord(key);
               if (word) {
                 captureWrong({

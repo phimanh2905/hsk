@@ -7,6 +7,9 @@ import { useSession } from "@/lib/use-session";
 import { useLoginModal } from "@/components/shell/login-modal";
 
 /* UPG-2 — session thật từ better-auth, thay cho `bye.mockLogin` của SP1.
+   W4.4 (spec 2026-10-24): /my-vocab, /my-grammar, /progress đã chuyển sang
+   server gate thật (getAuth + redirect "/?login=1") — LoginGate KHÔNG còn là
+   outer gate của 3 route đó nữa, nhưng notebook vẫn dùng component này.
    Vẫn gate ở client: các trang dùng nó vốn đã là client component, còn đọc
    session trong layout chung sẽ kéo cả nhóm route về dynamic và mất SSG.
    Spec 11 §F6 muốn server-render gate — để lát cắt UPG-2 tiếp theo, kèm route

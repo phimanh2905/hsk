@@ -23,15 +23,16 @@ describe("ProgressMatrix (spec 2026-10-04)", () => {
       expect((await screen.findByRole("link", { name })).getAttribute("href")).toBe(href);
     }
   });
-  it("có SRS learned → số từ đã nhớ > 0", async () => {
+  it("có SRS đã thuộc (format 4: status review) → số từ đã nhớ > 0", async () => {
     localStorage.setItem(
       "bye.srs.items",
       JSON.stringify({
-        a: { key: "a", status: "learned", dueAt: null, reviewCount: 2, lastReviewedAt: 1, updatedAt: 1 },
-        b: { key: "b", status: "known", dueAt: null, reviewCount: 3, lastReviewedAt: 1, updatedAt: 1 },
+        a: { key: "a", status: "review", intervalDays: 7, ease: 2.5, lapses: 0, dueAt: null, reviewCount: 2, lastReviewedAt: 1, updatedAt: 1 },
+        b: { key: "b", status: "review", intervalDays: 21, ease: 2.5, lapses: 0, dueAt: null, reviewCount: 3, lastReviewedAt: 1, updatedAt: 1 },
       })
     );
     render(<ProgressMatrix />);
-    expect((await screen.findAllByText(/2 \//)).length).toBeGreaterThan(0);
+    // W5.1 SM-2: chỉ item b (review, interval 21) là mature → "1 / N từ đã nhớ"
+    expect(screen.getAllByText(/1 \//).length).toBeGreaterThan(0);
   });
 });

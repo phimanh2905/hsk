@@ -8,20 +8,24 @@ import type { ReviewableWord } from "@/lib/srs-session";
 import type { Grade } from "@/lib/stats/review";
 
 const GRADES: { grade: Grade; label: string; hint: string; cls: string }[] = [
-  { grade: "forgot", label: "Quên", hint: "Sau 1 phút", cls: "bg-feedback-error/10 border-feedback-error/40 text-feedback-error-text" },
-  { grade: "hard", label: "Khó", hint: "Sau 5 phút", cls: "bg-amber-wash border-learning-streak/40 text-amber-ink" },
-  { grade: "good", label: "Nhớ", hint: "Từ tiếp theo", cls: "bg-action-primary border-action-primary text-white" },
+  { grade: "again", label: "Quên", hint: "Quay lại sớm", cls: "bg-feedback-error/10 border-feedback-error/40 text-feedback-error-text" },
+  { grade: "hard", label: "Khó", hint: "Khó", cls: "bg-amber-wash border-learning-streak/40 text-amber-ink" },
+  { grade: "good", label: "Nhớ", hint: "Tốt", cls: "bg-action-primary border-action-primary text-white" },
+  { grade: "easy", label: "Dễ", hint: "Dễ", cls: "bg-jade-wash border-learning-mastered/40 text-learning-mastered" },
 ];
 
 /* Overlay phiên ôn (mock .session, spec §3/§5). words là snapshot — dashboard
-   ghi grade qua onGrade; mem%/buckets cập nhật sau khi phiên kết thúc. */
+   ghi grade qua onGrade; mem%/buckets cập nhật sau khi phiên kết thúc.
+   W5.1 SM-2: 4 nút again/hard/good/easy, phím 1–4, onGrade kèm durationMs
+   (thời gian từ lúc reveal đến lúc chấm — đầu vào cho review_logs). */
 export function SrsSession({ words, onGrade, onExit }: {
   words: ReviewableWord[];
-  onGrade: (key: string, grade: Grade) => void;
+  onGrade: (key: string, grade: Grade, durationMs: number) => void;
   onExit: (score: number, total: number) => void;
 }) {
   const [idx, setIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [revealedAt, setRevealedAt] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const { speak } = useTts();
   const exitRef = useRef<HTMLButtonElement>(null);
@@ -42,15 +46,16 @@ export function SrsSession({ words, onGrade, onExit }: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx]);
 
-  const reveal = () => setRevealed(true);
+  const reveal = () => { setRevealed(true); setRevealedAt(Date.now()); };
 
   const grade = (g: Grade) => {
     if (!revealed || !w) return;
-    const s = g === "good" ? score + 1 : score;
-    onGrade(w.key, g);
+    const s = g === "good" || g === "easy" ? score + 1 : score;
+    onGrade(w.key, g, revealedAt != null ? Date.now() - revealedAt : 0);
     if (idx >= words.length - 1) { finish(s); return; }
     setIdx(idx + 1);
     setRevealed(false);
+    setRevealedAt(null);
     setScore(s);
   };
 
@@ -64,9 +69,10 @@ export function SrsSession({ words, onGrade, onExit }: {
         else reveal();
         return;
       }
-      if (e.key === "1") grade("forgot");
+      if (e.key === "1") grade("again");
       else if (e.key === "2") grade("hard");
       else if (e.key === "3") grade("good");
+      else if (e.key === "4") grade("easy");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -122,7 +128,7 @@ export function SrsSession({ words, onGrade, onExit }: {
           )}
           <div
             data-testid="sess-grades"
-            className={revealed ? "grid gap-2.5 max-[480px]:grid-cols-1 min-[480px]:grid-cols-3" : "hidden"}
+            className={revealed ? "grid gap-2.5 max-[480px]:grid-cols-2 min-[480px]:grid-cols-4" : "hidden"}
           >
             {GRADES.map((g) => (
               <button

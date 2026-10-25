@@ -30,6 +30,7 @@ import { StudioWorkbench } from "@/components/hanzi/studio/studio-workbench";
 import type { StudioGridApi } from "@/components/hanzi/studio/studio-grid";
 import type { WorkbenchData } from "@/components/hanzi/studio/studio-workbench";
 import { cn } from "@/lib/cn";
+import { progressStore, type HanziQuizRec } from "@/lib/store/progress-store";
 
 const HSK_PAGE_SIZE = 12;
 
@@ -56,6 +57,15 @@ export default function HanziStudio() {
   const [pane, setPane] = useState<"catalog" | "work">("catalog");
   const [page, setPage] = useState(1);
   const apiRef = useRef<StudioGridApi | null>(null);
+
+  /* W0.2: trạng thái "đã luyện" — chỉ đọc sau mount (hydration); re-sync khi store bắn bye:progress */
+  const [practiced, setPracticed] = useState<Record<string, HanziQuizRec>>({});
+  useEffect(() => {
+    const sync = () => setPracticed(progressStore.listHanziQuiz());
+    sync();
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
+  }, []);
 
   /* Deep-link ?rad=X — chạy 1 lần lúc mount (client). */
   useEffect(() => {
@@ -215,6 +225,7 @@ export default function HanziStudio() {
             cur={cur.g}
             onSelect={select}
             onPage={setPage}
+            practiced={practiced}
             onModeChange={changeCatalogMode}
           />
         </div>

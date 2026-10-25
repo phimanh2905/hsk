@@ -45,6 +45,17 @@ describe("BattleMode", () => {
     expect(screen.getByText(/Đăng nhập để lưu kết quả lên bảng xếp hạng/)).toBeInTheDocument();
     vi.useRealTimers();
   });
+  it("ít hơn 4 từ: không có nút Bắt đầu thi + hiện thông báo", () => {
+    render(
+      <LessonProvider items={words.slice(0, 3)} book="hsk1" page="lesson-1">
+        <LoginProvider>
+          <BattleMode />
+        </LoginProvider>
+      </LessonProvider>
+    );
+    expect(screen.getByText(/cần ít nhất 4 từ/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Bắt đầu thi/ })).not.toBeInTheDocument();
+  });
   it("Top-10 cứng hiển thị cả khi chưa thi", () => {
     render(<LessonProvider items={words} book="hsk1" page="lesson-1"><LoginProvider><BattleMode /></LoginProvider></LessonProvider>);
     expect(screen.getByText(/Top 10 bài này/)).toBeInTheDocument();

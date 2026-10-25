@@ -1,0 +1,431 @@
+[
+  {
+    "id": "hsk3-reading-1",
+    "book": "hsk3",
+    "lesson": "lesson-1",
+    "title": "搬家",
+    "titleVi": "Chuyển nhà",
+    "sentences": [
+      {
+        "zh": "上个月我们搬家了，新家在城市的北部。",
+        "vi": "Tháng trước chúng tôi chuyển nhà, nhà mới ở phía bắc thành phố.",
+        "py": "shàng gè yuè wǒmen bānjiā le, xīn jiā zài chéngshì de běibù."
+      },
+      {
+        "zh": "新家比旧家大，一共有三个房间。",
+        "vi": "Nhà mới rộng hơn nhà cũ, tổng cộng có ba phòng.",
+        "py": "xīn jiā bǐ jiù jiā dà, yīgòng yǒu sān ge fángjiān."
+      },
+      {
+        "zh": "我的房间朝南，白天非常亮。",
+        "vi": "Phòng của tôi quay về hướng nam, ban ngày rất sáng.",
+        "py": "wǒ de fángjiān cháo nán, báitiān fēicháng liàng."
+      },
+      {
+        "zh": "妈妈在阳台上放了几盆漂亮的花。",
+        "vi": "Mẹ đặt mấy chậu hoa đẹp trên ban công.",
+        "py": "māma zài yángtái shàng fàng le jǐ pén piàoliang de huā."
+      },
+      {
+        "zh": "房子旁边有一个超市，买东西很方便。",
+        "vi": "Cạnh nhà có một siêu thị, mua đồ rất tiện.",
+        "py": "fángzi pángbiān yǒu yī ge chāoshì, mǎi dōngxi hěn fāngbiàn."
+      },
+      {
+        "zh": "爸爸说这里的环境比以前好多了。",
+        "vi": "Bố nói môi trường ở đây tốt hơn trước nhiều.",
+        "py": "bàba shuō zhèlǐ de huánjìng bǐ yǐqián hǎo duō le."
+      },
+      {
+        "zh": "周末我们请朋友来家里吃饭。",
+        "vi": "Cuối tuần chúng tôi mời bạn bè đến nhà ăn cơm.",
+        "py": "zhōumò wǒmen qǐng péngyou lái jiālǐ chīfàn."
+      },
+      {
+        "zh": "妈妈做了白菜和鱼，大家都说好吃。",
+        "vi": "Mẹ làm cải trắng và cá, ai cũng nói ngon.",
+        "py": "māma zuò le báicài hé yú, dàjiā dōu shuō hǎochī."
+      },
+      {
+        "zh": "饭后我帮妈妈洗碗，然后打扫房间。",
+        "vi": "Sau bữa ăn tôi giúp mẹ rửa bát, rồi quét dọn phòng.",
+        "py": "fàn hòu wǒ bāng māma xǐ wǎn, ránhòu dǎsǎo fángjiān."
+      },
+      {
+        "zh": "弟弟把他的书都放进书柜里。",
+        "vi": "Em trai xếp hết sách của cậu vào tủ sách.",
+        "py": "dìdi bǎ tā de shū dōu fàng jìn shūguì lǐ."
+      },
+      {
+        "zh": "晚上我们一起看电视，聊了很多。",
+        "vi": "Tối đó cả nhà cùng xem tivi, nói chuyện rất nhiều.",
+        "py": "wǎnshang wǒmen yīqǐ kàn diànshì, liáo le hěnduō."
+      },
+      {
+        "zh": "朋友走的时候说下个月还要再来。",
+        "vi": "Khi về, bạn nói tháng sau còn đến nữa.",
+        "py": "péngyou zǒu de shíhou shuō xià gè yuè hái yào zài lái."
+      },
+      {
+        "zh": "我觉得搬新家是件快乐的事。",
+        "vi": "Tôi thấy chuyển nhà mới là một chuyện vui.",
+        "py": "wǒ juéde bān xīn jiā shì jiàn kuàilè de shì."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "搬家",
+        "py": "bānjiā",
+        "vi": "chuyển nhà"
+      },
+      {
+        "word": "环境",
+        "py": "huánjìng",
+        "vi": "môi trường"
+      },
+      {
+        "word": "超市",
+        "py": "chāoshì",
+        "vi": "siêu thị"
+      },
+      {
+        "word": "方便",
+        "py": "fāngbiàn",
+        "vi": "tiện lợi"
+      },
+      {
+        "word": "房间",
+        "py": "fángjiān",
+        "vi": "phòng"
+      },
+      {
+        "word": "以前",
+        "py": "yǐqián",
+        "vi": "trước đây"
+      },
+      {
+        "word": "快乐",
+        "py": "kuàilè",
+        "vi": "vui vẻ, hạnh phúc"
+      }
+    ],
+    "questions": [
+      {
+        "q": "新家有几个房间？",
+        "options": [
+          "三个",
+          "四个",
+          "两个"
+        ],
+        "answer": 0,
+        "qVi": "Nhà mới có mấy phòng?"
+      },
+      {
+        "q": "为什么在哪儿买东西都很方便？",
+        "options": [
+          "因为房子旁边有超市",
+          "因为爸爸有汽车",
+          "因为超市二十四小时开门"
+        ],
+        "answer": 0,
+        "qVi": "Vì sao mua đồ ở đâu cũng tiện?"
+      },
+      {
+        "q": "饭后\"我\"做了什么？",
+        "options": [
+          "看了电视",
+          "帮妈妈洗碗、打扫房间",
+          "去超市买东西"
+        ],
+        "answer": 1,
+        "qVi": "Sau bữa ăn \"tôi\" đã làm gì?"
+      }
+    ]
+  },
+  {
+    "id": "hsk3-reading-2",
+    "book": "hsk3",
+    "lesson": "lesson-2",
+    "title": "篮球比赛",
+    "titleVi": "Trận đấu bóng rổ",
+    "sentences": [
+      {
+        "zh": "星期六我们班和三班有一场篮球比赛。",
+        "vi": "Thứ bảy lớp chúng tôi có một trận bóng rổ với lớp ba.",
+        "py": "xīngqīliù wǒmen bān hé sān bān yǒu yī chǎng lánqiú bǐsài."
+      },
+      {
+        "zh": "老师把比赛安排在上午九点。",
+        "vi": "Thầy sắp xếp trận đấu vào lúc chín giờ sáng.",
+        "py": "lǎoshī bǎ bǐsài ānpái zài shàngwǔ jiǔ diǎn."
+      },
+      {
+        "zh": "比赛的地方是学校的体育馆。",
+        "vi": "Nơi thi đấu là nhà thi đấu của trường.",
+        "py": "bǐsài de dìfang shì xuéxiào de tǐyùguǎn."
+      },
+      {
+        "zh": "我们每天下午都练习一个小时。",
+        "vi": "Chiều nào chúng tôi cũng tập một tiếng.",
+        "py": "wǒmen měitiān xiàwǔ dōu liànxí yī ge xiǎoshí."
+      },
+      {
+        "zh": "队长让大家注意传球，不要太着急。",
+        "vi": "Đội trưởng bảo mọi người chú ý chuyền bóng, đừng vội vàng.",
+        "py": "duìzhǎng ràng dàjiā zhùyì chuánqiú, bùyào tài zháojí."
+      },
+      {
+        "zh": "上半场我们落后了三分，大家有点儿紧张。",
+        "vi": "Hiệp một chúng tôi bị dẫn trước ba điểm, mọi người hơi căng thẳng.",
+        "py": "shàng bàn chǎng wǒmen luòhòu le sān fēn, dàjiā yǒudiǎnr jǐnzhāng."
+      },
+      {
+        "zh": "中间休息的时候，老师给我们讲了新的办法。",
+        "vi": "Trong giờ nghỉ, Trong giờ nghỉ, thầy cho chúng tôi biết cách chơi mới.",
+        "py": "zhōngjiān xiūxi de shíhou, lǎoshī gěi wǒmen jiǎng le xīn de bànfǎ."
+      },
+      {
+        "zh": "下半场我们互相配合，慢慢追了回来。",
+        "vi": "Hiệp hai chúng tôi phối hợp với nhau, từ từ đuổi kịp.",
+        "py": "xià bàn chǎng wǒmen hùxiāng pèihé, mànmàn zhuī le huílái."
+      },
+      {
+        "zh": "最后我们赢了，同学们都非常高兴。",
+        "vi": "Cuối cùng chúng tôi thắng, các bạn học sinh đều rất vui.",
+        "py": "zuìhòu wǒmen yíng le, tóngxuémen dōu fēicháng gāoxìng."
+      },
+      {
+        "zh": "队长说赢不重要，重要的是大家一起努力。",
+        "vi": "Đội trưởng nói thắng không quan trọng, quan trọng là cùng nhau cố gắng.",
+        "py": "duìzhǎng shuō yíng bù zhòngyào, zhòngyào de shì dàjiā yīqǐ nǔlì."
+      },
+      {
+        "zh": "晚上我们去吃面条，庆祝这次胜利。",
+        "vi": "Tối đó chúng tôi đi ăn mì, ăn mừng chiến thắng lần này.",
+        "py": "wǎnshang wǒmen qù chī miàntiáo, qìngzhù zhè cì shènglì."
+      },
+      {
+        "zh": "我觉得这场比赛让我学会了合作。",
+        "vi": "Tôi thấy trận đấu này giúp tôi học được cách hợp tác.",
+        "py": "wǒ juéde zhè chǎng bǐsài ràng wǒ xuéhuì le hézuò."
+      },
+      {
+        "zh": "下个月还有一场比赛，我们会继续练习。",
+        "vi": "Tháng sau còn một trận nữa, chúng tôi sẽ tiếp tục luyện tập.",
+        "py": "xià gè yuè hái yǒu yī chǎng bǐsài, wǒmen huì jìxù liànxí."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "比赛",
+        "py": "bǐsài",
+        "vi": "thi đấu, trận đấu"
+      },
+      {
+        "word": "安排",
+        "py": "ānpái",
+        "vi": "sắp xếp"
+      },
+      {
+        "word": "紧张",
+        "py": "jǐnzhāng",
+        "vi": "căng thẳng"
+      },
+      {
+        "word": "配合",
+        "py": "pèihé",
+        "vi": "phối hợp"
+      },
+      {
+        "word": "庆祝",
+        "py": "qìngzhù",
+        "vi": "chúc mừng, ăn mừng"
+      },
+      {
+        "word": "合作",
+        "py": "hézuò",
+        "vi": "hợp tác"
+      },
+      {
+        "word": "继续",
+        "py": "jìxù",
+        "vi": "tiếp tục"
+      }
+    ],
+    "questions": [
+      {
+        "q": "比赛安排在什么时间？",
+        "options": [
+          "星期六上午九点",
+          "星期六下午三点",
+          "星期日上午九点"
+        ],
+        "answer": 0,
+        "qVi": "Trận đấu được sắp xếp vào lúc nào?"
+      },
+      {
+        "q": "上半场我们班怎么样？",
+        "options": [
+          "赢了三分",
+          "落后了三分",
+          "和对方一样"
+        ],
+        "answer": 1,
+        "qVi": "Hiệp một lớp chúng tôi thế nào?"
+      },
+      {
+        "q": "队长认为什么最重要？",
+        "options": [
+          "赢球",
+          "一起努力",
+          "多练习传球"
+        ],
+        "answer": 1,
+        "qVi": "Đội trưởng cho rằng điều gì quan trọng nhất?"
+      }
+    ]
+  },
+  {
+    "id": "hsk3-reading-3",
+    "book": "hsk3",
+    "lesson": "lesson-3",
+    "title": "生病",
+    "titleVi": "Bị ốm",
+    "sentences": [
+      {
+        "zh": "上星期我感冒了，头疼，还一直咳嗽。",
+        "vi": "Tuần trước tôi bị cảm, đau đầu, còn ho mãi không ngừng.",
+        "py": "shàng xīngqī wǒ gǎnmào le, tóuténg, hái yīzhí késou."
+      },
+      {
+        "zh": "妈妈马上带我去了附近的医院。",
+        "vi": "Mẹ lập tức đưa tôi đến bệnh viện gần đó.",
+        "py": "māma mǎshàng dài wǒ qù le fùjìn de yīyuàn."
+      },
+      {
+        "zh": "医生问我哪里不舒服，我说嗓子很疼。",
+        "vi": "Bác sĩ hỏi tôi chỗ nào không khỏe, tôi nói họng rất đau.",
+        "py": "yīshēng wèn wǒ nǎlǐ bù shūfu, wǒ shuō sǎngzi hěn téng."
+      },
+      {
+        "zh": "他给我量了体温，有一点儿高。",
+        "vi": "Ông ấy đo nhiệt độ cho tôi, hơi cao một chút.",
+        "py": "tā gěi wǒ liáng le tǐwēn, yǒu yīdiǎnr gāo."
+      },
+      {
+        "zh": "医生说不用打针，吃药就可以。",
+        "vi": "Bác sĩ nói không cần tiêm, uống thuốc là được.",
+        "py": "yīshēng shuō bùyòng dǎzhēn, chī yào jiù kěyǐ."
+      },
+      {
+        "zh": "他让我多喝水，这几天要好好休息。",
+        "vi": "Ông ấy dặn tôi uống nhiều nước, mấy ngày này phải nghỉ ngơi cho tốt.",
+        "py": "tā ràng wǒ duō hē shuǐ, zhè jǐ tiān yào hǎohǎo xiūxi."
+      },
+      {
+        "zh": "这种药一天吃三次，每次吃两片。",
+        "vi": "Loại thuốc này một ngày uống ba lần, mỗi lần hai viên.",
+        "py": "zhè zhǒng yào yī tiān chī sān cì, měi cì chī liǎng piàn."
+      },
+      {
+        "zh": "妈妈每天给我做粥，还买来水果。",
+        "vi": "Mẹ mỗi ngày nấu cháo cho tôi, còn mua cả trái cây.",
+        "py": "māma měitiān gěi wǒ zuò zhōu, hái mǎi lái shuǐguǒ."
+      },
+      {
+        "zh": "我在家休息了三天，没有去上课。",
+        "vi": "Tôi nghỉ ở nhà ba ngày, không đi học.",
+        "py": "wǒ zài jiā xiūxi le sān tiān, méiyǒu qù shàng kè."
+      },
+      {
+        "zh": "同学们给我发消息，问我的身体怎么样。",
+        "vi": "Các bạn cùng lớp nhắn tin hỏi thăm sức khỏe của tôi.",
+        "py": "tóngxuémen gěi wǒ fā xiāoxi, wèn wǒ de shēntǐ zěnmeyàng."
+      },
+      {
+        "zh": "星期四我的病好了，又能去上学了。",
+        "vi": "Thứ năm bệnh của tôi khỏi, lại có thể đi học được rồi.",
+        "py": "xīngqīsì wǒ de bìng hǎo le, yòu néng qù shàngxué le."
+      },
+      {
+        "zh": "医生说春天天气变化大，要小心感冒。",
+        "vi": "Bác sĩ nói mùa xuân thời tiết thay đổi nhiều, phải cẩn thận tránh cảm.",
+        "py": "yīshēng shuō chūntiān tiānqì biànhuà dà, yào xiǎoxīn gǎnmào."
+      },
+      {
+        "zh": "以后我要多运动，让身体更健康。",
+        "vi": "Sau này tôi sẽ vận động nhiều hơn để cơ thể khỏe mạnh hơn.",
+        "py": "yǐhòu wǒ yào duō yùndòng, ràng shēntǐ gèng jiànkāng."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "感冒",
+        "py": "gǎnmào",
+        "vi": "bị cảm, cảm lạnh"
+      },
+      {
+        "word": "医生",
+        "py": "yīshēng",
+        "vi": "bác sĩ"
+      },
+      {
+        "word": "医院",
+        "py": "yīyuàn",
+        "vi": "bệnh viện"
+      },
+      {
+        "word": "休息",
+        "py": "xiūxi",
+        "vi": "nghỉ ngơi"
+      },
+      {
+        "word": "变化",
+        "py": "biànhuà",
+        "vi": "thay đổi"
+      },
+      {
+        "word": "健康",
+        "py": "jiànkāng",
+        "vi": "khỏe mạnh"
+      },
+      {
+        "word": "运动",
+        "py": "yùndòng",
+        "vi": "vận động, thể dục"
+      }
+    ],
+    "questions": [
+      {
+        "q": "\"我\"为什么去了医院？",
+        "options": [
+          "因为头疼、咳嗽",
+          "因为要陪妈妈",
+          "因为要打针"
+        ],
+        "answer": 0,
+        "qVi": "Vì sao \"tôi\" đi bệnh viện?"
+      },
+      {
+        "q": "医生说药怎么吃？",
+        "options": [
+          "一天两次，每次一片",
+          "一天三次，每次两片",
+          "一天三次，每次一片"
+        ],
+        "answer": 1,
+        "qVi": "Bác sĩ dặn uống thuốc thế nào?"
+      },
+      {
+        "q": "\"我\"以后打算怎么做？",
+        "options": [
+          "多喝水",
+          "好好休息",
+          "多运动"
+        ],
+        "answer": 2,
+        "qVi": "Sau này \"tôi\" định làm gì?"
+      }
+    ]
+  }
+]

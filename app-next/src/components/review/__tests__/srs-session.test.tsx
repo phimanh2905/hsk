@@ -3,7 +3,10 @@ import { render, cleanup, fireEvent, act } from "@testing-library/react";
 import { SrsSession } from "../srs-session";
 import type { ReviewableWord } from "@/lib/srs-session";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 beforeEach(() => {
   Object.defineProperty(window, "speechSynthesis", {
@@ -35,21 +38,47 @@ describe("SrsSession", () => {
     act(() => { fireEvent.keyDown(window, { code: "Space" }); });
     expect(container.querySelector("[data-testid='sess-grades']")!.className).not.toContain("hidden"); // vẫn reveal
   });
+  it("4 nút grade render đúng data-grade again/hard/good/easy", () => {
+    const { container } = render(<SrsSession words={words} onGrade={() => {}} onExit={() => {}} />);
+    fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
+    const grades = container.querySelectorAll("[data-grade]");
+    expect(Array.from(grades).map((b) => b.getAttribute("data-grade"))).toEqual(["again", "hard", "good", "easy"]);
+  });
   it("grade qua phím 1/2/3 + click: điểm tăng khi nhớ, hết hàng → onExit(score,total)", () => {
     const onGrade = vi.fn();
     const onExit = vi.fn();
     const { container } = render(<SrsSession words={words} onGrade={onGrade} onExit={onExit} />);
     fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
     act(() => { fireEvent.keyDown(window, { key: "3" }); }); // nhớ → 1 điểm, sang thẻ 2
-    expect(onGrade).toHaveBeenLastCalledWith("k1", "good");
+    expect(onGrade).toHaveBeenLastCalledWith("k1", "good", expect.any(Number));
     expect(container.querySelector("[data-testid='sess-glyph']")!.textContent).toBe("好");
     expect(container.textContent).toContain("1 nhớ");
     fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
     act(() => { fireEvent.keyDown(window, { key: "1" }); }); // quên → 0 điểm thêm
-    expect(onGrade).toHaveBeenLastCalledWith("k2", "forgot");
+    expect(onGrade).toHaveBeenLastCalledWith("k2", "again", expect.any(Number));
     fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
     act(() => { fireEvent.keyDown(window, { key: "3" }); });
     expect(onExit).toHaveBeenCalledWith(2, 3);
+  });
+  it("phím 4 → easy; click nút → onGrade đúng grade", () => {
+    const onGrade = vi.fn();
+    const { container } = render(<SrsSession words={words} onGrade={onGrade} onExit={() => {}} />);
+    fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
+    act(() => { fireEvent.keyDown(window, { key: "4" }); });
+    expect(onGrade).toHaveBeenLastCalledWith("k1", "easy", expect.any(Number));
+    fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
+    fireEvent.click(container.querySelector("[data-grade='hard']")!);
+    expect(onGrade).toHaveBeenLastCalledWith("k2", "hard", expect.any(Number));
+  });
+  it("durationMs = chênh lệch thời gian reveal → grade (fake timers)", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000_000);
+    const onGrade = vi.fn();
+    const { container } = render(<SrsSession words={words} onGrade={onGrade} onExit={() => {}} />);
+    fireEvent.click(container.querySelector("[data-testid='sess-card']")!);
+    vi.setSystemTime(1_000_000 + 4_321);
+    act(() => { fireEvent.keyDown(window, { key: "3" }); });
+    expect(onGrade).toHaveBeenLastCalledWith("k1", "good", 4_321);
   });
   it("grade chưa reveal → bỏ qua", () => {
     const onGrade = vi.fn();

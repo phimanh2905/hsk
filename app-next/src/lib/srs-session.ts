@@ -2,7 +2,7 @@
    từ lib/stats/review, đọc decks qua progressStore (client singleton, jsdom OK). */
 
 import { progressStore, type SrsItem } from "@/lib/store/progress-store";
-import { memoryStrength } from "@/lib/stats/review";
+import { isMature, memoryStrength } from "@/lib/stats/review";
 import type { VocabData } from "@/lib/content/vocab";
 
 /* Nguồn vocab client-side: inject 1 lần qua setVocabData (ContentBridge →
@@ -61,9 +61,10 @@ export function resolveWord(key: string): { zh: string; pinyin: string; meaning:
   return word ? { zh: word.hanzi, pinyin: word.pinyin, meaning: word.meaning } : null;
 }
 
-/* Đến hạn (status != known && dueAt <= now) → 0; new/learning → 1; learned/known → 2. */
+/* W5.1 SM-2 — Đến hạn (chưa mature && dueAt <= now) → 0; new/learning → 1;
+   review/relearning (kể cả mature) → 2. */
 function orderBucket(it: SrsItem, now: number): number {
-  if (it.status !== "known" && it.dueAt != null && it.dueAt <= now) return 0;
+  if (!isMature(it) && it.dueAt != null && it.dueAt <= now) return 0;
   if (it.status === "new" || it.status === "learning") return 1;
   return 2;
 }

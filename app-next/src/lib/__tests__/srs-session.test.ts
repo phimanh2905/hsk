@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 function item(key: string, over: Partial<SrsItem> = {}): SrsItem {
-  return { key, status: "new", dueAt: NOW, reviewCount: 0, lastReviewedAt: null, updatedAt: NOW, ...over };
+  return { key, status: "new", dueAt: NOW, reviewCount: 0, lastReviewedAt: null, updatedAt: NOW, ease: 2.5, intervalDays: 0, lapses: 0, ...over };
 }
 
 describe("srsLevelFromKey", () => {

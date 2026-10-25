@@ -17,9 +17,9 @@ describe("SrsBuckets", () => {
     expect(container.textContent).toContain("Yếu · Dễ quên");
     expect(container.textContent).toContain("Cần ôn gấp trong hôm nay");
     expect(container.textContent).toContain("Đang củng cố");
-    expect(container.textContent).toContain("Ôn định kỳ 3 ngày một lần");
+    expect(container.textContent).toContain("Ôn lại theo chu kỳ SM-2");
     expect(container.textContent).toContain("Đã khắc sâu");
-    expect(container.textContent).toContain("Ôn nhắc lại sau 7 ngày");
+    expect(container.textContent).toContain("Chu kỳ SM-2 dài hạn");
     expect(container.querySelectorAll('[data-testid="bucket"]')).toHaveLength(3);
   });
   it("tối đa 3 chips/bucket; count 0 → 'Trống'", () => {

@@ -50,7 +50,10 @@ describe("SRS — toggle, batch, migration 3 format cũ", () => {
     s.migrateLegacySrs();
     expect(s.getSrs("hsk1.lesson-1.0")?.status).toBe("new");
     expect(s.getSrs("hsk1.lesson-1.1")?.status).toBe("learning");
-    expect(s.getSrs("hsk1.lesson-1.2")?.status).toBe("learned");
+    // format 4: status cũ learned/known được chuẩn hóa thành review khi đọc
+    expect(s.getSrs("hsk1.lesson-1.2")?.status).toBe("review");
+    expect(s.getSrs("hsk1.lesson-1.2")?.intervalDays).toBe(7);
+    expect(s.getSrs("hsk1.lesson-1.2")?.ease).toBe(2.5);
     expect(s.getSrs("hsk1.lesson-1.2")?.lastReviewedAt).toBeGreaterThan(0);
   });
 });

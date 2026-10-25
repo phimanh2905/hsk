@@ -1,11 +1,12 @@
 "use client";
-import { heatClass, heatData } from "@/lib/stats/heatmap";
+import { heatClass } from "@/lib/stats/heatmap";
 import { Card } from "@/components/ui/card";
 
 // Port renderHeatmap từ clone/js/progress.js:125-153.
 // Tooltip hover của clone dùng div fixed theo mouse — SP1 dùng `title` attr native (kèm số xp).
+// W5.2: real-only — ngày thiếu = 0, không còn dữ liệu mock seeded.
 export function Heatmap({ real, now = new Date() }: { real: Record<string, number> | null; now?: Date }) {
-  const map = heatData(real, now);
+  const map = real ?? {};
   const cols = [];
   for (let back = 11; back >= 0; back--) {
     const d = new Date(now.getFullYear(), now.getMonth() - back, 1);

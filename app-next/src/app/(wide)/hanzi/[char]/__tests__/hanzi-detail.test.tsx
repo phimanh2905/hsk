@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 import HanziDetail from "../hanzi-detail";
+import { progressStore } from "@/lib/store/progress-store";
 
 vi.stubGlobal("speechSynthesis", { speak: vi.fn(), cancel: vi.fn(), getVoices: vi.fn(() => []) });
 beforeEach(() => {
+  localStorage.clear();
   // canvas ctx cho DrawPad mount trong sidebar
   vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({
     setTransform() {}, clearRect() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, fill() {}, arc() {}, fillText() {},
@@ -34,5 +36,24 @@ describe("HanziDetail (G2 màn 2)", () => {
     render(<HanziDetail char="躯" />);
     expect(screen.getByText(/Chưa có dữ liệu chi tiết cho chữ này/)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "躯 - —" })).toBeInTheDocument();
+  });
+
+  it("chưa luyện → không chip 'Đã luyện viết' (W0.2)", () => {
+    render(<HanziDetail char="你" />);
+    expect(screen.queryByTestId("practiced-detail")).toBeNull();
+  });
+
+  it("có record bye.hanzi.quiz cho char → hiện chip 'Đã luyện viết' (W0.2)", () => {
+    progressStore.recordHanziQuiz("你");
+    render(<HanziDetail char="你" />);
+    const chip = screen.getByTestId("practiced-detail");
+    expect(chip.textContent).toContain("Đã luyện viết");
+    expect(chip.textContent).toContain("1 lần");
+  });
+
+  it("record của chữ khác → không chip (W0.2)", () => {
+    progressStore.recordHanziQuiz("好");
+    render(<HanziDetail char="你" />);
+    expect(screen.queryByTestId("practiced-detail")).toBeNull();
   });
 });

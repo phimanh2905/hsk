@@ -1,0 +1,566 @@
+[
+  {
+    "id": "hsk1-reading-1",
+    "book": "hsk1",
+    "lesson": "lesson-1",
+    "title": "我的家",
+    "titleVi": "Gia đình của tôi",
+    "sentences": [
+      {
+        "zh": "我叫王明，今年二十岁。",
+        "vi": "Tôi tên là Vương Minh, năm nay hai mươi tuổi.",
+        "py": "Wǒ jiào Wáng Míng, jīnnián èrshí suì."
+      },
+      {
+        "zh": "我家在北京。",
+        "vi": "Nhà tôi ở Bắc Kinh.",
+        "py": "Wǒ jiā zài Běijīng."
+      },
+      {
+        "zh": "我家有五个人：爸爸、妈妈、哥哥、妹妹和我。",
+        "vi": "Nhà tôi có năm người: bố, mẹ, anh trai, em gái và tôi.",
+        "py": "Wǒ jiā yǒu wǔ ge rén: bàba, māma, gēge, mèimei hé wǒ."
+      },
+      {
+        "zh": "爸爸是老师，他在中学工作。",
+        "vi": "Bố tôi là giáo viên, ông ấy làm việc ở trường trung học.",
+        "py": "Bàba shì lǎoshī, tā zài zhōngxué gōngzuò."
+      },
+      {
+        "zh": "妈妈是医生，她在医院上班。",
+        "vi": "Mẹ tôi là bác sĩ, bà ấy đi làm ở bệnh viện.",
+        "py": "Māma shì yīshēng, tā zài yīyuàn shàngbān."
+      },
+      {
+        "zh": "哥哥是大学生，他很爱读书。",
+        "vi": "Anh trai tôi là sinh viên đại học, anh ấy rất thích đọc sách.",
+        "py": "Gēge shì dàxuéshēng, tā hěn ài dúshū."
+      },
+      {
+        "zh": "妹妹今年六岁，她很好玩儿。",
+        "vi": "Em gái năm nay sáu tuổi, bé rất dễ thương.",
+        "py": "Mèimei jīnnián liù suì, tā hěn hǎowánr."
+      },
+      {
+        "zh": "妹妹喜欢看电视和玩儿。",
+        "vi": "Em gái thích xem tivi và chơi.",
+        "py": "Mèimei xǐhuan kàn diànshì hé wánr."
+      },
+      {
+        "zh": "我今年上大学，我学汉语。",
+        "vi": "Năm nay tôi vào đại học, tôi học tiếng Hán.",
+        "py": "Wǒ jīnnián shàng dàxué, wǒ xué Hànyǔ."
+      },
+      {
+        "zh": "我们学校很大，学生很多。",
+        "vi": "Trường của chúng tôi rất lớn, sinh viên rất nhiều.",
+        "py": "Wǒmen xuéxiào hěn dà, xuésheng hěn duō."
+      },
+      {
+        "zh": "早上我七点起床。",
+        "vi": "Sáng tôi bảy giờ dậy.",
+        "py": "Zǎoshang wǒ qī diǎn qǐchuáng."
+      },
+      {
+        "zh": "我和同学一起吃早饭。",
+        "vi": "Tôi và bạn cùng lớp ăn sáng cùng nhau.",
+        "py": "Wǒ hé tóngxué yìqǐ chī zǎofàn."
+      },
+      {
+        "zh": "上午我们上汉语课，老师很好。",
+        "vi": "Buổi sáng chúng tôi học tiếng Hán, cô giáo rất tốt.",
+        "py": "Shàngwǔ wǒmen shàng Hànyǔ kè, lǎoshī hěn hǎo."
+      },
+      {
+        "zh": "中午我在学校吃饭。",
+        "vi": "Buổi trưa tôi ăn cơm ở trường.",
+        "py": "Zhōngwǔ wǒ zài xuéxiào chīfàn."
+      },
+      {
+        "zh": "下午我常去图书馆看书。",
+        "vi": "Buổi chiều tôi thường đi thư viện đọc sách.",
+        "py": "Xiàwǔ wǒ cháng qù túshūguǎn kànshū."
+      },
+      {
+        "zh": "晚上我在家看电视，也和妹妹玩儿。",
+        "vi": "Buổi tối tôi ở nhà xem tivi, cũng chơi với em gái.",
+        "py": "Wǎnshang wǒ zài jiā kàn diànshì, yě hé mèimei wánr."
+      },
+      {
+        "zh": "星期天，我和家人一起去看电影。",
+        "vi": "Chủ nhật, tôi đi xem phim cùng gia đình.",
+        "py": "Xīngqītiān, wǒ hé jiārén yìqǐ qù kàn diànyǐng."
+      },
+      {
+        "zh": "我们都很高兴。",
+        "vi": "Chúng tôi đều rất vui.",
+        "py": "Wǒmen dōu hěn gāoxìng."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "老师",
+        "py": "lǎoshī",
+        "vi": "giáo viên"
+      },
+      {
+        "word": "医院",
+        "py": "yīyuàn",
+        "vi": "bệnh viện"
+      },
+      {
+        "word": "大学",
+        "py": "dàxué",
+        "vi": "trường đại học"
+      },
+      {
+        "word": "图书馆",
+        "py": "túshūguǎn",
+        "vi": "thư viện"
+      },
+      {
+        "word": "起床",
+        "py": "qǐchuáng",
+        "vi": "thức dậy"
+      },
+      {
+        "word": "汉语",
+        "py": "Hànyǔ",
+        "vi": "tiếng Hán"
+      },
+      {
+        "word": "家人",
+        "py": "jiārén",
+        "vi": "người thân trong gia đình"
+      }
+    ],
+    "questions": [
+      {
+        "q": "王明的爸爸在哪里工作？",
+        "options": [
+          "在医院",
+          "在中学",
+          "在大学"
+        ],
+        "answer": 1,
+        "qVi": "Bố của Vương Minh làm việc ở đâu?"
+      },
+      {
+        "q": "王明的妹妹今年多大了？",
+        "options": [
+          "五岁",
+          "六岁",
+          "七岁"
+        ],
+        "answer": 1,
+        "qVi": "Em gái Vương Minh năm nay bao nhiêu tuổi?"
+      },
+      {
+        "q": "王明在大学学什么？",
+        "options": [
+          "英语",
+          "汉语",
+          "电脑"
+        ],
+        "answer": 1,
+        "qVi": "Vương Minh học gì ở đại học?"
+      },
+      {
+        "q": "下午王明常去哪里看书？",
+        "options": [
+          "图书馆",
+          "家里",
+          "电影院"
+        ],
+        "answer": 0,
+        "qVi": "Buổi chiều Vương Minh thường đi đâu đọc sách?"
+      },
+      {
+        "q": "王明家有几口人？",
+        "options": [
+          "四个人",
+          "六个人",
+          "五个人"
+        ],
+        "answer": 2,
+        "qVi": "Nhà Vương Minh có mấy người?"
+      }
+    ]
+  },
+  {
+    "id": "hsk1-reading-2",
+    "book": "hsk1",
+    "lesson": "lesson-2",
+    "title": "小明的一天",
+    "titleVi": "Một ngày của Tiểu Minh",
+    "sentences": [
+      {
+        "zh": "小明是一个中学生，今年十五岁。",
+        "vi": "Tiểu Minh là học sinh trung học, năm nay mười lăm tuổi.",
+        "py": "Xiǎomíng shì yí ge zhōngxuéshēng, jīnnián shíwǔ suì."
+      },
+      {
+        "zh": "早上六点半，他起床了。",
+        "vi": "Sáu giờ rưỡi sáng, cậu ấy dậy.",
+        "py": "Zǎoshang liù diǎn bàn, tā qǐchuáng le."
+      },
+      {
+        "zh": "他先喝牛奶，再吃鸡蛋和面包。",
+        "vi": "Cậu ấy trước uống sữa, sau ăn trứng và bánh mì.",
+        "py": "Tā xiān hē niúnǎi, zài chī jīdàn hé miànbāo."
+      },
+      {
+        "zh": "七点半，他坐汽车去学校。",
+        "vi": "Bảy giờ rưỡi, cậu ấy đi học bằng ô tô.",
+        "py": "Qī diǎn bàn, tā zuò qìchē qù xuéxiào."
+      },
+      {
+        "zh": "他家在学校旁边，不很远。",
+        "vi": "Nhà cậu ấy ở cạnh trường, không xa lắm.",
+        "py": "Tā jiā zài xuéxiào pángbiān, bù hěn yuǎn."
+      },
+      {
+        "zh": "八点上课，他很认真。",
+        "vi": "Tám giờ vào học, cậu ấy rất nghiêm túc.",
+        "py": "Bā diǎn shàngkè, tā hěn rènzhēn."
+      },
+      {
+        "zh": "上午他上汉语课和电脑课。",
+        "vi": "Buổi sáng cậu ấy học tiếng Hán và học tin học.",
+        "py": "Shàngwǔ tā shàng Hànyǔ kè hé diànnǎo kè."
+      },
+      {
+        "zh": "他汉语很好，会说很多话。",
+        "vi": "Tiếng Hán của cậu ấy rất giỏi, nói được rất nhiều câu.",
+        "py": "Tā Hànyǔ hěn hǎo, huì shuō hěn duō huà."
+      },
+      {
+        "zh": "中午十二点，他和同学在学校吃饭。",
+        "vi": "Mười hai giờ trưa, cậu ấy và bạn cùng lớp ăn cơm ở trường.",
+        "py": "Zhōngwǔ shí'èr diǎn, tā hé tóngxué zài xuéxiào chīfàn."
+      },
+      {
+        "zh": "下午两点半，他和朋友在学校打球。",
+        "vi": "Hai giờ rưỡi chiều, cậu ấy và bạn bè chơi bóng ở trường.",
+        "py": "Xiàwǔ liǎng diǎn bàn, tā hé péngyou zài xuéxiào dǎ qiú."
+      },
+      {
+        "zh": "下午四点半，他回家写汉字。",
+        "vi": "Bốn giờ rưỡi chiều, cậu ấy về nhà viết chữ Hán.",
+        "py": "Xiàwǔ sì diǎn bàn, tā huí jiā xiě Hànzì."
+      },
+      {
+        "zh": "晚上六点，他和爸爸、妈妈一起吃晚饭。",
+        "vi": "Sáu giờ tối, cậu ấy ăn cơm tối cùng bố mẹ.",
+        "py": "Wǎnshang liù diǎn, tā hé bàba, māma yìqǐ chī wǎnfàn."
+      },
+      {
+        "zh": "晚饭后，他看电视，也看书。",
+        "vi": "Sau bữa tối, cậu ấy xem tivi, cũng đọc sách.",
+        "py": "Wǎnfàn hòu, tā kàn diànshì, yě kànshū."
+      },
+      {
+        "zh": "九点半，他准备睡觉。",
+        "vi": "Chín giờ rưỡi, cậu ấy chuẩn bị đi ngủ.",
+        "py": "Jiǔ diǎn bàn, tā zhǔnbèi shuìjiào."
+      },
+      {
+        "zh": "十点，他睡觉了。",
+        "vi": "Mười giờ, cậu ấy đi ngủ rồi.",
+        "py": "Shí diǎn, tā shuìjiào le."
+      },
+      {
+        "zh": "他觉得这一天很好，也很高兴。",
+        "vi": "Cậu ấy thấy ngày này rất đẹp, cũng rất vui.",
+        "py": "Tā juéde zhè yì tiān hěn hǎo, yě hěn gāoxìng."
+      },
+      {
+        "zh": "明天他还要早起，去学校学汉语。",
+        "vi": "Mai cậu ấy còn phải dậy sớm, đi học tiếng Hán.",
+        "py": "Míngtiān tā hái yào zǎo qǐ, qù xuéxiào xué Hànyǔ."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "中学生",
+        "py": "zhōngxuéshēng",
+        "vi": "học sinh trung học"
+      },
+      {
+        "word": "起床",
+        "py": "qǐchuáng",
+        "vi": "thức dậy"
+      },
+      {
+        "word": "牛奶",
+        "py": "niúnǎi",
+        "vi": "sữa bò"
+      },
+      {
+        "word": "汽车",
+        "py": "qìchē",
+        "vi": "ô tô"
+      },
+      {
+        "word": "认真",
+        "py": "rènzhēn",
+        "vi": "nghiêm túc, chăm chú"
+      },
+      {
+        "word": "准备",
+        "py": "zhǔnbèi",
+        "vi": "chuẩn bị"
+      },
+      {
+        "word": "睡觉",
+        "py": "shuìjiào",
+        "vi": "đi ngủ"
+      },
+      {
+        "word": "电脑",
+        "py": "diànnǎo",
+        "vi": "máy tính"
+      }
+    ],
+    "questions": [
+      {
+        "q": "小明早上几点起床？",
+        "options": [
+          "七点半",
+          "六点半",
+          "六点"
+        ],
+        "answer": 1,
+        "qVi": "Tiểu Minh mấy giờ dậy vào buổi sáng?"
+      },
+      {
+        "q": "他早上先喝什么？",
+        "options": [
+          "牛奶",
+          "茶",
+          "水"
+        ],
+        "answer": 0,
+        "qVi": "Sáng cậu ấy uống gì trước?"
+      },
+      {
+        "q": "他怎么去学校？",
+        "options": [
+          "走路",
+          "坐火车",
+          "坐汽车"
+        ],
+        "answer": 2,
+        "qVi": "Cậu ấy đi học bằng cách nào?"
+      },
+      {
+        "q": "下午他在学校和朋友做什么？",
+        "options": [
+          "打球",
+          "看电影",
+          "买东西"
+        ],
+        "answer": 0,
+        "qVi": "Buổi chiều cậu ấy làm gì với bạn bè ở trường?"
+      },
+      {
+        "q": "他晚上几点睡觉？",
+        "options": [
+          "九点半",
+          "十点",
+          "十点半"
+        ],
+        "answer": 1,
+        "qVi": "Tối cậu ấy mấy giờ đi ngủ?"
+      }
+    ]
+  },
+  {
+    "id": "hsk1-reading-3",
+    "book": "hsk1",
+    "lesson": "lesson-3",
+    "title": "买东西",
+    "titleVi": "Đi mua sắm",
+    "sentences": [
+      {
+        "zh": "星期六，李娜和妈妈去商场买东西。",
+        "vi": "Thứ bảy, Lý Na và mẹ đi trung tâm thương mại mua đồ.",
+        "py": "Xīngqīliù, Lǐ Nà hé māma qù shāngchǎng mǎi dōngxi."
+      },
+      {
+        "zh": "商场里人很多。",
+        "vi": "Trong trung tâm thương mại có rất nhiều người.",
+        "py": "Shāngchǎng li rén hěn duō."
+      },
+      {
+        "zh": "李娜想买衣服。",
+        "vi": "Lý Na muốn mua quần áo.",
+        "py": "Lǐ Nà xiǎng mǎi yīfu."
+      },
+      {
+        "zh": "她看到很多衣服，有大的，也有小的。",
+        "vi": "Cô ấy thấy rất nhiều quần áo, có cái to, cũng có cái nhỏ.",
+        "py": "Tā kàndào hěn duō yīfu, yǒu dà de, yě yǒu xiǎo de."
+      },
+      {
+        "zh": "她问：\"这个多少钱？\"",
+        "vi": "Cô ấy hỏi: \"Cái này bao nhiêu tiền?\"",
+        "py": "Tā wèn: \"Zhège duōshao qián?\""
+      },
+      {
+        "zh": "那个人说：\"一百块。\"",
+        "vi": "Người đó nói: \"Một trăm tệ.\"",
+        "py": "Nàge rén shuō: \"Yìbǎi kuài.\""
+      },
+      {
+        "zh": "李娜觉得太贵了。",
+        "vi": "Lý Na thấy quá đắt.",
+        "py": "Lǐ Nà juéde tài guì le."
+      },
+      {
+        "zh": "妈妈说：\"我们去那边看看吧。\"",
+        "vi": "Mẹ nói: \"Chúng ta qua bên kia xem thử đi.\"",
+        "py": "Māma shuō: \"Wǒmen qù nàbiān kànkan ba.\""
+      },
+      {
+        "zh": "那边还有一个商店。",
+        "vi": "Bên kia còn có một cửa hàng.",
+        "py": "Nàbiān hái yǒu yí ge shāngdiàn."
+      },
+      {
+        "zh": "那里的衣服不贵，也很好看。",
+        "vi": "Quần áo ở đó không đắt, cũng rất đẹp.",
+        "py": "Nàlǐ de yīfu bú guì, yě hěn hǎokàn."
+      },
+      {
+        "zh": "那边的衣服八十块，不很贵。",
+        "vi": "Quần áo bên đó tám mươi tệ, không đắt lắm.",
+        "py": "Nàbiān de yīfu bāshí kuài, bù hěn guì."
+      },
+      {
+        "zh": "李娜很高兴，马上穿上了。",
+        "vi": "Lý Na rất vui, mặc vào ngay.",
+        "py": "Lǐ Nà hěn gāoxìng, mǎshàng chuān shàng le."
+      },
+      {
+        "zh": "妈妈也买了水果和牛奶。",
+        "vi": "Mẹ cũng mua trái cây và sữa.",
+        "py": "Māma yě mǎi le shuǐguǒ hé niúnǎi."
+      },
+      {
+        "zh": "中午，她们在商场旁边吃饭。",
+        "vi": "Buổi trưa, các cô ăn cơm cạnh trung tâm thương mại.",
+        "py": "Zhōngwǔ, tāmen zài shāngchǎng pángbiān chīfàn."
+      },
+      {
+        "zh": "她们吃了米饭和鸡蛋。",
+        "vi": "Các cô ăn cơm và trứng.",
+        "py": "Tāmen chī le mǐfàn hé jīdàn."
+      },
+      {
+        "zh": "吃完饭，妈妈给李娜买了一个书包。",
+        "vi": "Ăn cơm xong, mẹ mua cho Lý Na một chiếc cặp sách.",
+        "py": "Chī wán fàn, māma gěi Lǐ Nà mǎi le yí ge shūbāo."
+      },
+      {
+        "zh": "李娜说：\"谢谢妈妈！我很喜欢。\"",
+        "vi": "Lý Na nói: \"Cảm ơn mẹ! Con rất thích.\"",
+        "py": "Lǐ Nà shuō: \"Xièxie māma! Wǒ hěn xǐhuan.\""
+      },
+      {
+        "zh": "下午，她们很高兴，一起回家了。",
+        "vi": "Buổi chiều, các cô rất vui, cùng nhau về nhà.",
+        "py": "Xiàwǔ, tāmen hěn gāoxìng, yìqǐ huí jiā le."
+      }
+    ],
+    "vocab": [
+      {
+        "word": "商场",
+        "py": "shāngchǎng",
+        "vi": "trung tâm thương mại"
+      },
+      {
+        "word": "东西",
+        "py": "dōngxi",
+        "vi": "đồ vật, đồ đạc"
+      },
+      {
+        "word": "贵",
+        "py": "guì",
+        "vi": "đắt"
+      },
+      {
+        "word": "块",
+        "py": "kuài",
+        "vi": "tệ (đơn vị tiền Trung Quốc)"
+      },
+      {
+        "word": "水果",
+        "py": "shuǐguǒ",
+        "vi": "trái cây"
+      },
+      {
+        "word": "书包",
+        "py": "shūbāo",
+        "vi": "cặp sách"
+      },
+      {
+        "word": "穿上",
+        "py": "chuān shàng",
+        "vi": "mặc vào"
+      }
+    ],
+    "questions": [
+      {
+        "q": "李娜和谁去买东西？",
+        "options": [
+          "和爸爸",
+          "和同学",
+          "和妈妈"
+        ],
+        "answer": 2,
+        "qVi": "Lý Na đi mua sắm với ai?"
+      },
+      {
+        "q": "第一件衣服多少钱？",
+        "options": [
+          "一百块",
+          "八十块",
+          "五十块"
+        ],
+        "answer": 0,
+        "qVi": "Chiếc quần áo đầu tiên giá bao nhiêu?"
+      },
+      {
+        "q": "李娜为什么不去第一个地方买？",
+        "options": [
+          "衣服太贵了",
+          "衣服不好看",
+          "没有衣服了"
+        ],
+        "answer": 0,
+        "qVi": "Vì sao Lý Na không mua ở nơi đầu tiên?"
+      },
+      {
+        "q": "妈妈还买了什么？",
+        "options": [
+          "鸡蛋和米饭",
+          "水果和牛奶",
+          "书包和水"
+        ],
+        "answer": 1,
+        "qVi": "Mẹ còn mua thêm gì?"
+      },
+      {
+        "q": "吃完饭，妈妈给李娜买了什么？",
+        "options": [
+          "一个书包",
+          "一件衣服",
+          "一些水果"
+        ],
+        "answer": 0,
+        "qVi": "Ăn cơm xong, mẹ mua gì cho Lý Na?"
+      }
+    ]
+  }
+]

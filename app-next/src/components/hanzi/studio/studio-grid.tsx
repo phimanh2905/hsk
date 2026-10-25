@@ -11,6 +11,7 @@ import type { StudioSelection } from "./studio-model";
 import { loadWriterCharData, type WriterCharData } from "./writer-data";
 import { useStudioStrokes, type StrokeSource } from "./use-studio-strokes";
 import { useWriter } from "./use-writer";
+import { progressStore } from "@/lib/store/progress-store";
 
 export type StudioGridApi = {
   play: () => void;
@@ -80,7 +81,7 @@ export function StudioGrid({ sel, mode, apiRef }: {
       strokes.stepTo(-1);
       strokes.playAll();
     } else {
-      writer.startQuiz();
+      writer.startQuiz(() => progressStore.recordHanziQuiz(sel.g));
       writer.showOutline(hintRef.current, { instant: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +96,7 @@ export function StudioGrid({ sel, mode, apiRef }: {
     if (!charData) return;
     if (mode === "draw") {
       strokes.stepTo(-1); // reset nét mẫu (sau playback mọi path đang .done — quiz cần nền todo)
-      writer.startQuiz();
+      writer.startQuiz(() => progressStore.recordHanziQuiz(sel.g));
       writer.showOutline(hintRef.current, { instant: true });
     } else {
       writer.cancelQuiz();

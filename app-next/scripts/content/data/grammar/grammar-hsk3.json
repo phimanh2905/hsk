@@ -1,0 +1,2587 @@
+[
+  {
+    "title": "CÂU 把 – LÀM THAY ĐỔI VỊ TRÍ HOẶC TRẠNG THÁI CỦA TÂN NGỮ",
+    "hz": "把",
+    "topic": "ba",
+    "def": "Câu 把 – làm thay đổi vị trí hoặc trạng thái của tân ngữ — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "把",
+        "key"
+      ],
+      [
+        "tân ngữ xác định"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "bổ ngữ / 了 / 在 / 到 / 给…"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt dịch theo trật tự tiếng Việt nên viết ",
+      "‘我写把作业’ hoặc ‘我把作业做’ thiếu thành phần sau động từ",
+      ". Đúng phải là ‘我把作业做完了’: tân ngữ phải xác định, sau động từ bắt buộc có bổ ngữ hoặc 了."
+    ],
+    "ex": [
+      {
+        "hz": "我把作业做完了。",
+        "py": "wǒ bǎ zuòyè zuò wán le.",
+        "vi": "Tôi đã làm xong bài tập."
+      },
+      {
+        "hz": "请把门关上。",
+        "py": "qǐng bǎ mén guān shàng.",
+        "vi": "Làm ơn đóng cửa lại."
+      },
+      {
+        "hz": "我把书放在桌子上了。",
+        "py": "wǒ bǎ shū fàng zài zhuōzi shàng le.",
+        "vi": "Tôi đã đặt sách lên bàn."
+      }
+    ],
+    "id": "hsk3-ba",
+    "level": "HSK 3"
+  },
+  {
+    "title": "CÂU 被 – CÂU BỊ ĐỘNG (BỊ AI/CÁI GÌ LÀM CHO)",
+    "hz": "被",
+    "topic": "ba",
+    "def": "Câu 被 – câu bị động (bị ai/cái gì làm cho) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ (bị tác động)"
+      ],
+      [
+        "被",
+        "key"
+      ],
+      [
+        "người/vật tác động (có thể bỏ)"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "bổ ngữ / 了"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên rằng sau động từ của câu 被 ",
+      "thường phải có bổ ngữ hoặc 了 để chỉ kết quả đã xảy ra",
+      ", ví dụ ‘杯子被我打破了’, không nói ‘杯子被我打’."
+    ],
+    "ex": [
+      {
+        "hz": "我的自行车被朋友借走了。",
+        "py": "wǒ de zìxíngchē bèi péngyou jiè zǒu le.",
+        "vi": "Chiếc xe đạp của tôi bị bạn mượn mất."
+      },
+      {
+        "hz": "蛋糕都被我们吃了。",
+        "py": "dàngāo dōu bèi wǒmen chī le.",
+        "vi": "Bánh ngọt đều bị chúng tôi ăn hết rồi."
+      }
+    ],
+    "id": "hsk3-bei",
+    "level": "HSK 3"
+  },
+  {
+    "title": "CÂU 是…的 – NHẤN MẠNH THÔNG TIN CỦA HÀNH ĐỘNG ĐÃ XẢY RA",
+    "hz": "是",
+    "topic": "ba",
+    "def": "Câu 是…的 – nhấn mạnh thông tin của hành động đã xảy ra — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "是",
+        "key"
+      ],
+      [
+        "thời gian / nơi chốn / cách thức"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "的"
+      ]
+    ],
+    "pitfall": [
+      "Nhiều người chỉ dùng 了 hoặc quên từ cuối: ",
+      "khi giải thích ‘khi nào, ở đâu, bằng gì’ của việc đã xong phải dùng 是…的",
+      ", ví dụ ‘我是坐飞机来的’, ‘他是什么时候走的?’."
+    ],
+    "ex": [
+      {
+        "hz": "我是坐飞机来中国的。",
+        "py": "wǒ shì zuò fēijī lái Zhōngguó de.",
+        "vi": "Tôi đến Trung Quốc bằng máy bay."
+      },
+      {
+        "hz": "他是什么时候走的？",
+        "py": "tā shì shénme shíhou zǒu de?",
+        "vi": "Cậu ấy đi lúc nào thế?"
+      }
+    ],
+    "id": "hsk3-shi",
+    "level": "HSK 3"
+  },
+  {
+    "title": "CÂU 兼语 – 请/让/叫 AI LÀM GÌ",
+    "hz": "请",
+    "topic": "ba",
+    "def": "Câu 兼语 – 请/让/叫 ai làm gì — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "请",
+        "key"
+      ],
+      [
+        "người (vừa là tân ngữ, vừa là chủ ngữ hai)"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "tân ngữ / thành phần khác (让/叫 cùng loại)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thêm 在 trước động từ thứ hai hoặc đảo trật tự: ",
+      "người đứng sau 请/让/叫 đồng thời là chủ ngữ của động từ phía sau",
+      ", ví dụ ‘妈妈让弟弟快点儿睡觉’, không nói ‘妈妈让睡觉弟弟’."
+    ],
+    "ex": [
+      {
+        "hz": "老师请我们回答问题。",
+        "py": "lǎoshī qǐng wǒmen huídá wèntí.",
+        "vi": "Cô giáo mời chúng tôi trả lời câu hỏi."
+      },
+      {
+        "hz": "妈妈让弟弟快点儿睡觉。",
+        "py": "māma ràng dìdi kuài diǎnr shuìjiào.",
+        "vi": "Mẹ bảo em trai nhanh đi ngủ."
+      }
+    ],
+    "id": "hsk3-qing",
+    "level": "HSK 3"
+  },
+  {
+    "title": "连…都/也 – THẬM CHÍ CẢ… CŨNG",
+    "hz": "连",
+    "topic": "ba",
+    "def": "连…都/也 – thậm chí cả… cũng — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "连 + tân ngữ / chủ ngữ nhấn mạnh"
+      ],
+      [
+        "连",
+        "key"
+      ],
+      [
+        "…"
+      ],
+      [
+        "都 / 也"
+      ],
+      [
+        "phần còn lại"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt thường bỏ 连 và chỉ dùng 都/也: ",
+      "‘连他都不知道这个问题’ – thậm chí anh ấy cũng không biết",
+      "; 连…都/也 đi cặp, 都/也 phải đứng trước động từ phủ định."
+    ],
+    "ex": [
+      {
+        "hz": "他连自己的电话号码都忘了。",
+        "py": "tā lián zìjǐ de diànhuà hàomǎ dōu wàng le.",
+        "vi": "Nó thậm chí quên cả số điện thoại của mình."
+      },
+      {
+        "hz": "她忙得连饭都没吃。",
+        "py": "tā máng de lián fàn dōu méi chī.",
+        "vi": "Cô ấy bận đến mức cơm cũng không ăn."
+      }
+    ],
+    "id": "hsk3-lian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "除了…以外 – NGOÀI… RA (NGOẠI TRỪ HAY THÊM VÀO)",
+    "hz": "除",
+    "topic": "ba",
+    "def": "除了…以外 – ngoài… ra (ngoại trừ hay thêm vào) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "除了…以外"
+      ],
+      [
+        "除",
+        "key"
+      ],
+      [
+        "…以外"
+      ],
+      [
+        "还 / 都 (hoặc không có)"
+      ],
+      [
+        "phần còn lại"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm hai nghĩa: ",
+      "除了…以外 + 还/都 = ngoài ra còn, không có 还/都 = ngoại trừ",
+      ": ‘除了他，我们都去’ là trừ anh ấy; ‘除了他还去’ là ngoài anh ấy ra cũng đi."
+    ],
+    "ex": [
+      {
+        "hz": "除了英语以外，他还学习汉语。",
+        "py": "chúle Yīngyǔ yǐwài, tā hái xuéxí Hànyǔ.",
+        "vi": "Ngoài tiếng Anh ra, anh ấy còn học tiếng Trung."
+      },
+      {
+        "hz": "除了星期天，我每天上班。",
+        "py": "chúle Xīngqītiān, wǒ měitiān shàngbān.",
+        "vi": "Ngoại trừ chủ nhật, ngày nào tôi cũng đi làm."
+      }
+    ],
+    "id": "hsk3-chu",
+    "level": "HSK 3"
+  },
+  {
+    "title": "一边…一边 – VỪA… VỪA (HAI HÀNH ĐỘNG CÙNG LÚC)",
+    "hz": "边",
+    "topic": "ba",
+    "def": "一边…一边 – vừa… vừa (hai hành động cùng lúc) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "边",
+        "key"
+      ],
+      [
+        "一边 + động từ 1"
+      ],
+      [
+        "一边"
+      ],
+      [
+        "động từ 2"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt thường dùng cho hai hành động nối tiếp nhau: ",
+      "一边…一边 chỉ dùng cho hai hành động diễn ra đồng thời",
+      ", ví dụ ‘他一边吃饭一边看电视’; việc nối tiếp dùng 先…然后."
+    ],
+    "ex": [
+      {
+        "hz": "我喜欢一边喝咖啡一边看书。",
+        "py": "wǒ xǐhuan yìbiān hē kāfēi yìbiān kàn shū.",
+        "vi": "Tôi thích vừa uống cà phê vừa đọc sách."
+      },
+      {
+        "hz": "她一边听音乐一边做作业。",
+        "py": "tā yìbiān tīng yīnyuè yìbiān zuò zuòyè.",
+        "vi": "Cô ấy vừa nghe nhạc vừa làm bài tập."
+      }
+    ],
+    "id": "hsk3-bian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "越…越 – CÀNG… CÀNG (MỨC ĐỘ TĂNG DẦN)",
+    "hz": "越",
+    "topic": "ba",
+    "def": "越…越 – càng… càng (mức độ tăng dần) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "越",
+        "key"
+      ],
+      [
+        "động từ / tình huống 1"
+      ],
+      [
+        "越"
+      ],
+      [
+        "tính từ / trạng thái 2"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 越 thứ hai hoặc dùng sai vị trí 了: ",
+      "‘他越跑越快’ – càng chạy càng nhanh, ‘越来越忙了’ chỉ khi nói chung",
+      "; 越…越 nhấn mức độ thay đổi theo tiến trình."
+    ],
+    "ex": [
+      {
+        "hz": "天气越来越冷了。",
+        "py": "tiānqì yuèláiyuè lěng le.",
+        "vi": "Thời tiết ngày càng lạnh."
+      },
+      {
+        "hz": "他越说越高兴。",
+        "py": "tā yuè shuō yuè gāoxìng.",
+        "vi": "Nó càng nói càng vui."
+      }
+    ],
+    "id": "hsk3-yue",
+    "level": "HSK 3"
+  },
+  {
+    "title": "又…又 – VỪA… VỪA (HAI TÍNH CHẤT CÙNG CÓ)",
+    "hz": "又",
+    "topic": "ba",
+    "def": "又…又 – vừa… vừa (hai tính chất cùng có) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ / danh ngữ"
+      ],
+      [
+        "又",
+        "key"
+      ],
+      [
+        "tính từ / động từ 1"
+      ],
+      [
+        "又"
+      ],
+      [
+        "tính từ / động từ 2"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 又…又 (miêu tả hai tính chất) với 一边…一边 (hai hành động): ",
+      "‘这个苹果又大又甜’ miêu tả, không phải hành động",
+      "; 又…又 không nối hai hành động nối tiếp."
+    ],
+    "ex": [
+      {
+        "hz": "这个房间又干净又漂亮。",
+        "py": "zhège fángjiān yòu gānjìng yòu piàoliang.",
+        "vi": "Căn phòng này vừa sạch vừa đẹp."
+      },
+      {
+        "hz": "他又说又笑，很高兴。",
+        "py": "tā yòu shuō yòu xiào, hěn gāoxìng.",
+        "vi": "Nó vừa nói vừa cười, vui lắm."
+      }
+    ],
+    "id": "hsk3-you",
+    "level": "HSK 3"
+  },
+  {
+    "title": "快…了 – SẮP… RỒI (SỰ KIỆN SẮP XẢY RA)",
+    "hz": "快",
+    "topic": "ba",
+    "def": "快…了 – sắp… rồi (sự kiện sắp xảy ra) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "快",
+        "key"
+      ],
+      [
+        "động từ / tính từ"
+      ],
+      [
+        "了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt 快 sau động từ hoặc quên 了: ",
+      "快 phải đứng trước động từ/tính từ và 了 ở cuối là bắt buộc",
+      ", ví dụ ‘快下雨了’, ‘火车快到了’."
+    ],
+    "ex": [
+      {
+        "hz": "快下课了，我们走吧。",
+        "py": "kuài xiàkè le, wǒmen zǒu ba.",
+        "vi": "Sắp tan học rồi, mình đi thôi."
+      },
+      {
+        "hz": "火车快到了。",
+        "py": "huǒchē kuài dào le.",
+        "vi": "Tàu sắp đến rồi."
+      }
+    ],
+    "id": "hsk3-kuai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "要…了 – SẮP… RỒI (KHÁC VỚI 要 = MUỐN)",
+    "hz": "要",
+    "topic": "ba",
+    "def": "要…了 – sắp… rồi (khác với 要 = muốn) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "要",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "了"
+      ],
+      [
+        "(快要…了 / 就要…了 nhấn mạnh hơn)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm ‘要…了’ nghĩa ‘sắp’ với nghĩa ‘muốn’: ",
+      "‘他要去北京了’ = sắp đi Bắc Kinh rồi",
+      ", còn không có 了 thì ‘他要去北京’ = anh ấy muốn đi Bắc Kinh."
+    ],
+    "ex": [
+      {
+        "hz": "天要黑了，快回家吧。",
+        "py": "tiān yào hēi le, kuài huí jiā ba.",
+        "vi": "Trời sắp tối rồi, nhanh về nhà đi."
+      },
+      {
+        "hz": "我要毕业了。",
+        "py": "wǒ yào bìyè le.",
+        "vi": "Tôi sắp tốt nghiệp rồi."
+      }
+    ],
+    "id": "hsk3-yao",
+    "level": "HSK 3"
+  },
+  {
+    "title": "一…就 – VỪA… LÀ NGAY",
+    "hz": "一",
+    "topic": "ba",
+    "def": "一…就 – vừa… là ngay — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ 1"
+      ],
+      [
+        "一",
+        "key"
+      ],
+      [
+        "động từ 1"
+      ],
+      [
+        "就"
+      ],
+      [
+        "động từ 2 (xảy ra ngay sau)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 一 hoặc thêm 了 sau động từ đầu: ",
+      "‘他一回家就睡觉’ – vừa về nhà là đi ngủ ngay",
+      "; 一…就 nhấn hành động hai xảy ra ngay lập tức."
+    ],
+    "ex": [
+      {
+        "hz": "我一到北京就给你打电话。",
+        "py": "wǒ yí dào Běijīng jiù gěi nǐ dǎ diànhuà.",
+        "vi": "Tôi vừa đến Bắc Kinh là gọi điện cho bạn ngay."
+      },
+      {
+        "hz": "他一听音乐就想跳舞。",
+        "py": "tā yì tīng yīnyuè jiù xiǎng tiàowǔ.",
+        "vi": "Nó vừa nghe nhạc là muốn nhảy ngay."
+      }
+    ],
+    "id": "hsk3-yi",
+    "level": "HSK 3"
+  },
+  {
+    "title": "因为…所以 – VÌ… NÊN",
+    "hz": "因",
+    "topic": "ba",
+    "def": "因为…所以 – vì… nên — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "因",
+        "key"
+      ],
+      [
+        "为 + nguyên nhân"
+      ],
+      [
+        "所以"
+      ],
+      [
+        "kết quả"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay lặp chủ ngữ hai lần hoặc trộn với 但是: ",
+      "‘因为下雨，所以我不去’ – vì mưa nên tôi không đi",
+      "; khi cùng một chủ ngữ, đặt chủ ngữ trước 因为, mệnh đề 因为 không lặp chủ ngữ."
+    ],
+    "ex": [
+      {
+        "hz": "因为天气不好，所以我们没去公园。",
+        "py": "yīnwèi tiānqì bù hǎo, suǒyǐ wǒmen méi qù gōngyuán.",
+        "vi": "Vì thời tiết không tốt nên chúng tôi không đi công viên."
+      },
+      {
+        "hz": "他因为生病没来上课。",
+        "py": "tā yīnwèi shēngbìng méi lái shàngkè.",
+        "vi": "Nó vì ốm nên không đến học."
+      }
+    ],
+    "id": "hsk3-yin",
+    "level": "HSK 3"
+  },
+  {
+    "title": "虽然…但是 – TUY… NHƯNG (HAI TỪ PHẢI ĐI CẶP)",
+    "hz": "虽",
+    "topic": "ba",
+    "def": "虽然…但是 – tuy… nhưng (hai từ phải đi cặp) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "虽",
+        "key"
+      ],
+      [
+        "然 + mệnh đề nhượng bộ"
+      ],
+      [
+        "但是 / 可是"
+      ],
+      [
+        "mệnh đề chính"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 但是 phía sau: ",
+      "虽然 và 但是 phải đi cùng nhau trong một câu",
+      ", ví dụ ‘虽然很难，但是我想学’; không nói ‘虽然很难，我想学’ mang màu văn nói không tự nhiên."
+    ],
+    "ex": [
+      {
+        "hz": "虽然房子小，但是很干净。",
+        "py": "suīrán fángzi xiǎo, dànshì hěn gānjìng.",
+        "vi": "Tuy nhà nhỏ nhưng rất sạch."
+      },
+      {
+        "hz": "虽然他很小，可是跑得很快。",
+        "py": "suīrán tā hěn xiǎo, kěshì pǎo de hěn kuài.",
+        "vi": "Tuy nó nhỏ tuổi nhưng chạy nhanh lắm."
+      }
+    ],
+    "id": "hsk3-sui",
+    "level": "HSK 3"
+  },
+  {
+    "title": "结果补语 到 – THẤY, NGHE THẤY, TÌM ĐƯỢC, MUA ĐƯỢC",
+    "hz": "到",
+    "topic": "bi",
+    "def": "结果补语 到 – thấy, nghe thấy, tìm được, mua được — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "到",
+        "key"
+      ],
+      [
+        "tân ngữ / 了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 到 sau động từ: ",
+      "到 chỉ kết quả đạt được: 看到看见, 听到 nghe thấy, 找到 tìm thấy, 买到 mua được",
+      "; ‘我看见他了’ khác ‘我看着他’ (tôi đang nhìn anh ấy)."
+    ],
+    "ex": [
+      {
+        "hz": "我找到工作了。",
+        "py": "wǒ zhǎodào gōngzuò le.",
+        "vi": "Tôi đã tìm được việc rồi."
+      },
+      {
+        "hz": "你听到那个消息了吗？",
+        "py": "nǐ tīngdào nàge xiāoxi le ma?",
+        "vi": "Bạn có nghe thấy tin đó không?"
+      }
+    ],
+    "id": "hsk3-dao",
+    "level": "HSK 3"
+  },
+  {
+    "title": "结果补语 完 – LÀM XONG, HOÀN THÀNH",
+    "hz": "完",
+    "topic": "bi",
+    "def": "结果补语 完 – làm xong, hoàn thành — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "完",
+        "key"
+      ],
+      [
+        "tân ngữ / 了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 了 thay cho 完: ",
+      "完 đứng sau động từ, trước tân ngữ: ‘我吃完饭了’",
+      "; không nói ‘我吃完饭了’ thành ‘我吃完了饭’ khi tân ngữ là danh từ thông thường."
+    ],
+    "ex": [
+      {
+        "hz": "我写完信就去睡觉。",
+        "py": "wǒ xiě wán xìn jiù qù shuìjiào.",
+        "vi": "Tôi viết xong thư là đi ngủ."
+      },
+      {
+        "hz": "你做完作业了吗？",
+        "py": "nǐ zuò wán zuòyè le ma?",
+        "vi": "Bạn làm xong bài tập chưa?"
+      }
+    ],
+    "id": "hsk3-wan",
+    "level": "HSK 3"
+  },
+  {
+    "title": "结果补语 好 – LÀM XONG VÀ HOÀN HẢO, SẴN SÀNG",
+    "hz": "好",
+    "topic": "bi",
+    "def": "结果补语 好 – làm xong và hoàn hảo, sẵn sàng — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "好",
+        "key"
+      ],
+      [
+        "tân ngữ / 了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 好 với 完: ",
+      "好 mang thêm nghĩa kết quả hoàn hảo, sẵn sàng dùng được",
+      ": ‘准备好了’ là chuẩn bị xong và sẵn sàng, ‘准备完了’ chỉ nói hoàn thành."
+    ],
+    "ex": [
+      {
+        "hz": "饭做好了，快来吃吧。",
+        "py": "fàn zuò hǎo le, kuài lái chī ba.",
+        "vi": "Cơm nấu xong rồi, mau đến ăn đi."
+      },
+      {
+        "hz": "我把房间收拾好了。",
+        "py": "wǒ bǎ fángjiān shōushi hǎo le.",
+        "vi": "Tôi đã dọn phòng gọn gàng rồi."
+      }
+    ],
+    "id": "hsk3-hao",
+    "level": "HSK 3"
+  },
+  {
+    "title": "结果补语 错/懂/见 – LÀM SAI, HIỂU, THẤY",
+    "hz": "错",
+    "topic": "bi",
+    "def": "结果补语 错/懂/见 – làm sai, hiểu, thấy — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "错",
+        "key"
+      ],
+      [
+        "tân ngữ / 了"
+      ],
+      [
+        "(懂, 见, 倒… cùng loại)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay sai vị trí bổ ngữ kết quả: ",
+      "错/懂/见 đứng ngay sau động từ, trước tân ngữ: ‘我写错了一个字’",
+      ", không nói ‘我错了写一个字’."
+    ],
+    "ex": [
+      {
+        "hz": "对不起，我说错了。",
+        "py": "duìbuqǐ, wǒ shuō cuò le.",
+        "vi": "Xin lỗi, tôi nói sai rồi."
+      },
+      {
+        "hz": "这个问题我听懂了。",
+        "py": "zhège wèntí wǒ tīng dǒng le.",
+        "vi": "Câu hỏi này tôi nghe hiểu rồi."
+      }
+    ],
+    "id": "hsk3-cuo",
+    "level": "HSK 3"
+  },
+  {
+    "title": "趋向补语 来/去 – HÀNH ĐỘNG HƯỚNG VỀ HOẶC RA KHỎI NGƯỜI NÓI",
+    "hz": "来",
+    "topic": "bi",
+    "def": "趋向补语 来/去 – hành động hướng về hoặc ra khỏi người nói — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "来",
+        "key"
+      ],
+      [
+        "tân ngữ nơi chốn / 了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt nơi chốn giữa động từ và 来/去: ",
+      "‘他走进教室来’ đúng, ‘他进来教室’ sai",
+      "; 来 = hướng về người nói, 去 = hướng đi xa người nói."
+    ],
+    "ex": [
+      {
+        "hz": "他拿来了两瓶水。",
+        "py": "tā ná lái le liǎng píng shuǐ.",
+        "vi": "Cậu ấy mang tới hai chai nước."
+      },
+      {
+        "hz": "你把我的书带去吧。",
+        "py": "nǐ bǎ wǒ de shū dài qù ba.",
+        "vi": "Bạn mang cuốn sách của tôi đi nhé."
+      }
+    ],
+    "id": "hsk3-lai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "趋向补语 上/下/进/出 – LÊN, XUỐNG, VÀO, RA",
+    "hz": "上",
+    "topic": "bi",
+    "def": "趋向补语 上/下/进/出 – lên, xuống, vào, ra — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "上",
+        "key"
+      ],
+      [
+        "nơi chốn + 来/去"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 到 thay cho 上/下/进/出: ",
+      "这些趋向补语 chỉ hướng lên/xuống/vào/ra: 跑上去, 拿下来, 开进来",
+      ", thường kèm 来/去 ở cuối."
+    ],
+    "ex": [
+      {
+        "hz": "他跑上去了。",
+        "py": "tā pǎo shàngqù le.",
+        "vi": "Nó chạy lên rồi."
+      },
+      {
+        "hz": "请把车开进来。",
+        "py": "qǐng bǎ chē kāi jìnlái.",
+        "vi": "Xin hãy lái xe vào trong."
+      }
+    ],
+    "id": "hsk3-shang",
+    "level": "HSK 3"
+  },
+  {
+    "title": "趋向补语复合 起来 – NHÌN VÀO THÌ… / NHỚ RA",
+    "hz": "起",
+    "topic": "bi",
+    "def": "趋向补语复合 起来 – nhìn vào thì… / nhớ ra — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "起",
+        "key"
+      ],
+      [
+        "来"
+      ],
+      [
+        "(nhận xét / 了)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm các nghĩa của 起来: ",
+      "‘看起来’ = nhìn vào thì, xem ra; ‘想起来’ = nhớ ra; ‘站起来’ = đứng dậy",
+      ", ba nghĩa này phải phân biệt theo động từ trước nó."
+    ],
+    "ex": [
+      {
+        "hz": "这个房子看起来很新。",
+        "py": "zhège fángzi kàn qǐlái hěn xīn.",
+        "vi": "Cái nhà này nhìn vào thì rất mới."
+      },
+      {
+        "hz": "我想起来了，他是小王。",
+        "py": "wǒ xiǎng qǐlái le, tā shì Xiǎo Wáng.",
+        "vi": "Tôi nhớ ra rồi, nó là Tiểu Vương."
+      }
+    ],
+    "id": "hsk3-qi",
+    "level": "HSK 3"
+  },
+  {
+    "title": "可能补语 得/不 – LÀM ĐƯỢC HAY KHÔNG LÀM ĐƯỢC (V + 得/不 + KẾT QUẢ)",
+    "hz": "得",
+    "topic": "bi",
+    "def": "可能补语 得/不 – làm được hay không làm được (v + 得/不 + kết quả) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "得",
+        "key"
+      ],
+      [
+        "kết quả / hướng (懂, 完, 上…)"
+      ],
+      [
+        "hoặc: 不 + kết quả"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 能 thay cho cấu trúc này: ",
+      "‘听不懂’ – nghe không hiểu, không nói ‘不能听懂’ khi nói năng lực hoàn thành",
+      "; khẳng định là 听得懂, phủ định là 听不懂, hỏi là ‘听得懂吗?’."
+    ],
+    "ex": [
+      {
+        "hz": "他说得太快，我听不懂。",
+        "py": "tā shuō de tài kuài, wǒ tīng bu dǒng.",
+        "vi": "Nó nói nhanh quá, tôi nghe không hiểu."
+      },
+      {
+        "hz": "这么多饭，我吃不完。",
+        "py": "zhème duō fàn, wǒ chī bu wán.",
+        "vi": "Cơm nhiều thế này, tôi ăn không hết."
+      }
+    ],
+    "id": "hsk3-de",
+    "level": "HSK 3"
+  },
+  {
+    "title": "可能补语 不了 – KHÔNG THỂ TIẾP TỤC / KHÔNG XONG ĐƯỢC",
+    "hz": "不了",
+    "topic": "bi",
+    "def": "可能补语 不了 – không thể tiếp tục / không xong được — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "不了",
+        "key"
+      ],
+      [
+        "(tân ngữ)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nói ‘不能做完了’ thay cho cấu trúc này: ",
+      "V + 不了 = làm không xong / không thể làm: ‘去不了’ đi không được",
+      ", khác 可能补语 ‘不完’ chỉ không hoàn thành được."
+    ],
+    "ex": [
+      {
+        "hz": "今天我忙，去不了。",
+        "py": "jīntiān wǒ máng, qù bu liǎo.",
+        "vi": "Hôm nay tôi bận, đi không được."
+      },
+      {
+        "hz": "这些菜我们吃不了。",
+        "py": "zhèxiē cài wǒmen chī bu liǎo.",
+        "vi": "Nhiều món thế này chúng tôi ăn không hết."
+      }
+    ],
+    "id": "hsk3-bu-le",
+    "level": "HSK 3"
+  },
+  {
+    "title": "程度补语 得 – LÀM (NHƯ THẾ NÀO) RẤT…",
+    "hz": "得",
+    "topic": "bi",
+    "def": "程度补语 得 – làm (như thế nào) rất… — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "得",
+        "key"
+      ],
+      [
+        "trạng ngữ mức độ (很, 太…了)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt trạng từ trước động từ kiểu tiếng Việt: ",
+      "‘他跑得很快’ đúng, ‘他很快地跑’ không tự nhiên",
+      "; thành phần chỉ mức độ phải đứng sau 得."
+    ],
+    "ex": [
+      {
+        "hz": "她汉语说得很流利。",
+        "py": "tā Hànyǔ shuō de hěn liúlì.",
+        "vi": "Cô ấy nói tiếng Trung rất trôi chảy."
+      },
+      {
+        "hz": "孩子们玩得很高兴。",
+        "py": "háizimen wán de hěn gāoxìng.",
+        "vi": "Bọn trẻ chơi rất vui."
+      }
+    ],
+    "id": "hsk3-de-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "时量补语 – LÀM (BAO LÂU) + THỜI LƯỢNG",
+    "hz": "了",
+    "topic": "bi",
+    "def": "时量补语 – làm (bao lâu) + thời lượng — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "了",
+        "key"
+      ],
+      [
+        "thời lượng (分钟, 小时, 年…)"
+      ],
+      [
+        "tân ngữ (nếu có)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt thời lượng trước tân ngữ như tiếng Việt: ",
+      "thời lượng đứng ngay sau động từ: ‘我学了两年汉语’",
+      ", không nói ‘我学了汉语两年’."
+    ],
+    "ex": [
+      {
+        "hz": "我学了三年汉语了。",
+        "py": "wǒ xué le sān nián Hànyǔ le.",
+        "vi": "Tôi đã học tiếng Trung ba năm rồi."
+      },
+      {
+        "hz": "他睡了八个小时。",
+        "py": "tā shuì le bā ge xiǎoshí.",
+        "vi": "Nó ngủ tám tiếng."
+      }
+    ],
+    "id": "hsk3-le",
+    "level": "HSK 3"
+  },
+  {
+    "title": "动量补语 次/遍 – LÀM (BAO NHIÊU LẦN)",
+    "hz": "遍",
+    "topic": "bi",
+    "def": "动量补语 次/遍 – làm (bao nhiêu lần) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "遍",
+        "key"
+      ],
+      [
+        "số từ + 次/遍"
+      ],
+      [
+        "tân ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 次 cho mọi trường hợp: ",
+      "次 đếm lượt xảy ra, 遍 đếm lần làm trọn từ đầu đến cuối",
+      ": ‘他来过三次’ – đã đến ba lần, ‘我把课文读了两遍’ – đọc hai lượt."
+    ],
+    "ex": [
+      {
+        "hz": "这个词我查过三次了。",
+        "py": "zhège cí wǒ chá guo sān cì le.",
+        "vi": "Từ này tôi đã tra ba lần rồi."
+      },
+      {
+        "hz": "请把这句话再念一遍。",
+        "py": "qǐng bǎ zhè jù huà zài niàn yí biàn.",
+        "vi": "Xin hãy đọc lại câu này một lượt nữa."
+      }
+    ],
+    "id": "hsk3-bian-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "补语 在/到/给 – ĐẶT Ở, GỬI ĐẾN, ĐƯA CHO",
+    "hz": "在",
+    "topic": "bi",
+    "def": "补语 在/到/给 – đặt ở, gửi đến, đưa cho — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "在",
+        "key"
+      ],
+      [
+        "nơi chốn / người nhận"
+      ],
+      [
+        "(tân ngữ)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 在/到/给 hoặc đảo vị trí: ",
+      "giới từ này đứng sau động từ, trước nơi chốn hoặc người nhận",
+      ": ‘他把行李放在床上了’, ‘请把书还给我’."
+    ],
+    "ex": [
+      {
+        "hz": "他把行李放在床上了。",
+        "py": "tā bǎ xíngli fàng zài chuáng shàng le.",
+        "vi": "Nó đặt hành lý lên giường."
+      },
+      {
+        "hz": "我把座位让给老人了。",
+        "py": "wǒ bǎ zuòwèi ràng gěi lǎorén le.",
+        "vi": "Tôi nhường chỗ cho cụ già rồi."
+      }
+    ],
+    "id": "hsk3-zai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "了 (SAU ĐỘNG TỪ) – CHỈ HÀNH ĐỘNG ĐÃ HOÀN THÀNH",
+    "hz": "了",
+    "topic": "bongu",
+    "def": "了 (sau động từ) – chỉ hành động đã hoàn thành — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "了",
+        "key"
+      ],
+      [
+        "tân ngữ / thành phần khác"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay gắn 了 sau mỗi động từ: ",
+      "phủ định dùng 没 và bỏ 了: ‘我昨天没买书’",
+      ", ‘我买了三本书’ – đã mua ba cuốn; 了 chỉ hoàn thành trong câu khẳng định."
+    ],
+    "ex": [
+      {
+        "hz": "他昨天看了两场电影。",
+        "py": "tā zuótiān kàn le liǎng chǎng diànyǐng.",
+        "vi": "Hôm qua nó xem hai bộ phim."
+      },
+      {
+        "hz": "我上个月去了北京。",
+        "py": "wǒ shàng ge yuè qù le Běijīng.",
+        "vi": "Tháng trước tôi đã đi Bắc Kinh."
+      }
+    ],
+    "id": "hsk3-le-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "了 (CUỐI CÂU) – TÌNH HÌNH MỚI THAY ĐỔI",
+    "hz": "了",
+    "topic": "bongu",
+    "def": "了 (cuối câu) – tình hình mới thay đổi — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ + vị ngữ"
+      ],
+      [
+        "了",
+        "key"
+      ],
+      [
+        "(đứng cuối câu)"
+      ],
+      [
+        "…"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 了 cuối câu với 了 sau động từ: ",
+      "了 cuối câu báo tin mới, tình huống thay đổi: ‘下雨了’ – trời mưa rồi",
+      ", còn ‘下了一夜雨’ là mưa suốt một đêm (hoàn thành)."
+    ],
+    "ex": [
+      {
+        "hz": "春天来了。",
+        "py": "chūntiān lái le.",
+        "vi": "Mùa xuân đến rồi."
+      },
+      {
+        "hz": "我肚子疼了。",
+        "py": "wǒ dùzi téng le.",
+        "vi": "Bụng tôi đau rồi."
+      }
+    ],
+    "id": "hsk3-le-3",
+    "level": "HSK 3"
+  },
+  {
+    "title": "过 – ĐÃ TỪNG (KINH NGHIỆM TRONG QUÁ KHỨ)",
+    "hz": "过",
+    "topic": "bongu",
+    "def": "过 – đã từng (kinh nghiệm trong quá khứ) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "过",
+        "key"
+      ],
+      [
+        "tân ngữ"
+      ],
+      [
+        "(không có 了 ở cuối)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 了 thay cho 过: ",
+      "‘我去过中国’ – đã từng đi (kinh nghiệm), ‘我去了中国’ – đã đi rồi",
+      "; 过 chỉ kinh nghiệm từng trải, phủ định là 没去过."
+    ],
+    "ex": [
+      {
+        "hz": "你吃过北京烤鸭吗？",
+        "py": "nǐ chī guo Běijīng kǎoyā ma?",
+        "vi": "Bạn đã từng ăn vịt quay Bắc Kinh chưa?"
+      },
+      {
+        "hz": "我从来没见过这样的动物。",
+        "py": "wǒ cónglái méi jiànguo zhèyàng de dòngwù.",
+        "vi": "Tôi chưa bao giờ thấy con vật như vậy."
+      }
+    ],
+    "id": "hsk3-guo",
+    "level": "HSK 3"
+  },
+  {
+    "title": "着 – TRẠNG THÁI TIẾP DIỄN, DUY TRÌ",
+    "hz": "着",
+    "topic": "bongu",
+    "def": "着 – trạng thái tiếp diễn, duy trì — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "着",
+        "key"
+      ],
+      [
+        "(tân ngữ)"
+      ],
+      [
+        "(mô tả trạng thái tồn tại)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 着 với 正在: ",
+      "‘门开着’ – cửa đang mở (trạng thái), ‘他在吃饭’ – đang ăn (hoạt động)",
+      "; 着 mô tả trạng thái giữ nguyên: 穿着, 放着, 坐着."
+    ],
+    "ex": [
+      {
+        "hz": "她穿着一件红色的毛衣。",
+        "py": "tā chuānzhe yí jiàn hóngsè de máoyī.",
+        "vi": "Cô ấy mặc một chiếc áo len màu đỏ."
+      },
+      {
+        "hz": "桌子上放着很多书。",
+        "py": "zhuōzi shàng fàngzhe hěn duō shū.",
+        "vi": "Trên bàn để rất nhiều sách."
+      }
+    ],
+    "id": "hsk3-zhe",
+    "level": "HSK 3"
+  },
+  {
+    "title": "正在/在…呢 – ĐANG (HÀNH ĐỘNG DIỄN RA LÚC NÓI)",
+    "hz": "正",
+    "topic": "bongu",
+    "def": "正在/在…呢 – đang (hành động diễn ra lúc nói) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "正",
+        "key"
+      ],
+      [
+        "在 + động từ"
+      ],
+      [
+        "(tân ngữ)"
+      ],
+      [
+        "呢 (có thể có)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thêm 了 cho hành động đang diễn ra: ",
+      "正在/在 đứng trước động từ, 呢 cuối câu, không dùng 了",
+      ": ‘妈妈正在做饭呢’ – mẹ đang nấu ăn."
+    ],
+    "ex": [
+      {
+        "hz": "妈妈正在做饭呢。",
+        "py": "māma zhèngzài zuò fàn ne.",
+        "vi": "Mẹ đang nấu ăn."
+      },
+      {
+        "hz": "别吵，孩子们在睡觉呢。",
+        "py": "bié chǎo, háizimen zài shuìjiào ne.",
+        "vi": "Đừng làm ồn, bọn trẻ đang ngủ."
+      }
+    ],
+    "id": "hsk3-zheng",
+    "level": "HSK 3"
+  },
+  {
+    "title": "就 – SỚM, NGAY (THỜI GIAN SỚM HƠN DỰ KIẾN)",
+    "hz": "就",
+    "topic": "bongu",
+    "def": "就 – sớm, ngay (thời gian sớm hơn dự kiến) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ / thời gian"
+      ],
+      [
+        "就",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(thành phần khác)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 就 với 才: ",
+      "就 = sớm/nhanh hơn dự kiến: ‘他六点就起床了’ – sáu giờ đã dậy",
+      "; 才 thì ngược lại, chỉ sự muộn."
+    ],
+    "ex": [
+      {
+        "hz": "我明天就回来。",
+        "py": "wǒ míngtiān jiù huílái.",
+        "vi": "Ngày mai tôi sẽ về ngay."
+      },
+      {
+        "hz": "他五分钟就做完了。",
+        "py": "tā wǔ fēnzhōng jiù zuò wán le.",
+        "vi": "Nó chỉ năm phút đã làm xong."
+      }
+    ],
+    "id": "hsk3-jiu",
+    "level": "HSK 3"
+  },
+  {
+    "title": "才 – MỚI, CHỈ (MUỘN HƠN DỰ KIẾN HOẶC SỐ LƯỢNG ÍT)",
+    "hz": "才",
+    "topic": "bongu",
+    "def": "才 – mới, chỉ (muộn hơn dự kiến hoặc số lượng ít) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ / thời gian"
+      ],
+      [
+        "才",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(thành phần khác)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 才 với 就: ",
+      "才 = muộn hơn dự kiến hoặc ít hơn nghĩ: ‘他八点才起床’",
+      ", ‘我才做了一半’ – tôi mới làm được nửa."
+    ],
+    "ex": [
+      {
+        "hz": "他二十八岁才结婚。",
+        "py": "tā èrshíbā suì cái jiéhūn.",
+        "vi": "Nó hai tám tuổi mới kết hôn."
+      },
+      {
+        "hz": "这道题太难，我才做了一半。",
+        "py": "zhè dào tí tài nán, wǒ cái zuò le yí bàn.",
+        "vi": "Bài này khó quá, tôi mới làm được nửa."
+      }
+    ],
+    "id": "hsk3-cai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "又 – LẠI (LẶP LẠI ĐÃ XẢY RA HOẶC CHẮC CHẮN SẼ XẢY RA)",
+    "hz": "又",
+    "topic": "bongu",
+    "def": "又 – lại (lặp lại đã xảy ra hoặc chắc chắn sẽ xảy ra) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "又",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "了 / thành phần khác"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 又 cho tương lai: ",
+      "又 dùng cho việc lặp lại đã xảy ra: ‘他又迟到了’",
+      "; hành động sẽ lặp lại trong tương lai dùng 再."
+    ],
+    "ex": [
+      {
+        "hz": "他昨天又感冒了。",
+        "py": "tā zuótiān yòu gǎnmào le.",
+        "vi": "Hôm qua nó lại bị cảm."
+      },
+      {
+        "hz": "你怎么又问这个问题？",
+        "py": "nǐ zěnme yòu wèn zhège wèntí?",
+        "vi": "Sao bạn lại hỏi câu này nữa?"
+      }
+    ],
+    "id": "hsk3-you-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "再 – LẦN NỮA (LẶP LẠI TRONG TƯƠNG LAI)",
+    "hz": "再",
+    "topic": "bongu",
+    "def": "再 – lần nữa (lặp lại trong tương lai) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "再",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(tân ngữ / 一遍)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 又 cho tương lai: ",
+      "再 cho hành động sẽ lặp lại: ‘请你再说一遍’",
+      "; 又 cho hành động đã lặp lại: ‘他又说了一遍’."
+    ],
+    "ex": [
+      {
+        "hz": "太贵了，我不再买了。",
+        "py": "tài guì le, wǒ bú zài mǎi le.",
+        "vi": "Đắt quá, tôi không mua nữa."
+      },
+      {
+        "hz": "等一下，我再看看。",
+        "py": "děng yíxià, wǒ zài kànkan.",
+        "vi": "Chờ một chút, tôi xem lại."
+      }
+    ],
+    "id": "hsk3-zai-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "还是 – HAY (CÂU HỎI LỰA CHỌN)",
+    "hz": "还",
+    "topic": "bongu",
+    "def": "还是 – hay (câu hỏi lựa chọn) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "mệnh đề A"
+      ],
+      [
+        "还",
+        "key"
+      ],
+      [
+        "是"
+      ],
+      [
+        "mệnh đề B"
+      ],
+      [
+        "?"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 或者 trong câu hỏi: ",
+      "还是 chỉ dùng trong câu hỏi lựa chọn: ‘你喝茶还是喝咖啡?’",
+      "; 或者 dùng trong câu trần thuật."
+    ],
+    "ex": [
+      {
+        "hz": "你去医院还是去学校？",
+        "py": "nǐ qù yīyuàn háishi qù xuéxiào?",
+        "vi": "Bạn đi bệnh viện hay đi trường?"
+      },
+      {
+        "hz": "我们坐火车还是坐飞机？",
+        "py": "wǒmen zuò huǒchē háishi zuò fēijī?",
+        "vi": "Chúng ta đi tàu hay đi máy bay?"
+      }
+    ],
+    "id": "hsk3-hai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "或者 vs 还是 – HOẶC (TRẦN THUẬT) KHÁC HAY (CÂU HỎI)",
+    "hz": "或",
+    "topic": "bongu",
+    "def": "或者 vs 还是 – hoặc (trần thuật) khác hay (câu hỏi) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "mệnh đề / danh ngữ A"
+      ],
+      [
+        "或",
+        "key"
+      ],
+      [
+        "者"
+      ],
+      [
+        "danh ngữ / mệnh đề B"
+      ],
+      [
+        "(câu trần thuật)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 还是 trong câu trần thuật: ",
+      "或者 dùng cho câu kể và câu mệnh lệnh: ‘下午我去打篮球或者游泳’",
+      "; 还是 dùng cho câu hỏi lựa chọn."
+    ],
+    "ex": [
+      {
+        "hz": "晚上我复习课文或者听录音。",
+        "py": "wǎnshang wǒ fùxí kèwén huòzhě tīng lùyīn.",
+        "vi": "Tối tôi ôn bài hoặc nghe băng."
+      },
+      {
+        "hz": "星期天我们爬山或者钓鱼。",
+        "py": "Xīngqītiān wǒmen páshān huòzhě diàoyú.",
+        "vi": "Chủ nhật chúng ta leo núi hoặc câu cá."
+      }
+    ],
+    "id": "hsk3-huo",
+    "level": "HSK 3"
+  },
+  {
+    "title": "已经…了 – ĐÃ… RỒI",
+    "hz": "已",
+    "topic": "bongu",
+    "def": "已经…了 – đã… rồi — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "已",
+        "key"
+      ],
+      [
+        "经"
+      ],
+      [
+        "vị ngữ"
+      ],
+      [
+        "了"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 已经 thiếu 了 ở cuối: ",
+      "已经…了 đi cặp: ‘他已经知道这个消息了’",
+      "; phủ định tương ứng là 还没…呢."
+    ],
+    "ex": [
+      {
+        "hz": "他已经知道这个消息了。",
+        "py": "tā yǐjīng zhīdào zhège xiāoxi le.",
+        "vi": "Nó đã biết tin này rồi."
+      },
+      {
+        "hz": "我们已经等了你半个小时了。",
+        "py": "wǒmen yǐjīng děng le nǐ bàn ge xiǎoshí le.",
+        "vi": "Chúng tôi đã chờ bạn nửa tiếng rồi."
+      }
+    ],
+    "id": "hsk3-yi-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "都 – ĐỀU (PHỦ RỘNG CHỦ NGỮ HOẶC TÂN NGỮ ĐỨNG TRƯỚC)",
+    "hz": "都",
+    "topic": "bongu",
+    "def": "都 – đều (phủ rộng chủ ngữ hoặc tân ngữ đứng trước) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ / 这些, 大家, 谁…"
+      ],
+      [
+        "都",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(thành phần khác)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt 都 sai chỗ: ",
+      "都 phải đứng sau từ mà nó phủ rộng: ‘我们都去’",
+      "; với tân ngữ đặt trước, cũng dùng 都: ‘他什么都不吃’."
+    ],
+    "ex": [
+      {
+        "hz": "这些书都是我的。",
+        "py": "zhèxiē shū dōu shì wǒ de.",
+        "vi": "Những cuốn sách này đều là của tôi."
+      },
+      {
+        "hz": "他什么都不想吃。",
+        "py": "tā shénme dōu bù xiǎng chī.",
+        "vi": "Nó cái gì cũng không muốn ăn."
+      }
+    ],
+    "id": "hsk3-dou",
+    "level": "HSK 3"
+  },
+  {
+    "title": "也 – CŨNG (VỊ TRÍ VỚI PHỦ ĐỊNH)",
+    "hz": "也",
+    "topic": "bongu",
+    "def": "也 – cũng (vị trí với phủ định) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "也",
+        "key"
+      ],
+      [
+        "động từ / tính từ"
+      ],
+      [
+        "(thành phần khác)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đặt 不/没 trước 也: ",
+      "khi phủ định, 也 đứng trước 不/没: ‘我也不去’",
+      ", không nói ‘我也不去’ thành ‘我不也去’."
+    ],
+    "ex": [
+      {
+        "hz": "他是学生，他姐姐也是学生。",
+        "py": "tā shì xuésheng, tā jiějie yě shì xuésheng.",
+        "vi": "Nó là học sinh, chị của nó cũng là học sinh."
+      },
+      {
+        "hz": "我不认识他，他也不认识我。",
+        "py": "wǒ bú rènshi tā, tā yě bú rènshi wǒ.",
+        "vi": "Tôi không biết nó, nó cũng không biết tôi."
+      }
+    ],
+    "id": "hsk3-ye",
+    "level": "HSK 3"
+  },
+  {
+    "title": "有点儿 – HƠI, KHÁ (ĐI VỚI CẢM GIÁC KHÔNG MONG MUỐN)",
+    "hz": "点",
+    "topic": "bongu",
+    "def": "有点儿 – hơi, khá (đi với cảm giác không mong muốn) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "点",
+        "key"
+      ],
+      [
+        "有(一)点儿"
+      ],
+      [
+        "tính từ / động từ (tiêu cực)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 有点儿 với tính từ tốt: ",
+      "有点儿 đứng trước tính từ/động từ tiêu cực: ‘今天有点儿冷’, ‘我有点儿累’",
+      "; không nói ‘有点儿高兴’; nghĩa tốt dùng ‘很高兴’."
+    ],
+    "ex": [
+      {
+        "hz": "我有点儿累，想休息一下。",
+        "py": "wǒ yǒudiǎnr lèi, xiǎng xiūxi yíxià.",
+        "vi": "Tôi hơi mệt, muốn nghỉ một chút."
+      },
+      {
+        "hz": "这个菜有点儿咸。",
+        "py": "zhège cài yǒudiǎnr xián.",
+        "vi": "Món này hơi mặn."
+      }
+    ],
+    "id": "hsk3-dian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "一点儿 – MỘT CHÚT (LƯỢNG ÍT, KHÔNG MANG CẢM XÚC TIÊU CỰC)",
+    "hz": "点",
+    "topic": "bongu",
+    "def": "一点儿 – một chút (lượng ít, không mang cảm xúc tiêu cực) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "động từ"
+      ],
+      [
+        "点",
+        "key"
+      ],
+      [
+        "(一)点儿"
+      ],
+      [
+        "danh từ / tính từ"
+      ],
+      [
+        "(phủ định: 一点儿也不/没)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay đảo 有点儿 và 一点儿: ",
+      "一点儿 đứng sau tính từ hoặc trước danh từ: ‘快一点儿’, ‘买一点儿水果’",
+      "; 有点儿 thì đứng trước tính từ tiêu cực."
+    ],
+    "ex": [
+      {
+        "hz": "我想喝一点儿水。",
+        "py": "wǒ xiǎng hē yìdiǎnr shuǐ.",
+        "vi": "Tôi muốn uống một chút nước."
+      },
+      {
+        "hz": "请你说得慢一点儿。",
+        "py": "qǐng nǐ shuō de màn yìdiǎnr.",
+        "vi": "Xin bạn nói chậm một chút."
+      }
+    ],
+    "id": "hsk3-dian-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "差不多 – GẦN NHƯ, TƯƠNG TỰ, CHỪNG",
+    "hz": "差",
+    "topic": "bongu",
+    "def": "差不多 – gần như, tương tự, chừng — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ / số lượng"
+      ],
+      [
+        "差",
+        "key"
+      ],
+      [
+        "不多"
+      ],
+      [
+        "vị ngữ / danh ngữ"
+      ],
+      [
+        "(了)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay quên nghĩa ‘gần đến lúc rồi’ của 差不多: ",
+      "‘差不多该走了’ – chừng đó thì nên đi thôi",
+      "; ‘两个颜色差不多’ – hai màu gần như giống nhau."
+    ],
+    "ex": [
+      {
+        "hz": "这两个颜色差不多。",
+        "py": "zhè liǎng ge yánsè chàbuduō.",
+        "vi": "Hai màu này gần như giống nhau."
+      },
+      {
+        "hz": "差不多十点了，我们走吧。",
+        "py": "chàbuduō shí diǎn le, wǒmen zǒu ba.",
+        "vi": "Chừng mười giờ rồi, mình đi thôi."
+      }
+    ],
+    "id": "hsk3-cha",
+    "level": "HSK 3"
+  },
+  {
+    "title": "从…到 – TỪ… ĐẾN (THỜI GIAN HAY NƠI CHỐN)",
+    "hz": "从",
+    "topic": "bongu",
+    "def": "从…到 – từ… đến (thời gian hay nơi chốn) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "从"
+      ],
+      [
+        "从",
+        "key"
+      ],
+      [
+        "điểm bắt đầu"
+      ],
+      [
+        "到"
+      ],
+      [
+        "điểm kết thúc"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 从 hoặc 到: ",
+      "hai từ phải đi cùng nhau: ‘从我家到学校很近’",
+      ", ‘从早上八点工作到下午六点’."
+    ],
+    "ex": [
+      {
+        "hz": "我从早上八点工作到下午六点。",
+        "py": "wǒ cóng zǎoshang bā diǎn gōngzuò dào xiàwǔ liù diǎn.",
+        "vi": "Tôi làm việc từ tám giờ sáng đến sáu giờ chiều."
+      },
+      {
+        "hz": "从北京到上海坐飞机要两个小时。",
+        "py": "cóng Běijīng dào Shànghǎi zuò fēijī yào liǎng ge xiǎoshí.",
+        "vi": "Từ Bắc Kinh đến Thượng Hải đi máy bay mất hai tiếng."
+      }
+    ],
+    "id": "hsk3-cong",
+    "level": "HSK 3"
+  },
+  {
+    "title": "对 – ĐỐI VỚI (THÁI ĐỘ, CẢM XÚC ĐỐI VỚI AI/ĐIỀU GÌ)",
+    "hz": "对",
+    "topic": "bongu",
+    "def": "对 – đối với (thái độ, cảm xúc đối với ai/điều gì) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "对",
+        "key"
+      ],
+      [
+        "đối tượng (người/vật)"
+      ],
+      [
+        "động từ / tính từ"
+      ],
+      [
+        "(thành phần khác)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 对 với 向/给: ",
+      "对 dùng với thái độ, cảm xúc: ‘他对我很好’, ‘对…感兴趣’",
+      "; 向/向 chỉ hướng, 给 chỉ người nhận."
+    ],
+    "ex": [
+      {
+        "hz": "他对我笑了笑。",
+        "py": "tā duì wǒ xiào le xiào.",
+        "vi": "Nó cười với tôi."
+      },
+      {
+        "hz": "我对汉语越来越感兴趣了。",
+        "py": "wǒ duì Hànyǔ yuèláiyuè gǎn xìngqù le.",
+        "vi": "Tôi càng ngày càng thích thú với tiếng Trung."
+      }
+    ],
+    "id": "hsk3-dui",
+    "level": "HSK 3"
+  },
+  {
+    "title": "给 – CHO, THAY, VÌ (NGƯỜI NHẬN HOẶC NGƯỜI ĐƯỢC LÀM HỘ)",
+    "hz": "给",
+    "topic": "bongu",
+    "def": "给 – cho, thay, vì (người nhận hoặc người được làm hộ) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "给",
+        "key"
+      ],
+      [
+        "người nhận / người được giúp"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(tân ngữ)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 给 khi nói làm gì cho ai: ",
+      "给 + người đứng trước động từ: ‘我给妈妈买礼物’",
+      "; các cụm quen thuộc: 给…打电话, 给…写信, 给…介绍."
+    ],
+    "ex": [
+      {
+        "hz": "老师给我们介绍了那个地方。",
+        "py": "lǎoshī gěi wǒmen jièshào le nàge dìfang.",
+        "vi": "Cô giáo giới thiệu với chúng tôi nơi đó."
+      },
+      {
+        "hz": "请你给客人倒一杯茶。",
+        "py": "qǐng nǐ gěi kèrén dào yì bēi chá.",
+        "vi": "Xin bạn rót một cốc trà cho khách."
+      }
+    ],
+    "id": "hsk3-gei",
+    "level": "HSK 3"
+  },
+  {
+    "title": "往/向 – HƯỚNG (PHƯƠNG HƯỚNG CỦA HÀNH ĐỘNG)",
+    "hz": "往",
+    "topic": "bongu",
+    "def": "往/向 – hướng (phương hướng của hành động) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "往",
+        "key"
+      ],
+      [
+        "danh ngữ phương hướng"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(走/看/拐…)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 到 thay 往/向: ",
+      "往/向 + phương hướng đứng trước động từ: ‘往前走’, ‘向南看’",
+      "; 到 + nơi chốn đứng sau động từ: ‘走到银行’."
+    ],
+    "ex": [
+      {
+        "hz": "往前走，右手边就是银行。",
+        "py": "wǎng qián zǒu, yòushǒu biān jiùshì yínháng.",
+        "vi": "Đi thẳng về phía trước, bên tay phải là ngân hàng."
+      },
+      {
+        "hz": "他朝我招了招手。",
+        "py": "tā cháo wǒ zhāo le zhāo shǒu.",
+        "vi": "Nó vẫy tay về phía tôi."
+      }
+    ],
+    "id": "hsk3-wang",
+    "level": "HSK 3"
+  },
+  {
+    "title": "离 – CÁCH, XA (KHOẢNG CÁCH NƠI CHỐN HOẶC THỜI GIAN CÒN LẠI)",
+    "hz": "离",
+    "topic": "bongu",
+    "def": "离 – cách, xa (khoảng cách nơi chốn hoặc thời gian còn lại) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "A"
+      ],
+      [
+        "离",
+        "key"
+      ],
+      [
+        "B"
+      ],
+      [
+        "远 / 近 / số lượng thời gian"
+      ],
+      [
+        "(thành phần khác)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 从 thay 离 khi nói khoảng cách: ",
+      "离 chỉ khoảng cách: ‘学校离我家很近’",
+      ", hoặc thời gian còn lại: ‘离考试还有三天’."
+    ],
+    "ex": [
+      {
+        "hz": "机场离市中心很远。",
+        "py": "jīchǎng lí shì zhōngxīn hěn yuǎn.",
+        "vi": "Sân bay cách trung tâm thành phố rất xa."
+      },
+      {
+        "hz": "离圣诞节还有两个星期。",
+        "py": "lí Shèngdànjié hái yǒu liǎng ge xīngqī.",
+        "vi": "Còn hai tuần nữa là đến Giáng sinh."
+      }
+    ],
+    "id": "hsk3-li",
+    "level": "HSK 3"
+  },
+  {
+    "title": "呢 – CÒN… THÌ SAO / ĐANG… ĐÓ",
+    "hz": "呢",
+    "topic": "bongu",
+    "def": "呢 – còn… thì sao / đang… đó — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "danh ngữ / chủ ngữ"
+      ],
+      [
+        "呢",
+        "key"
+      ],
+      [
+        "? (câu hỏi ngược)"
+      ],
+      [
+        "hoặc: chủ ngữ + động từ đang diễn ra"
+      ],
+      [
+        "呢"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 呢 cho câu hỏi có/không: ",
+      "呢 không dùng cho câu hỏi có/không, 吗 mới làm việc đó",
+      "; ‘你呢?’ – còn bạn thì sao?, ‘他在开会呢’ – anh ấy đang họp đó."
+    ],
+    "ex": [
+      {
+        "hz": "我很好，你呢？",
+        "py": "wǒ hěn hǎo, nǐ ne?",
+        "vi": "Tôi khỏe, còn bạn thì sao?"
+      },
+      {
+        "hz": "他看电视呢，别打扰他。",
+        "py": "tā kàn diànshì ne, bié dǎrǎo tā.",
+        "vi": "Nó đang xem tivi đấy, đừng làm phiền nó."
+      }
+    ],
+    "id": "hsk3-ne",
+    "level": "HSK 3"
+  },
+  {
+    "title": "先…然后 – TRƯỚC… RỒI SAU ĐÓ",
+    "hz": "先",
+    "topic": "bongu",
+    "def": "先…然后 – trước… rồi sau đó — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "先",
+        "key"
+      ],
+      [
+        "động từ 1"
+      ],
+      [
+        "然后"
+      ],
+      [
+        "động từ 2"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 先 mà thiếu 然后: ",
+      "先…然后 chỉ trình tự hai việc nối tiếp: ‘先洗手，然后吃饭’",
+      ", không dùng cho hai việc đồng thời (dùng 一边…一边)."
+    ],
+    "ex": [
+      {
+        "hz": "我先做作业，然后看电视。",
+        "py": "wǒ xiān zuò zuòyè, ránhòu kàn diànshì.",
+        "vi": "Tôi làm bài tập trước, rồi xem tivi."
+      },
+      {
+        "hz": "先往左拐，再往前走。",
+        "py": "xiān wǎng zuǒ guǎi, zài wǎng qián zǒu.",
+        "vi": "Rẽ trái trước, rồi đi thẳng."
+      }
+    ],
+    "id": "hsk3-xian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "每…都 – MỖI… ĐỀU (KHÔNG NGOẠI LỆ)",
+    "hz": "每",
+    "topic": "bongu",
+    "def": "每…都 – mỗi… đều (không ngoại lệ) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "每"
+      ],
+      [
+        "每",
+        "key"
+      ],
+      [
+        "lượng từ + danh từ"
+      ],
+      [
+        "都"
+      ],
+      [
+        "vị ngữ"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay bỏ 都 sau 每…: ",
+      "每 + lượng từ + danh từ thường phải kèm 都/也: ‘我每天都跑步’",
+      ", không nói ‘我每天跑步都’ kiểu tiếng Việt."
+    ],
+    "ex": [
+      {
+        "hz": "他每个星期都去打球。",
+        "py": "tā měi ge xīngqī dōu qù dǎ qiú.",
+        "vi": "Tuần nào nó cũng đi chơi bóng."
+      },
+      {
+        "hz": "每道题他都做对了。",
+        "py": "měi dào tí tā dōu zuò duì le.",
+        "vi": "Câu nào nó cũng làm đúng."
+      }
+    ],
+    "id": "hsk3-mei",
+    "level": "HSK 3"
+  },
+  {
+    "title": "太…了 – QUÁ… (CẢM THÁN VƯỚI MỨC ĐỘ)",
+    "hz": "太",
+    "topic": "bongu",
+    "def": "太…了 – quá… (cảm thán vưới mức độ) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "太",
+        "key"
+      ],
+      [
+        "tính từ / trạng từ tâm lý"
+      ],
+      [
+        "了"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 太 thiếu 了: ",
+      "太…了 đi cặp mang cảm thán: ‘今天太热了’",
+      "; rất/very trung tính dùng 很, không cần 了."
+    ],
+    "ex": [
+      {
+        "hz": "这部电影太有意思了！",
+        "py": "zhè bù diànyǐng tài yǒu yìsi le!",
+        "vi": "Bộ phim này thú vị quá!"
+      },
+      {
+        "hz": "这个箱子太重了，我搬不动。",
+        "py": "zhège xiāngzi tài zhòng le, wǒ bān bu dòng.",
+        "vi": "Cái thùng này nặng quá, tôi khiêng không nổi."
+      }
+    ],
+    "id": "hsk3-tai",
+    "level": "HSK 3"
+  },
+  {
+    "title": "只有…才 – CHỈ KHI… MỚI (ĐIỀU KIỆN DUY NHẤT)",
+    "hz": "只",
+    "topic": "bongu",
+    "def": "只有…才 – chỉ khi… mới (điều kiện duy nhất) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "只",
+        "key"
+      ],
+      [
+        "有 + điều kiện"
+      ],
+      [
+        "才"
+      ],
+      [
+        "kết quả"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 只要 thay 只有 hoặc bỏ 才: ",
+      "只有…才 nhấn điều kiện duy nhất: ‘只有努力才能学好汉语’",
+      "; 只要…就 nhấn điều kiện đủ, nghĩa khác."
+    ],
+    "ex": [
+      {
+        "hz": "只有他才知道这个秘密。",
+        "py": "zhǐyǒu tā cái zhīdào zhège mìmì.",
+        "vi": "Chỉ có nó mới biết bí mật này."
+      },
+      {
+        "hz": "只有坐出租车才赶得上飞机。",
+        "py": "zhǐyǒu zuò chūzūchē cái gǎn de shàng fēijī.",
+        "vi": "Chỉ đi taxi mới kịp máy bay."
+      }
+    ],
+    "id": "hsk3-zhi",
+    "level": "HSK 3"
+  },
+  {
+    "title": "会 vs 能 vs 可以 – BIỆT BA CÁCH NÓI ‘CÓ THỂ’",
+    "hz": "会",
+    "topic": "hutu",
+    "def": "会 vs 能 vs 可以 – biệt ba cách nói ‘có thể’ — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "会",
+        "key"
+      ],
+      [
+        "động từ"
+      ],
+      [
+        "(能 = điều kiện/được phép; 可以 = được phép)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 会 cho mọi nghĩa ‘có thể’: ",
+      "会 = kĩ năng học được, 能 = khả năng/điều kiện, 可以 = được phép",
+      ": ‘我会说汉语’, ‘这里不能抽烟’, ‘你可以走了’."
+    ],
+    "ex": [
+      {
+        "hz": "他会弹钢琴，但是今天不能弹。",
+        "py": "tā huì tán gāngqín, dànshì jīntiān bù néng tán.",
+        "vi": "Nó biết chơi đàn piano, nhưng hôm nay không thể chơi."
+      },
+      {
+        "hz": "老师，我可以问一个问题吗？",
+        "py": "lǎoshī, wǒ kěyǐ wèn yí ge wèntí ma?",
+        "vi": "Thầy ơi, em có thể hỏi một câu được không?"
+      }
+    ],
+    "id": "hsk3-hui",
+    "level": "HSK 3"
+  },
+  {
+    "title": "想 vs 要 vs 想要 – MUỐN, ĐỊNH (MỨC ĐỘ Ý ĐỊNH KHÁC NHAU)",
+    "hz": "想",
+    "topic": "hutu",
+    "def": "想 vs 要 vs 想要 – muốn, định (mức độ ý định khác nhau) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "想",
+        "key"
+      ],
+      [
+        "động từ (mong muốn)"
+      ],
+      [
+        "(要 = định chắc chắn; 想要 = muốn có vật)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 想 cho vật và 要 cho hành động lẫn lộn: ",
+      "想 + động từ = muốn làm: ‘我想喝水’",
+      "; 要 + danh từ = cần/đặt mua: ‘我要一瓶水’."
+    ],
+    "ex": [
+      {
+        "hz": "我想去海南旅行。",
+        "py": "wǒ xiǎng qù Hǎinán lǚxíng.",
+        "vi": "Tôi muốn đi du lịch Hải Nam."
+      },
+      {
+        "hz": "我想要一杯咖啡。",
+        "py": "wǒ xiǎng yào yì bēi kāfēi.",
+        "vi": "Tôi muốn một cốc cà phê."
+      }
+    ],
+    "id": "hsk3-xiang",
+    "level": "HSK 3"
+  },
+  {
+    "title": "离合词 – TỪ RỜI (见面, 睡觉, 洗澡: KHÔNG ĐƯA TÂN NGỮ NGAY SAU)",
+    "hz": "见",
+    "topic": "hutu",
+    "def": "离合词 – từ rời (见面, 睡觉, 洗澡: không đưa tân ngữ ngay sau) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "chủ ngữ"
+      ],
+      [
+        "见",
+        "key"
+      ],
+      [
+        "面 (từ rời: 见面, 睡觉, 洗澡, 帮忙…)"
+      ],
+      [
+        "(thành phần chen giữa: 了, 了 + lượng từ)"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay thêm tân ngữ ngay sau từ rời: ",
+      "‘见面他’ sai, phải nói ‘跟他见面’",
+      "; các dạng đúng: ‘见过一次面’, ‘睡了一个好觉’, ‘帮了我一个忙’."
+    ],
+    "ex": [
+      {
+        "hz": "我明天要见他一面。",
+        "py": "wǒ míngtiān yào jiàn tā yí miàn.",
+        "vi": "Ngày mai tôi sẽ gặp nó một lần."
+      },
+      {
+        "hz": "他洗了个澡就睡了。",
+        "py": "tā xǐ le ge zǎo jiù shuì le.",
+        "vi": "Nó tắm một cái rồi đi ngủ."
+      }
+    ],
+    "id": "hsk3-jian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "方位词 – 里/上/下/前/后/旁边 (KHÔNG ĐƯỢC BỊ BỎ)",
+    "hz": "面",
+    "topic": "hutu",
+    "def": "方位词 – 里/上/下/前/后/旁边 (không được bị bỏ) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "danh ngữ +"
+      ],
+      [
+        "面",
+        "key"
+      ],
+      [
+        "里 / 上 / 下 / 前面 / 后面 / 旁边"
+      ],
+      [
+        "+ động từ / 是"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dịch ‘trong phòng’ thành ‘在房间’ thiếu 里: ",
+      "sau danh từ nơi chốn thường phải có 方位词: ‘在房间里’, ‘桌子上’",
+      "; chỉ một số từ như 家, 学校, 今年 có thể đứng một mình."
+    ],
+    "ex": [
+      {
+        "hz": "书在桌子下面。",
+        "py": "shū zài zhuōzi xiàmiàn.",
+        "vi": "Sách ở dưới bàn."
+      },
+      {
+        "hz": "银行旁边有一个邮局。",
+        "py": "yínháng pángbiān yǒu yí ge yóujú.",
+        "vi": "Bên cạnh ngân hàng có một bưu điện."
+      }
+    ],
+    "id": "hsk3-mian",
+    "level": "HSK 3"
+  },
+  {
+    "title": "一会儿 – MỘT CHÚC, LÁT (KHOẢNG THỜI GIAN NGẮN)",
+    "hz": "会",
+    "topic": "hutu",
+    "def": "一会儿 – một chúc, lát (khoảng thời gian ngắn) — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "等 / 看 / 说…"
+      ],
+      [
+        "会",
+        "key"
+      ],
+      [
+        "儿"
+      ],
+      [
+        "(động từ)"
+      ],
+      [
+        "(一会儿…一会儿 = chốc chốc làm việc đó)"
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay nhầm 一会儿 với 一下: ",
+      "一会儿 chỉ khoảng thời gian: ‘等一会儿’ – chờ một lát",
+      "; 一会儿…一会儿 mô tả hành động thay đổi liên tục."
+    ],
+    "ex": [
+      {
+        "hz": "你等我一会儿，我马上回来。",
+        "py": "nǐ děng wǒ yíhuìr, wǒ mǎshàng huílái.",
+        "vi": "Chờ tôi một lát, tôi quay lại ngay."
+      },
+      {
+        "hz": "小狗一会儿跑，一会儿跳。",
+        "py": "xiǎo gǒu yíhuìr pǎo, yíhuìr tiào.",
+        "vi": "Con chó con chốc chốc chạy, chốc chốc nhảy."
+      }
+    ],
+    "id": "hsk3-hui-2",
+    "level": "HSK 3"
+  },
+  {
+    "title": "上/下 VỚI THỜI GIAN – TUẦN TRƯỚC/SAU, THÁNG TRƯỚC/SAU",
+    "hz": "上",
+    "topic": "hutu",
+    "def": "上/下 với thời gian – tuần trước/sau, tháng trước/sau — điểm ngữ pháp HSK 3.",
+    "formula": [
+      [
+        "上 / 下"
+      ],
+      [
+        "上",
+        "key"
+      ],
+      [
+        "个 / 星期 / 月 / 次"
+      ],
+      [
+        "+ danh từ thời gian"
+      ],
+      [
+        ""
+      ]
+    ],
+    "pitfall": [
+      "Người Việt hay dùng 前/后 cho tuần và tháng: ",
+      "tuần/tháng dùng 上/下: ‘上星期’, ‘下个月’",
+      "; 前/后 dùng với năm, ngày: ‘前天’, ‘后年’."
+    ],
+    "ex": [
+      {
+        "hz": "上个月我去了两次上海。",
+        "py": "shàng ge yuè wǒ qù le liǎng cì Shànghǎi.",
+        "vi": "Tháng trước tôi đi Thượng Hải hai lần."
+      },
+      {
+        "hz": "下星期我们有一场考试。",
+        "py": "xià xīngqī wǒmen yǒu yì chǎng kǎoshì.",
+        "vi": "Tuần sau chúng ta có một buổi thi."
+      }
+    ],
+    "id": "hsk3-shang-2",
+    "level": "HSK 3"
+  }
+]

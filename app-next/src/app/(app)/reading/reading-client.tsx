@@ -4,8 +4,9 @@
    Karaoke: TTS từng câu + highlight span ký tự (onboundary nếu có, fallback timer 260ms/ký tự/rate,
    grace 2500ms). Dán đoạn văn ≤ 3000 ký tự; demo doc + MCQ + từ vựng (demo). */
 
-import { useState } from "react";
-import { readingData, type ReadingSentence } from "@/content/reading";
+import { useEffect, useState } from "react";
+import { readingData, type ReadingQuestion, type ReadingSentence, type ReadingVocab } from "@/content/reading";
+import { readingPassages, type ReadingPassage } from "@/content/reading-passages";
 import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "@/components/reading/karaoke";
 import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal, useLoginModal } from "@/components/shell/login-modal";
@@ -18,6 +19,8 @@ import { Chip } from "@/components/ui/chip";
 import { Select } from "@/components/ui/select";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
+import { askAi } from "@/lib/ai-client";
+import { progressStore, type ReadingDraft } from "@/lib/store/progress-store";
 
 const MAX = 3000;
 
@@ -32,7 +35,8 @@ type Doc = {
   title: string;
   meta: string;
   sentences: KaraokeSentence[];
-  extras: typeof readingData.demoDoc | null;
+  /* W3 T9: passage thật (readingPassages) hoặc demoDoc — Extras chỉ dùng questions + vocab */
+  extras: { questions: ReadingQuestion[]; vocab: ReadingVocab[] } | null;
 };
 
 /* ---------- account-box (sidebar) ---------- */
@@ -153,9 +157,18 @@ function ReadingClientInner() {
   const toast = useToastSafe();
   const [text, setText] = useState("");
   const [doc, setDoc] = useState<Doc | null>(null);
+  const [annotating, setAnnotating] = useState(false);
   const [showVi, setShowVi] = useState(false);
   const [showPy, setShowPy] = useState(false);
   const k = useKaraoke(doc?.sentences ?? []);
+
+  /* W0.4: bản nháp tự lưu — khôi phục sau mount (hydration), sidebar liệt kê để mở lại */
+  const [drafts, setDrafts] = useState<ReadingDraft[]>([]);
+  useEffect(() => {
+    const list = progressStore.getReadingDrafts();
+    setDrafts(list);
+    if (list[0]) setText(list[0].text);
+  }, []);
 
   const syncCounter = (v: string) => (v.length > MAX ? v.slice(0, MAX) : v);
 
@@ -164,12 +177,9 @@ function ReadingClientInner() {
     toast("Đã điền văn bản mẫu — bấm “Tạo bài đọc” nhé!");
   };
 
-  const createDoc = () => {
-    const raw = text.trim();
-    if (!raw) {
-      toast("Hãy dán văn bản tiếng Trung vào ô trước nhé!");
-      return;
-    }
+  const createDocFromText = (rawFull: string) => {
+    const raw = rawFull.trim();
+    if (!raw) return;
     k.stop();
     const sliced = raw.slice(0, MAX);
     const { title, body } = extractTitle(sliced);
@@ -178,10 +188,7 @@ function ReadingClientInner() {
       sentenceMap[s.zh] = s;
     });
     const sentences = buildSentences(body, sentenceMap);
-    if (!sentences.length) {
-      toast("Không tìm thấy câu tiếng Trung nào trong văn bản.");
-      return;
-    }
+    if (!sentences.length) return false;
     const isDemoFull = normalize(body) === normalize(zhFull(readingData.demoDoc));
     setDoc({
       title: title || sentences[0].zh,
@@ -189,6 +196,20 @@ function ReadingClientInner() {
       sentences,
       extras: isDemoFull ? readingData.demoDoc : null,
     });
+    return true;
+  };
+
+  const createDoc = () => {
+    if (!text.trim()) {
+      toast("Hãy dán văn bản tiếng Trung vào ô trước nhé!");
+      return;
+    }
+    if (createDocFromText(text)) {
+      progressStore.saveReadingDraft(text.slice(0, MAX));
+      setDrafts(progressStore.getReadingDrafts());
+    } else {
+      toast("Không tìm thấy câu tiếng Trung nào trong văn bản.");
+    }
   };
 
   const openDemo = () => {
@@ -200,6 +221,88 @@ function ReadingClientInner() {
       sentences: d.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
       extras: d,
     });
+  };
+
+  const openDraft = (d: ReadingDraft) => {
+    k.stop();
+    setText(syncCounter(d.text));
+    createDocFromText(d.text); // tái dùng pipeline tạo doc
+  };
+
+  /* W3 T9: mở passage tĩnh theo level — câu đã tách sẵn + pinyin + dịch + questions/vocab,
+     tái dùng engine karaoke + Extras của demoDoc. Text đổ vào textarea và lưu draft
+     (W0.4 autosave chỉ wire trên nút "Tạo bài đọc" nên phải gọi saveReadingDraft tại đây). */
+  const openPassage = (id: string) => {
+    const p = readingPassages.find((x) => x.id === id) as ReadingPassage | undefined;
+    if (!p) return;
+    k.stop();
+    const full = zhFull(p);
+    setText(syncCounter(full));
+    setDoc({
+      title: p.title,
+      meta: `HSK ${p.book.replace("hsk", "")} · ${p.titleVi} · ${p.sentences.length} câu · ${full.length} ký tự`,
+      sentences: p.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
+      extras: p,
+    });
+    progressStore.saveReadingDraft(full.slice(0, MAX));
+    setDrafts(progressStore.getReadingDrafts());
+  };
+
+  /* Wave 7 T6: AI dịch + pinyin từng câu — mỗi câu 1 request (route giới hạn 20 messages),
+     parse JSON an toàn, câu nào fail bỏ qua. Cap 20 câu còn thiếu pinyin để tránh
+     dội 30-70 request liên tiếp vào route (429 + UI treo) với bài dài. */
+  const AI_ANNOTATE_CAP = 20;
+  const annotateWithAi = async () => {
+    if (!doc || annotating) return;
+    const missing = doc.sentences.filter((s) => !s.py);
+    const targets = missing.slice(0, AI_ANNOTATE_CAP);
+    const skipped = missing.length - targets.length;
+    setAnnotating(true);
+    try {
+      for (const s of targets) {
+        let raw: string;
+        try {
+          raw = await askAi([
+            {
+              role: "user",
+              content: `Dịch câu sau sang tiếng Việt và thêm pinyin, trả JSON {"zh":"...","py":"...","vi":"..."}: ${s.zh}`,
+            },
+          ]);
+        } catch {
+          // 429/502/network — hẳn là dừng, không quét tiếp
+          toast("AI đang bận, thử lại sau");
+          return;
+        }
+        try {
+          const parsed = JSON.parse(raw.trim().replace(/^```(?:json)?|```$/g, "").trim()) as {
+            zh?: string; py?: string; vi?: string;
+          };
+          if (parsed.py || parsed.vi) {
+            setDoc((cur) =>
+              cur
+                ? {
+                    ...cur,
+                    sentences: cur.sentences.map((row) =>
+                      row.zh === s.zh
+                        ? { ...row, py: parsed.py ?? row.py, vi: parsed.vi ?? row.vi }
+                        : row,
+                    ),
+                  }
+                : cur,
+            );
+          }
+        } catch {
+          // JSON rác → bỏ qua câu đó
+        }
+      }
+      if (skipped > 0) {
+        toast(`Chỉ chú thích ${AI_ANNOTATE_CAP} câu đầu — bài dài sẽ được chia nhỏ ở bản sau`);
+      } else {
+        toast("Đã chú thích bằng AI");
+      }
+    } finally {
+      setAnnotating(false);
+    }
   };
 
   return (
@@ -216,6 +319,45 @@ function ReadingClientInner() {
               </span>
             </button>
           </Card>
+          {readingPassages.length > 0 && (
+            <Card className="p-4">
+              <h2 className="font-extrabold mb-2">Bài đọc theo level</h2>
+              <Select
+                data-testid="reading-passage-select"
+                defaultValue=""
+                onChange={(e) => openPassage(e.target.value)}
+                aria-label="Chọn bài đọc theo level"
+                className="w-full text-sm"
+              >
+                <option value="">— Chọn bài đọc —</option>
+                {readingPassages.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.title} · HSK {p.book.replace("hsk", "")}
+                  </option>
+                ))}
+              </Select>
+            </Card>
+          )}
+          {drafts.length > 0 && (
+            <Card className="p-4">
+              <h2 className="font-extrabold mb-2">Bản nháp đã lưu</h2>
+              <div className="space-y-1">
+                {drafts.map((d, i) => (
+                  <button
+                    key={`${d.at}-${i}`}
+                    type="button"
+                    onClick={() => openDraft(d)}
+                    className="w-full text-left px-3 py-2.5 rounded-control hover:bg-surface-paper"
+                  >
+                    <span className="zh font-bold text-sm line-clamp-2">{d.text.slice(0, 60)}</span>
+                    <span className="block text-xs text-text-secondary mt-0.5">
+                      {new Date(d.at).toLocaleString("vi-VN")}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </Card>
+          )}
           <Card className="p-4">
             <AccountBox />
           </Card>
@@ -270,6 +412,15 @@ function ReadingClientInner() {
                   >
                     {k.playingAll ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
                     {k.playingAll ? "Dừng" : "Phát cả bài"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    disabled={annotating}
+                    onClick={annotateWithAi}
+                  >
+                    ✨ AI dịch &amp; chú thích
                   </Button>
                   <Chip selected={showVi} onClick={() => setShowVi((v) => !v)}>
                     Dịch

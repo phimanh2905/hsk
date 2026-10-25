@@ -8,8 +8,11 @@ import { vocab } from "@/content/vocab";
 const NOW = 1_700_000_000_000;
 const DAY = 86_400_000;
 
-function srs(key: string, status: SrsItem["status"], lastReviewedAt: number | null, dueAt = NOW + DAY): SrsItem {
-  return { key, status, dueAt, reviewCount: 1, lastReviewedAt, updatedAt: NOW };
+function srs(
+  key: string, status: SrsItem["status"], lastReviewedAt: number | null,
+  dueAt = NOW + DAY, intervalDays = 0,
+): SrsItem {
+  return { key, status, dueAt, reviewCount: 1, lastReviewedAt, updatedAt: NOW, ease: 2.5, intervalDays, lapses: 0 };
 }
 const deck = (id: string, rows: DeckItem["rows"]): DeckItem => ({ id, name: "Deck " + id, rows, updatedAt: new Date(NOW).toISOString() });
 
@@ -53,13 +56,13 @@ describe("buildVocabIndex (Review Focus #1 — hợp nhất 3 nguồn)", () => {
     ]));
     const idx = buildVocabIndex({
       ...BASE,
-      srs: [srs("deck.nb-2.0", "known", NOW - DAY)],
+      srs: [srs("deck.nb-2.0", "review", NOW - DAY, NOW + DAY, 21)],
       decks: [deck("nb-2", [{ hanzi: "你", pinyin: "nǐ", hanviet: "NHĨ", meaning: "bạn (đè bởi SRS)" }])],
       vocabBook: [{ hanzi: "你", pinyin: "nǐ", vi: "bạn" }],
     });
     expect(idx.rows).toHaveLength(1);
     const r = idx.rows[0];
-    expect(r.status).toBe("master"); // known → master
+    expect(r.status).toBe("master"); // review mature (interval 21) → master
     expect(r.vi).toBe("bạn (từ SRS)"); // first-wins: SRS meaning giữ nguyên, deck không đè
     expect(r.hsk).toBe("HSK 2"); // deck.* → HSK 2 (contingency brief Step 4)
     expect(r.deckIds).toEqual(["nb-2"]);
@@ -81,24 +84,24 @@ describe("buildVocabIndex (Review Focus #1 — hợp nhất 3 nguồn)", () => {
 });
 
 describe("hero metrics", () => {
-  it("dueCount = hasSrs && status !== master; learned/known đều là master", () => {
+  it("dueCount = hasSrs && status !== master; review mature là master, review chu kỳ ngắn vẫn phải ôn", () => {
     const idx = buildVocabIndex({
       ...BASE,
       srs: [
-        srs("hsk1.lesson-1.0", "known", NOW - DAY),
+        srs("hsk1.lesson-1.0", "review", NOW - DAY, NOW + DAY, 21), // mature → master
         srs("hsk1.lesson-1.1", "learning", NOW - DAY),
-        srs("hsk1.lesson-1.2", "learned", NOW - DAY),
+        srs("hsk1.lesson-1.2", "review", NOW - DAY, NOW + DAY, 7),  // chưa mature → study
       ],
       decks: [deck("nb-4", [{ hanzi: "朋友" }])],
     });
-    expect(idx.dueCount).toBe(1); // chỉ learning
+    expect(idx.dueCount).toBe(2); // learning + review chưa mature
   });
 
   it("mastery weighted (master 1 / study .5 / new 0), list rỗng → 0", () => {
     const idx = buildVocabIndex({
       ...BASE,
       srs: [
-        srs("hsk1.lesson-1.0", "known", NOW - DAY),
+        srs("hsk1.lesson-1.0", "review", NOW - DAY, NOW + DAY, 21),
         srs("hsk1.lesson-1.1", "learning", NOW - DAY),
       ],
       decks: [deck("nb-4", [{ hanzi: "朋友" }])],
@@ -110,7 +113,7 @@ describe("hero metrics", () => {
   it("hskTarget = level cao nhất; rỗng → null", () => {
     const idx = buildVocabIndex({
       ...BASE,
-      srs: [srs("hsk3.lesson-1.0", "learning", null), srs("hsk1.lesson-1.0", "known", NOW - DAY)],
+      srs: [srs("hsk3.lesson-1.0", "learning", null), srs("hsk1.lesson-1.0", "review", NOW - DAY, NOW + DAY, 21)],
     });
     expect(idx.hskTarget).toBe("HSK 3");
     expect(buildVocabIndex(BASE).hskTarget).toBeNull();

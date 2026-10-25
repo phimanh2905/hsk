@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Bot, Heart, MessageCircle, SendHorizontal, X, ICON_STROKE } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { Button } from "@/components/ui/button";
@@ -9,15 +10,16 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/shell/toast-provider";
 import { useSession } from "@/lib/use-session";
 
-const REPLY_TEXT =
-  "Mình là bản demo — thử bấm biểu tượng ngôi sao trong bài học, tra từ điển hoặc vào bài từ vựng để học nhé!";
+type Message = { role: "user" | "ai"; text: string };
 
 export default function AiWidget() {
   const toast = useToast();
   const { loggedIn } = useSession();
   const [chatOpen, setChatOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Array<{ role: "user" | "ai"; text: string }>>([
+  const [pending, setPending] = useState(false);
+  const [needLogin, setNeedLogin] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
     { role: "ai", text: "Xin chào! Mình là trợ lý Bye HSK. Hỏi về pinyin, từ vựng hoặc bấm một bài để học nhé!" },
   ]);
   // SP1 mock: chatBubble=0 chỉ ẩn nút mascot (giữ clone — panel vẫn mở được nếu đang mở)
@@ -27,15 +29,42 @@ export default function AiWidget() {
   useEffect(() => {
     setBubbleHidden(localStorage.getItem("bye.chatBubble") === "0");
   }, []);
+  // Đăng nhập lại sau khi từng bị 401 → mở khóa ô nhập (không cần reload).
+  useEffect(() => {
+    if (loggedIn) setNeedLogin(false);
+  }, [loggedIn]);
 
-  function send() {
+  async function send() {
     const value = input.trim();
-    if (!value) return;
+    if (!value || pending) return;
     setMessages((m) => [...m, { role: "user", text: value }]);
     setInput("");
-    setTimeout(() => {
-      setMessages((m) => [...m, { role: "ai", text: REPLY_TEXT }]);
-    }, 400);
+    // Gửi lịch sử hội thoại (bỏ message chào ở đầu) — route tự chèn system prompt.
+    const history = messages
+      .slice(1)
+      .map((m) => ({ role: m.role === "ai" ? "assistant" : "user", content: m.text }));
+    setPending(true);
+    try {
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [...history, { role: "user", content: value }] }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { text?: string };
+        setMessages((m) => [...m, { role: "ai", text: data.text ?? "" }]);
+      } else if (res.status === 429) {
+        toast("Bạn hỏi nhanh quá, chờ chút nhé!");
+      } else if (res.status === 401) {
+        setNeedLogin(true);
+      } else {
+        toast("Trợ lý AI đang bận, thử lại sau nhé!");
+      }
+    } catch {
+      toast("Trợ lý AI đang bận, thử lại sau nhé!");
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -62,22 +91,39 @@ export default function AiWidget() {
                 {m.text}
               </div>
             ))}
+            {pending ? (
+              <div className="rounded-control p-2 bg-surface-paper">…</div>
+            ) : null}
           </div>
-          <div className="flex gap-2 mt-2">
-            <Input
-              className="flex-1"
-              placeholder="Nhập câu hỏi…"
-              aria-label="Nhập câu hỏi cho trợ lý AI"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") send();
-              }}
-            />
-            <IconButton label="Gửi" variant="solid" onClick={send}>
-              <SendHorizontal size={16} strokeWidth={ICON_STROKE} />
-            </IconButton>
-          </div>
+          {loggedIn && !needLogin ? (
+            <div className="flex gap-2 mt-2">
+              <Input
+                className="flex-1"
+                placeholder="Nhập câu hỏi…"
+                aria-label="Nhập câu hỏi cho trợ lý AI"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") send();
+                }}
+              />
+              <IconButton label="Gửi" variant="solid" onClick={send}>
+                <SendHorizontal size={16} strokeWidth={ICON_STROKE} />
+              </IconButton>
+            </div>
+          ) : (
+            <div className="mt-2">
+              <Link
+                href="/login"
+                className="block w-full rounded-control px-4 py-2 text-sm font-semibold text-center border border-border-default hover:bg-surface-elevated"
+              >
+                Đăng nhập để hỏi Tiểu Ngữ
+              </Link>
+            </div>
+          )}
+          <p className="mt-2 text-[10px] text-text-secondary">
+            Nội dung AI chỉ mang tính tham khảo.
+          </p>
         </Card>
       ) : null}
 

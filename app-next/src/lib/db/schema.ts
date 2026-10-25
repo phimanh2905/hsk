@@ -3,6 +3,7 @@ import {
   index,
   integer,
   primaryKey,
+  real,
   sqliteTable,
   text,
   uniqueIndex,
@@ -154,6 +155,27 @@ type VocabWordRow = {
   example: { zh: string; pinyinPerChar: { c: string; py: string }[]; vi: string };
 };
 
+export const contentGrammars = sqliteTable(
+  "content_grammars",
+  {
+    id: text("id").primaryKey(),
+    level: text("level").notNull(), // "HSK 1".."HSK 5"
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    hz: text("hz").notNull(),
+    topic: text("topic").notNull(),
+    def: text("def").notNull(),
+    formula: text("formula", { mode: "json" }).$type<GrammarFormulaRow[]>().notNull(),
+    pitfall: text("pitfall", { mode: "json" }).$type<[string, string, string]>().notNull(),
+    ex: text("ex", { mode: "json" }).$type<{ hz: string; py: string; vi: string }[]>().notNull(),
+  },
+  (t) => [index("content_grammars_level_idx").on(t.level)]
+);
+
+/* Shape khớp GrammarPoint (src/content/grammar-points.ts) — khai báo structurally
+   thay vì import để schema.ts không phụ thuộc content module. */
+type GrammarFormulaRow = [label: string, isKey?: "key"];
+
 export const contentShadowingPlaylists = sqliteTable("content_shadowing_playlists", {
   id: text("id").primaryKey(),
   ord: integer("ord").notNull(),
@@ -179,6 +201,8 @@ export const contentShadowingVideos = sqliteTable(
     plays: integer("plays").notNull(),
     topic: text("topic").notNull(),
     spd: integer("spd").notNull(),
+    type: text("type").notNull().default("youtube"),
+    audioDir: text("audio_dir"),
   },
   (t) => [index("csv_playlist_idx").on(t.playlistId)]
 );
@@ -189,3 +213,117 @@ export const contentShadowingSubtitles = sqliteTable("content_shadowing_subtitle
     .$type<{ n: number; start: number; end: number; parts: { zh: string }[]; pinyin: string; vi: string }[]>()
     .notNull(),
 });
+
+/* ================= HybridStore sync (spec 2026-10-24 Wave 4) =================
+   localStorage-first: client ghi local + debounce POST /api/v1/sync; server chỉ
+   lưu + merge. updatedAt/deletedAt là EPOCH MS do client sinh (so sánh clock
+   Conflict: counter max, modes per-key max, còn lại bản updatedAt lớn hơn thắng;
+   tombstone deleted_at giữ 90 ngày rồi purge (route sync tự dọn). */
+
+export const srsCards = sqliteTable(
+  "srs_cards",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    key: text("key").notNull(), // SRS item key, vd "hsk1.u1.3"
+    status: text("status", { enum: ["new", "learning", "review", "relearning"] }).notNull().default("new"),
+    dueAt: integer("due_at"), // epoch ms
+    reviewCount: integer("review_count").notNull().default(0),
+    lastReviewedAt: integer("last_reviewed_at"), // epoch ms
+    updatedAt: integer("updated_at").notNull(), // epoch ms — client clock
+    deletedAt: integer("deleted_at"), // tombstone epoch ms
+    /* SM-2 (Wave 5): hệ số ease kẹp [1.3, 3.0], init 2.5; interval hiện tại (ngày);
+       lapses = số lần Again ở review/relearning. Chỉ số áp dụng cho status
+       review/relearning; learning dùng due_at theo phút với interval_days = 0. */
+    ease: real("ease").notNull().default(2.5),
+    intervalDays: integer("interval_days").notNull().default(0),
+    lapses: integer("lapses").notNull().default(0),
+  },
+  (t) => [uniqueIndex("srs_cards_user_key_uq").on(t.userId, t.key)]
+);
+
+export const studyDay = sqliteTable(
+  "study_day",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    date: text("date").notNull(), // YYYY-MM-DD theo Asia/Ho_Chi_Minh (vnDayString)
+    xp: integer("xp").notNull().default(0),
+    correct: integer("correct").notNull().default(0), // Wave 5 ghi vào
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.date] })]
+);
+
+export const lessonProgress = sqliteTable(
+  "lesson_progress",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    book: text("book").notNull(), // hsk1..hsk5 hoặc levelId roadmap
+    lesson: text("lesson").notNull(), // pageId hoặc stationId
+    modes: text("modes", { mode: "json" })
+      .$type<Record<string, number>>()
+      .notNull()
+      .default(sql`'{}'`),
+    knownCount: integer("known_count").notNull().default(0),
+    updatedAt: integer("updated_at").notNull(),
+    deletedAt: integer("deleted_at"),
+  },
+    (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
+);
+
+/* ================= Wave 5 — review logs (W5.2) =================
+   Append-only log mọi lần ôn; sync 1 chiều push (merge append-only theo
+   (user_id, item_key, reviewed_at)). Không tombstone, không merge field-wise. */
+export const reviewLogs = sqliteTable(
+  "review_logs",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    itemKey: text("item_key").notNull(), // SRS item key, vd "hsk1.u1.3"
+    cardType: text("card_type", { enum: ["vocab", "grammar"] }).notNull(),
+    rating: integer("rating").notNull(), // 1=Again 2=Hard 3=Good 4=Easy
+    durationMs: integer("duration_ms").notNull(),
+    reviewedAt: integer("reviewed_at").notNull(), // epoch ms client
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.itemKey, t.reviewedAt] })]
+);
+
+/* ================= Wave 6: Đấu trí + luyện thi ================= */
+
+/* Mỗi lượt chơi Đấu trí trong lesson (W6.2). `score` do client tính
+   (100đ chính xác + 50đ tốc độ, max 150) — server chỉ validate khoảng giá trị. */
+export const battleAttempts = sqliteTable(
+  "battle_attempts",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    bookSlug: text("book_slug").notNull(),
+    lessonSlug: text("lesson_slug").notNull(),
+    correctCount: integer("correct_count").notNull(),
+    totalCount: integer("total_count").notNull(),
+    durationMs: integer("duration_ms").notNull(),
+    score: integer("score").notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    index("battle_attempts_lesson_idx").on(t.bookSlug, t.lessonSlug, t.score),
+    index("battle_attempts_month_idx").on(t.createdAt),
+    index("battle_attempts_user_idx").on(t.userId, t.createdAt),
+  ]
+);
+
+/* Kết quả luyện thi chứng chỉ (W6.3). `sections` là JSON breakdown theo
+   listening/reading/writing — shape theo type ExamSectionResult ở lib/exam/types. */
+export const hskExamResults = sqliteTable(
+  "hsk_exam_results",
+  {
+    id: text("id").primaryKey(),
+    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+    level: text("level").notNull(), // "hsk1" ... "hsk6"
+    totalScore: integer("total_score").notNull(),
+    maxScore: integer("max_score").notNull(),
+    sections: text("sections", { mode: "json" })
+      .$type<{ section: string; score: number; maxScore: number }[]>()
+      .notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index("hsk_exam_results_user_idx").on(t.userId, t.createdAt)]
+);
