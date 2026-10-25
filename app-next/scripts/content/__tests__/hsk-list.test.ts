@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import {
@@ -75,8 +75,13 @@ describe("wordsForLevels", () => {
 const VENDOR_CSV = path.join(__dirname, "..", "vendor", "hsk30.csv");
 
 describe.skipIf(!existsSync(VENDOR_CSV))("HSK 3.0 dataset chuẩn (integration)", () => {
-  const csv = readFileSync(VENDOR_CSV, "utf-8");
-  const entries = parseHsk30Csv(csv);
+  /* Vitest vẫn chạy body describe lúc collect (kể cả suite bị skip) — đọc file
+     phải lazy trong it/beforeAll, nếu không CI thiếu vendor/hsk30.csv sẽ ENOENT
+     dù skipIf đã guard (bug CI run 40149549440). */
+  let entries: HskEntry[] = [];
+  beforeAll(() => {
+    entries = parseHsk30Csv(readFileSync(VENDOR_CSV, "utf-8"));
+  });
 
   it.each([1, 2, 3, 4, 5])("wordsForLevels cumulative level %i khớp chuẩn HSK 3.0", (n) => {
     expect(wordsForLevels(entries, n)).toHaveLength(EXPECTED_CUMULATIVE[n as keyof typeof EXPECTED_CUMULATIVE]);
