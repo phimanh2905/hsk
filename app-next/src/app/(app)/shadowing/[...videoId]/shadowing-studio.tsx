@@ -81,9 +81,10 @@ export default function ShadowingStudio({
   const { progressMap, recordPractice } = useShadowingProgress();
   const prog = progressMap[video.id];
   const [subMode, setSubMode] = useState<0 | 1 | 2>(2); // 0: chỉ hanzi, 1: chỉ pinyin, 2: cả hai
-  // tab cột phải — đặt ở level component để record dock nhận dimmed={tab === "dict"}
-  const [tab, setTab] = useState<"script" | "dict">("script");
-  const dimmed = tab === "dict";
+  // mode cột phải — đặt ở level component để record dock nhận dimmed={mode === "dict"};
+  // pron dùng mic nên không mờ (Task 9 thay panel pron)
+  const [mode, setMode] = useState<"shadow" | "dict" | "pron">("shadow");
+  const dimmed = mode === "dict";
 
   /* ---------- SLOT-RECORD: recorder + chấm điểm (port waveform-card/record-dock) ---------- */
   const [level, setLevel] = useState(0);
@@ -143,16 +144,29 @@ export default function ShadowingStudio({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dimmed, rec.start]);
 
+  /* Digit1/2/3 đổi mode học (shadow/dict/pron) — cùng guard isTyping như Space */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && ((t.matches?.("input, textarea, select") ?? false) || t.isContentEditable)) return;
+      if (e.code === "Digit1") setMode("shadow");
+      else if (e.code === "Digit2") setMode("dict");
+      else if (e.code === "Digit3") setMode("pron");
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   const linesDone = prog?.linesDone ?? 0;
   const pct = subs.length > 0 ? Math.round((linesDone / subs.length) * 100) : 0;
 
   /* ---------- transcript: autoscroll câu active theo pref (port renderActive) ---------- */
   const streamRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (tab !== "script" || !getAutoscroll()) return;
+    if (mode !== "shadow" || !getAutoscroll()) return;
     const el = streamRef.current?.querySelector(`[data-sent="${eng.cur}"]`);
     try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch { /* jsdom */ }
-  }, [eng.cur, tab]);
+  }, [eng.cur, mode]);
 
   /* ---------- dictation (port DictationPanel) — state reset theo câu ---------- */
   const curSub = subs[Math.min(eng.cur, subs.length - 1)] ?? subs[0];
@@ -504,30 +518,27 @@ export default function ShadowingStudio({
             aria-label="Kịch bản và chính tả"
             className="rounded-card border border-border-subtle bg-surface-elevated p-3.5"
           >
-            {/* tabs */}
-            <div role="group" aria-label="Chế độ học" data-od-id="script-tabs" className="flex gap-1 rounded-control border border-border-subtle bg-surface-muted p-0.5">
-              <button
-                type="button"
-                onClick={() => setTab("script")}
-                aria-pressed={tab === "script"}
-                className={
-                  "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
-                  (tab === "script" ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
-                }
-              >
-                Kịch bản đồng bộ
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("dict")}
-                aria-pressed={tab === "dict"}
-                className={
-                  "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
-                  (tab === "dict" ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
-                }
-              >
-                Chép chính tả
-              </button>
+            {/* mode tabs — Shadow / Chép chính tả / Phát âm (phím Digit1/2/3) */}
+            <div role="group" aria-label="Chế độ học" data-od-id="mode-tabs" className="flex gap-1 rounded-control border border-border-subtle bg-surface-muted p-0.5">
+              {([
+                ["mode-shadow", "shadow", "Shadow"],
+                ["mode-dict", "dict", "Chép chính tả"],
+                ["mode-pron", "pron", "Phát âm"],
+              ] as const).map(([tid, m, label]) => (
+                <button
+                  key={tid}
+                  type="button"
+                  data-testid={tid}
+                  onClick={() => setMode(m)}
+                  aria-pressed={mode === m}
+                  className={
+                    "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
+                    (mode === m ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
+                  }
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
             {/* transcript stream */}
@@ -535,7 +546,7 @@ export default function ShadowingStudio({
               ref={streamRef}
               data-testid="transcript-stream"
               data-od-id="transcript-stream"
-              hidden={tab === "dict"}
+              hidden={mode !== "shadow"}
               className="mt-3 max-h-[640px] space-y-2 overflow-y-auto pr-0.5"
             >
               {subs.map((s, i) => {
@@ -612,7 +623,7 @@ export default function ShadowingStudio({
             <div
               data-testid="dict-box"
               data-od-id="dictation-box"
-              hidden={tab === "script"}
+              hidden={mode !== "dict"}
               className="mt-3 space-y-3"
             >
               <div className="flex items-baseline justify-between gap-2">

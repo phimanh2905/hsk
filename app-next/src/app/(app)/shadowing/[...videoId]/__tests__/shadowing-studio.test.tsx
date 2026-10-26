@@ -39,7 +39,7 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
   });
 });
 
-describe("transcript + dictation (port script-tabs/transcript-stream/dictation-box)", () => {
+describe("transcript + dictation (mode 3 tab: Shadow/Chép chính tả/Phát âm)", () => {
   it("mỗi câu render data-sent, câu active có sent-active, click câu gọi seekTo", () => {
     const postSink = vi.fn();
     render(<ShadowingStudio video={video} subtitles={subs} enginePostSink={postSink} />);
@@ -66,6 +66,58 @@ describe("transcript + dictation (port script-tabs/transcript-stream/dictation-b
     expect(masked).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: "Gợi ý 1 chữ" }));
     expect(screen.getAllByText("?").length).toBe(masked - 1);
+  });
+});
+
+describe("mode switch — 3 tab Shadow/Dict/Pron + phím Digit1/2/3 (Task 6)", () => {
+  it("render 3 tab mode-shadow/mode-dict/mode-pron, mặc định shadow active", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    const shadow = screen.getByTestId("mode-shadow");
+    expect(shadow).toHaveAttribute("aria-pressed", "true");
+    expect(shadow).toHaveTextContent("Shadow");
+    expect(screen.getByTestId("mode-dict")).toHaveTextContent("Chép chính tả");
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByTestId("transcript-stream")).toBeVisible();
+  });
+
+  it("click mode-dict → dict-box hiện, transcript ẩn, dock mờ", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-dict"));
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("dict-box")).toBeVisible();
+    expect(screen.getByTestId("transcript-stream")).not.toBeVisible();
+    expect(screen.getByTestId("record-dock")).toHaveClass("opacity-45", "saturate-50");
+  });
+
+  it("click mode-pron → chỉ flip state (aria-pressed), dock KHÔNG mờ, dict/transcript ẩn, không render panel pron", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-pron"));
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("transcript-stream")).not.toBeVisible();
+    expect(screen.getByTestId("dict-box")).not.toBeVisible();
+    expect(screen.getByTestId("record-dock")).not.toHaveClass("opacity-45");
+  });
+
+  it("phím Digit1/2/3 đổi mode; Digit3 → tab Phát âm active", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.keyDown(document, { code: "Digit2" });
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(document, { code: "Digit3" });
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(document, { code: "Digit1" });
+    expect(screen.getByTestId("mode-shadow")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("transcript-stream")).toBeVisible();
+  });
+
+  it("phím Digit bỏ qua khi đang gõ trong textarea dictation", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-dict"));
+    const input = screen.getByTestId("dict-input");
+    input.focus();
+    fireEvent.keyDown(input, { code: "Digit3" });
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(input, { code: "Digit1" });
+    expect(screen.getByTestId("mode-shadow")).toHaveAttribute("aria-pressed", "false");
   });
 });
 
