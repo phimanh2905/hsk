@@ -9,6 +9,7 @@ import { barHeights } from "@/lib/shadowing/waveform";
 import { scoreFor, toneChipsFor } from "@/lib/shadowing/scoring";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
+import { activeWordIndex } from "@/lib/shadowing/auto-pause";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 import { topicVi } from "@/content/shadowing";
 import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
@@ -24,6 +25,13 @@ function fmt(t: number): string {
   const m = Math.floor(t / 60);
   const s = Math.round(t % 60);
   return m + ":" + String(s).padStart(2, "0");
+}
+
+/* Karaoke (Task 10): index từ đang phát tại tSec trong câu s — -1 nếu
+   không có words hoặc ngoài mọi khoảng. Pure, top-level để dễ test. */
+function activeIdx(s: SubtitleSentence, tSec: number): number {
+  if (!s.words || s.words.length === 0) return -1;
+  return activeWordIndex(s.words, tSec * 1000);
 }
 
 /* Vẽ dãy bar giả lên canvas — port drawBars() của mock; roundRect nếu có, fallback rect */
@@ -289,6 +297,18 @@ export default function ShadowingStudio({
               >
                 <Repeat size={14} strokeWidth={ICON_STROKE} /> Lặp câu
               </Button>
+              {subs.some((s) => s.words) && (
+                <Button
+                  size="sm"
+                  variant={eng.autoPause ? "primary" : "secondary"}
+                  onClick={() => eng.setAutoPause(!eng.autoPause)}
+                  aria-pressed={eng.autoPause}
+                  data-testid="auto-pause"
+                  title="Tự ngắt cuối câu theo word timing"
+                >
+                  Tự ngắt
+                </Button>
+              )}
               <div
                 role="group"
                 aria-label="Tốc độ phát"
@@ -529,6 +549,8 @@ export default function ShadowingStudio({
             >
               {subs.map((s, i) => {
                 const speaker = dialogue?.lines.find((l) => l.n === s.n)?.speaker;
+                const karaoke = !!s.words && s.words.length > 0 && i === eng.cur;
+                const ai = karaoke ? activeIdx(s, eng.time) : -1;
                 return (
                 <div
                   key={i}
@@ -554,9 +576,21 @@ export default function ShadowingStudio({
                   <div className="mt-1 flex items-start gap-2">
                     <div className="min-w-0 flex-1">
                       <div className={"zh font-semibold " + (i === eng.cur ? "text-xl" : "text-lg")} data-zh>
-                        {s.parts.map((p, pi) => (
-                          <span key={pi} data-part={pi}>{p.zh}</span>
-                        ))}
+                        {karaoke
+                          ? s.words!.map((w, wi) => (
+                              <span
+                                key={wi}
+                                data-testid="kw"
+                                data-word={wi}
+                                data-active={wi === ai ? "1" : "0"}
+                                className={wi === ai ? "rounded bg-jade-wash text-action-primary" : ""}
+                              >
+                                {w.zh}
+                              </span>
+                            ))
+                          : s.parts.map((p, pi) => (
+                              <span key={pi} data-part={pi}>{p.zh}</span>
+                            ))}
                       </div>
                       {s.pinyin && (
                         <p
