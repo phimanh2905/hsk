@@ -17,6 +17,7 @@ import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
 import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
 import DictationPanel from "./dictation-panel";
+import PronPanel from "./pron-panel";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
@@ -605,6 +606,17 @@ export default function ShadowingStudio({
               recordPractice={recordPractice}
               hidden={mode !== "dict"}
             />
+
+            {/* pron — PronPanel (Task 9): transcript thu gọn + ghi âm chấm điểm; record dock giữ nguyên cho mode shadow */}
+            {mode === "pron" && (
+              <PronPanel
+                subs={subs}
+                cur={eng.cur}
+                rate={eng.rate}
+                videoId={video.id}
+                recordPractice={recordPractice}
+              />
+            )}
           </section>
         </div>
       </div>
