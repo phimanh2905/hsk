@@ -2,11 +2,12 @@
 /* DictationPanel — chế độ Chép chính tả (port dict-box của studio, tách component).
    Variant "typing" (Task 7): gõ chữ → per-char diff + stats badges.
    Variant "arrange" (Task 8) sẽ render trong chính component này, dưới switch. */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { diffChars, type DiffResult } from "@/lib/shadowing/diff-chars";
 import { getDictStats, recordDictCheck, recordReplay } from "@/lib/shadowing/dictation-stats";
 import { getDictVariant, setDictVariant } from "@/lib/shadowing/prefs";
 import { normDict } from "@/lib/shadowing/dictation";
+import { seedFor, shuffleSeeded } from "@/lib/shadowing/arrange";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
 import { Button } from "@/components/ui/button";
@@ -83,6 +84,43 @@ export default function DictationPanel({
 
   const hintLen = Math.max(8, Math.floor((curSub?.pinyin.length ?? 0) * 0.4));
   const chars = dictChars(full);
+
+  /* --- variant arrange (Task 8): ghép từ shuffle deterministic --- */
+  const tiles: string[] = curSub?.words?.length
+    ? curSub.words.map((w) => w.zh)
+    : (curSub?.parts.map((p) => p.zh) ?? []);
+  const [built, setBuilt] = useState<number[]>([]); // index vào shuffled
+  const [wrong, setWrong] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [arrangeDiff, setArrangeDiff] = useState<DiffResult | null>(null);
+  const shuffled = useMemo(
+    () => shuffleSeeded(tiles.map((zh, i) => ({ zh, i })), seedFor(videoId, curSub?.n ?? 0)),
+    // tiles bắt nguồn hoàn toàn từ curSub — videoId đổi luôn kéo curSub đổi
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [curSub, videoId],
+  );
+  useEffect(() => {
+    setBuilt([]);
+    setWrong(false);
+    setChecked(false);
+    setArrangeDiff(null);
+  }, [curSub, videoId]);
+
+  function checkArrange() {
+    if (!curSub) return;
+    const guess = built.map((si) => shuffled[si].zh).join("");
+    const d = diffChars(guess, full);
+    const ok = d.errors === 0 && d.missing === 0;
+    setWrong(!ok);
+    setChecked(true);
+    setArrangeDiff(d);
+    recordDictCheck(videoId, curSub.n, ok ? 100 : 0, d.errors + d.missing);
+    if (ok) {
+      recordPractice(videoId, { score: 100, linesDoneDelta: 1 });
+      eng.next();
+    }
+  }
+  /* --- hết variant arrange --- */
 
   return (
     <div data-testid="dict-box" data-od-id="dictation-box" hidden={hidden} className="mt-3 space-y-3">
@@ -198,7 +236,7 @@ export default function DictationPanel({
                       ? "dict-ok border-feedback-success bg-jade-wash text-feedback-success"
                       : m.state === "bad"
                         ? "dict-bad border-feedback-error bg-rose-wash text-feedback-error"
-                        : "dict-skip border-border-subtle bg-surface-muted text-text-secondary")
+                        : "dict-neutral border-border-subtle bg-surface-muted text-text-secondary")
                   }
                 >
                   {m.ch}
@@ -246,6 +284,96 @@ export default function DictationPanel({
                 Bỏ qua / Tiếp ▶
               </Button>
             </span>
+          </div>
+        </>
+      )}
+
+      {variant === "arrange" && (
+        <>
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-sm font-extrabold tracking-wide">CÂU {cur + 1} / {subs.length}</p>
+            <small className="text-xs tabular-nums text-text-secondary">
+              Mốc thời gian {fmt(curSub?.start ?? 0)} – {fmt(curSub?.end ?? 0)}
+            </small>
+          </div>
+
+          <Button variant="secondary" size="sm" data-testid="dict-listen" onClick={pickReplay}>
+            <Volume2 size={14} strokeWidth={ICON_STROKE} /> Nghe câu mẫu
+          </Button>
+
+          {/* hàng đã ghép — khi sai: testid dict-arrange-wrong trên wrapper + tile viền đỏ */}
+          <div className="rounded-2xl border border-border-subtle bg-surface-muted p-3">
+            <p className="text-[11px] font-extrabold tracking-wider text-text-secondary">ĐÃ GHÉP</p>
+            <div
+              data-testid="dict-arrange-built"
+              className={
+                "mt-2 flex flex-wrap gap-1.5 rounded-lg p-1 " +
+                (wrong ? "border border-feedback-error bg-rose-wash" : "border border-dashed border-border-subtle")
+              }
+            >
+              {wrong && built.length > 0 && <span data-testid="dict-arrange-wrong" className="contents" aria-hidden="false" />}
+              {built.map((si) =>
+                shuffled[si] ? (
+                  <button
+                    key={si}
+                    type="button"
+                    data-testid="dict-arrange-tile"
+                    onClick={() => setBuilt((b) => b.filter((x) => x !== si))}
+                    className={
+                      "hanzi grid h-9 place-items-center rounded-lg border px-3 text-lg " +
+                      (wrong
+                        ? "border-feedback-error bg-rose-wash text-feedback-error"
+                        : "border-border-subtle bg-surface-elevated")
+                    }
+                  >
+                    {shuffled[si].zh}
+                  </button>
+                ) : null,
+              )}
+            </div>
+          </div>
+
+          {/* hàng mảnh còn lại */}
+          <div className="rounded-2xl border border-border-subtle bg-surface-muted p-3">
+            <p className="text-[11px] font-extrabold tracking-wider text-text-secondary">MẢNH TỪ</p>
+            <div data-testid="dict-arrange-bank" className="mt-2 flex flex-wrap gap-1.5">
+              {shuffled.map((t, si) =>
+                built.includes(si) ? null : (
+                  <button
+                    key={si}
+                    type="button"
+                    data-testid="dict-arrange-tile"
+                    onClick={() => { setWrong(false); setBuilt((b) => [...b, si]); }}
+                    className="hanzi grid h-9 place-items-center rounded-lg border border-border-subtle bg-surface-elevated px-3 text-lg"
+                  >
+                    {t.zh}
+                  </button>
+                ),
+              )}
+            </div>
+          </div>
+
+          <Button variant="primary" data-testid="dict-arrange-check" onClick={checkArrange} className="w-full">
+            KIỂM TRA
+          </Button>
+
+          <div className="space-y-2">
+            {checked && arrangeDiff && wrong && (
+              <div className="flex flex-wrap gap-2 text-xs font-bold">
+                <Chip tone="neutral" data-testid="dict-badge-errors" className="min-h-6 px-2">Lỗi sai: {arrangeDiff.errors}</Chip>
+                <Chip tone="neutral" data-testid="dict-badge-missing" className="min-h-6 px-2">Thiếu: {arrangeDiff.missing}</Chip>
+              </div>
+            )}
+            <p data-testid="dict-reason" className="text-sm font-bold">
+              {checked && !wrong
+                ? "Hoàn toàn chính xác"
+                : checked
+                  ? `Bạn mắc ${(arrangeDiff?.errors ?? 0) + (arrangeDiff?.missing ?? 0)} lỗi — nghe lại và sửa nhé`
+                  : ""}
+            </p>
+            {checked && !wrong && (
+              <p className="font-bold text-feedback-success">Chính xác!{curSub?.pinyin ? <span className="italic"> {curSub.pinyin}</span> : null}</p>
+            )}
           </div>
         </>
       )}

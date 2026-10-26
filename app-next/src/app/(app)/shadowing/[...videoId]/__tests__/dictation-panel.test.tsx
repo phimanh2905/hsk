@@ -27,6 +27,109 @@ beforeEach(() => {
   localStorage.clear();
 });
 
+/* fixture arrange: có words (ShadowWord[]) — tiles ưu tiên từ words */
+const subsWords: SubtitleSentence[] = [
+  {
+    n: 1,
+    start: 0,
+    end: 8,
+    parts: [{ zh: "我没你们" }],
+    words: [
+      { zh: "我", py: "wǒ", startMs: 0, endMs: 500 },
+      { zh: "没", py: "méi", startMs: 500, endMs: 1000 },
+      { zh: "你们", py: "nǐmen", startMs: 1000, endMs: 2000 },
+    ],
+    pinyin: "wǒ méi nǐ men",
+    vi: "Tôi không có các bạn",
+  },
+  { n: 2, start: 9, end: 15, parts: [{ zh: "再见" }], pinyin: "zàijiàn", vi: "Tạm biệt" },
+];
+
+function renderArrange() {
+  localStorage.setItem("bye.shadowing.dictVariant", "arrange");
+  const eng = makeEng(0);
+  const rec = vi.fn<(id: string, patch: { score?: number; linesDoneDelta?: number }) => void>();
+  render(<DictationPanel subs={subsWords} cur={0} videoId="v1" eng={eng} recordPractice={rec} />);
+  return { eng, recordPractice: rec, container: document.body };
+}
+
+function tileTexts(container: HTMLElement) {
+  return Array.from(container.querySelectorAll('[data-testid="dict-arrange-tile"]')).map((el) => el.textContent);
+}
+
+function bankTiles(container: HTMLElement) {
+  return Array.from(container.querySelectorAll('[data-testid="dict-arrange-bank"] [data-testid="dict-arrange-tile"]')).map((el) => el.textContent);
+}
+
+function tileInBank(container: HTMLElement, zh: string): HTMLElement {
+  const el = Array.from(container.querySelectorAll('[data-testid="dict-arrange-tile"]')).find(
+    (e) => e.textContent === zh,
+  );
+  if (!el) throw new Error("tile not found in bank: " + zh);
+  return el as HTMLElement;
+}
+
+describe("DictationPanel — variant Arrange (Task 8)", () => {
+  it("render: dict-arrange-bank có N tile (N = words.length), variant-arrange pressed", () => {
+    const { container } = renderArrange();
+    expect(screen.getByTestId("dict-variant-arrange")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("dict-arrange-bank")).toBeInTheDocument();
+    expect(screen.queryByTestId("dict-input")).not.toBeInTheDocument();
+    expect(tileTexts(container).length).toBe(3);
+  });
+
+  it("shuffle deterministic: thứ tự tile giống nhau giữa 2 render cùng seed", () => {
+    localStorage.setItem("bye.shadowing.dictVariant", "arrange");
+    const r1 = render(<DictationPanel subs={subsWords} cur={0} videoId="v1" eng={makeEng(0)} recordPractice={vi.fn()} />);
+    const order1 = tileTexts(r1.container);
+    r1.unmount();
+    const r2 = render(<DictationPanel subs={subsWords} cur={0} videoId="v1" eng={makeEng(0)} recordPractice={vi.fn()} />);
+    expect(tileTexts(r2.container)).toEqual(order1);
+    r2.unmount();
+  });
+
+  it("tap tile → vào built; tap lại trong built → về bank", () => {
+    const { container } = renderArrange();
+    const zh = tileTexts(container)[0]!;
+    fireEvent.click(screen.getByText(zh));
+    expect(bankTiles(container).length).toBe(2); // bank còn 2
+    expect(screen.getByTestId("dict-arrange-built").textContent).toContain(zh);
+    fireEvent.click(screen.getByTestId("dict-arrange-built").querySelector('[data-testid="dict-arrange-tile"]')!);
+    expect(bankTiles(container).length).toBe(3); // về lại bank đủ 3
+    expect(screen.getByTestId("dict-arrange-built").textContent).not.toContain(zh);
+  });
+
+  it("ghép đúng thứ tự → check → reason 'Hoàn toàn chính xác', recordPractice {score:100}", () => {
+    const { recordPractice, eng } = renderArrange();
+    for (const zh of ["我", "没", "你们"]) fireEvent.click(tileInBank(document.body, zh));
+    fireEvent.click(screen.getByTestId("dict-arrange-check"));
+    expect(screen.getByTestId("dict-reason").textContent).toContain("Hoàn toàn chính xác");
+    expect(recordPractice).toHaveBeenCalledWith("v1", { score: 100, linesDoneDelta: 1 });
+    expect(eng.next).toHaveBeenCalled();
+  });
+
+  it("ghép sai thứ tự → check → dict-arrange-wrong + dict-badge-errors >= 1", () => {
+    renderArrange();
+    for (const zh of ["没", "我", "你们"]) fireEvent.click(tileInBank(document.body, zh));
+    fireEvent.click(screen.getByTestId("dict-arrange-check"));
+    expect(screen.getByTestId("dict-arrange-wrong")).toBeInTheDocument();
+    const errors = Number(screen.getByTestId("dict-badge-errors").textContent?.replace(/\D/g, ""));
+    expect(errors).toBeGreaterThanOrEqual(1);
+  });
+
+  it("đổi câu (cur) → built reset rỗng", () => {
+    const eng = makeEng(0);
+    localStorage.setItem("bye.shadowing.dictVariant", "arrange");
+    const { rerender } = render(
+      <DictationPanel subs={subsWords} cur={0} videoId="v1" eng={eng} recordPractice={vi.fn()} />,
+    );
+    fireEvent.click(tileInBank(document.body, "我"));
+    expect(screen.getByTestId("dict-arrange-built").querySelectorAll('[data-testid="dict-arrange-tile"]').length).toBe(1);
+    rerender(<DictationPanel subs={subsWords} cur={1} videoId="v1" eng={eng} recordPractice={vi.fn()} />);
+    expect(screen.getByTestId("dict-arrange-built").querySelectorAll('[data-testid="dict-arrange-tile"]').length).toBe(0);
+  });
+});
+
 describe("DictationPanel — variant Typing (Task 7)", () => {
   it("mặc định variant = localStorage (typing) → dict-variant-typing aria-pressed=true", () => {
     renderPanel();

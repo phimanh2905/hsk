@@ -1,6 +1,6 @@
 "use client";
 /* Engine phát — tách nguyên vẹn từ video-player.tsx (postMessage YouTube,
-   polling 500ms, TTS fallback 4s). Khác biệt duy nhất (spec §3.4):
+   polling 100ms, TTS fallback 4s). Khác biệt duy nhất (spec §3.4):
    - auto-split thành state (default true), không đọc DOM
    - thêm loop: chạm cuối câu khi playing → seek về đầu câu thay vì pause
    - phím: K=play/pause, R=nghe mẫu, L=loop, ←/→=chuyển câu. Space do record dock phụ trách. */
