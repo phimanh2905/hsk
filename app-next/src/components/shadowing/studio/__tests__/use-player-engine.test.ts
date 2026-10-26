@@ -52,4 +52,46 @@ describe("usePlayerEngine", () => {
     act(() => result.current.toggleLoop());
     expect(result.current.loop).toBe(true);
   });
+
+  /* Task 5 — time state + auto-pause toggle. Poll 100ms; ytReady phải đánh thức
+     qua message "onReady" (như handshake thật) để nhịp poll đi tới tick(). */
+  const subsWords: SubtitleSentence[] = [
+    {
+      n: 1, start: 0, end: 2, parts: [{ zh: "我们" }], pinyin: "", vi: "",
+      words: [
+        { zh: "我", py: "", startMs: 0, endMs: 1200 },
+        { zh: "们", py: "", startMs: 1200, endMs: 1800 },
+      ],
+    },
+    { n: 2, start: 3, end: 15, parts: [{ zh: "再见" }], pinyin: "Zàijiàn", vi: "Tạm biệt" },
+  ];
+
+  function ytMessage(data: unknown) {
+    window.dispatchEvent(
+      new MessageEvent("message", { origin: "https://www.youtube-nocookie.com", data: JSON.stringify(data) })
+    );
+  }
+
+  it("tick cập nhật time", () => {
+    vi.useFakeTimers();
+    try {
+      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords }));
+      expect(result.current.time).toBe(0);
+      act(() => ytMessage({ event: "onReady" }));
+      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 5, playerState: 1 } } }));
+      act(() => vi.advanceTimersByTime(150)); // qua 1 nhịp poll 100ms
+      expect(result.current.time).toBe(5);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("setAutoPause flip state + localStorage", () => {
+    localStorage.clear();
+    const { result } = renderHook(() => usePlayerEngine({ subs: subsWords }));
+    expect(result.current.autoPause).toBe(false);
+    act(() => result.current.setAutoPause(true));
+    expect(result.current.autoPause).toBe(true);
+    expect(localStorage.getItem("bye.shadowing.autoPause")).toBe("1");
+  });
 });
