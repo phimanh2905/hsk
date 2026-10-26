@@ -64,5 +64,7 @@ export function diffChars(src: string, want: string): DiffResult {
     marks[a.i].state = "bad";
     errors++;
   }
-  return { marks, errors, missing: Math.max(0, B.length - matched - skippedWant), total: B.length };
+  // skippedWant chỉ được trừ khỏi missing ở mức số lỗi tương ứng:
+  // thay thế có chủ đích (errors>0) mới excused, thiếu chữ thuần (errors=0) vẫn missing.
+  return { marks, errors, missing: Math.max(0, B.length - matched - Math.min(skippedWant, errors)), total: B.length };
 }

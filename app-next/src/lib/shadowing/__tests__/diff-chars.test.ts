@@ -56,6 +56,19 @@ describe("diffChars", () => {
     expect(r.errors).toBe(2);
     expect(r.missing).toBe(0);
   });
+  it("thiếu chữ giữa câu (omission) → missing, không ok", () => {
+    const r = diffChars("我你们", "我没你们");
+    expect(r.errors).toBe(0);
+    expect(r.missing).toBe(1);
+    // 我=ok, 你=ok (resync), 们=ok — nhưng missing=1 nên tổng thể không "chính xác"
+    expect(states(r)).toBe("okokok");
+  });
+  it("subsequence bỏ 2 chữ giữa (啊离 vs 啊我才离) → vẫn có lỗi", () => {
+    const r = diffChars("啊离", "啊我才离");
+    // errors=0 nhưng skippedWant=2 không được errors che phủ → missing=2, không pass
+    expect(r.errors).toBe(0);
+    expect(r.missing).toBe(2);
+  });
   it("dấu thanh pinyin (diacritics) bỏ qua qua stripTones", () => {
     const r = diffChars("wǒ měi", "wo mei");
     expect(r.errors).toBe(0);
