@@ -28,7 +28,9 @@ function signSessionToken(token: string, secret: string): string {
 
 function d1Run(sql: string): void {
   execFileSync("pnpm", [
-    "wrangler", "d1", "execute", "hsk-dev", "--remote", "--config", "wrangler.dev.jsonc",
+    // D1 seed: --local trùng DB dev server đang bind (miniflare state);
+    // set E2E_D1_REMOTE=1 để seed D1 remote thật khi có CLOUDFLARE_API_TOKEN.
+    "wrangler", "d1", "execute", "hsk-dev", process.env.E2E_D1_REMOTE === "1" ? "--remote" : "--local", "--config", "wrangler.dev.jsonc",
     "--command", sql, "--json",
   ], { stdio: "ignore", timeout: 120_000 });
 }

@@ -27,7 +27,10 @@ test("không có hydration mismatch trên các route chính", async ({ page }) =
   });
 
   for (const route of ROUTES) {
-    await page.goto(route, { waitUntil: "networkidle" });
+    // "networkidle" từng treo ở chế độ dev khi response JSON lớn (vocab ~1.7MB)
+    // giữ connection lâu — spec này chỉ cần hydration xong, không cần network rảnh.
+    await page.goto(route, { waitUntil: "load", timeout: 30_000 });
+    await page.waitForTimeout(500); // nhịp hydration/console sau load
   }
   expect(errors, errors.join("\n")).toEqual([]);
 });

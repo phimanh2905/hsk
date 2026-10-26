@@ -59,13 +59,24 @@ export function usePlayerEngine({
   const [rate, setRate] = useState(1);
   const [loop, setLoop] = useState(false);
   const [time, setTime] = useState(0); // giây — cập nhật mỗi nhịp poll (Task 6 karaoke đọc)
-  const [autoPause, setAutoPauseState] = useState(getAutoPause());
+  // SSR render false — giá trị localStorage chỉ đọc lại sau mount (useEffect) vì
+  // hydration không patch thuộc tính DOM sai khác giữa server và client.
+  const [autoPause, setAutoPauseState] = useState(false);
   const [autoSplit] = useState(true); // Task 8 có thể nâng thành state điều khiển từ settings
   st.current.autoSplit = autoSplit;
   st.current.audio = audioMode;
 
   const sinkRef = useRef(postSink);
   sinkRef.current = postSink;
+
+  // Task 5 — auto-pause nhớ localStorage: sync sau mount (hydration-safe)
+  useEffect(() => {
+    const saved = getAutoPause();
+    if (saved) {
+      st.current.autoPause = true;
+      setAutoPauseState(true);
+    }
+  }, []);
 
   /* ---------- điều khiển YouTube (postMessage) — port shadowing-video.js:52-56 ---------- */
   function ytSend(obj: Record<string, unknown>) {
