@@ -8,9 +8,7 @@ import { useRecorder } from "@/lib/shadowing/use-recorder";
 import { barHeights } from "@/lib/shadowing/waveform";
 import { scoreFor, toneChipsFor } from "@/lib/shadowing/scoring";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
-import { normDict } from "@/lib/shadowing/dictation";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
-import { useTts } from "@/lib/tts/use-tts";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 import { topicVi } from "@/content/shadowing";
 import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
@@ -18,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
 import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
+import DictationPanel from "./dictation-panel";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
@@ -50,11 +49,6 @@ function drawBars(canvas: HTMLCanvasElement, heights: number[], color: string) {
   });
 }
 
-/* dictChars của mock: full text trừ dấu câu + khoảng trắng, tách từng chữ */
-function dictChars(full: string): string[] {
-  return full.replace(/[。，、！？…—\s]/g, "").split("");
-}
-
 export default function ShadowingStudio({
   video,
   subtitles: subs,
@@ -77,7 +71,6 @@ export default function ShadowingStudio({
     ? (dialogueByLesson as unknown as Record<string, DialogueRecord | undefined>)[video.id]
     : undefined;
   const toast = useToast();
-  const { speak } = useTts();
   const { progressMap, recordPractice } = useShadowingProgress();
   const prog = progressMap[video.id];
   const [subMode, setSubMode] = useState<0 | 1 | 2>(2); // 0: chỉ hanzi, 1: chỉ pinyin, 2: cả hai
@@ -168,24 +161,8 @@ export default function ShadowingStudio({
     try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch { /* jsdom */ }
   }, [eng.cur, mode]);
 
-  /* ---------- dictation (port DictationPanel) — state reset theo câu ---------- */
+  /* ---------- dictation — DictationPanel (Task 7, variant typing; Task 8 thêm arrange) ---------- */
   const curSub = subs[Math.min(eng.cur, subs.length - 1)] ?? subs[0];
-  const full = curSub ? curSub.parts.map((p) => p.zh).join(" ") : "";
-  const [value, setValue] = useState("");
-  const [result, setResult] = useState<null | { kind: "empty" | "correct" | "wrong" }>(null);
-  const [dictShown, setDictShown] = useState(0); // số chữ đã mở trong "Gợi ý ô trống"
-  useEffect(() => { setValue(""); setResult(null); setDictShown(0); }, [curSub]);
-
-  function check() {
-    if (!curSub) return;
-    if (!normDict(value)) { setResult({ kind: "empty" }); return; }
-    const ok = normDict(value) === normDict(full);
-    setResult({ kind: ok ? "correct" : "wrong" });
-    if (ok) recordPractice(video.id, { score: 85, linesDoneDelta: 1 });
-  }
-
-  const hintLen = Math.max(8, Math.floor((curSub?.pinyin.length ?? 0) * 0.4));
-  const chars = dictChars(full);
   const chips = toneChipsFor(lastScore ?? -1, (curSub?.parts ?? []).map((p) => p.zh));
 
   return (
@@ -619,98 +596,15 @@ export default function ShadowingStudio({
               })}
             </div>
 
-            {/* dictation box */}
-            <div
-              data-testid="dict-box"
-              data-od-id="dictation-box"
+            {/* dictation — DictationPanel (testid dict-box nằm trong panel) */}
+            <DictationPanel
+              subs={subs}
+              cur={eng.cur}
+              videoId={video.id}
+              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, prev: eng.prev, next: eng.next }}
+              recordPractice={recordPractice}
               hidden={mode !== "dict"}
-              className="mt-3 space-y-3"
-            >
-              <div className="flex items-baseline justify-between gap-2">
-                <p className="text-sm font-extrabold tracking-wide">CÂU {eng.cur + 1} / {subs.length}</p>
-                <small className="text-xs tabular-nums text-text-secondary">
-                  Mốc thời gian {fmt(curSub?.start ?? 0)} – {fmt(curSub?.end ?? 0)}
-                </small>
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" data-testid="dict-listen" onClick={eng.listenCurrent}>
-                  <Volume2 size={14} strokeWidth={ICON_STROKE} /> Nghe câu mẫu
-                </Button>
-                <Button variant="secondary" size="sm" data-testid="dict-slow" onClick={() => speak(full, { lang: "zh-CN", rate: 0.65 })}>
-                  Nghe chậm 0.65x
-                </Button>
-              </div>
-
-              {/* gợi ý ô trống */}
-              <div className="rounded-2xl border border-border-subtle bg-surface-muted p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] font-extrabold tracking-wider text-text-secondary">GỢI Ý Ô TRỐNG</p>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    data-testid="dict-hint"
-                    onClick={() => {
-                      if (dictShown >= chars.length) { toast("Đã hiện hết gợi ý rồi"); return; }
-                      setDictShown((n) => n + 1);
-                    }}
-                  >
-                    Gợi ý 1 chữ
-                  </Button>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {chars.map((c, ci) => (
-                    <span
-                      key={ci}
-                      className={
-                        "grid h-9 w-9 place-items-center rounded-lg border text-lg " +
-                        (ci < dictShown
-                          ? "hanzi border-border-subtle bg-surface-elevated"
-                          : "border-dashed border-border-subtle text-text-secondary")
-                      }
-                    >
-                      {ci < dictShown ? c : "?"}
-                    </span>
-                  ))}
-                </div>
-                {dictShown >= 1 && curSub?.pinyin && (
-                  <p className="mt-2 text-xs italic text-text-secondary">Gợi ý: {curSub.pinyin.slice(0, hintLen)}…</p>
-                )}
-              </div>
-
-              <textarea
-                data-testid="dict-input"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); check(); } }}
-                placeholder="Gõ những gì bạn nghe được (chữ Hán hoặc pinyin)"
-                rows={3}
-                className="zh text-lg min-h-24 rounded-2xl bg-surface-muted p-3.5 w-full border border-border-subtle text-text-primary placeholder:text-text-secondary focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
-              />
-
-              <Button variant="primary" onClick={check} data-testid="dict-check" className="w-full">
-                Kiểm tra đáp án
-              </Button>
-
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" data-testid="dict-prev" onClick={eng.prev}>◀ Câu trước</Button>
-                <Button variant="secondary" size="sm" data-testid="dict-skip" onClick={eng.next} className="ml-auto">
-                  Bỏ qua / Tiếp ▶
-                </Button>
-              </div>
-
-              <div data-testid="dict-result">
-                {result?.kind === "empty" && <p className="text-sm text-text-secondary">Hãy gõ những gì bạn nghe được trước đã.</p>}
-                {result?.kind === "correct" && (
-                  <p className="font-bold text-feedback-success">
-                    Chính xác!{curSub?.pinyin ? <span className="italic"> {curSub.pinyin}</span> : null}
-                  </p>
-                )}
-                {result?.kind === "wrong" && (
-                  <p className="font-bold text-feedback-error">Chưa đúng — nghe lại và thử tiếp nhé (đáp án vẫn đang ẩn)</p>
-                )}
-              </div>
-            </div>
+            />
           </section>
         </div>
       </div>
