@@ -94,4 +94,43 @@ describe("usePlayerEngine", () => {
     expect(result.current.autoPause).toBe(true);
     expect(localStorage.getItem("bye.shadowing.autoPause")).toBe("1");
   });
+
+  /* auto-pause theo word timing: t chạm endMs từ cuối (1800ms) → dừng.
+     loop BẬT → phải seek về đầu câu thay vì pause (ưu tiên loop). */
+  it("auto-pause: loop TẮT → pause; loop BẬT → seek về đầu câu (không pause)", () => {
+    localStorage.clear();
+    vi.useFakeTimers();
+    try {
+      const postSink = vi.fn();
+      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords, postSink }));
+      act(() => result.current.setAutoPause(true));
+      act(() => ytMessage({ event: "onReady" }));
+      // playing + currentTime 1.9s (> endMs từ cuối 1800ms - 60ms)
+      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 1.9, playerState: 1 } } }));
+      expect(result.current.playing).toBe(true);
+
+      /* ---- loop TẮT → auto-pause dừng video ---- */
+      postSink.mockClear();
+      act(() => vi.advanceTimersByTime(150)); // qua 1 nhịp poll 100ms
+      const msgsOff = postSink.mock.calls.map((c) => c[0] as string);
+      expect(msgsOff.some((m) => m.includes('"func":"pauseVideo"'))).toBe(true);
+      expect(result.current.playing).toBe(false);
+
+      /* ---- loop BẬT → seek về đầu câu, KHÔNG pause ---- */
+      act(() => result.current.toggleLoop());
+      expect(result.current.loop).toBe(true);
+      act(() => result.current.play());
+      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 1.9, playerState: 1 } } }));
+      postSink.mockClear();
+      act(() => vi.advanceTimersByTime(150));
+      const msgsOn = postSink.mock.calls.map((c) => c[0] as string);
+      const seek = msgsOn.find((m) => m.includes('"func":"seekTo"'));
+      expect(seek).toBeTruthy();
+      expect(seek).toContain('"args":[0,true]'); // về đầu câu 0
+      expect(msgsOn.some((m) => m.includes('"func":"pauseVideo"'))).toBe(false);
+      expect(result.current.playing).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

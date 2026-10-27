@@ -53,6 +53,13 @@ let inited = false;
 let loggedIn = false;
 let timer: ReturnType<typeof setTimeout> | null = null;
 const dirty = new Set<SyncDomain>();
+/* Version của từng domain: tăng mỗi lần domain bị đánh dirty. Dùng để phát hiện
+   "domain bị mutate TRONG LÚC POST đang bay" — khi đó payload snapshot cũ KHÔNG
+   chứa thay đổi mới, nên KHÔNG được clear dirty (nếu clear → mất dữ liệu vĩnh viễn:
+   ví dụ grade xảy ra trong lúc merge-push login đang bay → srs bị xóa khỏi dirty
+   → item có reviewCount mới không bao giờ được gửi lên server). */
+const dirtyVersion: Record<SyncDomain, number> = { srs: 0, studyDay: 0, lessonProgress: 0, reviewLogs: 0 };
+let dirtySeq = 0;
 
 type Tombstones = { srs: Record<string, number>; lessonProgress: Record<string, number> };
 
@@ -123,12 +130,21 @@ function persistDirty(): void {
 function restoreDirty(): void {
   const obj = readJSON<Partial<Record<SyncDomain, 1>>>(DIRTY_KEY, {});
   for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs"] as const) {
-    if (obj[d]) dirty.add(d);
+    if (obj[d]) {
+      dirty.add(d);
+      dirtyVersion[d] = ++dirtySeq; // version mới → flush đang bay không xóa nhầm
+    }
   }
 }
 
-function markDirty(d: SyncDomain): void {
+/** Đánh dirty + tăng version (không schedule) — dùng khi cần giữ cờ qua flush đang bay. */
+function bumpDirty(d: SyncDomain): void {
   dirty.add(d);
+  dirtyVersion[d] = ++dirtySeq;
+}
+
+function markDirty(d: SyncDomain): void {
+  bumpDirty(d);
   persistDirty();
   schedule();
 }
@@ -419,6 +435,8 @@ let flushing: Promise<void> | null = null;
 async function doFlush(): Promise<void> {
   if (!loggedIn || dirty.size === 0) return;
   const domains = [...dirty];
+  // version tại thời điểm chụp payload — so sánh sau khi POST xong
+  const marks = domains.map((d) => [d, dirtyVersion[d]] as const);
   const payload = computePayload();
   try {
     const res = await fetch("/api/v1/sync", {
@@ -447,7 +465,10 @@ async function doFlush(): Promise<void> {
     if (sent.length) {
       writeLastSentLogAt(Math.max(readLastSentLogAt(), sent[sent.length - 1].reviewedAt));
     }
-    for (const d of domains) {
+    for (const [d, mark] of marks) {
+      // domain bị mutate TRONG LÚC POST đang bay → payload cũ chưa chứa thay đổi
+      // mới → giữ dirty, flush lại (nếu clear ở đây → mất dữ liệu vĩnh viễn).
+      if (dirtyVersion[d] !== mark) continue;
       // reviewLogs: chỉ clear dirty khi KHÔNG còn log chưa gửi (so với con trỏ,
       // không so với tổng local — tránh flush vô hạn khi local > batch cap)
       if (d === "reviewLogs" && progressStore.getReviewLogs().some((l) => l.reviewedAt > readLastSentLogAt())) {
@@ -533,10 +554,10 @@ export function hybridOnAuthChange(nextLoggedIn: boolean): void {
 /** Merge-push 2 chiều lần đầu đăng nhập: POST toàn bộ local state → response
     merge ngược vào local. Gọi 1 lần per lần login. */
 export async function hybridMergeOnLogin(): Promise<void> {
-  dirty.add("srs");
-  dirty.add("studyDay");
-  dirty.add("lessonProgress"); // push toàn bộ 2 chiều
-  dirty.add("reviewLogs");
+  bumpDirty("srs");
+  bumpDirty("studyDay");
+  bumpDirty("lessonProgress"); // push toàn bộ 2 chiều
+  bumpDirty("reviewLogs");
   persistDirty();
   await flush();
 }

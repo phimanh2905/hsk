@@ -388,6 +388,84 @@ describe("hybrid-store", () => {
     expect(after.srs).toBeUndefined();
   });
 
+  it("item CHỈ có sau merge từ server → grade → payload phải chứa item với reviewCount mới", async () => {
+    initHybridStoreFn();
+    // flush merge-push lúc login: server trả về 1 srs item (pull)
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          srs: [sse("hsk1.lesson-1.0", { status: "learning", reviewCount: 0, updatedAt: 1000 })],
+          studyDay: [],
+          lessonProgress: [],
+          reviewLogs: [],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+    hybridOnAuthChangeFn(true);
+    await settle();
+    // item đã vào localStorage nhờ merge
+    const items = JSON.parse(localStorage.getItem("bye.srs.items") || "{}");
+    expect(items["hsk1.lesson-1.0"]).toBeTruthy();
+
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
+    );
+
+    // user grade item vừa đến từ server
+    const NOW = Date.now();
+    expect(progressStore.recordReview("hsk1.lesson-1.0", "good", NOW, 500)).toBeTruthy();
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const rec = (body.srs as Array<Record<string, unknown>>).find((r) => r.key === "hsk1.lesson-1.0");
+    expect(rec).toBeTruthy();
+    expect(rec!.reviewCount).toBe(1);
+  });
+
+  it("grade xảy ra TRONG LÚC flush đang bay → dirty không bị mất, flush sau gửi srs", async () => {
+    initHybridStoreFn();
+    // merge-push login: server trả item (pull)
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          srs: [sse("hsk1.lesson-1.0", { status: "learning", reviewCount: 0, updatedAt: 1000 })],
+          studyDay: [],
+          lessonProgress: [],
+          reviewLogs: [],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+    hybridOnAuthChangeFn(true);
+    await settle();
+
+    // flush mới đang bay (fetch chậm) — giống case thật: sang trang mới → merge-push
+    let resolveFetch!: (v: Response) => void;
+    fetchMock.mockImplementationOnce(() => new Promise<Response>((res) => (resolveFetch = res)));
+    hybridMarkDirtyFn("srs");
+    const inflight = hybridSyncNowFn();
+
+    // user grade TRONG LÚC POST đang bay
+    const NOW = Date.now();
+    expect(progressStore.recordReview("hsk1.lesson-1.0", "good", NOW, 500)).toBeTruthy();
+
+    resolveFetch(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], reviewLogs: [], serverTime: 1 }), { status: 200 })
+    );
+    await inflight;
+
+    // flush kế tiếp (debounce) phải đưa item có reviewCount mới lên server
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const rec = (body.srs as Array<Record<string, unknown>>).find((r) => r.key === "hsk1.lesson-1.0");
+    expect(rec).toBeTruthy();
+    expect(rec!.reviewCount).toBe(1);
+  });
+
   it("server trả log trùng khóa (itemKey, reviewedAt) → local không đúp; log mới từ server được thêm", async () => {
     const NOW = Date.now() - 5000;
     progressStore.toggleSrs("hsk1.1.0");
