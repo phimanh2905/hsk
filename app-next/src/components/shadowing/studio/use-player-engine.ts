@@ -83,6 +83,15 @@ export function usePlayerEngine({
   function handlePlayerError() {
     setPlayerError(true);
   }
+  /* Sync playing state từ player events (onPlay/onPause của ReactPlayer) — YT có thể
+     tự pause (buffer, autoplay policy); engine cũ đọc playerState từ postMessage,
+     engine ref-driven phải sync qua callback để không mất đồng bộ nút Phát. */
+  function syncPlaying(on: boolean) {
+    if (st.current.audio || st.current.tts) return;
+    if (st.current.playing === on) return;
+    st.current.playing = on;
+    setPlaying(on);
+  }
 
   /* ---------- T7 — điều khiển <audio id="audioplayer"> (clip mp3 theo câu) ---------- */
   function seekAudio(i: number) {
@@ -298,5 +307,6 @@ export function usePlayerEngine({
     speakSentence: (i: number) => speakSentence(i),
     markYtReady,
     handlePlayerError,
+    syncPlaying,
   };
 }

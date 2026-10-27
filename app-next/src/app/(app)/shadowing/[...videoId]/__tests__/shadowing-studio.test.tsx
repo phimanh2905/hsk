@@ -14,7 +14,18 @@ vi.mock("react-player", () => ({
     props: Record<string, unknown> & { src?: string; config?: unknown; onReady?: () => void; onError?: () => void },
     ref: React.Ref<HTMLDivElement>
   ) {
-    return <div ref={ref} data-yt-src={props.src} data-config={JSON.stringify(props.config ?? null)} />;
+    return (
+      <div
+        ref={(el) => {
+          // engine gọi play/pause/currentTime trên ref — stub như HTMLMediaElement
+          if (el) Object.assign(el, { play: () => {}, pause: () => {} });
+          if (typeof ref === "function") ref(el);
+          else if (ref) ref.current = el;
+        }}
+        data-yt-src={props.src}
+        data-config={JSON.stringify(props.config ?? null)}
+      />
+    );
   }),
 }));
 
@@ -27,7 +38,7 @@ vi.mock("@/components/shadowing/studio/use-player-engine", async (importOriginal
     cur: 0, playing: false, tts: false, ytReady: true, playerError: false, rate: 1, loop: false, time: 0, autoPause: false,
     setAutoPause: vi.fn(), play: vi.fn(), pause: vi.fn(), togglePlay: vi.fn(), gotoSentence: vi.fn(),
     next: vi.fn(), prev: vi.fn(), repeat: vi.fn(), setRate: vi.fn(), toggleLoop: vi.fn(),
-    listenCurrent: vi.fn(), speakSentence: vi.fn(), markYtReady: vi.fn(), handlePlayerError: vi.fn(),
+    listenCurrent: vi.fn(), speakSentence: vi.fn(), markYtReady: vi.fn(), handlePlayerError: vi.fn(), syncPlaying: vi.fn(),
   };
   return {
     ...actual,

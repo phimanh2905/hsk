@@ -69,6 +69,14 @@ describe("usePlayerEngine (ref-driven)", () => {
     expect(result.current.ytReady).toBe(true);
   });
 
+  it("syncPlaying cập nhật playing khi YouTube tự pause (không đổi ở audio/tts mode)", () => {
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
+    act(() => result.current.syncPlaying(true)); // YT báo đang phát
+    expect(result.current.playing).toBe(true);
+    act(() => result.current.syncPlaying(false)); // YT tự pause (buffer)
+    expect(result.current.playing).toBe(false);
+  });
+
   it("next/prev/repeat clamp trong [0, len-1]", () => {
     const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
     act(() => result.current.prev());

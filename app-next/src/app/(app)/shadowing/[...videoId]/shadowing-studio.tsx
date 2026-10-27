@@ -251,6 +251,8 @@ export default function ShadowingStudio({
                     config={windowOrigin ? { youtube: { origin: windowOrigin, rel: 0 } } : undefined}
                     onReady={eng.markYtReady}
                     onError={eng.handlePlayerError}
+                    onPlay={() => eng.syncPlaying(true)}
+                    onPause={() => eng.syncPlaying(false)}
                     fallback={<div className="h-full w-full animate-pulse bg-surface-muted" />}
                     style={{ width: "100%", height: "100%" }}
                   />
