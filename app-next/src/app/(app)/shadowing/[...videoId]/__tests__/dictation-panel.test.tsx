@@ -13,7 +13,7 @@ const subs: SubtitleSentence[] = [
 ];
 
 function makeEng(cur = 0) {
-  return { cur, listenCurrent: vi.fn(), prev: vi.fn(), next: vi.fn() };
+  return { cur, listenCurrent: vi.fn(), listenSlow: vi.fn(), prev: vi.fn(), next: vi.fn() };
 }
 
 function renderPanel({ cur = 0, recordPractice }: { cur?: number; recordPractice?: (id: string, patch: { score?: number; linesDoneDelta?: number }) => void } = {}) {
@@ -180,6 +180,12 @@ describe("DictationPanel — variant Typing (Task 7)", () => {
     expect(replaySpy).toHaveBeenCalledWith("v1", 1);
     expect(eng.listenCurrent).toHaveBeenCalled();
     replaySpy.mockRestore();
+  });
+
+  it("dict-slow → eng.listenSlow được gọi (nghe giọng video chậm 0.65x, không dùng TTS)", () => {
+    const { eng } = renderPanel();
+    fireEvent.click(screen.getByTestId("dict-slow"));
+    expect(eng.listenSlow).toHaveBeenCalled();
   });
 
   it("dict-hint click 1 lần → 1 ô hiện chữ đầu, còn lại '?'", () => {

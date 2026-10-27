@@ -57,6 +57,9 @@ export function usePlayerEngine({
   const [playing, setPlaying] = useState(false);
   const [tts, setTts] = useState(false);
   const [rate, setRate] = useState(1);
+  // tốc độ override khi nghe chậm (one-shot) — phải là React state để ReactPlayer
+  // prop playbackRate sync đúng, không bị ghi đè về rate chính khi re-render
+  const [listenRate, setListenRate] = useState<number | null>(null);
   const [loop, setLoop] = useState(false);
   const [time, setTime] = useState(0); // giây — cập nhật mỗi nhịp poll (Task 6 karaoke đọc)
   // SSR render false — giá trị localStorage chỉ đọc lại sau mount (useEffect) vì
@@ -79,7 +82,8 @@ export function usePlayerEngine({
     if (st.current.ytReady) return;
     st.current.ytReady = true;
     setYtReady(true); // Ruling Task 5 review: render-from-ref → React state
-    if (playerRef.current) playerRef.current.playbackRate = st.current.rate;
+    // onReady tới trễ không được ghi đè tốc độ nghe chậm đang chạy
+    if (playerRef.current && !st.current.listen) playerRef.current.playbackRate = st.current.rate;
   }
   function handlePlayerError() {
     setPlayerError(true);
@@ -149,6 +153,7 @@ export function usePlayerEngine({
     if (st.current.listen) {
       if (t >= st.current.listen.end - 0.05) {
         st.current.listen = null;
+        setListenRate(null); // restore tốc độ qua prop ReactPlayer
         if (st.current.playing) pause();
       }
       return;
@@ -194,7 +199,7 @@ export function usePlayerEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function speakSentence(i: number, onend?: () => void) {
+  function speakSentence(i: number, onend?: () => void, rateOverride?: number) {
     if (st.current.audio) { // T7: audio mode — "Nghe câu" phát clip thật thay vì TTS
       gotoSentence(Math.min(Math.max(i, 0), subs.length - 1), true);
       return;
@@ -205,13 +210,14 @@ export function usePlayerEngine({
       const clamped = Math.min(Math.max(i, 0), subs.length - 1);
       if (playerRef.current) playerRef.current.currentTime = subs[clamped].start;
       st.current.listen = { end: subs[clamped].end };
+      if (rateOverride) setListenRate(rateOverride);
       if (!st.current.playing) play();
       return;
     }
     const s = subs[i];
     speak(s.parts.map((p) => p.zh).join(" "), {
       lang: "zh-CN",
-      rate: st.current.rate,
+      rate: rateOverride ?? st.current.rate,
       onEnd: onend ? () => { if (st.current.playing && st.current.tts) onend(); } : undefined,
     });
   }
@@ -239,8 +245,10 @@ export function usePlayerEngine({
   function pause() {
     st.current.playing = false; setPlaying(false);
     st.current.listen = null; // pause thủ công hủy nghe mẫu (tick đã clear trước khi gọi pause ở đường one-shot)
+    setListenRate(null); // restore tốc độ nghe chậm nếu đang chạy
     if (st.current.audio) { try { audioEl()?.pause(); } catch { /* silent */ } return; }
-    if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } } else playerRef.current?.pause();
+    if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } }
+    else playerRef.current?.pause();
   }
   const togglePlay = () => { if (st.current.playing) pause(); else play(); };
 
@@ -300,10 +308,15 @@ export function usePlayerEngine({
   /* ---------- autoscroll câu active: capability giữ qua `cur` — Task 8 (transcript
      panel) tự đăng ký effect trên cur và đọc pref getAutoscroll() để scrollIntoView. ---------- */
 
-  /* ---------- nghe lại câu — cùng cơ chế nghe mẫu one-shot (giọng video) ---------- */
-  const listenCurrent = () => {
-    if (st.current.audio) { gotoSentence(st.current.cur, true); return; }
-    speakSentence(cur);
+  /* ---------- nghe lại câu — cùng cơ chế nghe mẫu one-shot (giọng video).
+     slowRate (vd 0.65): phát chậm hơn, hết câu restore về tốc độ đang chọn. ---------- */
+  const listenCurrent = (slowRate?: number) => {
+    if (st.current.audio) {
+      if (slowRate) { try { audioEl()!.playbackRate = slowRate; } catch { /* silent */ } }
+      gotoSentence(st.current.cur, true);
+      return;
+    }
+    speakSentence(cur, undefined, slowRate);
   };
 
   return {
@@ -313,6 +326,7 @@ export function usePlayerEngine({
     ytReady,
     playerError,
     rate,
+    effectiveRate: listenRate ?? rate,
     loop,
     time,
     autoPause,

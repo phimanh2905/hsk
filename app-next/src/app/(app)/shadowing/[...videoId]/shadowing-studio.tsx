@@ -228,7 +228,7 @@ export default function ShadowingStudio({
                     ref={playerRef as unknown as React.Ref<HTMLVideoElement>}
                     src={"https://www.youtube-nocookie.com/embed/" + video.id + "?rel=0"}
                     playing={eng.playing}
-                    playbackRate={eng.rate}
+                    playbackRate={eng.effectiveRate}
                     playsInline
                     config={windowOrigin ? { youtube: { origin: windowOrigin, rel: 0 } } : undefined}
                     onReady={eng.markYtReady}
@@ -365,7 +365,7 @@ export default function ShadowingStudio({
               seed={eng.cur + 3}
               amp={1}
               rgb={nativeRgb}
-              className="mt-1.5 h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+              className="mt-1.5 h-8 w-full"
             />
 
             {/* hàng 2 — giọng của bạn */}
@@ -387,7 +387,7 @@ export default function ShadowingStudio({
                 seed={eng.cur * 7 + 2}
                 amp={rec.lastUrl != null ? 0.55 + lastRatio * 0.4 : 0.25}
                 rgb={mineRgb}
-                className="h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+                className="h-8 w-full"
               />
               {rec.lastUrl == null && (
                 <div
@@ -632,7 +632,7 @@ export default function ShadowingStudio({
               subs={subs}
               cur={eng.cur}
               videoId={video.id}
-              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, prev: eng.prev, next: eng.next }}
+              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, listenSlow: () => eng.listenCurrent(0.65), prev: eng.prev, next: eng.next }}
               recordPractice={recordPractice}
               hidden={mode !== "dict"}
             />

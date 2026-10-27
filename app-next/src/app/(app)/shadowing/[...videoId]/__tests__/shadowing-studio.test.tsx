@@ -35,7 +35,7 @@ const engineOverride = vi.hoisted(() => ({ current: null as Partial<ReturnType<t
 vi.mock("@/components/shadowing/studio/use-player-engine", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/components/shadowing/studio/use-player-engine")>();
   const fake: ReturnType<typeof usePlayerEngine> = {
-    cur: 0, playing: false, tts: false, ytReady: true, playerError: false, rate: 1, loop: false, time: 0, autoPause: false,
+    cur: 0, playing: false, tts: false, ytReady: true, playerError: false, rate: 1, effectiveRate: 1, loop: false, time: 0, autoPause: false,
     setAutoPause: vi.fn(), play: vi.fn(), pause: vi.fn(), togglePlay: vi.fn(), gotoSentence: vi.fn(),
     next: vi.fn(), prev: vi.fn(), repeat: vi.fn(), setRate: vi.fn(), toggleLoop: vi.fn(),
     listenCurrent: vi.fn(), speakSentence: vi.fn(), markYtReady: vi.fn(), handlePlayerError: vi.fn(), syncPlaying: vi.fn(),
