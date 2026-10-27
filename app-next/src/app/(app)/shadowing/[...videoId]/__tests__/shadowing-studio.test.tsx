@@ -83,11 +83,12 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
     expect(screen.queryByTestId("video-overlay")).not.toBeInTheDocument();
     engineOverride.current = null;
   });
-  it("player toolbar: play, scrub, lặp câu, speed seg 0.75/0.85/1.0, CC", () => {
+  it("player toolbar: play, lặp câu, speed seg 0.75/0.85/1.0, CC — không còn thanh timestamp", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);
     expect(screen.getByTestId("player-toolbar")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Phát / tạm dừng" })).toBeInTheDocument();
-    expect(screen.getByRole("slider")).toBeInTheDocument();
+    expect(screen.queryByTestId("scrub")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("t-cur")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Lặp câu/ })).toBeInTheDocument();
     for (const s of ["0.75x", "0.85x", "1.0x"]) expect(screen.getByRole("button", { name: s })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "CC" })).toBeInTheDocument();

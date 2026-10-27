@@ -20,6 +20,7 @@ import { useToast } from "@/components/shell/toast-provider";
 import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
 import DictationPanel from "./dictation-panel";
 import PronPanel from "./pron-panel";
+import WaveformVisual from "@/components/shadowing/studio/waveform-visual";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
@@ -35,28 +36,13 @@ function activeIdx(s: SubtitleSentence, tSec: number): number {
   return activeWordIndex(s.words, tSec * 1000);
 }
 
-/* Vẽ dãy bar giả lên canvas — port drawBars() của mock; roundRect nếu có, fallback rect */
-function drawBars(canvas: HTMLCanvasElement, heights: number[], color: string) {
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  const W = canvas.width;
-  const H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = color;
-  const bw = W / heights.length;
-  heights.forEach((h, i) => {
-    const bh = 6 + h * (H * 0.72);
-    const x = i * bw + bw * 0.2;
-    const y = (H - bh) / 2;
-    const w = bw * 0.6;
-    if (typeof ctx.roundRect === "function") {
-      ctx.beginPath();
-      ctx.roundRect(x, y, w, bh, 3);
-      ctx.fill();
-    } else {
-      ctx.fillRect(x, y, w, bh);
-    }
-  });
+/* Vẽ dãy bar đã chuyển sang WaveformVisual (rAF, port style dictation-mate);
+   màu bar đọc design token 1 lần ở đây (canvas không đọc được CSS var). */
+function tokenRgb(varName: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  // token có thể là "r, g, b" sẵn rồi — nếu là màu hex/other thì fallback
+  return /^\d{1,3},\s*\d{1,3},\s*\d{1,3}$/.test(raw) ? raw : fallback;
 }
 
 export default function ShadowingStudio({
@@ -100,16 +86,12 @@ export default function ShadowingStudio({
   const [lastRatio, setLastRatio] = useState(0);
   useEffect(() => { setLastScore(null); setLastRatio(0); }, [eng.cur]);
 
-  const nativeCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mineCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [nativeRgb, setNativeRgb] = useState("100, 116, 139");
+  const [mineRgb, setMineRgb] = useState("100, 116, 139");
   useEffect(() => {
-    if (nativeCanvasRef.current) drawBars(nativeCanvasRef.current, barHeights(eng.cur + 3, 1), getComputedStyle(document.documentElement).getPropertyValue("--hz-text-secondary") || "currentColor");
-  }, [eng.cur]);
-  useEffect(() => {
-    if (mineCanvasRef.current && rec.lastUrl != null) {
-      drawBars(mineCanvasRef.current, barHeights(eng.cur * 7 + 2, 0.55 + lastRatio * 0.4), getComputedStyle(document.documentElement).getPropertyValue("--hz-action-primary") || "currentColor");
-    }
-  }, [eng.cur, rec.lastUrl, lastRatio]);
+    setNativeRgb(tokenRgb("--hz-text-secondary", "100, 116, 139"));
+    setMineRgb(tokenRgb("--hz-action-primary", "13, 148, 136"));
+  }, []);
 
   const onStop = useCallback(() => {
     const r = rec.stop();
@@ -301,19 +283,6 @@ export default function ShadowingStudio({
                 {eng.playing ? <Pause size={16} strokeWidth={ICON_STROKE} /> : <Play size={16} strokeWidth={ICON_STROKE} />}
                 {eng.playing ? "Tạm dừng" : "Phát"}
               </Button>
-              <label className="flex min-w-[120px] flex-1 items-center gap-2 text-xs tabular-nums text-text-secondary">
-                <span data-testid="t-cur">00:00</span>
-                <input
-                  type="range"
-                  aria-label="Dòng thời gian"
-                  min={0}
-                  max={video.durSec}
-                  defaultValue={0}
-                  data-testid="scrub"
-                  className="flex-1 accent-[var(--action-primary)]"
-                />
-                <span>{video.duration}</span>
-              </label>
               <Chip tone="neutral" data-testid="pos" className="min-h-6 px-2 text-xs font-bold tabular-nums">
                 Câu {eng.cur + 1}/{subs.length}
               </Chip>
@@ -392,11 +361,10 @@ export default function ShadowingStudio({
                 Nghe mẫu
               </button>
             </div>
-            <canvas
-              ref={nativeCanvasRef}
-              data-testid="wave-native"
-              width={600}
-              height={80}
+            <WaveformVisual
+              seed={eng.cur + 3}
+              amp={1}
+              rgb={nativeRgb}
               className="mt-1.5 h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
             />
 
@@ -415,11 +383,10 @@ export default function ShadowingStudio({
               </button>
             </div>
             <div className="relative mt-1.5">
-              <canvas
-                ref={mineCanvasRef}
-                data-testid="wave-mine"
-                width={600}
-                height={80}
+              <WaveformVisual
+                seed={eng.cur * 7 + 2}
+                amp={rec.lastUrl != null ? 0.55 + lastRatio * 0.4 : 0.25}
+                rgb={mineRgb}
                 className="h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
               />
               {rec.lastUrl == null && (
