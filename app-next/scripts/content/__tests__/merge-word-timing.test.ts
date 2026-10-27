@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { wordsForSentence } from "../merge-word-timing.mts";
-import type { SentenceDraft, WhisperToken } from "../../split-sentences";
+import type { SentenceDraft, WhisperToken } from "../split-sentences.ts";
 
 const tok = (text: string, start: number, end: number): WhisperToken => ({ text, start, end });
 
