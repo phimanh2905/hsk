@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { forwardRef } from "react";
 import ShadowingStudio from "../shadowing-studio";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 import type { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
@@ -7,16 +8,26 @@ import type { usePlayerEngine } from "@/components/shadowing/studio/use-player-e
 vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }) }));
 vi.mock("@/components/shell/toast-provider", () => ({ useToast: () => vi.fn(), useToastSafe: () => vi.fn() }));
 
+/* Mock react-player — render div mang src + config để assert, forward ref như thật. */
+vi.mock("react-player", () => ({
+  default: forwardRef(function MockReactPlayer(
+    props: Record<string, unknown> & { src?: string; config?: unknown; onReady?: () => void; onError?: () => void },
+    ref: React.Ref<HTMLDivElement>
+  ) {
+    return <div ref={ref} data-yt-src={props.src} data-config={JSON.stringify(props.config ?? null)} />;
+  }),
+}));
+
 /* Engine fake có thể kiểm soát time/cur cho test karaoke — mặc định (override null)
    vẫn dùng engine thật để các test cũ không giòn. */
 const engineOverride = vi.hoisted(() => ({ current: null as Partial<ReturnType<typeof usePlayerEngine>> | null }));
 vi.mock("@/components/shadowing/studio/use-player-engine", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/components/shadowing/studio/use-player-engine")>();
   const fake: ReturnType<typeof usePlayerEngine> = {
-    cur: 0, playing: false, tts: false, ytReady: true, rate: 1, loop: false, time: 0, autoPause: false,
+    cur: 0, playing: false, tts: false, ytReady: true, playerError: false, rate: 1, loop: false, time: 0, autoPause: false,
     setAutoPause: vi.fn(), play: vi.fn(), pause: vi.fn(), togglePlay: vi.fn(), gotoSentence: vi.fn(),
     next: vi.fn(), prev: vi.fn(), repeat: vi.fn(), setRate: vi.fn(), toggleLoop: vi.fn(),
-    listenCurrent: vi.fn(), speakSentence: vi.fn(),
+    listenCurrent: vi.fn(), speakSentence: vi.fn(), markYtReady: vi.fn(), handlePlayerError: vi.fn(),
   };
   return {
     ...actual,
@@ -42,10 +53,24 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
     expect(screen.getByText(/Tiến độ nói/)).toBeInTheDocument();
     expect(screen.getByText("Câu 1/2")).toBeInTheDocument();
   });
-  it("stage có iframe YouTube + overlay khi chưa ready", () => {
+  it("stage render ReactPlayer với src youtube-nocookie + config youtube.origin", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);
-    const iframe = screen.getByTitle(/YouTube video player/);
-    expect(iframe).toHaveAttribute("src", expect.stringContaining("youtube-nocookie.com/embed/EA3rwvr99Q0"));
+    const p = document.querySelector("[data-yt-src]")!;
+    expect(p.getAttribute("data-yt-src")).toContain("youtube-nocookie.com/embed/EA3rwvr99Q0");
+    const cfg = JSON.parse(p.getAttribute("data-config")!);
+    expect(cfg.youtube.rel).toBe(0);
+    expect(typeof cfg.youtube.origin).toBe("string"); // window.location.origin sau mount
+  });
+  it("overlay lỗi: engine playerError → hiện video-error kèm link YouTube", () => {
+    engineOverride.current = { playerError: true, ytReady: false };
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    expect(screen.getByTestId("video-error")).toBeInTheDocument();
+    expect(screen.getByText(/Mở video trên YouTube/)).toHaveAttribute(
+      "href",
+      "https://www.youtube.com/watch?v=EA3rwvr99Q0"
+    );
+    expect(screen.queryByTestId("video-overlay")).not.toBeInTheDocument();
+    engineOverride.current = null;
   });
   it("player toolbar: play, scrub, lặp câu, speed seg 0.75/0.85/1.0, CC", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);
@@ -59,15 +84,16 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
 });
 
 describe("transcript + dictation (mode 3 tab: Shadow/Chép chính tả/Phát âm)", () => {
-  it("mỗi câu render data-sent, câu active có sent-active, click câu gọi seekTo", () => {
-    const postSink = vi.fn();
-    render(<ShadowingStudio video={video} subtitles={subs} enginePostSink={postSink} />);
+  it("mỗi câu render data-sent, câu active có sent-active, click câu seek qua playerRef", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
     const s0 = document.querySelector('[data-sent="0"]')!;
     const s1 = document.querySelector('[data-sent="1"]')!;
     expect(s0).toHaveClass("sent-active");
     expect(s1).not.toHaveClass("sent-active");
     fireEvent.click(s1);
-    expect(postSink).toHaveBeenCalledWith(expect.stringContaining('"seekTo"'));
+    // engine thật: gotoSentence gán currentTime = start câu 1 lên media element (mock ref)
+    const player = document.querySelector("[data-yt-src]") as HTMLElement & { currentTime?: number };
+    expect(player.currentTime).toBe(subs[1].start);
   });
   it("tab Chép chính tả → hiện dictation box, ẩn stream; check đúng → điểm ghi nhận", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);

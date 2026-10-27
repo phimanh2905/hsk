@@ -39,7 +39,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
   it("play/pause điều khiển #audioplayer, KHÔNG postMessage YouTube", () => {
     const postSink = vi.fn();
     const audio = mountAudio();
-    const { result } = renderHook(() => usePlayerEngine({ subs, postSink, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, postSink, playerRef: { current: null }, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
     act(() => result.current.play());
     expect(playSpy).toHaveBeenCalled();
     expect(postSink).not.toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
 
   it("gotoSentence đặt currentTime = subs[i].start; setRate → playbackRate", () => {
     const audio = mountAudio();
-    const { result } = renderHook(() => usePlayerEngine({ subs, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: null }, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
     act(() => result.current.gotoSentence(1, false));
     expect(result.current.cur).toBe(1);
     expect(audio.currentTime).toBe(subs[1].start);
@@ -60,7 +60,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
 
   it("onended của clip → tự chuyển câu tiếp; hết danh sách → pause", () => {
     mountAudio();
-    const { result } = renderHook(() => usePlayerEngine({ subs, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: null }, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
     act(() => { result.current.play(); });
     const audio = document.getElementById("audioplayer") as HTMLAudioElement;
     act(() => { audio.dispatchEvent(new Event("ended")); });
@@ -75,7 +75,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
 
   it("loop bật → onended quay lại đầu câu thay vì sang câu mới", () => {
     mountAudio();
-    const { result } = renderHook(() => usePlayerEngine({ subs, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: null }, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
     act(() => { result.current.play(); result.current.toggleLoop(); });
     const audio = document.getElementById("audioplayer") as HTMLAudioElement;
     act(() => { audio.dispatchEvent(new Event("ended")); });
@@ -85,7 +85,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
 
   it("speakSentence(i) ở chế độ audio → phát clip câu i thay vì TTS", () => {
     mountAudio();
-    const { result } = renderHook(() => usePlayerEngine({ subs, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: null }, audioSrcs: ["a-1.mp3", "a-2.mp3", "a-3.mp3"] }));
     act(() => result.current.speakSentence(2));
     expect(result.current.cur).toBe(2);
     expect(playSpy).toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
     vi.useFakeTimers();
     try {
       mountAudio();
-      const { result } = renderHook(() => usePlayerEngine({ subs, audioSrcs: ["a-1.mp3"] }));
+      const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: null }, audioSrcs: ["a-1.mp3"] }));
       act(() => vi.advanceTimersByTime(4100));
       expect(result.current.tts).toBe(false);
     } finally {
@@ -104,12 +104,17 @@ describe("usePlayerEngine — chế độ audio (audioSrcs)", () => {
   });
 });
 
-describe("usePlayerEngine — không có audioSrcs: path YouTube giữ nguyên", () => {
-  it("gotoSentence vẫn postMessage seekTo qua postSink", () => {
+describe("usePlayerEngine — không có audioSrcs: path YouTube qua media ref", () => {
+  it("gotoSentence gán currentTime = start câu lên ref; postSink không còn dùng", () => {
     const postSink = vi.fn();
-    const { result } = renderHook(() => usePlayerEngine({ subs, postSink }));
+    const media = {
+      currentTime: 0, duration: 100, playbackRate: 1,
+      play: vi.fn().mockResolvedValue(undefined), pause: vi.fn(),
+    } as unknown as HTMLMediaElement & { play: ReturnType<typeof vi.fn> };
+    const { result } = renderHook(() => usePlayerEngine({ subs, postSink, playerRef: { current: media } }));
     act(() => result.current.gotoSentence(1, false));
-    expect(postSink).toHaveBeenCalledWith(expect.stringContaining('"seekTo"'));
+    expect(media.currentTime).toBe(subs[1].start);
+    expect(postSink).not.toHaveBeenCalled();
     expect(result.current.cur).toBe(1);
   });
 });

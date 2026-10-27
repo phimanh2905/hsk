@@ -3,6 +3,7 @@
    ghi chú: nút Ẩn video, checkbox show-vi/py, Cài đặt của player cũ bị bỏ theo mock. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import ReactPlayer from "react-player";
 import { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
 import { useRecorder } from "@/lib/shadowing/use-recorder";
 import { barHeights } from "@/lib/shadowing/waveform";
@@ -72,7 +73,11 @@ export default function ShadowingStudio({
   const audioDir = video.type === "audio" ? video.audioDir : null;
   const isAudio = !!audioDir;
   const audioSrcs = audioDir ? subs.map((s) => `/${audioDir}-${s.n}.mp3`) : undefined;
-  const eng = usePlayerEngine({ subs, postSink: enginePostSink, audioSrcs });
+  const playerRef = useRef<HTMLMediaElement | null>(null);
+  // origin đọc sau mount (hydration-safe) — config.youtube.origin phục vụ postMessage
+  const [windowOrigin, setWindowOrigin] = useState<string | undefined>(undefined);
+  useEffect(() => setWindowOrigin(window.location.origin), []);
+  const eng = usePlayerEngine({ subs, postSink: enginePostSink, audioSrcs, playerRef });
   const [audioMissing, setAudioMissing] = useState(false);
   useEffect(() => { setAudioMissing(false); }, [eng.cur]);
   // vai A/B trong transcript (hội thoại theo bài) — map rỗng → không label
@@ -237,15 +242,37 @@ export default function ShadowingStudio({
                 </>
               ) : (
                 <>
-                  <iframe
-                    id="ytplayer"
-                    title={"YouTube video player — " + video.title}
-                    src={"https://www.youtube-nocookie.com/embed/" + video.id + "?enablejsapi=1&rel=0&playsinline=1"}
-                    className="h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                  <ReactPlayer
+                    ref={playerRef as unknown as React.Ref<HTMLVideoElement>}
+                    src={"https://www.youtube-nocookie.com/embed/" + video.id + "?rel=0"}
+                    playing={eng.playing}
+                    playbackRate={eng.rate}
+                    playsInline
+                    config={windowOrigin ? { youtube: { origin: windowOrigin, rel: 0 } } : undefined}
+                    onReady={eng.markYtReady}
+                    onError={eng.handlePlayerError}
+                    fallback={<div className="h-full w-full animate-pulse bg-surface-muted" />}
+                    style={{ width: "100%", height: "100%" }}
                   />
-                  {!eng.ytReady && (
+                  {eng.playerError && (
+                    <div
+                      data-testid="video-error"
+                      className="absolute inset-0 grid place-items-center bg-surface-muted p-4 text-center"
+                    >
+                      <div>
+                        <p className="text-sm font-bold text-feedback-error">Không phát được video trên trang.</p>
+                        <a
+                          href={"https://www.youtube.com/watch?v=" + video.id}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-2 inline-block text-xs font-bold text-action-primary underline"
+                        >
+                          Mở video trên YouTube ↗
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {!eng.ytReady && !eng.playerError && (
                     <div
                       data-testid="video-overlay"
                       className="absolute inset-0 grid place-items-center bg-surface-muted text-center"

@@ -1,16 +1,15 @@
 "use client";
-/* Engine phát — tách nguyên vẹn từ video-player.tsx (postMessage YouTube,
-   polling 100ms, TTS fallback 4s). Khác biệt duy nhất (spec §3.4):
+/* Engine phát — điều khiển player qua ref interface HTMLMediaElement (ReactPlayer
+   v3 / youtube-video-element extends HTMLVideoElement): currentTime = seek, play(),
+   pause(), playbackRate. Poll 100ms đọc currentTime từ ref (bỏ postMessage YouTube).
    - auto-split thành state (default true), không đọc DOM
-   - thêm loop: chạm cuối câu khi playing → seek về đầu câu thay vì pause
+   - loop: chạm cuối câu khi playing → seek về đầu câu thay vì pause
    - phím: K=play/pause, R=nghe mẫu, L=loop, ←/→=chuyển câu. Space do record dock phụ trách. */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useTts } from "@/lib/tts/use-tts";
 import type { SubtitleSentence } from "@/content/shadowing";
 import { getAutoPause, setAutoPause } from "@/lib/shadowing/prefs";
 import { sentencePauseMs } from "@/lib/shadowing/auto-pause";
-
-const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
 /* Port tick của clone: chọn câu theo thời gian (t ngoài range → câu cuối nếu
    t ≥ end cuối, ngược lại câu 0). Pure — export riêng để unit test. */
@@ -21,19 +20,19 @@ export function findSentenceIndex(subs: SubtitleSentence[], t: number): number {
 
 export function usePlayerEngine({
   subs,
-  postSink,
+  postSink: _postSink,
   audioSrcs,
+  playerRef,
 }: {
   subs: SubtitleSentence[];
   postSink?: (msg: string) => void;
   audioSrcs?: string[];
+  playerRef: RefObject<HTMLMediaElement | null>;
 }) {
   const { speak, cancel: ttsCancel } = useTts();
-  // iframe do Task 8 render và gắn qua window ("ytplayer"); engine tìm nó lúc gửi lệnh.
-  const iframeEl = () => document.getElementById("ytplayer") as HTMLIFrameElement | null;
   /* T7 — chế độ audio: studio render <audio id="audioplayer"> với src theo câu
-     (audioSrcs[index]); engine điều khiển element này thay vì postMessage YouTube.
-     audioSrcs undefined/[] → mode YouTube giữ nguyên behavior cũ. */
+     (audioSrcs[index]); engine điều khiển element này thay vì media ref.
+     audioSrcs undefined/[] → mode YouTube. */
   const audioMode = !!audioSrcs && audioSrcs.length > 0;
   const audioEl = () => document.getElementById("audioplayer") as HTMLAudioElement | null;
 
@@ -44,16 +43,16 @@ export function usePlayerEngine({
     rate: 1,
     tts: false,
     ytReady: false,
-    lastTime: 0,
     loop: false,
     autoSplit: true,
-    audio: false, // T7: mode audio → mọi lệnh ytCmd thành no-op, TTS fallback tắt
+    audio: false, // T7: mode audio → mọi lệnh media thành no-op, TTS fallback tắt
     autoPause: getAutoPause(), // Task 5 — toggle tạm dừng theo word timing (spec WSD.3)
   });
 
   // slice hiển thị
   const [cur, setCur] = useState(0);
   const [ytReady, setYtReady] = useState(false);
+  const [playerError, setPlayerError] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [tts, setTts] = useState(false);
   const [rate, setRate] = useState(1);
@@ -66,9 +65,6 @@ export function usePlayerEngine({
   st.current.autoSplit = autoSplit;
   st.current.audio = audioMode;
 
-  const sinkRef = useRef(postSink);
-  sinkRef.current = postSink;
-
   // Task 5 — auto-pause nhớ localStorage: sync sau mount (hydration-safe)
   useEffect(() => {
     const saved = getAutoPause();
@@ -78,42 +74,14 @@ export function usePlayerEngine({
     }
   }, []);
 
-  /* ---------- điều khiển YouTube (postMessage) — port shadowing-video.js:52-56 ---------- */
-  function ytSend(obj: Record<string, unknown>) {
-    if (st.current.audio) return; // mode audio: không gửi gì vào YouTube
-    sinkRef.current?.(JSON.stringify(obj));
-    if (st.current.tts || !iframeEl()?.contentWindow) return;
-    try { iframeEl()!.contentWindow!.postMessage(JSON.stringify(obj), YT_ORIGIN); } catch { /* silent */ }
-  }
-  function ytCmd(func: string, args: unknown[] = []) { ytSend({ event: "command", func, args }); }
-
-  /* ---------- handshake + listener message — port shadowing-video.js:58-84 ---------- */
-  useEffect(() => {
-    const onMsg = (e: MessageEvent) => {
-      if (!/^https:\/\/(www\.)?(youtube-nocookie|youtube)\.com$/.test(e.origin)) return;
-      let data: Record<string, unknown>;
-      try { data = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch { return; }
-      if (!data || typeof data !== "object") return;
-      if (data.event === "onReady" || (data.infoDelivery as { playerData?: unknown } | undefined)?.playerData) markYtReady();
-      const pd = (data.infoDelivery as { playerData?: { currentTime?: number; playerState?: number } } | undefined)?.playerData;
-      if (pd && typeof pd.currentTime === "number") {
-        st.current.lastTime = pd.currentTime;
-        if (typeof pd.playerState === "number") { st.current.playing = pd.playerState === 1; setPlaying(pd.playerState === 1); }
-      }
-    };
-    window.addEventListener("message", onMsg);
-    return () => window.removeEventListener("message", onMsg);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // cleanup: hủy TTS đang phát khi unmount
-  useEffect(() => () => { try { ttsCancel(); } catch { /* silent */ } }, [ttsCancel]);
-
   function markYtReady() {
     if (st.current.ytReady) return;
     st.current.ytReady = true;
     setYtReady(true); // Ruling Task 5 review: render-from-ref → React state
-    ytCmd("setPlaybackRate", [st.current.rate]);
+    if (playerRef.current) playerRef.current.playbackRate = st.current.rate;
+  }
+  function handlePlayerError() {
+    setPlayerError(true);
   }
 
   /* ---------- T7 — điều khiển <audio id="audioplayer"> (clip mp3 theo câu) ---------- */
@@ -145,22 +113,13 @@ export function usePlayerEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subs]);
 
-  /* onIframeLoad của video-player cũ (gửi handshake "listening" khi iframe load)
-     chuyển sang Task 8 cùng với <iframe> — hook không render DOM. */
-
-  /* ---------- polling 100ms — port shadowing-video.js:87-107 (Task 5: 500→100ms cho karaoke mượt) ---------- */
+  /* ---------- polling 100ms — đọc currentTime từ media ref (Task 5: 500→100ms cho karaoke mượt) ---------- */
   useEffect(() => {
     const id = setInterval(() => {
       if (st.current.audio) return; // T7: mode audio do 'ended' điều khiển, không polling
       if (st.current.tts) return;
-      // iframe có thể onLoad TRƯỚC khi hydration gắn handler → handshake "listening" mất,
-      // widget không bao giờ nhận onReady và overlay kẹt. Gửi lại handshake mỗi nhịp cho tới khi sẵn sàng.
-      if (!st.current.ytReady) {
-        ytSend({ event: "listening", id: "bye-yt", channel: "widget" });
-        return;
-      }
-      ytCmd("getCurrentTime");
-      tick(st.current.lastTime);
+      if (!st.current.ytReady) return; // onReady (ReactPlayer) đánh thức poll
+      tick(playerRef.current?.currentTime ?? 0);
     }, 100);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,7 +133,10 @@ export function usePlayerEngine({
       const s = subs[st.current.cur];
       const pauseMs = sentencePauseMs(s.words, s.end * 1000);
       if (pauseMs != null && t * 1000 >= pauseMs - 60) {
-        if (st.current.loop) { ytCmd("seekTo", [subs[st.current.cur].start, true]); return; }
+        if (st.current.loop) {
+          if (playerRef.current) playerRef.current.currentTime = subs[st.current.cur].start;
+          return;
+        }
         pause();
         return;
       }
@@ -183,7 +145,10 @@ export function usePlayerEngine({
     if (idx !== st.current.cur) { st.current.cur = idx; setCur(idx); return; }
     // tự ngắt câu: dừng ở cuối câu đang phát (loop → quay về đầu câu)
     if (st.current.playing && st.current.autoSplit && t >= subs[st.current.cur].end - 0.15) {
-      if (st.current.loop) { ytCmd("seekTo", [subs[st.current.cur].start, true]); return; }
+      if (st.current.loop) {
+        if (playerRef.current) playerRef.current.currentTime = subs[st.current.cur].start;
+        return;
+      }
       pause();
     }
   }
@@ -229,17 +194,17 @@ export function usePlayerEngine({
     });
   }
 
-  /* ---------- play / pause / câu — port shadowing-video.js:153-182 ---------- */
+  /* ---------- play / pause / câu ---------- */
   function play() {
     st.current.playing = true; setPlaying(true);
     if (st.current.audio) { audioPlay(); return; }
     if (st.current.tts) speakCurrent();
-    else { ytCmd("playVideo"); ytCmd("setPlaybackRate", [st.current.rate]); }
+    else { void playerRef.current?.play(); if (playerRef.current) playerRef.current.playbackRate = st.current.rate; }
   }
   function pause() {
     st.current.playing = false; setPlaying(false);
     if (st.current.audio) { try { audioEl()?.pause(); } catch { /* silent */ } return; }
-    if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } } else ytCmd("pauseVideo");
+    if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } } else playerRef.current?.pause();
   }
   const togglePlay = () => { if (st.current.playing) pause(); else play(); };
 
@@ -256,7 +221,7 @@ export function usePlayerEngine({
       if (st.current.playing || autoplay) { st.current.playing = true; setPlaying(true); speakCurrent(); }
       else setCur(clamped);
     } else {
-      ytCmd("seekTo", [subs[clamped].start, true]);
+      if (playerRef.current) playerRef.current.currentTime = subs[clamped].start;
       if (autoplay && !st.current.playing) play();
     }
     setCur(clamped);
@@ -268,7 +233,7 @@ export function usePlayerEngine({
   const setRatePublic = (r: number) => {
     st.current.rate = r; setRate(r);
     if (st.current.audio) { try { audioEl()!.playbackRate = r; } catch { /* silent */ } return; }
-    if (!st.current.tts) ytCmd("setPlaybackRate", [r]);
+    if (!st.current.tts && playerRef.current) playerRef.current.playbackRate = r;
   };
   const toggleLoop = () => { st.current.loop = !st.current.loop; setLoop(st.current.loop); };
   // Task 5 — toggle auto-pause: mirror ref + React state + localStorage (prefs)
@@ -298,11 +263,15 @@ export function usePlayerEngine({
   /* ---------- autoscroll câu active: capability giữ qua `cur` — Task 8 (transcript
      panel) tự đăng ký effect trên cur và đọc pref getAutoscroll() để scrollIntoView. ---------- */
 
-  /* ---------- nghe lại câu — port shadowing-video.js ---------- */
+  /* ---------- nghe lại câu ---------- */
   const listenCurrent = () => {
     if (st.current.audio) { gotoSentence(st.current.cur, true); return; }
     if (tts) speakSentence(cur);
-    else { ytCmd("seekTo", [subs[cur].start, true]); ytCmd("playVideo"); }
+    else {
+      if (playerRef.current) playerRef.current.currentTime = subs[cur].start;
+      void playerRef.current?.play();
+      if (!st.current.playing) play();
+    }
   };
 
   return {
@@ -310,6 +279,7 @@ export function usePlayerEngine({
     playing,
     tts,
     ytReady,
+    playerError,
     rate,
     loop,
     time,
@@ -326,5 +296,7 @@ export function usePlayerEngine({
     toggleLoop,
     listenCurrent,
     speakSentence: (i: number) => speakSentence(i),
+    markYtReady,
+    handlePlayerError,
   };
 }
