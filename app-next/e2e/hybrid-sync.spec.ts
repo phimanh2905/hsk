@@ -31,7 +31,9 @@ function signSessionToken(token: string, secret: string): string {
 
 function d1Run(sql: string): void {
   execFileSync("pnpm", [
-    "wrangler", "d1", "execute", "hsk-dev", "--remote", "--config", "wrangler.dev.jsonc",
+    // D1 seed: --local trùng DB dev server đang bind (miniflare state);
+    // set E2E_D1_REMOTE=1 để seed D1 remote thật khi có CLOUDFLARE_API_TOKEN.
+    "wrangler", "d1", "execute", "hsk-dev", process.env.E2E_D1_REMOTE === "1" ? "--remote" : "--local", "--config", "wrangler.dev.jsonc",
     "--command", sql, "--json",
   ], { stdio: "ignore", timeout: 120_000 });
 }
@@ -135,7 +137,16 @@ const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" })
   await pageB.goto("/lesson/hsk1/lesson-1");
   await pageB.getByRole("article", { name: "Thẻ ghi nhớ, chạm để xem nghĩa" }).click();
   await pageB.locator("button[data-grade]").first().click(); // chấm điểm → recordReview
-  const flushB = pageB.waitForResponse(isSyncPost, { timeout: 20_000 });
+  /* Chờ đúng POST mang srs ĐÃ CẬP NHẬT (reviewCount >= 1) — chờ "POST bất kỳ"
+     dễ bắt nhầm flush trước đó (XP/studyDay), khiến A reload pull về bản cũ
+     (race đã làm spec fail liên tục). */
+  const flushB = pageB.waitForResponse(
+    (r) =>
+      r.url().includes(SYNC_URL) &&
+      r.request().method() === "POST" &&
+      /"reviewCount"\s*:\s*[1-9]/.test(r.request().postData() ?? ""),
+    { timeout: 30_000 }
+  );
   const bRes = await flushB; // debounce 5s của hybrid-store
   expect(bRes.status()).toBe(200);
 

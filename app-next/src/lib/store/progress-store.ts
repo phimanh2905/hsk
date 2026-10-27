@@ -48,6 +48,10 @@ export type HanziQuizRec = {
 /* Bản nháp bài đọc (Wave 0 W0.4 — /reading auto-save), key bye.reading.drafts */
 export type ReadingDraft = { text: string; at: string };
 
+/* Stats chép chính tả per video/line (Task 2), key bye.shadowing.dictStats.<videoId> */
+export type DictLineStat = { lastScore: number; errors: number; replays: number };
+export type DictStats = Record<string, DictLineStat>;
+
 export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
@@ -103,6 +107,9 @@ export interface ProgressStoreApi {
   recordSoundRulesResult(correct: number): void;
   getReadingDrafts(): ReadingDraft[];
   saveReadingDraft(text: string): void;
+  getDictStats(videoId: string): DictStats;
+  recordDictCheck(videoId: string, lineN: number, score: number, errors: number): void;
+  recordReplay(videoId: string, lineN: number): void;
 }
 
 const PROGRESS_EVENT = "bye:progress";
@@ -769,6 +776,28 @@ export class ProgressStore implements ProgressStoreApi {
     drafts.unshift({ text: trimmed, at: new Date().toISOString() });
     writeJSON("bye.reading.drafts", drafts.slice(0, 5));
     dispatchProgress();
+  }
+
+  /* ---------- dictation stats (bye.shadowing.dictStats.<videoId> — Task 2) ---------- */
+
+  getDictStats(videoId: string): DictStats {
+    return readJSON<DictStats>(`bye.shadowing.dictStats.${videoId}`, {});
+  }
+
+  recordDictCheck(videoId: string, lineN: number, score: number, errors: number): void {
+    const key = String(lineN);
+    const all = this.getDictStats(videoId);
+    const prev = all[key] ?? { lastScore: 0, errors: 0, replays: 0 };
+    all[key] = { lastScore: score, errors: prev.errors + errors, replays: prev.replays };
+    writeJSON(`bye.shadowing.dictStats.${videoId}`, all);
+  }
+
+  recordReplay(videoId: string, lineN: number): void {
+    const key = String(lineN);
+    const all = this.getDictStats(videoId);
+    const prev = all[key] ?? { lastScore: 0, errors: 0, replays: 0 };
+    all[key] = { ...prev, replays: prev.replays + 1 };
+    writeJSON(`bye.shadowing.dictStats.${videoId}`, all);
   }
 }
 

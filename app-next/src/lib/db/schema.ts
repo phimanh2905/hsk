@@ -207,12 +207,19 @@ export const contentShadowingVideos = sqliteTable(
   (t) => [index("csv_playlist_idx").on(t.playlistId)]
 );
 
-export const contentShadowingSubtitles = sqliteTable("content_shadowing_subtitles", {
-  videoId: text("video_id").primaryKey(),
-  sentences: text("sentences", { mode: "json" })
-    .$type<{ n: number; start: number; end: number; parts: { zh: string }[]; pinyin: string; vi: string }[]>()
-    .notNull(),
-});
+export const contentShadowingSubtitles = sqliteTable(
+  "content_shadowing_subtitles",
+  {
+    videoId: text("video_id").notNull(),
+    chunk: integer("chunk").notNull().default(0),
+    sentences: text("sentences", { mode: "json" })
+      .$type<{ n: number; start: number; end: number; parts: { zh: string }[]; pinyin: string; vi: string }[]>()
+      .notNull(),
+  },
+  // chunk: sentences JSON của 1 video có thể tới 258KB > limit 100KB/statement
+  // của D1/wrangler — seed tách nhiều row, content layer concat theo chunk.
+  (t) => [primaryKey({ columns: [t.videoId, t.chunk] })]
+);
 
 /* ================= HybridStore sync (spec 2026-10-24 Wave 4) =================
    localStorage-first: client ghi local + debounce POST /api/v1/sync; server chỉ

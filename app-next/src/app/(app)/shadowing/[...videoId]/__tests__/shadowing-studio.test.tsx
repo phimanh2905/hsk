@@ -1,10 +1,29 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ShadowingStudio from "../shadowing-studio";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
+import type { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
 
 vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }) }));
 vi.mock("@/components/shell/toast-provider", () => ({ useToast: () => vi.fn(), useToastSafe: () => vi.fn() }));
+
+/* Engine fake có thể kiểm soát time/cur cho test karaoke — mặc định (override null)
+   vẫn dùng engine thật để các test cũ không giòn. */
+const engineOverride = vi.hoisted(() => ({ current: null as Partial<ReturnType<typeof usePlayerEngine>> | null }));
+vi.mock("@/components/shadowing/studio/use-player-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/components/shadowing/studio/use-player-engine")>();
+  const fake: ReturnType<typeof usePlayerEngine> = {
+    cur: 0, playing: false, tts: false, ytReady: true, rate: 1, loop: false, time: 0, autoPause: false,
+    setAutoPause: vi.fn(), play: vi.fn(), pause: vi.fn(), togglePlay: vi.fn(), gotoSentence: vi.fn(),
+    next: vi.fn(), prev: vi.fn(), repeat: vi.fn(), setRate: vi.fn(), toggleLoop: vi.fn(),
+    listenCurrent: vi.fn(), speakSentence: vi.fn(),
+  };
+  return {
+    ...actual,
+    usePlayerEngine: (args: Parameters<typeof usePlayerEngine>[0]) =>
+      engineOverride.current ? { ...fake, ...engineOverride.current } : actual.usePlayerEngine(args),
+  };
+});
 
 const video: ShadowingVideo = {
   id: "EA3rwvr99Q0", title: "墓碑上的QR碼", playlistId: "daihuaxiyou", hsk: "HSK3",
@@ -39,7 +58,7 @@ describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolb
   });
 });
 
-describe("transcript + dictation (port script-tabs/transcript-stream/dictation-box)", () => {
+describe("transcript + dictation (mode 3 tab: Shadow/Chép chính tả/Phát âm)", () => {
   it("mỗi câu render data-sent, câu active có sent-active, click câu gọi seekTo", () => {
     const postSink = vi.fn();
     render(<ShadowingStudio video={video} subtitles={subs} enginePostSink={postSink} />);
@@ -66,6 +85,58 @@ describe("transcript + dictation (port script-tabs/transcript-stream/dictation-b
     expect(masked).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: "Gợi ý 1 chữ" }));
     expect(screen.getAllByText("?").length).toBe(masked - 1);
+  });
+});
+
+describe("mode switch — 3 tab Shadow/Dict/Pron + phím Digit1/2/3 (Task 6)", () => {
+  it("render 3 tab mode-shadow/mode-dict/mode-pron, mặc định shadow active", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    const shadow = screen.getByTestId("mode-shadow");
+    expect(shadow).toHaveAttribute("aria-pressed", "true");
+    expect(shadow).toHaveTextContent("Shadow");
+    expect(screen.getByTestId("mode-dict")).toHaveTextContent("Chép chính tả");
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByTestId("transcript-stream")).toBeVisible();
+  });
+
+  it("click mode-dict → dict-box hiện, transcript ẩn, dock mờ", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-dict"));
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("dict-box")).toBeVisible();
+    expect(screen.getByTestId("transcript-stream")).not.toBeVisible();
+    expect(screen.getByTestId("record-dock")).toHaveClass("opacity-45", "saturate-50");
+  });
+
+  it("click mode-pron → chỉ flip state (aria-pressed), dock KHÔNG mờ, dict/transcript ẩn, không render panel pron", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-pron"));
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("transcript-stream")).not.toBeVisible();
+    expect(screen.getByTestId("dict-box")).not.toBeVisible();
+    expect(screen.getByTestId("record-dock")).not.toHaveClass("opacity-45");
+  });
+
+  it("phím Digit1/2/3 đổi mode; Digit3 → tab Phát âm active", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.keyDown(document, { code: "Digit2" });
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(document, { code: "Digit3" });
+    expect(screen.getByTestId("mode-pron")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(document, { code: "Digit1" });
+    expect(screen.getByTestId("mode-shadow")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByTestId("transcript-stream")).toBeVisible();
+  });
+
+  it("phím Digit bỏ qua khi đang gõ trong textarea dictation", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    fireEvent.click(screen.getByTestId("mode-dict"));
+    const input = screen.getByTestId("dict-input");
+    input.focus();
+    fireEvent.keyDown(input, { code: "Digit3" });
+    expect(screen.getByTestId("mode-dict")).toHaveAttribute("aria-pressed", "true");
+    fireEvent.keyDown(input, { code: "Digit1" });
+    expect(screen.getByTestId("mode-shadow")).toHaveAttribute("aria-pressed", "false");
   });
 });
 
@@ -96,6 +167,80 @@ describe("waveform + record dock (port waveform-card/record-dock)", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);
     fireEvent.click(screen.getByRole("button", { name: "Chép chính tả" }));
     expect(screen.getByTestId("record-dock")).toHaveClass("opacity-45", "saturate-50");
+  });
+});
+
+describe("Task 10 — karaoke word highlight + toggle tự ngắt câu", () => {
+  const subsWithWords: SubtitleSentence[] = [
+    {
+      n: 1, start: 0, end: 8, parts: [{ zh: "你好" }, { zh: "吗" }], pinyin: "Nǐ hǎo ma", vi: "Bạn có khỏe không",
+      words: [
+        { zh: "你", py: "nǐ", startMs: 0, endMs: 500 },
+        { zh: "好", py: "hǎo", startMs: 500, endMs: 1200 },
+        { zh: "吗", py: "ma", startMs: 1200, endMs: 1800 },
+      ],
+    },
+    { n: 2, start: 9, end: 15, parts: [{ zh: "再见" }], pinyin: "Zàijiàn", vi: "Tạm biệt" },
+  ];
+  beforeEach(() => {
+    engineOverride.current = null;
+    try { localStorage.removeItem("bye.shadowing.autoPause"); } catch { /* jsdom ok */ }
+  });
+
+  it("không có words → không render toggle auto-pause và không kw span", () => {
+    render(<ShadowingStudio video={video} subtitles={subs} />);
+    expect(screen.queryByTestId("auto-pause")).toBeNull();
+    expect(document.querySelectorAll('[data-testid="kw"]').length).toBe(0);
+  });
+
+  it("có words → toggle auto-pause hiện, aria-pressed flip + ghi localStorage (engine thật)", () => {
+    render(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    const tgl = screen.getByTestId("auto-pause");
+    expect(tgl).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(tgl);
+    expect(tgl).toHaveAttribute("aria-pressed", "true");
+    expect(localStorage.getItem("bye.shadowing.autoPause")).toBe("1");
+    fireEvent.click(tgl);
+    expect(tgl).toHaveAttribute("aria-pressed", "false");
+    expect(localStorage.getItem("bye.shadowing.autoPause")).toBe("0");
+  });
+
+  it("câu active render kw spans theo eng.time — từ đang phát có data-active=1 (engine fake)", () => {
+    engineOverride.current = { cur: 0, time: 0.3, ytReady: true };
+    const { rerender } = render(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    const kws = document.querySelectorAll('[data-testid="kw"]');
+    expect(kws.length).toBe(3);
+    expect(kws[0].getAttribute("data-active")).toBe("1");
+    expect(kws[1].getAttribute("data-active")).toBe("0");
+    // time 0.8s → từ thứ 2 đang phát
+    engineOverride.current = { cur: 0, time: 0.8, ytReady: true };
+    rerender(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    const kws2 = document.querySelectorAll('[data-testid="kw"]');
+    expect(kws2[0].getAttribute("data-active")).toBe("0");
+    expect(kws2[1].getAttribute("data-active")).toBe("1");
+  });
+
+  it("từ đang phát dùng utility token highlight (bg-jade-wash text-action-primary)", () => {
+    engineOverride.current = { cur: 0, time: 0.3, ytReady: true };
+    render(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    const active = document.querySelector('[data-testid="kw"][data-active="1"]')!;
+    expect(active).toHaveClass("bg-jade-wash", "text-action-primary");
+  });
+
+  it("câu khác active / không words → render parts như cũ", () => {
+    engineOverride.current = { cur: 1, time: 10, ytReady: true };
+    render(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    // câu 0 không active dù có words → không kw
+    expect(document.querySelectorAll('[data-testid="kw"]').length).toBe(0);
+    expect(document.querySelector('[data-sent="0"] [data-part="0"]')).not.toBeNull();
+  });
+
+  it("mode dict → dict-box từ panel; mode pron → pron-box (testid pron-box của PronPanel)", () => {
+    render(<ShadowingStudio video={video} subtitles={subsWithWords} />);
+    fireEvent.click(screen.getByTestId("mode-dict"));
+    expect(screen.getByTestId("dict-box")).toBeVisible();
+    fireEvent.click(screen.getByTestId("mode-pron"));
+    expect(screen.getByTestId("pron-box")).toBeVisible();
   });
 });
 

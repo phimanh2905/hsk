@@ -31,7 +31,7 @@ describe("rowsToVocabData / rowsToVocabMeta", () => {
 });
 
 const videoRows = staticVideos.map((v, i) => ({ ...v, ord: i }));
-const subRows = Object.entries(staticSubs).map(([videoId, sentences]) => ({ videoId, sentences }));
+const subRows = Object.entries(staticSubs).map(([videoId, sentences]) => ({ videoId, chunk: 0, sentences }));
 
 describe("rowsToShadowing", () => {
   it("videos giữ thứ tự ord, topic cast về kiểu gốc", () => {
@@ -42,6 +42,15 @@ describe("rowsToShadowing", () => {
   it("subtitles 1:1", () => {
     const { subtitles } = rowsToShadowing(videoRows, subRows);
     expect(subtitles).toEqual(staticSubs);
+  });
+  it("subtitles nhiều chunk: concat theo thứ tự chunk (seed tách JSON >60KB)", () => {
+    const [videoId, sentences] = Object.entries(staticSubs)[0];
+    const mid = Math.ceil(sentences.length / 2);
+    const { subtitles } = rowsToShadowing(videoRows, [
+      { videoId, chunk: 1, sentences: sentences.slice(mid) },
+      { videoId, chunk: 0, sentences: sentences.slice(0, mid) },
+    ]);
+    expect(subtitles[videoId]).toEqual(sentences);
   });
   it("ShadowingErr export đúng", () => {
     expect(new ShadowingErr("x").name).toBe("ContentNotFoundError");

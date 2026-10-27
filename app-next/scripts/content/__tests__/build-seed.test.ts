@@ -30,7 +30,7 @@ describe("sentenceToRow", () => {
 });
 
 describe("buildSeedSql", () => {
-  it("mỗi video 1 dòng INSERT OR REPLACE, escape nháy đơn", () => {
+  it("DELETE + INSERT OR REPLACE theo chunk, escape nháy đơn", () => {
     const sql = buildSeedSql([
       {
         videoId: "EA3rwvr99Q0",
@@ -50,11 +50,12 @@ describe("buildSeedSql", () => {
       { n: 1, start: 0, end: 1, parts: [{ zh: "你好。" }], pinyin: "Nǐ hǎo.", vi: "" },
     ]);
     expect(sql).toBe(
-      `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('EA3rwvr99Q0', '${json}');\n`
+      `DELETE FROM content_shadowing_subtitles WHERE video_id = 'EA3rwvr99Q0';\n` +
+        `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, chunk, sentences) VALUES ('EA3rwvr99Q0', 0, '${json}');\n`
     );
     // escape dấu ' trong chuỗi SQL: ' → '' (doubling)
     const tricky = buildSeedSql([{ videoId: "abc", sentences: [] }]);
-    expect(tricky).toContain("VALUES ('abc', '[]')");
+    expect(tricky).toContain("VALUES ('abc', 0, '[]')");
     const apostrophe = buildSeedSql([
       { videoId: "x'y", sentences: [{ n: 1, start: 0, end: 1, parts: [{ zh: "好's" }], pinyin: "Nǐ hǎo's", vi: "" }] },
     ]);

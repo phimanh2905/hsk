@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const YT_STUB = `<!DOCTYPE html><html><body><script>
+var cur = 0;
 window.addEventListener("message", function (e) {
   var d; try { d = JSON.parse(e.data); } catch (err) { return; }
   if (!d || d.event !== "command") {
@@ -9,8 +10,11 @@ window.addEventListener("message", function (e) {
     return;
   }
   if (d.func === "getCurrentTime") {
-    parent.postMessage(JSON.stringify({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 5, playerState: 1 } } }), "*");
+    parent.postMessage(JSON.stringify({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: cur, playerState: 1 } } }), "*");
   } else {
+    // seekTo [t, allowSeekAhead] — nhớ vị trí để getCurrentTime trả đúng thời điểm;
+    // nếu không, poll 100ms của engine tick() sẽ kéo cur về câu tại t cố định.
+    if (d.func === "seekTo" && d.args && d.args.length) cur = d.args[0];
     parent.postMessage(JSON.stringify({ event: "onReady" }), "*");
   }
 });
@@ -51,14 +55,33 @@ test.describe("G5 shadowing (UI redesign)", () => {
     await expect(page.locator("[data-play]")).toHaveText(/Tạm dừng/);
     await page.keyboard.press("ArrowRight");
     await expect(page.locator("[data-sent='1']")).toHaveClass(/sent-active/);
+    // dừng phát trước khi chép chính tả: engine cur chạy theo time (Task 5),
+    // nếu vẫn playing thì câu active đổi trong lúc gõ → check sai dòng.
+    await page.keyboard.press("k");
+    await expect(page.locator("[data-play]")).toHaveText(/Phát/);
     // dictation
     await page.getByRole("button", { name: "Chép chính tả" }).click();
-    const zh = await page.locator("[data-sent='1'] [data-zh]").innerText();
+    // Đổi mode remount iframe → stub time reset về 0 → poll của engine có thể
+    // kéo cur về câu 0. Chờ pos ổn định rồi gõ đúng câu engine đang đứng —
+    // tránh race giữa thời điểm đọc đề và thời điểm check.
+    const stablePos = async () => {
+      let last = "";
+      for (let i = 0; i < 20; i++) {
+        const p = await page.getByTestId("pos").innerText();
+        if (p && p === last) return p;
+        last = p;
+        await page.waitForTimeout(250);
+      }
+      return last;
+    };
+    const posText = await stablePos();
+    const sentIdx = Number(posText.match(/Câu (\d+)/)![1]) - 1;
+    const zh = await page.locator(`[data-sent='${sentIdx}'] [data-zh]`).innerText();
     await page.getByTestId("dict-input").fill(zh);
     await page.getByTestId("dict-check").click();
     await expect(page.getByTestId("dict-result")).toContainText(/Chính xác/);
     // hydration & sent-active style thật
-    const border = await page.locator("[data-sent='1']").evaluate((el) => getComputedStyle(el).borderColor);
+    const border = await page.locator(`[data-sent='${sentIdx}']`).evaluate((el) => getComputedStyle(el).borderColor);
     expect(border).not.toBe("rgba(0, 0, 0, 0)");
   });
 });

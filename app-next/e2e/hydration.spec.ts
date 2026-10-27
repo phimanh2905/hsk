@@ -14,6 +14,9 @@ const ROUTES = [
 ];
 
 test("không có hydration mismatch trên các route chính", async ({ page }) => {
+  // 25 route × cold-compile dev-mode + /shadowing giờ nạp subtitles WSD (~1.4MB) —
+  // 30s mặc định tích lũy là quá sát, không phải hồi quy hydration.
+  test.setTimeout(120_000);
   const errors: string[] = [];
   let current = "";
   page.on("pageerror", (e) => {
@@ -27,7 +30,10 @@ test("không có hydration mismatch trên các route chính", async ({ page }) =
   });
 
   for (const route of ROUTES) {
-    await page.goto(route, { waitUntil: "networkidle" });
+    // "networkidle" từng treo ở chế độ dev khi response JSON lớn (vocab ~1.7MB)
+    // giữ connection lâu — spec này chỉ cần hydration xong, không cần network rảnh.
+    await page.goto(route, { waitUntil: "load", timeout: 30_000 });
+    await page.waitForTimeout(500); // nhịp hydration/console sau load
   }
   expect(errors, errors.join("\n")).toEqual([]);
 });

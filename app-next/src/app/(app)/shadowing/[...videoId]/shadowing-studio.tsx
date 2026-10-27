@@ -8,9 +8,8 @@ import { useRecorder } from "@/lib/shadowing/use-recorder";
 import { barHeights } from "@/lib/shadowing/waveform";
 import { scoreFor, toneChipsFor } from "@/lib/shadowing/scoring";
 import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
-import { normDict } from "@/lib/shadowing/dictation";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
-import { useTts } from "@/lib/tts/use-tts";
+import { activeWordIndex } from "@/lib/shadowing/auto-pause";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
 import { topicVi } from "@/content/shadowing";
 import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
@@ -18,12 +17,21 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
 import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
+import DictationPanel from "./dictation-panel";
+import PronPanel from "./pron-panel";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
   const m = Math.floor(t / 60);
   const s = Math.round(t % 60);
   return m + ":" + String(s).padStart(2, "0");
+}
+
+/* Karaoke (Task 10): index từ đang phát tại tSec trong câu s — -1 nếu
+   không có words hoặc ngoài mọi khoảng. Pure, top-level để dễ test. */
+function activeIdx(s: SubtitleSentence, tSec: number): number {
+  if (!s.words || s.words.length === 0) return -1;
+  return activeWordIndex(s.words, tSec * 1000);
 }
 
 /* Vẽ dãy bar giả lên canvas — port drawBars() của mock; roundRect nếu có, fallback rect */
@@ -50,11 +58,6 @@ function drawBars(canvas: HTMLCanvasElement, heights: number[], color: string) {
   });
 }
 
-/* dictChars của mock: full text trừ dấu câu + khoảng trắng, tách từng chữ */
-function dictChars(full: string): string[] {
-  return full.replace(/[。，、！？…—\s]/g, "").split("");
-}
-
 export default function ShadowingStudio({
   video,
   subtitles: subs,
@@ -77,13 +80,13 @@ export default function ShadowingStudio({
     ? (dialogueByLesson as unknown as Record<string, DialogueRecord | undefined>)[video.id]
     : undefined;
   const toast = useToast();
-  const { speak } = useTts();
   const { progressMap, recordPractice } = useShadowingProgress();
   const prog = progressMap[video.id];
   const [subMode, setSubMode] = useState<0 | 1 | 2>(2); // 0: chỉ hanzi, 1: chỉ pinyin, 2: cả hai
-  // tab cột phải — đặt ở level component để record dock nhận dimmed={tab === "dict"}
-  const [tab, setTab] = useState<"script" | "dict">("script");
-  const dimmed = tab === "dict";
+  // mode cột phải — đặt ở level component để record dock nhận dimmed={mode === "dict"};
+  // pron dùng mic nên không mờ (Task 9 thay panel pron)
+  const [mode, setMode] = useState<"shadow" | "dict" | "pron">("shadow");
+  const dimmed = mode === "dict";
 
   /* ---------- SLOT-RECORD: recorder + chấm điểm (port waveform-card/record-dock) ---------- */
   const [level, setLevel] = useState(0);
@@ -143,35 +146,32 @@ export default function ShadowingStudio({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dimmed, rec.start]);
 
+  /* Digit1/2/3 đổi mode học (shadow/dict/pron) — cùng guard isTyping như Space */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && ((t.matches?.("input, textarea, select") ?? false) || t.isContentEditable)) return;
+      if (e.code === "Digit1") setMode("shadow");
+      else if (e.code === "Digit2") setMode("dict");
+      else if (e.code === "Digit3") setMode("pron");
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   const linesDone = prog?.linesDone ?? 0;
   const pct = subs.length > 0 ? Math.round((linesDone / subs.length) * 100) : 0;
 
   /* ---------- transcript: autoscroll câu active theo pref (port renderActive) ---------- */
   const streamRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (tab !== "script" || !getAutoscroll()) return;
+    if (mode !== "shadow" || !getAutoscroll()) return;
     const el = streamRef.current?.querySelector(`[data-sent="${eng.cur}"]`);
     try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch { /* jsdom */ }
-  }, [eng.cur, tab]);
+  }, [eng.cur, mode]);
 
-  /* ---------- dictation (port DictationPanel) — state reset theo câu ---------- */
+  /* ---------- dictation — DictationPanel (Task 7, variant typing; Task 8 thêm arrange) ---------- */
   const curSub = subs[Math.min(eng.cur, subs.length - 1)] ?? subs[0];
-  const full = curSub ? curSub.parts.map((p) => p.zh).join(" ") : "";
-  const [value, setValue] = useState("");
-  const [result, setResult] = useState<null | { kind: "empty" | "correct" | "wrong" }>(null);
-  const [dictShown, setDictShown] = useState(0); // số chữ đã mở trong "Gợi ý ô trống"
-  useEffect(() => { setValue(""); setResult(null); setDictShown(0); }, [curSub]);
-
-  function check() {
-    if (!curSub) return;
-    if (!normDict(value)) { setResult({ kind: "empty" }); return; }
-    const ok = normDict(value) === normDict(full);
-    setResult({ kind: ok ? "correct" : "wrong" });
-    if (ok) recordPractice(video.id, { score: 85, linesDoneDelta: 1 });
-  }
-
-  const hintLen = Math.max(8, Math.floor((curSub?.pinyin.length ?? 0) * 0.4));
-  const chars = dictChars(full);
   const chips = toneChipsFor(lastScore ?? -1, (curSub?.parts ?? []).map((p) => p.zh));
 
   return (
@@ -297,6 +297,18 @@ export default function ShadowingStudio({
               >
                 <Repeat size={14} strokeWidth={ICON_STROKE} /> Lặp câu
               </Button>
+              {subs.some((s) => s.words) && (
+                <Button
+                  size="sm"
+                  variant={eng.autoPause ? "primary" : "secondary"}
+                  onClick={() => eng.setAutoPause(!eng.autoPause)}
+                  aria-pressed={eng.autoPause}
+                  data-testid="auto-pause"
+                  title="Tự ngắt cuối câu theo word timing"
+                >
+                  Tự ngắt
+                </Button>
+              )}
               <div
                 role="group"
                 aria-label="Tốc độ phát"
@@ -504,30 +516,27 @@ export default function ShadowingStudio({
             aria-label="Kịch bản và chính tả"
             className="rounded-card border border-border-subtle bg-surface-elevated p-3.5"
           >
-            {/* tabs */}
-            <div role="group" aria-label="Chế độ học" data-od-id="script-tabs" className="flex gap-1 rounded-control border border-border-subtle bg-surface-muted p-0.5">
-              <button
-                type="button"
-                onClick={() => setTab("script")}
-                aria-pressed={tab === "script"}
-                className={
-                  "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
-                  (tab === "script" ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
-                }
-              >
-                Kịch bản đồng bộ
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("dict")}
-                aria-pressed={tab === "dict"}
-                className={
-                  "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
-                  (tab === "dict" ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
-                }
-              >
-                Chép chính tả
-              </button>
+            {/* mode tabs — Shadow / Chép chính tả / Phát âm (phím Digit1/2/3) */}
+            <div role="group" aria-label="Chế độ học" data-od-id="mode-tabs" className="flex gap-1 rounded-control border border-border-subtle bg-surface-muted p-0.5">
+              {([
+                ["mode-shadow", "shadow", "Shadow"],
+                ["mode-dict", "dict", "Chép chính tả"],
+                ["mode-pron", "pron", "Phát âm"],
+              ] as const).map(([tid, m, label]) => (
+                <button
+                  key={tid}
+                  type="button"
+                  data-testid={tid}
+                  onClick={() => setMode(m)}
+                  aria-pressed={mode === m}
+                  className={
+                    "min-h-11 flex-1 rounded-[9px] px-2 text-[13px] font-bold focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2 " +
+                    (mode === m ? "bg-surface-elevated text-text-primary shadow-xs" : "text-text-secondary")
+                  }
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
             {/* transcript stream */}
@@ -535,11 +544,13 @@ export default function ShadowingStudio({
               ref={streamRef}
               data-testid="transcript-stream"
               data-od-id="transcript-stream"
-              hidden={tab === "dict"}
+              hidden={mode !== "shadow"}
               className="mt-3 max-h-[640px] space-y-2 overflow-y-auto pr-0.5"
             >
               {subs.map((s, i) => {
                 const speaker = dialogue?.lines.find((l) => l.n === s.n)?.speaker;
+                const karaoke = !!s.words && s.words.length > 0 && i === eng.cur;
+                const ai = karaoke ? activeIdx(s, eng.time) : -1;
                 return (
                 <div
                   key={i}
@@ -565,9 +576,21 @@ export default function ShadowingStudio({
                   <div className="mt-1 flex items-start gap-2">
                     <div className="min-w-0 flex-1">
                       <div className={"zh font-semibold " + (i === eng.cur ? "text-xl" : "text-lg")} data-zh>
-                        {s.parts.map((p, pi) => (
-                          <span key={pi} data-part={pi}>{p.zh}</span>
-                        ))}
+                        {karaoke
+                          ? s.words!.map((w, wi) => (
+                              <span
+                                key={wi}
+                                data-testid="kw"
+                                data-word={wi}
+                                data-active={wi === ai ? "1" : "0"}
+                                className={wi === ai ? "rounded bg-jade-wash text-action-primary" : ""}
+                              >
+                                {w.zh}
+                              </span>
+                            ))
+                          : s.parts.map((p, pi) => (
+                              <span key={pi} data-part={pi}>{p.zh}</span>
+                            ))}
                       </div>
                       {s.pinyin && (
                         <p
@@ -608,98 +631,26 @@ export default function ShadowingStudio({
               })}
             </div>
 
-            {/* dictation box */}
-            <div
-              data-testid="dict-box"
-              data-od-id="dictation-box"
-              hidden={tab === "script"}
-              className="mt-3 space-y-3"
-            >
-              <div className="flex items-baseline justify-between gap-2">
-                <p className="text-sm font-extrabold tracking-wide">CÂU {eng.cur + 1} / {subs.length}</p>
-                <small className="text-xs tabular-nums text-text-secondary">
-                  Mốc thời gian {fmt(curSub?.start ?? 0)} – {fmt(curSub?.end ?? 0)}
-                </small>
-              </div>
+            {/* dictation — DictationPanel (testid dict-box nằm trong panel) */}
+            <DictationPanel
+              subs={subs}
+              cur={eng.cur}
+              videoId={video.id}
+              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, prev: eng.prev, next: eng.next }}
+              recordPractice={recordPractice}
+              hidden={mode !== "dict"}
+            />
 
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" data-testid="dict-listen" onClick={eng.listenCurrent}>
-                  <Volume2 size={14} strokeWidth={ICON_STROKE} /> Nghe câu mẫu
-                </Button>
-                <Button variant="secondary" size="sm" data-testid="dict-slow" onClick={() => speak(full, { lang: "zh-CN", rate: 0.65 })}>
-                  Nghe chậm 0.65x
-                </Button>
-              </div>
-
-              {/* gợi ý ô trống */}
-              <div className="rounded-2xl border border-border-subtle bg-surface-muted p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] font-extrabold tracking-wider text-text-secondary">GỢI Ý Ô TRỐNG</p>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    data-testid="dict-hint"
-                    onClick={() => {
-                      if (dictShown >= chars.length) { toast("Đã hiện hết gợi ý rồi"); return; }
-                      setDictShown((n) => n + 1);
-                    }}
-                  >
-                    Gợi ý 1 chữ
-                  </Button>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {chars.map((c, ci) => (
-                    <span
-                      key={ci}
-                      className={
-                        "grid h-9 w-9 place-items-center rounded-lg border text-lg " +
-                        (ci < dictShown
-                          ? "hanzi border-border-subtle bg-surface-elevated"
-                          : "border-dashed border-border-subtle text-text-secondary")
-                      }
-                    >
-                      {ci < dictShown ? c : "?"}
-                    </span>
-                  ))}
-                </div>
-                {dictShown >= 1 && curSub?.pinyin && (
-                  <p className="mt-2 text-xs italic text-text-secondary">Gợi ý: {curSub.pinyin.slice(0, hintLen)}…</p>
-                )}
-              </div>
-
-              <textarea
-                data-testid="dict-input"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); check(); } }}
-                placeholder="Gõ những gì bạn nghe được (chữ Hán hoặc pinyin)"
-                rows={3}
-                className="zh text-lg min-h-24 rounded-2xl bg-surface-muted p-3.5 w-full border border-border-subtle text-text-primary placeholder:text-text-secondary focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+            {/* pron — PronPanel (Task 9): transcript thu gọn + ghi âm chấm điểm; record dock giữ nguyên cho mode shadow */}
+            {mode === "pron" && (
+              <PronPanel
+                subs={subs}
+                cur={eng.cur}
+                rate={eng.rate}
+                videoId={video.id}
+                recordPractice={recordPractice}
               />
-
-              <Button variant="primary" onClick={check} data-testid="dict-check" className="w-full">
-                Kiểm tra đáp án
-              </Button>
-
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" data-testid="dict-prev" onClick={eng.prev}>◀ Câu trước</Button>
-                <Button variant="secondary" size="sm" data-testid="dict-skip" onClick={eng.next} className="ml-auto">
-                  Bỏ qua / Tiếp ▶
-                </Button>
-              </div>
-
-              <div data-testid="dict-result">
-                {result?.kind === "empty" && <p className="text-sm text-text-secondary">Hãy gõ những gì bạn nghe được trước đã.</p>}
-                {result?.kind === "correct" && (
-                  <p className="font-bold text-feedback-success">
-                    Chính xác!{curSub?.pinyin ? <span className="italic"> {curSub.pinyin}</span> : null}
-                  </p>
-                )}
-                {result?.kind === "wrong" && (
-                  <p className="font-bold text-feedback-error">Chưa đúng — nghe lại và thử tiếp nhé (đáp án vẫn đang ẩn)</p>
-                )}
-              </div>
-            </div>
+            )}
           </section>
         </div>
       </div>

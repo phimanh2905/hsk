@@ -1,12 +1,14 @@
 "use client";
 /* Engine phát — tách nguyên vẹn từ video-player.tsx (postMessage YouTube,
-   polling 500ms, TTS fallback 4s). Khác biệt duy nhất (spec §3.4):
+   polling 100ms, TTS fallback 4s). Khác biệt duy nhất (spec §3.4):
    - auto-split thành state (default true), không đọc DOM
    - thêm loop: chạm cuối câu khi playing → seek về đầu câu thay vì pause
    - phím: K=play/pause, R=nghe mẫu, L=loop, ←/→=chuyển câu. Space do record dock phụ trách. */
 import { useEffect, useRef, useState } from "react";
 import { useTts } from "@/lib/tts/use-tts";
 import type { SubtitleSentence } from "@/content/shadowing";
+import { getAutoPause, setAutoPause } from "@/lib/shadowing/prefs";
+import { sentencePauseMs } from "@/lib/shadowing/auto-pause";
 
 const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
@@ -46,6 +48,7 @@ export function usePlayerEngine({
     loop: false,
     autoSplit: true,
     audio: false, // T7: mode audio → mọi lệnh ytCmd thành no-op, TTS fallback tắt
+    autoPause: getAutoPause(), // Task 5 — toggle tạm dừng theo word timing (spec WSD.3)
   });
 
   // slice hiển thị
@@ -55,12 +58,25 @@ export function usePlayerEngine({
   const [tts, setTts] = useState(false);
   const [rate, setRate] = useState(1);
   const [loop, setLoop] = useState(false);
+  const [time, setTime] = useState(0); // giây — cập nhật mỗi nhịp poll (Task 6 karaoke đọc)
+  // SSR render false — giá trị localStorage chỉ đọc lại sau mount (useEffect) vì
+  // hydration không patch thuộc tính DOM sai khác giữa server và client.
+  const [autoPause, setAutoPauseState] = useState(false);
   const [autoSplit] = useState(true); // Task 8 có thể nâng thành state điều khiển từ settings
   st.current.autoSplit = autoSplit;
   st.current.audio = audioMode;
 
   const sinkRef = useRef(postSink);
   sinkRef.current = postSink;
+
+  // Task 5 — auto-pause nhớ localStorage: sync sau mount (hydration-safe)
+  useEffect(() => {
+    const saved = getAutoPause();
+    if (saved) {
+      st.current.autoPause = true;
+      setAutoPauseState(true);
+    }
+  }, []);
 
   /* ---------- điều khiển YouTube (postMessage) — port shadowing-video.js:52-56 ---------- */
   function ytSend(obj: Record<string, unknown>) {
@@ -132,7 +148,7 @@ export function usePlayerEngine({
   /* onIframeLoad của video-player cũ (gửi handshake "listening" khi iframe load)
      chuyển sang Task 8 cùng với <iframe> — hook không render DOM. */
 
-  /* ---------- polling 500ms — port shadowing-video.js:87-107 ---------- */
+  /* ---------- polling 100ms — port shadowing-video.js:87-107 (Task 5: 500→100ms cho karaoke mượt) ---------- */
   useEffect(() => {
     const id = setInterval(() => {
       if (st.current.audio) return; // T7: mode audio do 'ended' điều khiển, không polling
@@ -145,12 +161,24 @@ export function usePlayerEngine({
       }
       ytCmd("getCurrentTime");
       tick(st.current.lastTime);
-    }, 500);
+    }, 100);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subs]);
 
   function tick(t: number) {
+    setTime(t);
+    // auto-pause theo word timing (spec WSD.3): dừng tại endMs từ cuối câu;
+    // loop bật → quay về đầu câu thay vì dừng (giữ ưu tiên như autoSplit bên dưới)
+    if (st.current.playing && st.current.autoPause) {
+      const s = subs[st.current.cur];
+      const pauseMs = sentencePauseMs(s.words, s.end * 1000);
+      if (pauseMs != null && t * 1000 >= pauseMs - 60) {
+        if (st.current.loop) { ytCmd("seekTo", [subs[st.current.cur].start, true]); return; }
+        pause();
+        return;
+      }
+    }
     const idx = findSentenceIndex(subs, t);
     if (idx !== st.current.cur) { st.current.cur = idx; setCur(idx); return; }
     // tự ngắt câu: dừng ở cuối câu đang phát (loop → quay về đầu câu)
@@ -243,6 +271,12 @@ export function usePlayerEngine({
     if (!st.current.tts) ytCmd("setPlaybackRate", [r]);
   };
   const toggleLoop = () => { st.current.loop = !st.current.loop; setLoop(st.current.loop); };
+  // Task 5 — toggle auto-pause: mirror ref + React state + localStorage (prefs)
+  const setAutoPausePublic = (on: boolean) => {
+    st.current.autoPause = on;
+    setAutoPauseState(on);
+    setAutoPause(on);
+  };
 
   /* ---------- phím tắt — K=play/pause, R=nghe mẫu, L=loop, ←/→=chuyển câu.
      Space KHÔNG nằm ở engine (record dock đăng ký hold-to-record riêng). ---------- */
@@ -278,6 +312,9 @@ export function usePlayerEngine({
     ytReady,
     rate,
     loop,
+    time,
+    autoPause,
+    setAutoPause: setAutoPausePublic,
     play,
     pause,
     togglePlay,

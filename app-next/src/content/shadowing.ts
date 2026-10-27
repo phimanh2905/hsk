@@ -35,6 +35,7 @@ export type ShadowingVideo = {
   type: "youtube" | "audio";
   audioDir: string | null;
 };
+export type ShadowWord = { zh: string; py: string; startMs: number; endMs: number };
 export type SubtitleSentence = {
   n: number;
   start: number;
@@ -42,6 +43,7 @@ export type SubtitleSentence = {
   parts: { zh: string }[];
   pinyin: string;
   vi: string;
+  words?: ShadowWord[]; // word timing whisper (chỉ video YouTube W1) — undefined → không karaoke/auto-pause
 };
 
 export const shadowingPlaylists: ShadowingPlaylist[] = [

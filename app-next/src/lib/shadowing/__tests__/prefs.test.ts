@@ -1,5 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { getShadowFont, setShadowFont, getAutoscroll, setAutoscroll } from "../prefs";
+import {
+  getShadowFont,
+  setShadowFont,
+  getAutoscroll,
+  setAutoscroll,
+  getDictVariant,
+  setDictVariant,
+  getAutoPause,
+  setAutoPause,
+} from "../prefs";
 
 beforeEach(() => localStorage.clear());
 
@@ -15,4 +24,16 @@ it("autoscroll mặc định true, '0' tắt", () => {
   expect(getAutoscroll()).toBe(false);
   localStorage.setItem("bye.shadow.autoscroll", "1");
   expect(getAutoscroll()).toBe(true);
+});
+it("dictVariant mặc định typing, set arrange nhớ lại", () => {
+  localStorage.clear();
+  expect(getDictVariant()).toBe("typing");
+  setDictVariant("arrange");
+  expect(getDictVariant()).toBe("arrange");
+});
+it("autoPause mặc định false, set true nhớ lại", () => {
+  localStorage.clear();
+  expect(getAutoPause()).toBe(false);
+  setAutoPause(true);
+  expect(getAutoPause()).toBe(true);
 });
