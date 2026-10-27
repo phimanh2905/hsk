@@ -28,3 +28,5 @@ build/
 # SDD scratch / worktrees
 .worktrees/
 .superpowers/
+.gitnexus/
+graphify-out/

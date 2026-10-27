@@ -5,7 +5,7 @@
    (hamburger ở topbar + nút More ở bottom-nav), đóng bằng scrim / Escape / click link.
    Active: nền action-primary/10 + rail trái 3px — dùng aria-current="page" thay class .active. */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -77,7 +77,7 @@ export default function SidebarNav() {
 
   /* Tooltip theo vị trí icon thật (fixed): overflow-y-auto của vùng scroll sẽ cắt
      tooltip định vị tuyệt đối trong nav, nên đo rect lúc hover thay vì CSS group-hover. */
-  const showTip = (label: string) => (e: React.MouseEvent) => {
+  const showTip = (label: string) => (e: MouseEvent<HTMLElement>) => {
     if (!collapsed || !window.matchMedia("(min-width: 1024px)").matches) return;
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setTip({ label, top: r.top + r.height / 2, left: r.right + 10 });
@@ -126,14 +126,14 @@ export default function SidebarNav() {
           type="button"
           aria-label="Đóng menu"
           onClick={close}
-          className="fixed inset-0 z-[425] bg-black/50 lg:hidden"
+          className="fixed inset-0 z-[460] bg-black/50 lg:hidden"
         />
       )}
       <nav
         aria-label="Điều hướng chính"
         data-open={open ? "true" : "false"}
         className={
-          "fixed inset-y-0 left-0 z-[430] flex flex-col border-r border-border-default " +
+          "fixed inset-y-0 left-0 z-[470] flex flex-col border-r border-border-default " +
           (collapsed ? "w-64 lg:w-[68px]" : "w-64") + " " +
           "bg-[color-mix(in_srgb,var(--surface-elevated)_95%,transparent)] backdrop-blur-xl " +
           "transition-[width,transform] duration-300 lg:translate-x-0 " +
@@ -160,7 +160,8 @@ export default function SidebarNav() {
           <IconButton
             label={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
             onClick={toggleCollapsed}
-            className={collapsed ? "lg:ml-0" : "ml-auto"}
+            /* Mobile/tablet có bottom-nav làm lối vào drawer — collapse chỉ dành cho desktop. */
+            className={(collapsed ? "lg:ml-0" : "ml-auto") + " hidden lg:inline-flex"}
           >
             {collapsed
               ? <PanelLeftOpen size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
@@ -209,7 +210,7 @@ export default function SidebarNav() {
                           />
                         )}
                         <Icon size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
-                        {label}
+                        <span className={collapsed ? "lg:hidden" : ""}>{label}</span>
                         {badge === "srs" && mounted && srsDue > 0 && (
                           <>
                             <span
@@ -239,9 +240,9 @@ export default function SidebarNav() {
         </div>
 
         {/* Footer — user-card session-driven + settings (event đã có listener) */}
-        <div className={"flex items-center gap-2.5 border-t border-border-default p-3 " + (collapsed ? "lg:justify-center" : "")}>
+        <div className={"flex items-center gap-2.5 border-t border-border-default p-3 " + (collapsed ? "lg:flex-col" : "")}>
           {loggedIn ? (
-            <div className={"min-w-0 flex-1 items-center gap-2.5 " + (collapsed ? "lg:flex lg:flex-none" : "flex")}>
+            <div className={"flex min-w-0 items-center gap-2.5 " + (collapsed ? "lg:flex-none" : "flex-1")}>
               <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full bg-learning-mastered text-[13px] font-bold text-white">
                 {initials}
               </span>
@@ -274,7 +275,7 @@ export default function SidebarNav() {
         <div
           role="tooltip"
           aria-hidden="true"
-          className="pointer-events-none fixed z-[450] -translate-y-1/2 whitespace-nowrap rounded-[8px] bg-text-primary px-2.5 py-1.5 text-[12px] font-semibold text-surface-paper shadow-md"
+          className="pointer-events-none fixed z-[480] -translate-y-1/2 whitespace-nowrap rounded-[8px] bg-text-primary px-2.5 py-1.5 text-[12px] font-semibold text-surface-paper shadow-md"
           style={{ top: tip.top, left: tip.left }}
         >
           {tip.label}

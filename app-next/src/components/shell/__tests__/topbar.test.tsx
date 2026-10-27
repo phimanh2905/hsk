@@ -39,12 +39,10 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(screen.queryByText("Lộ trình HSK")).not.toBeInTheDocument();
   });
 
-  it("nút hamburger chỉ ở mobile (lg:hidden) và dispatch bye:open-nav", async () => {
+  it("KHÔNG còn hamburger — mobile mở menu qua nút More của bottom-nav", () => {
     renderTopbar();
-    const btn = screen.getByRole("button", { name: "Mở menu" });
-    expect(btn.className).toContain("lg:hidden");
-    await userEvent.click(btn);
-    expect(openNav).toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: "Mở menu" })).not.toBeInTheDocument();
+    expect(openNav).not.toHaveBeenCalled();
   });
 
   it("SearchTrigger mở command palette", async () => {
@@ -60,11 +58,8 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(dialog.closest("header")).toBeNull();
   });
 
-  it("hamburger + SearchTrigger đạt touch target 44px", () => {
+  it("SearchTrigger đạt touch target 44px", () => {
     renderTopbar();
-    const menu = screen.getByRole("button", { name: "Mở menu" });
-    expect(menu.className).toContain("h-11");
-    expect(menu.className).not.toContain("h-10");
     expect(screen.getByRole("button", { name: "Tìm kiếm" }).className).toContain("min-h-11");
   });
 

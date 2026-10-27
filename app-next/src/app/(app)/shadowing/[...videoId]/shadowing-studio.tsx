@@ -164,7 +164,7 @@ export default function ShadowingStudio({
   return (
     <>
       <header
-        className="sticky top-0 z-20 -mx-4 mb-4 border-b border-border-subtle bg-surface-elevated/80 px-4 py-2 backdrop-blur lg:-mx-6 lg:px-6"
+        className="sticky top-16 z-20 -mx-4 -mt-6 mb-4 border-b border-border-subtle bg-surface-elevated/80 px-4 py-2 backdrop-blur lg:-mx-6 lg:px-6"
         data-od-id="studio-topbar"
         data-testid="studio-topbar"
       >

@@ -1,13 +1,13 @@
 "use client";
 
 /* Topbar v2 — port .topbar của opendesign_hsk/app-shell.html (spec 2026-10-04 §4.3).
-   Hamburger (mobile) + breadcrumb + SearchTrigger (⌘K → CommandPalette) + LevelPopover
+   Breadcrumb + SearchTrigger (⌘K → CommandPalette) + LevelPopover
    + StreakPill + theme. Brand & avatar chuyển sang SidebarNav theo mock.
    Key mục tiêu HSK do LevelPopover sở hữu duy nhất — Topbar không đọc/ghi. */
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, Moon, Search, Sun, ICON_STROKE } from "@/components/ui/icon";
+import { Moon, Search, Sun, ICON_STROKE } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { LevelPopover } from "@/components/ui/level-popover";
 import { StreakPill } from "@/components/ui/streak-pill";
@@ -39,15 +39,6 @@ export default function Topbar() {
     <>
       <header className="sticky top-0 z-40 border-b border-border-default bg-[color-mix(in_srgb,var(--surface-elevated)_80%,transparent)] backdrop-blur-xl">
         <div className="flex h-16 items-center gap-3 px-4 md:px-6">
-          <button
-            type="button"
-            aria-label="Mở menu"
-            onClick={() => window.dispatchEvent(new CustomEvent("bye:open-nav"))}
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-control border border-border-default bg-surface-elevated text-text-primary lg:hidden"
-          >
-            <Menu size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
-          </button>
-
           <div className="min-w-0 flex-1 lg:flex-none">
             <div className="truncate text-[14px] font-extrabold leading-tight">{pageTitle(pathname)}</div>
             {/* C2: ngày là dữ liệu thời gian — chỉ render sau mount để không lệch hydration
