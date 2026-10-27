@@ -9,6 +9,7 @@ import { readCuratedVideos } from "./video-config";
 import { transcribeVideo, flattenWhisperJson, type TokenizedSentence } from "./transcribe-video";
 import { splitSentences } from "./split-sentences";
 import { buildSentenceParts, type WordPinyin } from "./pinyin-parts";
+import { subtitleInsertStatements } from "./subtitle-chunks";
 
 export type SubtitleRow = {
   n: number;
@@ -30,12 +31,11 @@ export function sentenceToRow(n: number, s: SentenceInput): SubtitleRow {
 
 export function buildSeedSql(rows: { videoId: string; sentences: SubtitleRow[] }[]): string {
   const esc = (s: string) => s.replace(/'/g, "''");
-  return rows
-    .map(
-      ({ videoId, sentences }) =>
-        `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('${esc(videoId)}', '${esc(JSON.stringify(sentences))}');\n`
-    )
-    .join("");
+  return (
+    rows
+      .map(({ videoId, sentences }) => subtitleInsertStatements(videoId, sentences, esc).join("\n"))
+      .join("\n") + "\n"
+  );
 }
 
 // resume: dựng lại TokenizedSentence[] từ out/<id>/ đã có (không gọi tiến trình ngoài)

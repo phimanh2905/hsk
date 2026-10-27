@@ -9,6 +9,7 @@ import { readCuratedVideos } from "./video-config.ts";
 import { flattenWhisperJson } from "./transcribe-video.ts";
 import { splitSentences, type SentenceDraft } from "./split-sentences.ts";
 import { buildSentenceParts, type WordPinyin } from "./pinyin-parts.ts";
+import { subtitleInsertStatements } from "./subtitle-chunks.ts";
 import type { ShadowWord } from "../../src/content/shadowing.ts";
 
 const CJK_RE = /[\u3400-\u4dbf\u4e00-\u9fff]/;
@@ -50,7 +51,7 @@ function buildSeedSql(): string {
       const { parts, pinyin } = buildSentenceParts(d.zh, [prev]);
       return { n: i + 1, start: d.start, end: d.end, parts, pinyin, vi: "", words };
     });
-    rows.push(`INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('${esc(v.videoId)}', '${esc(JSON.stringify(sentences))}');`);
+    rows.push(...subtitleInsertStatements(v.videoId, sentences, esc));
     console.log(`${v.videoId}: ${sentences.length} câu, words đầu: ${JSON.stringify(sentences[0]?.words?.[0] ?? null)}`);
   }
   return rows.join("\n") + "\n";

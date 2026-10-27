@@ -14,6 +14,9 @@ const ROUTES = [
 ];
 
 test("không có hydration mismatch trên các route chính", async ({ page }) => {
+  // 25 route × cold-compile dev-mode + /shadowing giờ nạp subtitles WSD (~1.4MB) —
+  // 30s mặc định tích lũy là quá sát, không phải hồi quy hydration.
+  test.setTimeout(120_000);
   const errors: string[] = [];
   let current = "";
   page.on("pageerror", (e) => {

@@ -168,11 +168,16 @@ export function usePlayerEngine({
 
   function tick(t: number) {
     setTime(t);
-    // auto-pause theo word timing (spec WSD.3): dừng tại endMs từ cuối câu
+    // auto-pause theo word timing (spec WSD.3): dừng tại endMs từ cuối câu;
+    // loop bật → quay về đầu câu thay vì dừng (giữ ưu tiên như autoSplit bên dưới)
     if (st.current.playing && st.current.autoPause) {
       const s = subs[st.current.cur];
       const pauseMs = sentencePauseMs(s.words, s.end * 1000);
-      if (pauseMs != null && t * 1000 >= pauseMs - 60) { pause(); return; }
+      if (pauseMs != null && t * 1000 >= pauseMs - 60) {
+        if (st.current.loop) { ytCmd("seekTo", [subs[st.current.cur].start, true]); return; }
+        pause();
+        return;
+      }
     }
     const idx = findSentenceIndex(subs, t);
     if (idx !== st.current.cur) { st.current.cur = idx; setCur(idx); return; }

@@ -7,6 +7,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dialogueRows } from "./src/dialogue-seed";
+import { subtitleInsertStatements } from "./subtitle-chunks";
 import type { DialogueRecord } from "./src/dialogues";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -43,9 +44,7 @@ videos.forEach((v) => {
 });
 
 for (const [videoId, sentences] of Object.entries(subtitles)) {
-  lines.push(
-    `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('${esc(videoId)}', '${esc(JSON.stringify(sentences))}');`
-  );
+  lines.push(...subtitleInsertStatements(videoId, sentences, esc));
 }
 
 mkdirSync("drizzle/seeds", { recursive: true });

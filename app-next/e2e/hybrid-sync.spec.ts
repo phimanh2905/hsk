@@ -137,7 +137,16 @@ const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" })
   await pageB.goto("/lesson/hsk1/lesson-1");
   await pageB.getByRole("article", { name: "Thẻ ghi nhớ, chạm để xem nghĩa" }).click();
   await pageB.locator("button[data-grade]").first().click(); // chấm điểm → recordReview
-  const flushB = pageB.waitForResponse(isSyncPost, { timeout: 20_000 });
+  /* Chờ đúng POST mang srs ĐÃ CẬP NHẬT (reviewCount >= 1) — chờ "POST bất kỳ"
+     dễ bắt nhầm flush trước đó (XP/studyDay), khiến A reload pull về bản cũ
+     (race đã làm spec fail liên tục). */
+  const flushB = pageB.waitForResponse(
+    (r) =>
+      r.url().includes(SYNC_URL) &&
+      r.request().method() === "POST" &&
+      /"reviewCount"\s*:\s*[1-9]/.test(r.request().postData() ?? ""),
+    { timeout: 30_000 }
+  );
   const bRes = await flushB; // debounce 5s của hybrid-store
   expect(bRes.status()).toBe(200);
 

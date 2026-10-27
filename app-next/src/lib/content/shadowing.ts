@@ -38,7 +38,7 @@ type VideoRow = Omit<ShadowingVideo, "topic" | "type" | "audioDir"> & {
   audioDir?: string | null;
   ord: number;
 };
-type SubRow = { videoId: string; sentences: SubtitleSentence[] };
+type SubRow = { videoId: string; chunk: number; sentences: SubtitleSentence[] };
 
 /* Pure function (test được): rows → shape app, sort ord, cast topic. */
 export function rowsToShadowing(
@@ -54,7 +54,10 @@ export function rowsToShadowing(
       audioDir: v.audioDir ?? null,
     }));
   const subtitles: SubtitlesByVideo = {};
-  for (const r of subRows) subtitles[r.videoId] = r.sentences;
+  for (const r of [...subRows].sort((a, b) => a.chunk - b.chunk)) {
+    // seed tách sentences JSON thành nhiều row (chunk ≤60KB) — concat theo thứ tự
+    subtitles[r.videoId] = [...(subtitles[r.videoId] ?? []), ...r.sentences];
+  }
   return { videos, subtitles };
 }
 
@@ -95,6 +98,7 @@ export async function getShadowingSubtitlesByVideo(videoId: string): Promise<Sub
   const rows = await createDb()
     .select()
     .from(contentShadowingSubtitles)
-    .where(eq(contentShadowingSubtitles.videoId, videoId));
-  return rows[0]?.sentences ?? null;
+    .where(eq(contentShadowingSubtitles.videoId, videoId))
+    .orderBy(asc(contentShadowingSubtitles.chunk));
+  return rows.length > 0 ? rows.flatMap((r) => r.sentences) : null;
 }

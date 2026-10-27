@@ -71,6 +71,13 @@
       "when": 1792848107414,
       "tag": "0009_concerned_ser_duncan",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1793059827417,
+      "tag": "0010_shadowing_subtitles_chunk",
+      "breakpoints": true
     }
   ]
 }

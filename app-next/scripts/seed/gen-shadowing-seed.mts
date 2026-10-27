@@ -3,6 +3,7 @@
    Chạy: pnpm dlx tsx scripts/seed/gen-shadowing-seed.mts (từ app-next/) */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { shadowingPlaylists, shadowingSubtitles, shadowingVideos } from "../../src/content/shadowing";
+import { subtitleInsertStatements } from "../content/subtitle-chunks";
 
 const esc = (s: string) => s.replace(/'/g, "''");
 const lines: string[] = [
@@ -22,9 +23,7 @@ shadowingVideos.forEach((v, i) => {
 });
 
 for (const [videoId, sentences] of Object.entries(shadowingSubtitles)) {
-  lines.push(
-    `INSERT OR REPLACE INTO content_shadowing_subtitles (video_id, sentences) VALUES ('${esc(videoId)}', '${esc(JSON.stringify(sentences))}');`
-  );
+  lines.push(...subtitleInsertStatements(videoId, sentences, esc));
 }
 
 mkdirSync("drizzle/seeds", { recursive: true });
