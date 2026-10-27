@@ -47,6 +47,7 @@ export function usePlayerEngine({
     autoSplit: true,
     audio: false, // T7: mode audio → mọi lệnh media thành no-op, TTS fallback tắt
     autoPause: getAutoPause(), // Task 5 — toggle tạm dừng theo word timing (spec WSD.3)
+    listen: null as null | { end: number }, // nghe mẫu one-shot: phát tới end câu rồi dừng
   });
 
   // slice hiển thị
@@ -144,6 +145,14 @@ export function usePlayerEngine({
 
   function tick(t: number) {
     setTime(t);
+    // nghe mẫu one-shot (giọng video): tới end câu → dừng, bỏ qua auto-split/pause
+    if (st.current.listen) {
+      if (t >= st.current.listen.end - 0.05) {
+        st.current.listen = null;
+        if (st.current.playing) pause();
+      }
+      return;
+    }
     // auto-pause theo word timing (spec WSD.3): dừng tại endMs từ cuối câu;
     // loop bật → quay về đầu câu thay vì dừng (giữ ưu tiên như autoSplit bên dưới)
     if (st.current.playing && st.current.autoPause) {
@@ -190,6 +199,15 @@ export function usePlayerEngine({
       gotoSentence(Math.min(Math.max(i, 0), subs.length - 1), true);
       return;
     }
+    /* YouTube ready → nghe mẫu bằng giọng video: seek start câu, phát tới end câu
+       rồi tự dừng (one-shot). TTS chỉ còn là fallback khi ytReady=false. */
+    if (st.current.ytReady) {
+      const clamped = Math.min(Math.max(i, 0), subs.length - 1);
+      if (playerRef.current) playerRef.current.currentTime = subs[clamped].start;
+      st.current.listen = { end: subs[clamped].end };
+      if (!st.current.playing) play();
+      return;
+    }
     const s = subs[i];
     speak(s.parts.map((p) => p.zh).join(" "), {
       lang: "zh-CN",
@@ -220,6 +238,7 @@ export function usePlayerEngine({
   }
   function pause() {
     st.current.playing = false; setPlaying(false);
+    st.current.listen = null; // pause thủ công hủy nghe mẫu (tick đã clear trước khi gọi pause ở đường one-shot)
     if (st.current.audio) { try { audioEl()?.pause(); } catch { /* silent */ } return; }
     if (st.current.tts) { try { ttsCancel(); } catch { /* silent */ } } else playerRef.current?.pause();
   }
@@ -228,6 +247,7 @@ export function usePlayerEngine({
   function gotoSentence(i: number, autoplay: boolean) {
     const clamped = Math.min(Math.max(i, 0), subs.length - 1);
     st.current.cur = clamped;
+    st.current.listen = null; // nhảy câu thủ công hủy nghe mẫu đang dở
     if (st.current.audio) {
       seekAudio(clamped); // src clip mới do studio render theo cur
       if (autoplay) play();
@@ -280,15 +300,10 @@ export function usePlayerEngine({
   /* ---------- autoscroll câu active: capability giữ qua `cur` — Task 8 (transcript
      panel) tự đăng ký effect trên cur và đọc pref getAutoscroll() để scrollIntoView. ---------- */
 
-  /* ---------- nghe lại câu ---------- */
+  /* ---------- nghe lại câu — cùng cơ chế nghe mẫu one-shot (giọng video) ---------- */
   const listenCurrent = () => {
     if (st.current.audio) { gotoSentence(st.current.cur, true); return; }
-    if (tts) speakSentence(cur);
-    else {
-      if (playerRef.current) playerRef.current.currentTime = subs[cur].start;
-      void playerRef.current?.play();
-      if (!st.current.playing) play();
-    }
+    speakSentence(cur);
   };
 
   return {

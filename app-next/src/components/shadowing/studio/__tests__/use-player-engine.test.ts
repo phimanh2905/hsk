@@ -4,7 +4,10 @@ import { renderHook, act } from "@testing-library/react";
 import { findSentenceIndex, usePlayerEngine } from "../use-player-engine";
 import type { SubtitleSentence } from "@/content/shadowing";
 
-vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }) }));
+vi.mock("@/lib/tts/use-tts", () => ({
+  useTts: () => ({ speak: ttsSpeakSpy, cancel: vi.fn(), speaking: false }),
+}));
+const ttsSpeakSpy = vi.hoisted(() => vi.fn());
 
 const subs: SubtitleSentence[] = [
   { n: 1, start: 0, end: 8, parts: [{ zh: "你好" }], pinyin: "Nǐ hǎo", vi: "Xin chào" },
@@ -75,6 +78,34 @@ describe("usePlayerEngine (ref-driven)", () => {
     expect(result.current.playing).toBe(true);
     act(() => result.current.syncPlaying(false)); // YT tự pause (buffer)
     expect(result.current.playing).toBe(false);
+  });
+
+  /* Nghe mẫu bằng giọng video: seek start câu → phát → TỰ DỪNG ở end câu.
+     TTS chỉ còn là fallback khi ytReady=false. */
+  it("speakSentence (YouTube): seek tới start câu và phát giọng video", () => {
+    vi.useFakeTimers();
+    const media = fakeMedia();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: media } }));
+    act(() => result.current.markYtReady());
+    act(() => result.current.speakSentence(1));
+    expect(media.currentTime).toBe(subs[1].start);
+    expect(media.play).toHaveBeenCalled();
+    expect(result.current.playing).toBe(true);
+    // phát qua end câu 1 (15s) → tick tự dừng, không sang câu 2
+    act(() => { media.currentTime = 15.2; });
+    act(() => vi.advanceTimersByTime(150));
+    expect(media.pause).toHaveBeenCalled();
+    expect(result.current.playing).toBe(false);
+    expect(media.currentTime).toBe(15.2); // không seek đi đâu
+    vi.useRealTimers();
+  });
+
+  it("speakSentence (YouTube chưa ready) → fallback TTS như cũ", () => {
+    ttsSpeakSpy.mockClear();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
+    act(() => result.current.speakSentence(0));
+    // chưa markYtReady → ytReady=false → speak() được gọi với text câu 0
+    expect(ttsSpeakSpy).toHaveBeenCalledWith("你好", expect.objectContaining({ lang: "zh-CN" }));
   });
 
   it("next/prev/repeat clamp trong [0, len-1]", () => {
