@@ -122,6 +122,14 @@ export function usePlayerEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subs]);
 
+  // đổi câu trong audio mode: React vừa đổi src clip → play() cũ bị abort,
+  // resume phát clip mới nếu engine đang playing (loop/replay/auto-next cùng lợi).
+  useEffect(() => {
+    if (!st.current.audio || !st.current.playing) return;
+    audioPlay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cur]);
+
   /* ---------- polling 100ms — đọc currentTime từ media ref (Task 5: 500→100ms cho karaoke mượt) ---------- */
   useEffect(() => {
     const id = setInterval(() => {
