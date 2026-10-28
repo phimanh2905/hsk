@@ -25,13 +25,13 @@ export default function BangAmPage() {
         <div className="mt-3 flex flex-wrap gap-2">
           <Link
             href="/pinyin?mode=quiz"
-            className="inline-flex min-h-[44px] items-center rounded-control border border-border-default bg-main px-4 py-2 text-sm font-bold text-main-foreground shadow-xs transition-colors hover:bg-main-hi"
+            className="inline-flex min-h-[44px] items-center rounded-control border border-action-primary bg-action-primary px-4 py-2 text-sm font-bold text-white shadow-xs transition-colors hover:bg-action-primary-hover"
           >
             Luyện phản xạ tai
           </Link>
           <Link
             href="/roadmap/pinyin"
-            className="inline-flex min-h-[44px] items-center rounded-control border border-border-subtle bg-surface-elevated px-4 py-2 text-sm font-bold text-foreground shadow-xs transition-colors hover:bg-main-hi"
+            className="inline-flex min-h-[44px] items-center rounded-control border border-border-subtle bg-surface-elevated px-4 py-2 text-sm font-bold text-text-primary shadow-xs transition-colors hover:bg-surface-muted"
           >
             Học lộ trình
           </Link>

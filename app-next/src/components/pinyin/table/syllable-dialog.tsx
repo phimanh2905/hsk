@@ -24,7 +24,7 @@ export function SyllableDialog({ cell, onClose }: { cell: SyllableCell; onClose:
         <h2 id="syllable-dialog-title" className="zh text-3xl font-bold text-text-primary">
           {forms[tone - 1]}
         </h2>
-        <span className="rounded-full border border-border-subtle bg-secondary-background px-2 py-0.5 text-xs text-text-secondary">
+        <span className="rounded-full border border-border-subtle bg-surface-muted px-2 py-0.5 text-xs text-text-secondary">
           {cell.initial === "Ø" ? "không thanh mẫu" : cell.initial} · {cell.final}
         </span>
       </div>
@@ -41,8 +41,8 @@ export function SyllableDialog({ cell, onClose }: { cell: SyllableCell; onClose:
             aria-pressed={tone === i + 1}
             className={`flex min-h-[44px] cursor-pointer flex-col items-center justify-center rounded-card border px-1 py-1.5 text-sm font-bold transition-colors ${
               tone === i + 1
-                ? "border-border-default bg-main text-main-foreground"
-                : "border-border-subtle bg-background text-foreground hover:bg-main-hi"
+                ? "border-action-primary bg-action-primary text-white"
+                : "border-border-subtle bg-surface-paper text-text-primary hover:bg-surface-muted"
             }`}
           >
             <span className="zh">{form}</span>

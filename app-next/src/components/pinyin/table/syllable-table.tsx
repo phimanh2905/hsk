@@ -44,10 +44,10 @@ export function SyllableTable({ initialSy }: { initialSy?: string | null }) {
       type="button"
       onClick={() => openCell(cell)}
       aria-label={`âm tiết ${cell.base}`}
-      className={`zh min-h-[44px] min-w-[44px] cursor-pointer rounded-base border px-2 py-1 text-sm font-bold transition-colors ${
+      className={`zh min-h-[44px] min-w-[44px] cursor-pointer rounded-control border px-2 py-1 text-sm font-bold transition-colors ${
         open?.base === cell.base
-          ? "border-border-default bg-main text-main-foreground"
-          : "border-border-subtle bg-background text-foreground hover:bg-main-hi"
+          ? "border-action-primary bg-action-primary text-white"
+          : "border-border-subtle bg-surface-paper text-text-primary hover:bg-surface-muted"
       }`}
     >
       {cell.base}
