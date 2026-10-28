@@ -11,6 +11,9 @@ export const stationSchema = z.object({
   zh: z.string(),
   meta: z.string(),
   kind: z.enum(["lesson", "milestone"]),
+  lesson: z
+    .object({ book: z.string(), page: z.string() })
+    .optional(),
   vocab: z.array(z.tuple([z.string(), z.string(), z.string()])),
   gram: z.array(z.tuple([z.string(), z.string()])),
 });
@@ -48,6 +51,7 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "1", no: "Trạm 1", kind: "lesson",
         title: "Chào hỏi & Làm quen", zh: "你好",
+        lesson: { book: "hsk2", page: "lesson-1" },
         meta: "15/15 từ · 100% · 3 điểm ngữ pháp",
         vocab: [
           ["你好", "nǐ hǎo", "xin chào"], ["谢谢", "xièxie", "cảm ơn"],
@@ -62,6 +66,7 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "2", no: "Trạm 2", kind: "lesson",
         title: "Số đếm & Mua sắm", zh: "数字",
+        lesson: { book: "hsk2", page: "lesson-11" },
         meta: "15/15 từ · 100% · 2 điểm ngữ pháp",
         vocab: [
           ["买", "mǎi", "mua"], ["多少钱", "duōshao qián", "bao nhiêu tiền"],
@@ -72,6 +77,7 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "3", no: "Trạm 3", kind: "lesson",
         title: "Thời gian & Lịch trình", zh: "时间",
+        lesson: { book: "hsk2", page: "lesson-6" },
         meta: "15/15 từ · 100% · 2 điểm ngữ pháp",
         vocab: [
           ["今天", "jīntiān", "hôm nay"], ["明天", "míngtiān", "ngày mai"],
@@ -83,6 +89,7 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "4", no: "Trạm 4", kind: "lesson",
         title: "Sở thích & Thời gian rảnh", zh: "爱好",
+        lesson: { book: "hsk2", page: "lesson-25" },
         meta: "8/15 từ vựng · 55% · Còn ~6 phút",
         vocab: [
           ["爱好", "àihào", "sở thích"], ["空闲", "kòngxián", "rảnh rỗi"],
@@ -98,7 +105,8 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "5", no: "Trạm 5", kind: "lesson",
         title: "Đi lại & Chỉ đường", zh: "问路",
-        meta: "Khóa · mở sau khi xong Bài 4",
+        lesson: { book: "hsk2", page: "lesson-15" },
+        meta: "问路 · Hỏi đường & phương tiện",
         vocab: [
           ["地铁", "dìtiě", "tàu điện ngầm"], ["怎么走", "zěnme zǒu", "đi thế nào"],
           ["附近", "fùjìn", "gần đây"],
@@ -108,14 +116,15 @@ export const roadmapLevels: RoadmapLevel[] = [
       {
         id: "m", no: "Milestone", kind: "milestone",
         title: "Ôn tập chặng & Mini test", zh: "复习",
-        meta: "Khóa · mở sau Trạm 5 · Đánh giá năng lực HSK 2",
+        meta: "Đánh giá năng lực HSK 2 · Mini test tổng hợp",
         vocab: [["Tổng ôn 60 từ", "zǒng fùxí", "flashcard chặng 1"]],
         gram: [["Tổng hợp ngữ pháp", "把 · Hỏi giá · Hỏi giờ"], ["Mini test 20 câu", "Nghe · Đọc · Viết"]],
       },
       {
         id: "6", no: "Trạm 6", kind: "lesson",
         title: "Thời tiết & Bốn mùa", zh: "天气",
-        meta: "Khóa · mở sau Milestone",
+        lesson: { book: "hsk2", page: "lesson-21" },
+        meta: "天气 · Từ vựng thời tiết & so sánh 比",
         vocab: [["天气", "tiānqì", "thời tiết"], ["下雨", "xià yǔ", "mưa"], ["冷", "lěng", "lạnh"]],
         gram: [["Miêu tả thời tiết", "今天… / 明天会…"], ["So sánh", "比 + adj"]],
       },
