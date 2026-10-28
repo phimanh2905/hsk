@@ -4,12 +4,27 @@ import { renderHook, act } from "@testing-library/react";
 import { findSentenceIndex, usePlayerEngine } from "../use-player-engine";
 import type { SubtitleSentence } from "@/content/shadowing";
 
-vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }) }));
+vi.mock("@/lib/tts/use-tts", () => ({
+  useTts: () => ({ speak: ttsSpeakSpy, cancel: vi.fn(), speaking: false }),
+}));
+const ttsSpeakSpy = vi.hoisted(() => vi.fn());
 
 const subs: SubtitleSentence[] = [
   { n: 1, start: 0, end: 8, parts: [{ zh: "你好" }], pinyin: "Nǐ hǎo", vi: "Xin chào" },
   { n: 2, start: 9, end: 15, parts: [{ zh: "再见" }], pinyin: "Zàijiàn", vi: "Tạm biệt" },
 ];
+
+/* fake media element theo interface HTMLMediaElement — ReactPlayer v3 expose
+   chính interface này qua ref (youtube-video-element extends HTMLVideoElement). */
+function fakeMedia() {
+  return {
+    currentTime: 0,
+    duration: 100,
+    playbackRate: 1,
+    play: vi.fn().mockResolvedValue(undefined),
+    pause: vi.fn(),
+  } as unknown as HTMLMediaElement & { play: ReturnType<typeof vi.fn>; pause: ReturnType<typeof vi.fn> };
+}
 
 describe("findSentenceIndex (di chuyển nguyên vẹn)", () => {
   it("t trong range → index; t ≥ end cuối → câu cuối; t < start đầu → 0", () => {
@@ -20,16 +35,81 @@ describe("findSentenceIndex (di chuyển nguyên vẹn)", () => {
   });
 });
 
-describe("usePlayerEngine", () => {
-  it("postSink nhận seekTo khi gotoSentence", () => {
-    const postSink = vi.fn();
-    const { result } = renderHook(() => usePlayerEngine({ subs, postSink }));
+describe("usePlayerEngine (ref-driven)", () => {
+  it("seek: gotoSentence gán currentTime = start của câu", () => {
+    const media = fakeMedia();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: media } }));
     act(() => result.current.gotoSentence(1, false));
-    expect(postSink).toHaveBeenCalledWith(expect.stringContaining('"seekTo"'));
+    expect(media.currentTime).toBe(subs[1].start);
     expect(result.current.cur).toBe(1);
   });
+
+  it("play/pause điều khiển media element qua ref", () => {
+    const media = fakeMedia();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: media } }));
+    act(() => result.current.play());
+    expect(media.play).toHaveBeenCalled();
+    expect(result.current.playing).toBe(true);
+    act(() => result.current.pause());
+    expect(media.pause).toHaveBeenCalled();
+    expect(result.current.playing).toBe(false);
+  });
+
+  it("setRate gán playbackRate lên media element", () => {
+    const media = fakeMedia();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: media } }));
+    act(() => result.current.setRate(0.85));
+    expect(media.playbackRate).toBe(0.85);
+    expect(result.current.rate).toBe(0.85);
+  });
+
+  it("markYtReady tắt overlay; handlePlayerError bật playerError", () => {
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
+    expect(result.current.playerError).toBe(false);
+    act(() => result.current.handlePlayerError());
+    expect(result.current.playerError).toBe(true);
+    act(() => result.current.markYtReady());
+    expect(result.current.ytReady).toBe(true);
+  });
+
+  it("syncPlaying cập nhật playing khi YouTube tự pause (không đổi ở audio/tts mode)", () => {
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
+    act(() => result.current.syncPlaying(true)); // YT báo đang phát
+    expect(result.current.playing).toBe(true);
+    act(() => result.current.syncPlaying(false)); // YT tự pause (buffer)
+    expect(result.current.playing).toBe(false);
+  });
+
+  /* Nghe mẫu bằng giọng video: seek start câu → phát → TỰ DỪNG ở end câu.
+     TTS chỉ còn là fallback khi ytReady=false. */
+  it("speakSentence (YouTube): seek tới start câu và phát giọng video", () => {
+    vi.useFakeTimers();
+    const media = fakeMedia();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: media } }));
+    act(() => result.current.markYtReady());
+    act(() => result.current.speakSentence(1));
+    expect(media.currentTime).toBe(subs[1].start);
+    expect(media.play).toHaveBeenCalled();
+    expect(result.current.playing).toBe(true);
+    // phát qua end câu 1 (15s) → tick tự dừng, không sang câu 2
+    act(() => { media.currentTime = 15.2; });
+    act(() => vi.advanceTimersByTime(150));
+    expect(media.pause).toHaveBeenCalled();
+    expect(result.current.playing).toBe(false);
+    expect(media.currentTime).toBe(15.2); // không seek đi đâu
+    vi.useRealTimers();
+  });
+
+  it("speakSentence (YouTube chưa ready) → fallback TTS như cũ", () => {
+    ttsSpeakSpy.mockClear();
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
+    act(() => result.current.speakSentence(0));
+    // chưa markYtReady → ytReady=false → speak() được gọi với text câu 0
+    expect(ttsSpeakSpy).toHaveBeenCalledWith("你好", expect.objectContaining({ lang: "zh-CN" }));
+  });
+
   it("next/prev/repeat clamp trong [0, len-1]", () => {
-    const { result } = renderHook(() => usePlayerEngine({ subs }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
     act(() => result.current.prev());
     expect(result.current.cur).toBe(0);
     act(() => result.current.next());
@@ -39,22 +119,16 @@ describe("usePlayerEngine", () => {
     act(() => result.current.repeat());
     expect(result.current.cur).toBe(1);
   });
-  it("setRate đẩy setPlaybackRate vào iframe", () => {
-    const postSink = vi.fn();
-    const { result } = renderHook(() => usePlayerEngine({ subs, postSink }));
-    act(() => result.current.setRate(0.85));
-    expect(postSink).toHaveBeenCalledWith(expect.stringContaining('"setPlaybackRate"'));
-    expect(result.current.rate).toBe(0.85);
-  });
+
   it("toggleLoop đổi loop", () => {
-    const { result } = renderHook(() => usePlayerEngine({ subs }));
+    const { result } = renderHook(() => usePlayerEngine({ subs, playerRef: { current: fakeMedia() } }));
     expect(result.current.loop).toBe(false);
     act(() => result.current.toggleLoop());
     expect(result.current.loop).toBe(true);
   });
 
-  /* Task 5 — time state + auto-pause toggle. Poll 100ms; ytReady phải đánh thức
-     qua message "onReady" (như handshake thật) để nhịp poll đi tới tick(). */
+  /* Task 5 — time state + auto-pause toggle. Poll 100ms đọc currentTime trực tiếp
+     từ ref (bỏ postMessage); markYtReady() thay message "onReady". */
   const subsWords: SubtitleSentence[] = [
     {
       n: 1, start: 0, end: 2, parts: [{ zh: "我们" }], pinyin: "", vi: "",
@@ -66,19 +140,14 @@ describe("usePlayerEngine", () => {
     { n: 2, start: 3, end: 15, parts: [{ zh: "再见" }], pinyin: "Zàijiàn", vi: "Tạm biệt" },
   ];
 
-  function ytMessage(data: unknown) {
-    window.dispatchEvent(
-      new MessageEvent("message", { origin: "https://www.youtube-nocookie.com", data: JSON.stringify(data) })
-    );
-  }
-
-  it("tick cập nhật time", () => {
+  it("tick cập nhật time từ ref", () => {
     vi.useFakeTimers();
     try {
-      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords }));
+      const media = fakeMedia();
+      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords, playerRef: { current: media } }));
       expect(result.current.time).toBe(0);
-      act(() => ytMessage({ event: "onReady" }));
-      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 5, playerState: 1 } } }));
+      act(() => result.current.markYtReady());
+      act(() => { media.currentTime = 5; });
       act(() => vi.advanceTimersByTime(150)); // qua 1 nhịp poll 100ms
       expect(result.current.time).toBe(5);
     } finally {
@@ -88,7 +157,7 @@ describe("usePlayerEngine", () => {
 
   it("setAutoPause flip state + localStorage", () => {
     localStorage.clear();
-    const { result } = renderHook(() => usePlayerEngine({ subs: subsWords }));
+    const { result } = renderHook(() => usePlayerEngine({ subs: subsWords, playerRef: { current: fakeMedia() } }));
     expect(result.current.autoPause).toBe(false);
     act(() => result.current.setAutoPause(true));
     expect(result.current.autoPause).toBe(true);
@@ -101,33 +170,29 @@ describe("usePlayerEngine", () => {
     localStorage.clear();
     vi.useFakeTimers();
     try {
-      const postSink = vi.fn();
-      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords, postSink }));
+      const media = fakeMedia();
+      const { result } = renderHook(() => usePlayerEngine({ subs: subsWords, playerRef: { current: media } }));
       act(() => result.current.setAutoPause(true));
-      act(() => ytMessage({ event: "onReady" }));
+      act(() => result.current.markYtReady());
       // playing + currentTime 1.9s (> endMs từ cuối 1800ms - 60ms)
-      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 1.9, playerState: 1 } } }));
+      act(() => result.current.play());
+      act(() => { media.currentTime = 1.9; });
       expect(result.current.playing).toBe(true);
 
-      /* ---- loop TẮT → auto-pause dừng video ---- */
-      postSink.mockClear();
+      /* ---- loop TẮT → auto-pause dừng media ---- */
       act(() => vi.advanceTimersByTime(150)); // qua 1 nhịp poll 100ms
-      const msgsOff = postSink.mock.calls.map((c) => c[0] as string);
-      expect(msgsOff.some((m) => m.includes('"func":"pauseVideo"'))).toBe(true);
+      expect(media.pause).toHaveBeenCalled();
       expect(result.current.playing).toBe(false);
 
       /* ---- loop BẬT → seek về đầu câu, KHÔNG pause ---- */
       act(() => result.current.toggleLoop());
       expect(result.current.loop).toBe(true);
       act(() => result.current.play());
-      act(() => ytMessage({ event: "infoDelivery", infoDelivery: { playerData: { currentTime: 1.9, playerState: 1 } } }));
-      postSink.mockClear();
+      media.pause.mockClear();
+      act(() => { media.currentTime = 1.9; });
       act(() => vi.advanceTimersByTime(150));
-      const msgsOn = postSink.mock.calls.map((c) => c[0] as string);
-      const seek = msgsOn.find((m) => m.includes('"func":"seekTo"'));
-      expect(seek).toBeTruthy();
-      expect(seek).toContain('"args":[0,true]'); // về đầu câu 0
-      expect(msgsOn.some((m) => m.includes('"func":"pauseVideo"'))).toBe(false);
+      expect(media.currentTime).toBe(0); // về đầu câu 0
+      expect(media.pause).not.toHaveBeenCalled();
       expect(result.current.playing).toBe(true);
     } finally {
       vi.useRealTimers();

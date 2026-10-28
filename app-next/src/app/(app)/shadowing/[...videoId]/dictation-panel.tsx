@@ -8,7 +8,6 @@ import { getDictStats, recordDictCheck, recordReplay } from "@/lib/shadowing/dic
 import { getDictVariant, setDictVariant } from "@/lib/shadowing/prefs";
 import { normDict } from "@/lib/shadowing/dictation";
 import { seedFor, shuffleSeeded } from "@/lib/shadowing/arrange";
-import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
@@ -27,7 +26,7 @@ function dictChars(full: string): string[] {
   return full.replace(/[。，、！？…—\s]/g, "").split("");
 }
 
-export type DictEng = { cur: number; listenCurrent: () => void; prev: () => void; next: () => void };
+export type DictEng = { cur: number; listenCurrent: () => void; listenSlow: () => void; prev: () => void; next: () => void };
 
 export default function DictationPanel({
   subs,
@@ -44,7 +43,6 @@ export default function DictationPanel({
   recordPractice: (id: string, patch: { score?: number; linesDoneDelta?: number }) => void;
   hidden?: boolean;
 }) {
-  const { speak } = useTts();
   const toast = useToast();
   const curSub = subs[Math.min(cur, subs.length - 1)] ?? subs[0];
   const full = curSub ? curSub.parts.map((p) => p.zh).join(" ") : "";
@@ -165,7 +163,7 @@ export default function DictationPanel({
             <Button variant="secondary" size="sm" data-testid="dict-listen" onClick={pickReplay}>
               <Volume2 size={14} strokeWidth={ICON_STROKE} /> Nghe câu mẫu
             </Button>
-            <Button variant="secondary" size="sm" data-testid="dict-slow" onClick={() => speak(full, { lang: "zh-CN", rate: 0.65 })}>
+            <Button variant="secondary" size="sm" data-testid="dict-slow" onClick={() => eng.listenSlow()}>
               Nghe chậm 0.65x
             </Button>
           </div>

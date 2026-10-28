@@ -5,12 +5,12 @@
    (hamburger ở topbar + nút More ở bottom-nav), đóng bằng scrim / Escape / click link.
    Active: nền action-primary/10 + rail trái 3px — dùng aria-current="page" thay class .active. */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BarChart3, BookmarkCheck, Brain, Compass, Home, Languages, NotebookPen, Pencil, Printer, Settings,
-  Volume2, AudioLines, ICON_STROKE, type LucideIcon,
+  BarChart3, BookmarkCheck, Brain, Compass, Home, Languages, NotebookPen, PanelLeftClose, PanelLeftOpen,
+  Pencil, Printer, Settings, Volume2, AudioLines, ICON_STROKE, type LucideIcon,
 } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { useHomeSummary } from "@/lib/home-summary";
@@ -18,6 +18,7 @@ import { useSession } from "@/lib/use-session";
 import { useLoginModal } from "./login-modal";
 
 const OPEN_NAV_EVENT = "bye:open-nav";
+const COLLAPSE_KEY = "bye:nav-collapsed";
 
 const GROUPS: ReadonlyArray<{
   title: string;
@@ -57,6 +58,40 @@ export default function SidebarNav() {
   const { loggedIn, name } = useSession();
   const { openLogin } = useLoginModal();
   const [open, setOpen] = useState(false);
+  /* Collapse chỉ có ý nghĩa ở desktop (≥lg); mobile luôn drawer full-width.
+     Đọc localStorage sau mount để tránh lệch hydration. data-nav-collapsed trên <html>
+     là nguồn chân lý cho layout (wrapper ml + hz-breakout đọc var --nav-w). */
+  const [collapsed, setCollapsed] = useState(false);
+  const [tip, setTip] = useState<{ label: string; top: number; left: number } | null>(null);
+
+  const applyCollapsed = (c: boolean) => {
+    if (c) document.documentElement.dataset.navCollapsed = "1";
+    else delete document.documentElement.dataset.navCollapsed;
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem(COLLAPSE_KEY) === "1") {
+      setCollapsed(true);
+      applyCollapsed(true);
+    }
+  }, []);
+
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1");
+      applyCollapsed(!c);
+      return !c;
+    });
+    setTip(null);
+  };
+
+  /* Tooltip theo vị trí icon thật (fixed): overflow-y-auto của vùng scroll sẽ cắt
+     tooltip định vị tuyệt đối trong nav, nên đo rect lúc hover thay vì CSS group-hover. */
+  const showTip = (label: string) => (e: MouseEvent<HTMLElement>) => {
+    if (!collapsed || !window.matchMedia("(min-width: 1024px)").matches) return;
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setTip({ label, top: r.top + r.height / 2, left: r.right + 10 });
+  };
 
   useEffect(() => {
     const openNav = () => setOpen(true);
@@ -101,35 +136,58 @@ export default function SidebarNav() {
           type="button"
           aria-label="Đóng menu"
           onClick={close}
-          className="fixed inset-0 z-[425] bg-black/50 lg:hidden"
+          className="fixed inset-0 z-[460] bg-black/50 lg:hidden"
         />
       )}
       <nav
         aria-label="Điều hướng chính"
         data-open={open ? "true" : "false"}
         className={
-          "fixed inset-y-0 left-0 z-[430] flex w-64 flex-col border-r border-border-default " +
+          "fixed inset-y-0 left-0 z-[470] flex flex-col border-r border-border-default " +
+          (collapsed ? "w-64 lg:w-[68px]" : "w-64") + " " +
           "bg-[color-mix(in_srgb,var(--surface-elevated)_95%,transparent)] backdrop-blur-xl " +
-          "transition-transform duration-300 lg:translate-x-0 " +
+          "transition-[width,transform] duration-300 lg:translate-x-0 " +
           // Đóng/mở exclusive: closed = trượt ra ngoài, open = trượt vào.
           (open ? "translate-x-0 shadow-md" : "-translate-x-full")
         }
       >
-        {/* Brand — glyph 奈 của app (mock dùng 汉) */}
-        <Link href="/" className="flex items-center gap-2.5 px-4 pb-3.5 pt-4">
-          <span className="zh grid h-10 w-10 place-items-center rounded-control bg-text-primary text-[23px] font-extrabold leading-none text-surface-paper dark:bg-action-primary dark:text-white">
-            奈
-          </span>
-          <span className="leading-tight">
-            <b className="block text-[15px] font-bold">Bye</b>
-            <small className="block text-[11px] tracking-[0.08em] text-text-secondary">HSK LEARNING</small>
-          </span>
-        </Link>
+        {/* Brand — glyph 奈 của app (mock dùng 汉) + nút collapse/expand desktop */}
+        <div
+          className={
+            "flex items-center gap-2.5 px-4 pb-3.5 pt-4 " +
+            (collapsed ? "lg:flex-col lg:gap-2 lg:px-3" : "")
+          }
+        >
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="zh grid h-10 w-10 shrink-0 place-items-center rounded-control bg-text-primary text-[23px] font-extrabold leading-none text-surface-paper dark:bg-action-primary dark:text-white">
+              奈
+            </span>
+            <span className={"leading-tight " + (collapsed ? "lg:hidden" : "")}>
+              <b className="block text-[15px] font-bold">Bye</b>
+              <small className="block text-[11px] tracking-[0.08em] text-text-secondary">HSK LEARNING</small>
+            </span>
+          </Link>
+          <IconButton
+            label={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
+            onClick={toggleCollapsed}
+            /* Mobile/tablet có bottom-nav làm lối vào drawer — collapse chỉ dành cho desktop. */
+            className={(collapsed ? "lg:ml-0" : "ml-auto") + " hidden lg:inline-flex"}
+          >
+            {collapsed
+              ? <PanelLeftOpen size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
+              : <PanelLeftClose size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />}
+          </IconButton>
+        </div>
 
         <div className="flex-1 overflow-y-auto px-3 pb-3">
           {GROUPS.map((g) => (
             <div key={g.title} className="mt-6 first:mt-0">
-              <h4 className="px-2.5 pb-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-text-secondary">
+              <h4
+                className={
+                  "px-2.5 pb-1.5 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-text-secondary " +
+                  (collapsed ? "lg:hidden" : "")
+                }
+              >
                 {g.title}
               </h4>
               <ul className="flex flex-col gap-0.5">
@@ -140,26 +198,47 @@ export default function SidebarNav() {
                       <Link
                         href={href}
                         aria-current={active ? "page" : undefined}
+                        aria-label={collapsed ? label : undefined}
                         onClick={close}
+                        onMouseEnter={showTip(label)}
+                        onMouseLeave={() => setTip(null)}
                         className={
                           "relative flex min-h-11 items-center gap-2.5 rounded-[12px] py-2 pl-3.5 pr-2.5 text-[13.5px] transition-colors " +
+                          (collapsed ? "lg:justify-center lg:px-0" : "") +
                           (active
-                            ? "bg-action-primary/10 font-semibold text-action-primary"
-                            : "font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary")
+                            ? " bg-action-primary/10 font-semibold text-action-primary"
+                            : " font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary")
                         }
                       >
                         {active && (
                           <span
                             aria-hidden="true"
-                            className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-action-primary"
+                            className={
+                              "absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-action-primary " +
+                              (collapsed ? "lg:inset-y-1.5" : "")
+                            }
                           />
                         )}
                         <Icon size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />
-                        {label}
+                        <span className={collapsed ? "lg:hidden" : ""}>{label}</span>
                         {badge === "srs" && mounted && srsDue > 0 && (
-                          <span className="ml-auto rounded-full bg-action-primary/10 px-2 py-0.5 text-[11px] font-bold text-action-primary">
-                            {srsDue}
-                          </span>
+                          <>
+                            <span
+                              className={
+                                "ml-auto rounded-full bg-action-primary/10 px-2 py-0.5 text-[11px] font-bold text-action-primary " +
+                                (collapsed ? "lg:hidden" : "")
+                              }
+                            >
+                              {srsDue}
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              className={
+                                "absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-action-primary " +
+                                (collapsed ? "lg:block" : "lg:hidden")
+                              }
+                            />
+                          </>
                         )}
                       </Link>
                     </li>
@@ -171,13 +250,13 @@ export default function SidebarNav() {
         </div>
 
         {/* Footer — user-card session-driven + settings (event đã có listener) */}
-        <div className="flex items-center gap-2.5 border-t border-border-default p-3">
+        <div className={"flex items-center gap-2.5 border-t border-border-default p-3 " + (collapsed ? "lg:flex-col" : "")}>
           {loggedIn ? (
-            <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <div className={"flex min-w-0 items-center gap-2.5 " + (collapsed ? "lg:flex-none" : "flex-1")}>
               <span className="grid h-[38px] w-[38px] shrink-0 place-items-center rounded-full bg-learning-mastered text-[13px] font-bold text-white">
                 {initials}
               </span>
-              <span className="min-w-0 leading-tight">
+              <span className={"min-w-0 leading-tight " + (collapsed ? "lg:hidden" : "")}>
                 <b className="block truncate text-[13px] font-bold">{name}</b>
                 <small className="block truncate text-[11px] text-text-secondary">HSK 2 · Chặng 1/3</small>
               </span>
@@ -186,7 +265,10 @@ export default function SidebarNav() {
             <button
               type="button"
               onClick={openLogin}
-              className="min-h-11 flex-1 rounded-control border border-border-default bg-surface-muted text-[13px] font-bold text-text-primary hover:bg-surface-elevated"
+              className={
+                "min-h-11 rounded-control border border-border-default bg-surface-muted text-[13px] font-bold text-text-primary hover:bg-surface-elevated " +
+                (collapsed ? "lg:w-11 lg:flex-none" : "flex-1")
+              }
             >
               Đăng nhập
             </button>
@@ -199,6 +281,16 @@ export default function SidebarNav() {
           </IconButton>
         </div>
       </nav>
+      {tip && (
+        <div
+          role="tooltip"
+          aria-hidden="true"
+          className="pointer-events-none fixed z-[480] -translate-y-1/2 whitespace-nowrap rounded-[8px] bg-text-primary px-2.5 py-1.5 text-[12px] font-semibold text-surface-paper shadow-md"
+          style={{ top: tip.top, left: tip.left }}
+        >
+          {tip.label}
+        </div>
+      )}
     </>
   );
 }

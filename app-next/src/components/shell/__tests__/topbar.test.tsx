@@ -39,15 +39,13 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(screen.queryByText("Lộ trình HSK")).not.toBeInTheDocument();
   });
 
-  it("nút hamburger chỉ ở mobile (lg:hidden) và dispatch bye:open-nav", async () => {
+  it("KHÔNG còn hamburger — mobile mở menu qua nút More của bottom-nav", () => {
     renderTopbar();
-    const btn = screen.getByRole("button", { name: "Mở menu" });
-    expect(btn.className).toContain("lg:hidden");
-    await userEvent.click(btn);
-    expect(openNav).toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: "Mở menu" })).not.toBeInTheDocument();
+    expect(openNav).not.toHaveBeenCalled();
   });
 
-  it("SearchTrigger mở command palette", async () => {
+  it("SearchTrigger (icon) mở command palette", async () => {
     renderTopbar();
     await userEvent.click(screen.getByRole("button", { name: "Tìm kiếm" }));
     expect(await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" })).toBeInTheDocument();
@@ -60,28 +58,20 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(dialog.closest("header")).toBeNull();
   });
 
-  it("hamburger + SearchTrigger đạt touch target 44px", () => {
+  it("SearchTrigger là icon button đạt touch target 44px", () => {
     renderTopbar();
-    const menu = screen.getByRole("button", { name: "Mở menu" });
-    expect(menu.className).toContain("h-11");
-    expect(menu.className).not.toContain("h-10");
-    expect(screen.getByRole("button", { name: "Tìm kiếm" }).className).toContain("min-h-11");
+    const search = screen.getByRole("button", { name: "Tìm kiếm" });
+    expect(search.className).toContain("min-h-11");
   });
 
-  it("ngày chỉ render sau mount — prerender không đóng băng ngày / không lệch hydration", async () => {
-    const today = new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "numeric", month: "long" }).format(
-      new Date(),
-    );
+  it("KHÔNG còn dòng ngày trong topbar", () => {
     const staticHtml = renderToStaticMarkup(
       <ThemeProvider>
         <Topbar />
       </ThemeProvider>,
     );
     expect(staticHtml).toContain("Lộ trình HSK"); // breadcrumb là dữ liệu tĩnh → vẫn có ngay
-    expect(staticHtml).not.toContain(today);
-
-    const { container } = renderTopbar();
-    await waitFor(() => expect(container.textContent).toContain(today));
+    expect(staticHtml).not.toContain("tháng");
   });
 
   it("⌘K mở command palette", async () => {
@@ -90,13 +80,13 @@ describe("Topbar v2 (app-shell.html)", () => {
     expect(await screen.findByRole("dialog", { name: "Tìm kiếm nhanh" })).toBeInTheDocument();
   });
 
-  it("có LevelPopover và StreakPill mini kèm unit", async () => {
+  it("có LevelPopover và StreakPill mini (icon + số, không chữ 'ngày')", async () => {
     localStorage.setItem("bye.streak", "12");
     renderTopbar();
     expect(screen.getByRole("button", { name: "Đổi cấp độ HSK" })).toBeInTheDocument();
     const pill = await screen.findByTitle("Chuỗi ngày học liên tục");
     await waitFor(() => expect(pill.textContent).toContain("12"));
-    expect(pill.textContent).toContain("ngày");
+    expect(pill.textContent).not.toContain("ngày");
   });
 
   it("theme toggle bật/tắt class dark", async () => {

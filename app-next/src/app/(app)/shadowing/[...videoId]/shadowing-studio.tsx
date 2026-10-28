@@ -2,7 +2,7 @@
 /* ShadowingStudio (port shadowing-video.html) — engine dùng usePlayerEngine;
    ghi chú: nút Ẩn video, checkbox show-vi/py, Cài đặt của player cũ bị bỏ theo mock. */
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import ReactPlayer from "react-player";
 import { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
 import { useRecorder } from "@/lib/shadowing/use-recorder";
 import { barHeights } from "@/lib/shadowing/waveform";
@@ -11,14 +11,14 @@ import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
 import { activeWordIndex } from "@/lib/shadowing/auto-pause";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
-import { topicVi } from "@/content/shadowing";
 import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
-import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
+import { Volume2, Play, Pause, Repeat, Mic, ICON_STROKE } from "@/components/ui/icon";
 import DictationPanel from "./dictation-panel";
 import PronPanel from "./pron-panel";
+import WaveformVisual from "@/components/shadowing/studio/waveform-visual";
 
 /* mm:ss — hàng "Câu {n} · {start} – {end}" của transcript */
 function fmt(t: number): string {
@@ -34,28 +34,13 @@ function activeIdx(s: SubtitleSentence, tSec: number): number {
   return activeWordIndex(s.words, tSec * 1000);
 }
 
-/* Vẽ dãy bar giả lên canvas — port drawBars() của mock; roundRect nếu có, fallback rect */
-function drawBars(canvas: HTMLCanvasElement, heights: number[], color: string) {
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  const W = canvas.width;
-  const H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = color;
-  const bw = W / heights.length;
-  heights.forEach((h, i) => {
-    const bh = 6 + h * (H * 0.72);
-    const x = i * bw + bw * 0.2;
-    const y = (H - bh) / 2;
-    const w = bw * 0.6;
-    if (typeof ctx.roundRect === "function") {
-      ctx.beginPath();
-      ctx.roundRect(x, y, w, bh, 3);
-      ctx.fill();
-    } else {
-      ctx.fillRect(x, y, w, bh);
-    }
-  });
+/* Vẽ dãy bar đã chuyển sang WaveformVisual (rAF, port style dictation-mate);
+   màu bar đọc design token 1 lần ở đây (canvas không đọc được CSS var). */
+function tokenRgb(varName: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  // token có thể là "r, g, b" sẵn rồi — nếu là màu hex/other thì fallback
+  return /^\d{1,3},\s*\d{1,3},\s*\d{1,3}$/.test(raw) ? raw : fallback;
 }
 
 export default function ShadowingStudio({
@@ -72,7 +57,11 @@ export default function ShadowingStudio({
   const audioDir = video.type === "audio" ? video.audioDir : null;
   const isAudio = !!audioDir;
   const audioSrcs = audioDir ? subs.map((s) => `/${audioDir}-${s.n}.mp3`) : undefined;
-  const eng = usePlayerEngine({ subs, postSink: enginePostSink, audioSrcs });
+  const playerRef = useRef<HTMLMediaElement | null>(null);
+  // origin đọc sau mount (hydration-safe) — config.youtube.origin phục vụ postMessage
+  const [windowOrigin, setWindowOrigin] = useState<string | undefined>(undefined);
+  useEffect(() => setWindowOrigin(window.location.origin), []);
+  const eng = usePlayerEngine({ subs, postSink: enginePostSink, audioSrcs, playerRef });
   const [audioMissing, setAudioMissing] = useState(false);
   useEffect(() => { setAudioMissing(false); }, [eng.cur]);
   // vai A/B trong transcript (hội thoại theo bài) — map rỗng → không label
@@ -95,16 +84,12 @@ export default function ShadowingStudio({
   const [lastRatio, setLastRatio] = useState(0);
   useEffect(() => { setLastScore(null); setLastRatio(0); }, [eng.cur]);
 
-  const nativeCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mineCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [nativeRgb, setNativeRgb] = useState("100, 116, 139");
+  const [mineRgb, setMineRgb] = useState("100, 116, 139");
   useEffect(() => {
-    if (nativeCanvasRef.current) drawBars(nativeCanvasRef.current, barHeights(eng.cur + 3, 1), getComputedStyle(document.documentElement).getPropertyValue("--hz-text-secondary") || "currentColor");
-  }, [eng.cur]);
-  useEffect(() => {
-    if (mineCanvasRef.current && rec.lastUrl != null) {
-      drawBars(mineCanvasRef.current, barHeights(eng.cur * 7 + 2, 0.55 + lastRatio * 0.4), getComputedStyle(document.documentElement).getPropertyValue("--hz-action-primary") || "currentColor");
-    }
-  }, [eng.cur, rec.lastUrl, lastRatio]);
+    setNativeRgb(tokenRgb("--hz-text-secondary", "100, 116, 139"));
+    setMineRgb(tokenRgb("--hz-action-primary", "13, 148, 136"));
+  }, []);
 
   const onStop = useCallback(() => {
     const r = rec.stop();
@@ -170,41 +155,20 @@ export default function ShadowingStudio({
     try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch { /* jsdom */ }
   }, [eng.cur, mode]);
 
+  /* Context video cho topbar chung (gộp 2 header thành 1 — topbar render back-link + title). */
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("bye:studio-title", { detail: { title: video.title } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("bye:studio-title", { detail: null }));
+    };
+  }, [video.title]);
+
   /* ---------- dictation — DictationPanel (Task 7, variant typing; Task 8 thêm arrange) ---------- */
   const curSub = subs[Math.min(eng.cur, subs.length - 1)] ?? subs[0];
   const chips = toneChipsFor(lastScore ?? -1, (curSub?.parts ?? []).map((p) => p.zh));
 
   return (
     <>
-      <header
-        className="sticky top-0 z-20 -mx-4 mb-4 border-b border-border-subtle bg-surface-elevated/80 px-4 py-2 backdrop-blur lg:-mx-6 lg:px-6"
-        data-od-id="studio-topbar"
-        data-testid="studio-topbar"
-      >
-        <div className="flex items-center gap-3">
-          <Link
-            href="/shadowing"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2 text-[13px] font-bold text-text-secondary hover:text-text-primary hover:border-border-subtle border border-transparent focus-visible:ring-3 ring-action-focus ring-offset-2"
-          >
-            <ChevronLeft size={14} strokeWidth={ICON_STROKE} /> Thư viện Shadowing
-          </Link>
-          <div className="min-w-0 truncate text-[13.5px] font-extrabold">
-            <span className="hanzi">{video.title}</span>{" "}
-            <small className="font-normal text-text-secondary">• {video.hsk} · {topicVi[video.topic]}</small>
-          </div>
-          <div className="ml-auto flex items-center gap-2 whitespace-nowrap text-xs font-bold text-text-secondary">
-            <span>Tiến độ nói: {linesDone}/{subs.length} câu ({pct}%)</span>
-            <span className="h-2 w-36 overflow-hidden rounded-full bg-ring-track">
-              <i
-                className="block h-full rounded-full bg-feedback-success transition-[width]"
-                style={{ width: pct + "%" }}
-                data-testid="studio-progress-fill"
-              />
-            </span>
-          </div>
-        </div>
-      </header>
-
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
         <div className="flex min-w-0 flex-col gap-4 lg:w-[58%]" data-od-id="media-deck">
           <section aria-label="Trình phát video">
@@ -237,15 +201,39 @@ export default function ShadowingStudio({
                 </>
               ) : (
                 <>
-                  <iframe
-                    id="ytplayer"
-                    title={"YouTube video player — " + video.title}
-                    src={"https://www.youtube-nocookie.com/embed/" + video.id + "?enablejsapi=1&rel=0&playsinline=1"}
-                    className="h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                  <ReactPlayer
+                    ref={playerRef as unknown as React.Ref<HTMLVideoElement>}
+                    src={"https://www.youtube-nocookie.com/embed/" + video.id + "?rel=0"}
+                    playing={eng.playing}
+                    playbackRate={eng.effectiveRate}
+                    playsInline
+                    config={windowOrigin ? { youtube: { origin: windowOrigin, rel: 0 } } : undefined}
+                    onReady={eng.markYtReady}
+                    onError={eng.handlePlayerError}
+                    onPlay={() => eng.syncPlaying(true)}
+                    onPause={() => eng.syncPlaying(false)}
+                    fallback={<div className="h-full w-full animate-pulse bg-surface-muted" />}
+                    style={{ width: "100%", height: "100%" }}
                   />
-                  {!eng.ytReady && (
+                  {eng.playerError && (
+                    <div
+                      data-testid="video-error"
+                      className="absolute inset-0 grid place-items-center bg-surface-muted p-4 text-center"
+                    >
+                      <div>
+                        <p className="text-sm font-bold text-feedback-error">Không phát được video trên trang.</p>
+                        <a
+                          href={"https://www.youtube.com/watch?v=" + video.id}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-2 inline-block text-xs font-bold text-action-primary underline"
+                        >
+                          Mở video trên YouTube ↗
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {!eng.ytReady && !eng.playerError && (
                     <div
                       data-testid="video-overlay"
                       className="absolute inset-0 grid place-items-center bg-surface-muted text-center"
@@ -262,6 +250,20 @@ export default function ShadowingStudio({
                 </>
               )}
             </div>
+            {/* tiến độ nói — chuyển từ bar header cũ xuống đây (gộp 2 header thành 1) */}
+            <div
+              className="mt-2.5 flex items-center gap-2 px-1 text-xs font-bold text-text-secondary"
+              data-testid="studio-progress"
+            >
+              <span className="whitespace-nowrap">Tiến độ nói: {linesDone}/{subs.length} câu ({pct}%)</span>
+              <span className="h-2 flex-1 overflow-hidden rounded-full bg-ring-track">
+                <i
+                  className="block h-full rounded-full bg-feedback-success transition-[width]"
+                  style={{ width: pct + "%" }}
+                  data-testid="studio-progress-fill"
+                />
+              </span>
+            </div>
             {/* player toolbar */}
             <div
               className="mt-2.5 flex flex-wrap items-center gap-2 rounded-card border border-border-subtle bg-surface-elevated p-1.5 shadow-xs"
@@ -272,19 +274,6 @@ export default function ShadowingStudio({
                 {eng.playing ? <Pause size={16} strokeWidth={ICON_STROKE} /> : <Play size={16} strokeWidth={ICON_STROKE} />}
                 {eng.playing ? "Tạm dừng" : "Phát"}
               </Button>
-              <label className="flex min-w-[120px] flex-1 items-center gap-2 text-xs tabular-nums text-text-secondary">
-                <span data-testid="t-cur">00:00</span>
-                <input
-                  type="range"
-                  aria-label="Dòng thời gian"
-                  min={0}
-                  max={video.durSec}
-                  defaultValue={0}
-                  data-testid="scrub"
-                  className="flex-1 accent-[var(--action-primary)]"
-                />
-                <span>{video.duration}</span>
-              </label>
               <Chip tone="neutral" data-testid="pos" className="min-h-6 px-2 text-xs font-bold tabular-nums">
                 Câu {eng.cur + 1}/{subs.length}
               </Chip>
@@ -363,12 +352,11 @@ export default function ShadowingStudio({
                 Nghe mẫu
               </button>
             </div>
-            <canvas
-              ref={nativeCanvasRef}
-              data-testid="wave-native"
-              width={600}
-              height={80}
-              className="mt-1.5 h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+            <WaveformVisual
+              seed={eng.cur + 3}
+              amp={1}
+              rgb={nativeRgb}
+              className="mt-1.5 h-8 w-full"
             />
 
             {/* hàng 2 — giọng của bạn */}
@@ -386,12 +374,11 @@ export default function ShadowingStudio({
               </button>
             </div>
             <div className="relative mt-1.5">
-              <canvas
-                ref={mineCanvasRef}
-                data-testid="wave-mine"
-                width={600}
-                height={80}
-                className="h-8 w-full rounded-[10px] border border-border-subtle bg-surface-muted"
+              <WaveformVisual
+                seed={eng.cur * 7 + 2}
+                amp={rec.lastUrl != null ? 0.55 + lastRatio * 0.4 : 0.25}
+                rgb={mineRgb}
+                className="h-8 w-full"
               />
               {rec.lastUrl == null && (
                 <div
@@ -636,7 +623,7 @@ export default function ShadowingStudio({
               subs={subs}
               cur={eng.cur}
               videoId={video.id}
-              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, prev: eng.prev, next: eng.next }}
+              eng={{ cur: eng.cur, listenCurrent: eng.listenCurrent, listenSlow: () => eng.listenCurrent(0.65), prev: eng.prev, next: eng.next }}
               recordPractice={recordPractice}
               hidden={mode !== "dict"}
             />

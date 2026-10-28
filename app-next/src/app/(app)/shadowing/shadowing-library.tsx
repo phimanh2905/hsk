@@ -2,6 +2,7 @@
 /* Library /shadowing — port shadow-header / daily-pick / filter-toolbar / video-grid
    của shadowing.html (spec 2026-10-05). Server serialize videos + subtitles vào props. */
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { topicVi, type ShadowingVideo, type SubtitleSentence, type ShadowingTopic } from "@/content/shadowing";
 import { pickDaily, syntheticLines } from "@/lib/shadowing/daily";
 import { subtitlePct } from "@/lib/shadowing/subtitle-progress";
@@ -10,9 +11,10 @@ import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { useTts } from "@/lib/tts/use-tts";
 import { useToast } from "@/components/shell/toast-provider";
 import { ShadowingDrawer } from "./shadowing-drawer";
+import { VideoThumbnail } from "./video-thumbnail";
 import { PracticeOverlay } from "./practice-overlay";
 import { Button } from "@/components/ui/button";
-import { Play } from "@/components/ui/icon";
+import { Play, FileText } from "@/components/ui/icon";
 
 type Props = { videos: ShadowingVideo[]; subtitlesByVideo: Record<string, SubtitleSentence[]> };
 
@@ -55,8 +57,7 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
   const [topic, setTopic] = useState<string>("Tất cả");
   const [speed, setSpeed] = useState<string>("Tất cả");
   const [q, setQ] = useState("");
-  // SLOT-DRAWER / SLOT-OVERLAY (Task 11): drawerVideo + practiceVideo state giữ sẵn,
-  // render ShadowingDrawer / PracticeOverlay sẽ được nối ở Task 11.
+  // Drawer mở qua nút "Kịch bản" trên card; card click navigate studio.
   const [drawerVideo, setDrawerVideo] = useState<ShadowingVideo | null>(null);
   const [practiceVideo, setPracticeVideo] = useState<ShadowingVideo | null>(null);
 
@@ -126,12 +127,10 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
         className="rounded-[20px] border border-border-default bg-surface-elevated shadow-xs p-5 grid lg:grid-cols-[2fr_3fr] gap-5 items-center"
       >
         <div
-          className="hz-thumb-gradient aspect-video rounded-[14px] relative overflow-hidden cursor-pointer group"
+          className="relative aspect-video rounded-[14px] overflow-hidden cursor-pointer group"
           onClick={() => previewFirst(daily)}
         >
-          <span className="hanzi absolute inset-0 flex items-center justify-center text-8xl text-white/20 select-none pointer-events-none">
-            {daily.title.slice(0, 2)}
-          </span>
+          <VideoThumbnail video={daily} big />
           <span className="absolute inset-0 flex items-center justify-center">
             <span className="h-12 w-12 rounded-full bg-white/25 flex items-center justify-center text-white transition group-hover:scale-110">
               <Play className="size-5 ml-0.5" />
@@ -220,19 +219,31 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
           const lines = linesOf(v);
           const rec = progressMap[v.id];
           return (
-            <button
+            <Link
               key={v.id}
+              href={"/shadowing/" + v.id}
               data-od-id={"video-" + v.id}
-              onClick={() => setDrawerVideo(v)} // SLOT-DRAWER (Task 11)
-              className="text-left rounded-card border border-border-default bg-surface-elevated shadow-xs overflow-hidden transition hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
+              data-testid={"video-" + v.id}
+              className="group text-left rounded-card border border-border-default bg-surface-elevated shadow-xs overflow-hidden transition hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-3 ring-action-focus ring-offset-2"
             >
-              <div className="hz-thumb-gradient aspect-video relative overflow-hidden">
-                <span className="hanzi absolute inset-0 flex items-center justify-center text-5xl text-white/20 select-none pointer-events-none">
-                  {v.title.slice(0, 2)}
-                </span>
+              <div className="relative aspect-video overflow-hidden">
+                <VideoThumbnail video={v} />
                 <span className="absolute bottom-2 left-2 rounded bg-black/55 px-1.5 py-0.5 text-[11px] font-bold text-white">
                   {v.duration}
                 </span>
+                <button
+                  type="button"
+                  aria-label="Xem kịch bản"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDrawerVideo(v);
+                  }}
+                  className="absolute top-2 right-2 rounded-full bg-black/45 px-2.5 py-1.5 text-[11px] font-bold text-white inline-flex items-center gap-1.5 hover:bg-black/65 transition focus-visible:outline-none focus-visible:ring-3 ring-action-focus"
+                >
+                  <FileText className="size-3.5" />
+                  Kịch bản
+                </button>
               </div>
               <div className="p-4 flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-[12px] text-text-secondary">
@@ -250,7 +261,7 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
                   <StatusPill rec={rec} total={lines.length} />
                 </div>
               </div>
-            </button>
+            </Link>
           );
         })}
         {filtered.length === 0 && (

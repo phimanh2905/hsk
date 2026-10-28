@@ -30,7 +30,8 @@ export default async function ShadowingVideoPage({ params }: { params: Promise<{
   const subs = (await getShadowingSubtitlesByVideo(video.id)) ?? FALLBACK_SUBS(video.durSec);
   return (
     <div className="hz-breakout pb-28 lg:pb-6">
-      <div className="mx-auto max-w-[1280px] px-4 lg:px-6 py-4">
+      {/* pt-0 + header studio -mt-6: header dính sát topbar, bù đúng py-6 của (app)/layout */}
+      <div className="mx-auto max-w-[1280px] px-4 pt-0 pb-4 lg:px-6">
         <ShadowingStudio video={video} subtitles={subs} />
       </div>
     </div>

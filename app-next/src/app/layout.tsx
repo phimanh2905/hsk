@@ -44,7 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <HybridSyncProvider />
               <ContentBridge />
               <SidebarNav />
-              <div className="flex min-h-screen flex-col lg:ml-64">
+              {/* ml theo --nav-w (sidebar expanded 256 / collapsed 68 — globals.css) */}
+              <div className="flex min-h-screen flex-col transition-[margin] duration-300 lg:ml-(--nav-w)">
                 <Topbar />
                 <main className="flex-1">{children}</main>
               </div>

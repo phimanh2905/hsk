@@ -12,14 +12,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 const nextConfig: NextConfig = {
-  /* Referrer-Policy same-origin: request cross-site (vd fetch model Kokoro từ
-     HuggingFace) không gửi Referer — HF trả 404 không-CORS cho mọi Referer
-     *.workers.dev; request same-origin vẫn giữ hành vi cũ. */
+  /* strict-origin-when-cross-origin: embed YouTube cần Referer/origin (error 153
+     "Video player configuration error"); Kokoro TTS same-origin vẫn nhận origin
+     như cũ nên không hồi quy. */
   async headers() {
     return [
       {
         source: "/:path*",
-        headers: [{ key: "Referrer-Policy", value: "same-origin" }],
+        headers: [{ key: "Referrer-Policy", value: "strict-origin-when-cross-origin" }],
       },
     ];
   },

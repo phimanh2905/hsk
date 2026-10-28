@@ -16,6 +16,36 @@ import { videosFixture, subsFixture } from "@/lib/shadowing/__tests__/fixtures";
 
 beforeEach(() => localStorage.clear());
 
+describe("ShadowingLibrary grid card navigate + nút kịch bản", () => {
+  it("card là Link tới /shadowing/{id}", () => {
+    render(<ShadowingLibrary videos={videosFixture} subtitlesByVideo={subsFixture} />);
+    const card = screen.getByTestId("video-EA3rwvr99Q0");
+    expect(card.tagName).toBe("A");
+    expect(card).toHaveAttribute("href", "/shadowing/EA3rwvr99Q0");
+  });
+
+  it("card có thumbnail img youtube", () => {
+    render(<ShadowingLibrary videos={videosFixture} subtitlesByVideo={subsFixture} />);
+    const card = screen.getByTestId("video-EA3rwvr99Q0");
+    expect(card.querySelector("img")).not.toBeNull();
+    expect(card.querySelector("img")!.getAttribute("src")).toContain("i.ytimg.com");
+  });
+
+  it("nút 'Xem kịch bản' mở drawer, KHÔNG navigate", () => {
+    render(<ShadowingLibrary videos={videosFixture} subtitlesByVideo={subsFixture} />);
+    fireEvent.click(screen.getAllByRole("button", { name: "Xem kịch bản" })[0]);
+    expect(screen.getByRole("dialog", { name: "Xem trước hội thoại" })).toBeInTheDocument();
+  });
+
+  it("hero daily-pick có thumbnail (img youtube), không còn span chữ placeholder", () => {
+    const { container } = render(<ShadowingLibrary videos={videosFixture} subtitlesByVideo={subsFixture} />);
+    const hero = screen.getByTestId("daily-pick");
+    expect(hero.querySelector("img")).not.toBeNull();
+    expect(hero.querySelector("img")!.getAttribute("src")).toContain("i.ytimg.com");
+    expect(container).toBeDefined();
+  });
+});
+
 describe("ShadowingLibrary (port shadow-header/daily-pick/filter-toolbar/video-grid)", () => {
   it("header: h1 + 3 metric pills từ progress", () => {
     render(<ShadowingLibrary videos={videosFixture} subtitlesByVideo={subsFixture} />);
