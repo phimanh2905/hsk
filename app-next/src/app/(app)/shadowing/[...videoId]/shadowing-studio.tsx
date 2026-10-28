@@ -2,7 +2,6 @@
 /* ShadowingStudio (port shadowing-video.html) — engine dùng usePlayerEngine;
    ghi chú: nút Ẩn video, checkbox show-vi/py, Cài đặt của player cũ bị bỏ theo mock. */
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import ReactPlayer from "react-player";
 import { usePlayerEngine } from "@/components/shadowing/studio/use-player-engine";
 import { useRecorder } from "@/lib/shadowing/use-recorder";
@@ -12,12 +11,11 @@ import { useShadowingProgress } from "@/lib/shadowing/use-shadowing-progress";
 import { getAutoscroll } from "@/lib/shadowing/prefs";
 import { activeWordIndex } from "@/lib/shadowing/auto-pause";
 import type { ShadowingVideo, SubtitleSentence } from "@/content/shadowing";
-import { topicVi } from "@/content/shadowing";
 import { dialogueByLesson, type DialogueRecord } from "@/content/dialogues";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { useToast } from "@/components/shell/toast-provider";
-import { Volume2, Play, Pause, Repeat, ChevronLeft, Mic, ICON_STROKE } from "@/components/ui/icon";
+import { Volume2, Play, Pause, Repeat, Mic, ICON_STROKE } from "@/components/ui/icon";
 import DictationPanel from "./dictation-panel";
 import PronPanel from "./pron-panel";
 import WaveformVisual from "@/components/shadowing/studio/waveform-visual";
@@ -157,41 +155,20 @@ export default function ShadowingStudio({
     try { el?.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch { /* jsdom */ }
   }, [eng.cur, mode]);
 
+  /* Context video cho topbar chung (gộp 2 header thành 1 — topbar render back-link + title). */
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("bye:studio-title", { detail: { title: video.title } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("bye:studio-title", { detail: null }));
+    };
+  }, [video.title]);
+
   /* ---------- dictation — DictationPanel (Task 7, variant typing; Task 8 thêm arrange) ---------- */
   const curSub = subs[Math.min(eng.cur, subs.length - 1)] ?? subs[0];
   const chips = toneChipsFor(lastScore ?? -1, (curSub?.parts ?? []).map((p) => p.zh));
 
   return (
     <>
-      <header
-        className="sticky top-16 z-20 -mx-4 -mt-6 mb-4 border-b border-border-subtle bg-surface-elevated/80 px-4 py-2 backdrop-blur lg:-mx-6 lg:px-6"
-        data-od-id="studio-topbar"
-        data-testid="studio-topbar"
-      >
-        <div className="flex items-center gap-3">
-          <Link
-            href="/shadowing"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-control px-2 text-[13px] font-bold text-text-secondary hover:text-text-primary hover:border-border-subtle border border-transparent focus-visible:ring-3 ring-action-focus ring-offset-2"
-          >
-            <ChevronLeft size={14} strokeWidth={ICON_STROKE} /> Thư viện Shadowing
-          </Link>
-          <div className="min-w-0 truncate text-[13.5px] font-extrabold">
-            <span className="hanzi">{video.title}</span>{" "}
-            <small className="font-normal text-text-secondary">• {video.hsk} · {topicVi[video.topic]}</small>
-          </div>
-          <div className="ml-auto flex items-center gap-2 whitespace-nowrap text-xs font-bold text-text-secondary">
-            <span>Tiến độ nói: {linesDone}/{subs.length} câu ({pct}%)</span>
-            <span className="h-2 w-36 overflow-hidden rounded-full bg-ring-track">
-              <i
-                className="block h-full rounded-full bg-feedback-success transition-[width]"
-                style={{ width: pct + "%" }}
-                data-testid="studio-progress-fill"
-              />
-            </span>
-          </div>
-        </div>
-      </header>
-
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
         <div className="flex min-w-0 flex-col gap-4 lg:w-[58%]" data-od-id="media-deck">
           <section aria-label="Trình phát video">
@@ -272,6 +249,20 @@ export default function ShadowingStudio({
                   )}
                 </>
               )}
+            </div>
+            {/* tiến độ nói — chuyển từ bar header cũ xuống đây (gộp 2 header thành 1) */}
+            <div
+              className="mt-2.5 flex items-center gap-2 px-1 text-xs font-bold text-text-secondary"
+              data-testid="studio-progress"
+            >
+              <span className="whitespace-nowrap">Tiến độ nói: {linesDone}/{subs.length} câu ({pct}%)</span>
+              <span className="h-2 flex-1 overflow-hidden rounded-full bg-ring-track">
+                <i
+                  className="block h-full rounded-full bg-feedback-success transition-[width]"
+                  style={{ width: pct + "%" }}
+                  data-testid="studio-progress-fill"
+                />
+              </span>
             </div>
             {/* player toolbar */}
             <div

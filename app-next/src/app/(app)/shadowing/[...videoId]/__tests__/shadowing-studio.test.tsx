@@ -56,13 +56,22 @@ const subs: SubtitleSentence[] = [
   { n: 2, start: 9, end: 15, parts: [{ zh: "再见" }], pinyin: "Zàijiàn", vi: "Tạm biệt" },
 ];
 
-describe("ShadowingStudio — shell (port studio-topbar/video-stage/player-toolbar)", () => {
-  it("render topbar: back link, title, tiến độ nói", () => {
+describe("ShadowingStudio — shell (gộp header vào topbar chung / video-stage / player-toolbar)", () => {
+  it("bỏ bar header riêng; dispatch bye:studio-title cho topbar; tiến độ nói nằm cạnh toolbar", () => {
+    const onTitle = vi.fn();
+    window.addEventListener("bye:studio-title", onTitle);
     render(<ShadowingStudio video={video} subtitles={subs} />);
-    expect(screen.getByTestId("studio-topbar")).toBeInTheDocument();
-    expect(screen.getByText("Thư viện Shadowing")).toHaveAttribute("href", "/shadowing");
+    expect(screen.queryByTestId("studio-topbar")).not.toBeInTheDocument();
+    expect(onTitle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "bye:studio-title",
+        detail: { title: video.title },
+      }),
+    );
+    expect(screen.getByTestId("studio-progress")).toBeInTheDocument();
     expect(screen.getByText(/Tiến độ nói/)).toBeInTheDocument();
     expect(screen.getByText("Câu 1/2")).toBeInTheDocument();
+    window.removeEventListener("bye:studio-title", onTitle);
   });
   it("stage render ReactPlayer với src youtube-nocookie + config youtube.origin", () => {
     render(<ShadowingStudio video={video} subtitles={subs} />);

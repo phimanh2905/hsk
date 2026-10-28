@@ -79,7 +79,6 @@ export function LevelPopover({ className }: { className?: string }) {
         className="flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-border-default bg-surface-elevated pl-3 pr-2.5 text-[13px] font-bold text-text-primary hover:border-border-strong"
       >
         <span className="h-2 w-2 rounded-full bg-learning-mastered" aria-hidden="true" />
-        <span className="hidden min-[900px]:inline">Mục tiêu:</span>
         {level}
         <ChevronDown size={14} strokeWidth={ICON_STROKE} aria-hidden="true" />
       </button>

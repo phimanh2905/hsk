@@ -5,9 +5,10 @@
    + StreakPill + theme. Brand & avatar chuyển sang SidebarNav theo mock.
    Key mục tiêu HSK do LevelPopover sở hữu duy nhất — Topbar không đọc/ghi. */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { Moon, Search, Sun, ICON_STROKE } from "@/components/ui/icon";
+import Link from "next/link";
+import { ChevronLeft, Moon, Search, Sun, ICON_STROKE } from "@/components/ui/icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { LevelPopover } from "@/components/ui/level-popover";
 import { StreakPill } from "@/components/ui/streak-pill";
@@ -21,6 +22,22 @@ export default function Topbar() {
   const { streak, mounted } = useHomeSummary();
   const { theme, setTheme } = useTheme();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  /* Trang studio shadowing tự nhận context video qua event (title/hsk/topic) —
+     topbar là chủ sở hữu hiển thị, bar studio riêng đã bỏ (gộp 2 header thành 1). */
+  const [studioCtx, setStudioCtx] = useState<{ title: string } | null>(null);
+  const isStudio = pathname.startsWith("/shadowing/") && pathname !== "/shadowing";
+
+  useEffect(() => {
+    const onCtx = (e: Event) => {
+      const d = (e as CustomEvent<{ title: string }>).detail;
+      setStudioCtx(d ?? null);
+    };
+    window.addEventListener("bye:studio-title", onCtx);
+    return () => {
+      window.removeEventListener("bye:studio-title", onCtx);
+      setStudioCtx(null);
+    };
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,36 +50,38 @@ export default function Topbar() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  const today = new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
-
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-border-default bg-[color-mix(in_srgb,var(--surface-elevated)_80%,transparent)] backdrop-blur-xl">
         <div className="flex h-16 items-center gap-3 px-4 md:px-6">
-          <div className="min-w-0 flex-1 lg:flex-none">
-            <div className="truncate text-[14px] font-extrabold leading-tight">{pageTitle(pathname)}</div>
-            {/* C2: ngày là dữ liệu thời gian — chỉ render sau mount để không lệch hydration
-                (server UTC vs client ICT) và không đóng băng ngày lúc prerender (ruling mount-gate). */}
-            {mounted && (
-              <div className="hidden truncate text-[11px] capitalize text-text-secondary lg:block">{today}</div>
+          <div className="min-w-0 flex-1 lg:max-w-[42%] lg:flex-none">
+            {isStudio && studioCtx ? (
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Link
+                  href="/shadowing"
+                  aria-label="Về Thư viện Shadowing"
+                  className="inline-flex shrink-0 items-center gap-0.5 rounded-control px-1.5 py-1 text-[12px] font-bold text-text-secondary hover:text-text-primary focus-visible:outline-none focus-visible:ring-3 ring-action-focus"
+                >
+                  <ChevronLeft size={13} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                  Thư viện
+                </Link>
+                <span className="hanzi min-w-0 truncate text-[14px] font-extrabold leading-tight">{studioCtx.title}</span>
+              </div>
+            ) : (
+              <div className="truncate text-[14px] font-extrabold leading-tight">{pageTitle(pathname)}</div>
             )}
           </div>
 
-          <button
-            type="button"
-            aria-label="Tìm kiếm"
-            onClick={() => setPaletteOpen(true)}
-            className="mx-auto flex min-h-11 w-auto max-w-[38vw] flex-1 items-center gap-2 rounded-control border border-border-default bg-surface-muted px-3 text-[13px] text-text-secondary lg:max-w-[288px]"
-          >
-            <Search size={15} strokeWidth={ICON_STROKE} aria-hidden="true" className="shrink-0" />
-            <span className="truncate">Tìm từ vựng, bài học…</span>
-            <kbd className="ml-auto hidden shrink-0 rounded-[6px] border border-border-default bg-surface-elevated px-1.5 py-0.5 text-[11px] md:block">⌘K</kbd>
-          </button>
+          {/* Trigger mở CommandPalette — palette là "ô search thật" (overlay full).
+              Semantic search sau này cũng vào đây, không cần input inline trên topbar. */}
+          <IconButton label="Tìm kiếm" onClick={() => setPaletteOpen(true)} className="ml-auto lg:ml-0">
+            <Search size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
+          </IconButton>
 
           <div className="ml-auto hidden shrink-0 lg:block">
             <LevelPopover />
           </div>
-          {mounted && <StreakPill days={streak} unit="ngày" className="hidden shrink-0 lg:inline-flex" />}
+          {mounted && <StreakPill days={streak} className="hidden shrink-0 lg:inline-flex" />}
           <IconButton label="Chuyển chế độ sáng tối" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
             {theme === "dark" ? (
               <Sun size={18} strokeWidth={ICON_STROKE} aria-hidden="true" />

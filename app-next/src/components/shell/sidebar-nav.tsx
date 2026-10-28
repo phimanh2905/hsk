@@ -59,17 +59,27 @@ export default function SidebarNav() {
   const { openLogin } = useLoginModal();
   const [open, setOpen] = useState(false);
   /* Collapse chỉ có ý nghĩa ở desktop (≥lg); mobile luôn drawer full-width.
-     Đọc localStorage sau mount để tránh lệch hydration. */
+     Đọc localStorage sau mount để tránh lệch hydration. data-nav-collapsed trên <html>
+     là nguồn chân lý cho layout (wrapper ml + hz-breakout đọc var --nav-w). */
   const [collapsed, setCollapsed] = useState(false);
   const [tip, setTip] = useState<{ label: string; top: number; left: number } | null>(null);
 
+  const applyCollapsed = (c: boolean) => {
+    if (c) document.documentElement.dataset.navCollapsed = "1";
+    else delete document.documentElement.dataset.navCollapsed;
+  };
+
   useEffect(() => {
-    if (localStorage.getItem(COLLAPSE_KEY) === "1") setCollapsed(true);
+    if (localStorage.getItem(COLLAPSE_KEY) === "1") {
+      setCollapsed(true);
+      applyCollapsed(true);
+    }
   }, []);
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
       localStorage.setItem(COLLAPSE_KEY, c ? "0" : "1");
+      applyCollapsed(!c);
       return !c;
     });
     setTip(null);

@@ -141,6 +141,20 @@ html {
   overflow-x: clip;
 }
 
+/* Scrollbar mảnh theo theme — đọc token 2 lớp nên tự đổi khi html.dark (Webkit + Firefox).
+   Nhớ của windows/Linux/macOS where-overlay-off; macOS overlay scrollbar không bị ảnh hưởng. */
+* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); background-clip: padding-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+
 body {
   background: var(--surface-paper);
   color: var(--text-primary);
@@ -238,14 +252,16 @@ body {
   width: 100vw;
 }
 
-/* ≥lg shell dịch container sang phải 256px (lg:ml-64 cho sidebar) → breakout phải
-   bám vùng content [256px, viewport], nếu không mép trái chui dưới sidebar
-   (fixed z-[430]) và mép phải tràn viewport gây scroll ngang. */
+/* ≥lg shell dịch container sang phải theo bề rộng sidebar (data-nav-collapsed của
+   SidebarNav là nguồn chân lý) — breakout bám vùng content, không tràn dưới sidebar
+   (fixed z-[470]) và không tràn viewport gây scroll ngang. */
+:root { --nav-w: 256px; }
+html[data-nav-collapsed="1"] { --nav-w: 68px; }
 @media (min-width: 1024px) {
   .hz-breakout {
-    margin-left: calc(50% - 50vw + 128px);
-    margin-right: calc(50% - 50vw + 128px);
-    width: calc(100vw - 256px);
+    margin-left: calc(50% - 50vw + var(--nav-w) / 2);
+    margin-right: calc(50% - 50vw + var(--nav-w) / 2);
+    width: calc(100vw - var(--nav-w));
   }
 }
 
