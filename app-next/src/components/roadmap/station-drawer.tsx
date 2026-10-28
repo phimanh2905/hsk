@@ -146,7 +146,7 @@ export function StationDrawer({
             </div>
             {quizOpen && state !== "locked" ? (
               <div className="flex-1 overflow-y-auto px-5 py-3.5">
-                <StationQuiz station={station} level={level} onClose={() => setQuizOpen(false)} />
+                <StationQuiz key={station.id} station={station} level={level} onClose={() => setQuizOpen(false)} />
               </div>
             ) : (
               <>

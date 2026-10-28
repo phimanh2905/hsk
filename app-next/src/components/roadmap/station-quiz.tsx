@@ -13,6 +13,7 @@ import {
   type QuizQuestion,
 } from "@/lib/station-quiz";
 import { useToastSafe } from "@/components/shell/toast-provider";
+import { PASS_PCT } from "@/lib/roadmap-progress";
 import type { Station, RoadmapLevel } from "@/content/roadmap-stations";
 
 export function StationQuiz({
@@ -37,7 +38,12 @@ export function StationQuiz({
   const [qIndex, setQIndex] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [correct, setCorrect] = useState(0);
-  const [finished, setFinished] = useState<{ pct: number; passed: boolean } | null>(null);
+  const [finished, setFinished] = useState<{
+    attemptPct: number;
+    bestPct: number;
+    passed: boolean;
+    improved: boolean;
+  } | null>(null);
 
   const q = questions[qIndex];
   const total = questions.length;
@@ -56,9 +62,12 @@ export function StationQuiz({
     }
     const finalCorrect = correct;
     const r = submitStationResult(level.id, station.id, finalCorrect, total);
-    setFinished({ pct: r.pct, passed: r.passed });
-    if (r.passed) toast(`🎉 Hoàn thành ${station.no} — ${r.pct}%`);
-    else toast(`Chưa đạt 80% — làm lại nhé! (${r.pct}%)`);
+    const attemptPct = total > 0 ? Math.round((finalCorrect / total) * 100) : 0;
+    setFinished({ attemptPct, bestPct: r.pct, passed: r.passed, improved: r.improved });
+    // F2: toast theo điểm của lần thi NÀY, không phải best-of
+    if (attemptPct >= PASS_PCT) toast(`🎉 Hoàn thành ${station.no} — ${attemptPct}%`);
+    else if (r.passed) toast(`Vẫn giữ thành tích ${r.pct}% — làm lại để cải thiện nhé!`);
+    else toast(`Chưa đạt ${PASS_PCT}% — làm lại nhé! (${attemptPct}%)`);
   };
 
   const retry = () => {
@@ -74,8 +83,13 @@ export function StationQuiz({
       <div data-testid="quiz-result" className="flex flex-col items-center gap-3 py-8 text-center">
         <p className="text-3xl">{finished.passed ? "🎉" : "💪"}</p>
         <p className="text-lg font-extrabold">
-          {correct}/{total} câu đúng · {finished.pct}%
+          {correct}/{total} câu đúng · {finished.attemptPct}%
         </p>
+        {!finished.improved && (
+          <p data-testid="quiz-best" className="text-sm text-text-secondary">
+            Thành tích tốt nhất: {finished.bestPct}%
+          </p>
+        )}
         <p
           className={cn(
             "text-sm font-bold",

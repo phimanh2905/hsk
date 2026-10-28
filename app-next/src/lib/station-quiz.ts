@@ -40,6 +40,20 @@ function optionsFor(answer: string, candidates: string[], rng: Rng): { options: 
   return { options, answerIndex: options.indexOf(answer) };
 }
 
+/** 4 options gồm đáp án + 3 nhiễu, ưu tiên cùng loại (F1): gram pool đủ
+    dày (≥3 unique cùng loại) thì chỉ dùng cùng loại; mỏng mới trộn
+    trường đối ứng để đủ 4 options (station 1 có 2 gram). */
+function gramOptionsFor(
+  answer: string,
+  sameKind: string[],
+  otherKind: string[],
+  rng: Rng,
+): { options: string[]; answerIndex: number } {
+  const same = [...new Set(sameKind.filter((c) => c !== answer))];
+  const candidates = same.length >= 3 ? same : [...same, ...otherKind];
+  return optionsFor(answer, candidates, rng);
+}
+
 export function buildStationQuestions(
   station: Station,
   pool: StationPool = { vocab: station.vocab, gram: station.gram },
@@ -57,16 +71,16 @@ export function buildStationQuestions(
       qs.push({ prompt: `“${zh}” có nghĩa là gì?`, options, answerIndex });
     }
   });
-  // Pool gram của station thường mỏng (<4 mục) → lấy thêm trường đối ứng
-  // (tên mẫu / ý nghĩa) làm nhiễu để đủ 4 options.
+  // Distractor cùng loại (F1): câu nghĩa → nhiễu là các nghĩa khác;
+  // câu tên mẫu → nhiễu là tên mẫu khác. Pool mỏng (<4 cùng loại) mới trộn.
   const gramDescs = pool.gram.map(([, d]) => d);
   const gramNames = pool.gram.map(([n]) => n);
   station.gram.forEach(([name, desc], i) => {
     if (i % 2 === 0) {
-      const { options, answerIndex } = optionsFor(desc, [...gramDescs, ...gramNames], rng);
+      const { options, answerIndex } = gramOptionsFor(desc, gramDescs, gramNames, rng);
       qs.push({ prompt: `Mẫu ngữ pháp “${name}” diễn đạt ý gì?`, options, answerIndex });
     } else {
-      const { options, answerIndex } = optionsFor(name, [...gramNames, ...gramDescs], rng);
+      const { options, answerIndex } = gramOptionsFor(name, gramNames, gramDescs, rng);
       qs.push({ prompt: `Ý nghĩa “${desc}” ứng với mẫu nào?`, options, answerIndex });
     }
   });
@@ -90,7 +104,12 @@ export function sampleMilestoneQuestions(level: RoadmapLevel, rng: Rng = Math.ra
     );
   }
   for (const [name, desc] of gramPicks) {
-    const { options, answerIndex } = optionsFor(desc, pool.gram.map(([, d]) => d), rng);
+    const { options, answerIndex } = gramOptionsFor(
+      desc,
+      pool.gram.map(([, d]) => d),
+      pool.gram.map(([n]) => n),
+      rng,
+    );
     qs.push({ prompt: `Mẫu ngữ pháp “${name}” diễn đạt ý gì?`, options, answerIndex });
   }
   return shuffle(qs, rng);

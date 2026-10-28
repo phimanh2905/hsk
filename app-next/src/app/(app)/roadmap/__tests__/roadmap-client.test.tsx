@@ -102,4 +102,14 @@ describe("RoadmapClient", () => {
     await userEvent.click(screen.getByRole("button", { name: "HSK 3" }));
     expect(nav.replace).toHaveBeenCalledWith("/roadmap?level=hsk-3", { scroll: false });
   });
+
+  it("F6b — mọi trạm done: banner 'Hoàn thành toàn bộ trạm', không còn 'Tiếp tục học'", () => {
+    const all = Object.fromEntries(
+      ["1", "2", "3", "4", "5", "m", "6"].map((id) => [id, { pct: 100, stars: 3 }]),
+    );
+    localStorage.setItem("bye.roadmap.stations.v1", JSON.stringify({ "hsk-2": all }));
+    renderClient("hsk-2");
+    expect(screen.getByText("🎉 Hoàn thành toàn bộ trạm")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Tiếp tục học →" })).toBeNull();
+  });
 });

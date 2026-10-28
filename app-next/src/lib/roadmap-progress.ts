@@ -18,6 +18,9 @@ export type StationView = {
 
 export const PASS_PCT = 80;
 
+/** Lộ trình Pinyin có 8 buổi (/roadmap/pinyin) — nền tảng cho level hsk-1. */
+export const PINYIN_SESSIONS = 8;
+
 export function deriveStationStates(
   level: RoadmapLevel,
   record: Record<string, StationProgress>,
@@ -68,7 +71,7 @@ export function overallRoadmapPct(store: {
   getRoadmapDone(): number[];
   getStationProgress(id: string): Record<string, StationProgress>;
 }): number {
-  const PINYIN_SESSIONS = 8;
+  // TODO(roadmap): hard-code hsk-2 — tổng quát hoá khi HSK 3 có stations.
   const pinyinPct = Math.round((store.getRoadmapDone().length / PINYIN_SESSIONS) * 100);
   const hsk2 = getRoadmapLevel("hsk-2")!;
   const views = deriveStationStates(hsk2, store.getStationProgress(hsk2.id));

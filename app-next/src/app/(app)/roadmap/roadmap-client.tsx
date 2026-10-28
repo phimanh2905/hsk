@@ -10,13 +10,10 @@ import { MilestoneBanner } from "@/components/roadmap/milestone-banner";
 import { SerpentinePath } from "@/components/roadmap/serpentine-path";
 import { StationDrawer } from "@/components/roadmap/station-drawer";
 import { getRoadmapLevel, type LevelId, type RoadmapLevel } from "@/content/roadmap-stations";
-import { bannerSummary, overallRoadmapPct, useRoadmapProgress } from "@/lib/roadmap-progress";
+import { bannerSummary, overallRoadmapPct, useRoadmapProgress, PINYIN_SESSIONS } from "@/lib/roadmap-progress";
 import { progressStore } from "@/lib/store/progress-store";
 import { ReviewCard } from "@/components/roadmap/review-card";
 import { useToastSafe } from "@/components/shell/toast-provider";
-
-/* Lộ trình Pinyin có 8 buổi (/roadmap/pinyin) — nền tảng cho level hsk-1. */
-const PINYIN_SESSIONS = 8;
 
 export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const search = useSearchParams();

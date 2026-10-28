@@ -45,6 +45,40 @@ describe("buildStationQuestions", () => {
     for (const q of qs) expect(q.options.length).toBe(4);
   });
 
+  it("F1 — gram distractor cùng loại: câu nghĩa → options toàn nghĩa, câu tên mẫu → toàn tên", () => {
+    const station: Station = {
+      ...s1,
+      vocab: [],
+      gram: [
+        ["Mẫu G1", "nghĩa một"], ["Mẫu G2", "nghĩa hai"],
+        ["Mẫu G3", "nghĩa ba"], ["Mẫu G4", "nghĩa bốn"],
+      ],
+    };
+    const qs = buildStationQuestions(station, undefined, detRng);
+    const descs = station.gram.map(([, d]) => d);
+    const names = station.gram.map(([n]) => n);
+    const descQs = qs.filter((q) => q.prompt.includes("diễn đạt"));
+    const nameQs = qs.filter((q) => q.prompt.includes("ứng với"));
+    expect(descQs.length).toBe(2);
+    expect(nameQs.length).toBe(2);
+    for (const q of descQs) {
+      expect(q.options.every((o) => descs.includes(o))).toBe(true);
+    }
+    for (const q of nameQs) {
+      expect(q.options.every((o) => names.includes(o))).toBe(true);
+    }
+  });
+
+  it("F1 — pool gram mỏng (station 1: 2 mục) vẫn đủ 4 options qua fallback trộn", () => {
+    const qs = buildStationQuestions(s1, undefined, detRng);
+    const gramQs = qs.filter((q) => q.prompt.includes("diễn đạt") || q.prompt.includes("ứng với"));
+    expect(gramQs.length).toBe(s1.gram.length);
+    for (const q of gramQs) {
+      expect(q.options.length).toBe(4);
+      expect(new Set(q.options).size).toBe(4);
+    }
+  });
+
   it("rng được dùng cho shuffle (cùng seed → cùng kết quả)", () => {
     const a = buildStationQuestions(s1, undefined, detRng);
     const b = buildStationQuestions(s1, undefined, detRng);

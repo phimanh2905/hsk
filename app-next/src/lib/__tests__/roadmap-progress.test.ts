@@ -12,7 +12,6 @@ const hsk2 = getRoadmapLevel("hsk-2")!;
 const stateOf = (record: Record<string, StationProgress>, id: string) => {
   const views = deriveStationStates(hsk2, record);
   const v = views.find((v) => v.station.id === id);
-  if (!v) console.error("DBG missing", id, JSON.stringify(record), views.map((x) => x.station.id));
   return v!.state;
 };
 
