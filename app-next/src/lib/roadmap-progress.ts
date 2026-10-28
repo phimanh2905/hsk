@@ -4,7 +4,7 @@
    Thuần + mount-gate SSR-safe như lib/home-summary.ts. */
 
 import { useEffect, useState } from "react";
-import type { RoadmapLevel, Station } from "@/content/roadmap-stations";
+import { getRoadmapLevel, type RoadmapLevel, type Station } from "@/content/roadmap-stations";
 import { progressStore, type StationProgress } from "@/lib/store/progress-store";
 
 export type StationState = "done" | "active" | "locked";
@@ -16,38 +16,26 @@ export type StationView = {
   stars: number; // 0–3
 };
 
+export const PASS_PCT = 80;
+
 export function deriveStationStates(
   level: RoadmapLevel,
   record: Record<string, StationProgress>,
 ): StationView[] {
-  // Milestone chỉ mở khi MỌI lesson ĐỨNG TRƯỚC nó done (spec §5) — Trạm 6
-  // nằm sau milestone nên không được chặn (content order [1,2,3,4,5,m,6]).
-  const milestoneIdx = level.stations.findIndex((s) => s.kind === "milestone");
-  let allPriorLessonsDone = true;
-  const base = level.stations.map((station, index) => {
-    const rec = record[station.id] ?? null;
-    if (station.kind === "milestone") {
-      return { station, rec, done: rec != null && rec.pct >= 100, isLesson: false };
-    }
-    const done = rec != null && rec.pct >= 100;
-    if (!done && (milestoneIdx < 0 || index < milestoneIdx)) allPriorLessonsDone = false;
-    return { station, rec, done, isLesson: true };
-  });
-
+  // Tuần tự thuần theo thứ tự content: station đầu chưa done = active,
+  // mọi station sau = locked. Milestone là 1 mắt xích bình thường — sửa bug
+  // Trạm 6 không bao giờ mở (spec 2026-10-28 §4).
   let activeAssigned = false;
-  return base.map(({ station, rec, done, isLesson }) => {
-    if (!isLesson) {
-      // Milestone chỉ mở khi toàn bộ lesson TRƯỚC milestone xong (Review Focus #4)
-      if (done && allPriorLessonsDone) return { station, state: "done", pct: 100, stars: rec?.stars ?? 0 };
-      if (allPriorLessonsDone) return { station, state: "active", pct: 0, stars: 0 };
-      return { station, state: "locked", pct: 0, stars: 0 };
+  return level.stations.map((station) => {
+    const rec = record[station.id] ?? null;
+    if (rec != null && rec.pct >= PASS_PCT) {
+      return { station, state: "done" as const, pct: rec.pct, stars: rec.stars };
     }
-    if (done) return { station, state: "done", pct: 100, stars: rec?.stars ?? 0 };
     if (!activeAssigned) {
       activeAssigned = true;
-      return { station, state: "active", pct: rec?.pct ?? 0, stars: rec?.stars ?? 0 };
+      return { station, state: "active" as const, pct: rec?.pct ?? 0, stars: rec?.stars ?? 0 };
     }
-    return { station, state: "locked", pct: 0, stars: 0 };
+    return { station, state: "locked" as const, pct: 0, stars: 0 };
   });
 }
 
@@ -63,7 +51,7 @@ export function bannerSummary(level: RoadmapLevel, views: StationView[]): Banner
     lessons.length > 0
       ? Math.round(lessons.reduce((s, v) => s + v.pct, 0) / lessons.length)
       : 100;
-  const current = views.find((v) => v.state === "active" && v.station.kind === "lesson") ?? null;
+  const current = views.find((v) => v.state === "active") ?? null;
   const milestoneIdx = level.stations.findIndex((s) => s.kind === "milestone");
   const remaining =
     milestoneIdx >= 0
@@ -74,6 +62,18 @@ export function bannerSummary(level: RoadmapLevel, views: StationView[]): Banner
         ).length
       : null;
   return { pct, currentTitle: current ? `${current.station.no}: ${current.station.title}` : null, remainingToMilestone: remaining };
+}
+
+export function overallRoadmapPct(store: {
+  getRoadmapDone(): number[];
+  getStationProgress(id: string): Record<string, StationProgress>;
+}): number {
+  const PINYIN_SESSIONS = 8;
+  const pinyinPct = Math.round((store.getRoadmapDone().length / PINYIN_SESSIONS) * 100);
+  const hsk2 = getRoadmapLevel("hsk-2")!;
+  const views = deriveStationStates(hsk2, store.getStationProgress(hsk2.id));
+  const summary = bannerSummary(hsk2, views);
+  return Math.round((pinyinPct + summary.pct) / 2);
 }
 
 /* mounted=false trước effect → view rỗng khi SSR, không đọc localStorage lúc render. */
