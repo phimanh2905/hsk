@@ -2,9 +2,10 @@
 
 /* Right drawer chi tiết trạm (port .drawer + .overlay + JS drawer của
    opendesign_hsk/roadmap.html). KHÔNG tái dụng ui/dialog (Dialog là overlay
-   giữa màn hình). Audio nối useTts thật; launch buttons toast "sắp ra mắt"
-   (spec §8, non-goal phase 1). */
+   giữa màn hình). Audio nối useTts thật; launch buttons điều hướng thật —
+   quiz render StationQuiz ngay trong drawer (spec 2026-10-28 §5.2). */
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   HelpCircle,
   ICON_STROKE,
@@ -16,16 +17,13 @@ import {
 import { cn } from "@/lib/cn";
 import { Chip } from "@/components/ui/chip";
 import { SegmentedTabs } from "@/components/ui/segmented-tabs";
+import { StationQuiz } from "@/components/roadmap/station-quiz";
 import { useTts } from "@/lib/tts/use-tts";
-import { useToastSafe } from "@/components/shell/toast-provider";
 import type { StationView } from "@/lib/roadmap-progress";
-import type { Station } from "@/content/roadmap-stations";
+import type { Station, RoadmapLevel } from "@/content/roadmap-stations";
 
-const LAUNCH = [
-  { act: "Học Flashcard", Icon: MonitorPlay },
-  { act: "Luyện viết Hanzi", Icon: PencilLine },
-  { act: "Thi trắc nghiệm Quiz", Icon: HelpCircle },
-] as const;
+const LAUNCH_CLASS =
+  "flex min-h-12 items-center justify-center gap-2 rounded-control border border-border-default bg-surface-muted text-[13.5px] font-bold hover:-translate-y-px hover:border-border-strong hover:bg-surface-elevated disabled:opacity-50";
 
 function statusLabel(v: StationView): string {
   if (v.state === "done") return `HOÀN THÀNH · ${v.station.no.toUpperCase()}`;
@@ -35,16 +33,18 @@ function statusLabel(v: StationView): string {
 
 export function StationDrawer({
   view,
+  level,
   open,
   onClose,
 }: {
   view: StationView | null;
+  level: RoadmapLevel;
   open: boolean;
   onClose: () => void;
 }) {
   const [tab, setTab] = useState<"vocab" | "gram">("vocab");
+  const [quizOpen, setQuizOpen] = useState(false);
   const { speak } = useTts();
-  const toast = useToastSafe();
   const panelRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
@@ -82,9 +82,12 @@ export function StationDrawer({
     };
   }, [open, onClose]);
 
-  // Mở drawer luôn về tab Từ vựng (như mock: mode='vocab' trong openDrawer)
+  // Mở drawer luôn về tab Từ vựng + đóng quiz (như mock: mode='vocab' trong openDrawer)
   useEffect(() => {
-    if (open) setTab("vocab");
+    if (open) {
+      setTab("vocab");
+      setQuizOpen(false);
+    }
   }, [open]);
 
   const station = view?.station ?? null;
@@ -141,31 +144,70 @@ export function StationDrawer({
                   : station.meta}
               </p>
             </div>
-            <SegmentedTabs
-              className="mx-5 mt-3.5"
-              label="Tổng quan trạm"
-              tabs={[
-                { key: "vocab" as const, label: "Từ vựng mới" },
-                { key: "gram" as const, label: "Ngữ pháp trọng tâm" },
-              ]}
-              value={tab}
-              onChange={setTab}
-            />
-            <div className="flex-1 overflow-y-auto px-5 py-3.5">
-              {tab === "vocab" ? <VocabList view={view} onSpeak={speak} /> : <GramList station={station} />}
-            </div>
+            {quizOpen && state !== "locked" ? (
+              <div className="flex-1 overflow-y-auto px-5 py-3.5">
+                <StationQuiz station={station} level={level} onClose={() => setQuizOpen(false)} />
+              </div>
+            ) : (
+              <>
+                <SegmentedTabs
+                  className="mx-5 mt-3.5"
+                  label="Tổng quan trạm"
+                  tabs={[
+                    { key: "vocab" as const, label: "Từ vựng mới" },
+                    { key: "gram" as const, label: "Ngữ pháp trọng tâm" },
+                  ]}
+                  value={tab}
+                  onChange={setTab}
+                />
+                <div className="flex-1 overflow-y-auto px-5 py-3.5">
+                  {tab === "vocab" ? (
+                    <VocabList view={view} onSpeak={speak} />
+                  ) : (
+                    <GramList station={station} />
+                  )}
+                </div>
+              </>
+            )}
             <div className="grid gap-2 border-t border-border-default px-5 pb-5 pt-3.5">
-              {LAUNCH.map(({ act, Icon }) => (
-                <button
-                  key={act}
-                  type="button"
-                  onClick={() => toast(`${act} — sắp ra mắt trong bản demo`)}
-                  className="flex min-h-12 items-center justify-center gap-2 rounded-control border border-border-default bg-surface-muted text-[13.5px] font-bold hover:-translate-y-px hover:border-border-strong hover:bg-surface-elevated"
-                >
-                  <Icon size={15} strokeWidth={ICON_STROKE} aria-hidden="true" />
-                  {act}
-                </button>
-              ))}
+              {(() => {
+                const lessonHref = station.lesson
+                  ? `/lesson/${station.lesson.book}/${station.lesson.page}`
+                  : null;
+                return (
+                  <>
+                    {lessonHref ? (
+                      <Link href={lessonHref} className={LAUNCH_CLASS}>
+                        <MonitorPlay size={15} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                        Học Flashcard
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled
+                        title="Mini test tổng hợp"
+                        className={LAUNCH_CLASS}
+                      >
+                        <MonitorPlay size={15} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                        Học Flashcard
+                      </button>
+                    )}
+                    <Link href="/hanzi" className={LAUNCH_CLASS}>
+                      <PencilLine size={15} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                      Luyện viết Hanzi
+                    </Link>
+                    <button
+                      type="button"
+                      disabled={state === "locked"}
+                      onClick={() => setQuizOpen(true)}
+                      className={LAUNCH_CLASS}
+                    >
+                      <HelpCircle size={15} strokeWidth={ICON_STROKE} aria-hidden="true" />
+                      Thi trắc nghiệm Quiz
+                    </button>
+                  </>
+                );
+              })()}
             </div>
           </>
         )}

@@ -121,7 +121,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
         {level.status !== "upcoming" && level.stations.length > 0 && (
           <SerpentinePath views={views} onOpen={openDrawer} onContinue={onContinue} />
         )}
-        <StationDrawer view={drawerView} open={drawerId !== null} onClose={closeDrawer} />
+        <StationDrawer view={drawerView} level={level} open={drawerId !== null} onClose={closeDrawer} />
       </main>
     </>
   );
