@@ -35,7 +35,7 @@ export function RoadmapTopbar({
           value={value}
           onChange={onLevelChange}
         />
-        <div className="flex items-center gap-2 text-[12.5px] font-bold text-text-secondary" aria-label={`Tiến độ ${pct}%`}>
+        <div className="flex items-center gap-2 text-[12.5px] font-bold text-text-secondary" aria-label={`Tiến độ toàn lộ trình ${pct}%`}>
           <span>{pct}%</span>
           <span className="h-1.5 w-[90px] overflow-hidden rounded-full bg-ring-track">
             <span className="block h-full rounded-full bg-jade transition-[width] duration-700" style={{ width: `${pct}%` }} />
