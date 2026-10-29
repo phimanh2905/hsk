@@ -7,6 +7,7 @@ import { useStaticAudio, _resetStaticAudioForTest } from "../use-static-audio";
 class FakeAudio {
   static instances: FakeAudio[] = [];
   src = "";
+  currentTime = 0;
   playbackRate = 1;
   preservesPitch = true;
   play = vi.fn(() => Promise.resolve());
@@ -64,13 +65,37 @@ describe("useStaticAudio", () => {
     expect(latest().src).toBe("/audio/pinyin/ma-2.mp3");
   });
 
-  it("stop dừng clip hiện tại và reset currentTime", () => {
+  it("stop dừng clip hiện tại và reset currentTime (không đụng src)", () => {
     const { result } = renderHook(() => useStaticAudio());
     act(() => result.current.play("/audio/pinyin/ma-1.mp3"));
     const a = latest();
     act(() => result.current.stop());
     expect(a.pause).toHaveBeenCalled();
-    expect(a.src).toBe("");
+    expect(a.currentTime).toBe(0);
+  });
+
+  it("error event cho url KHÁC request hiện tại → không gọi onError", async () => {
+    const onError = vi.fn();
+    const { result } = renderHook(() => useStaticAudio({ onError }));
+    act(() => result.current.play("/audio/pinyin/ma-1.mp3"));
+    const a = latest();
+    act(() => {
+      a.src = "/audio/pinyin/ma-9.mp3"; // event trễ của clip cũ đã bị thay
+    });
+    await act(async () => {
+      a.dispatch("error");
+    });
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it("ended (hết clip tự nhiên) không gọi onError", async () => {
+    const onError = vi.fn();
+    const { result } = renderHook(() => useStaticAudio({ onError }));
+    act(() => result.current.play("/audio/pinyin/ma-1.mp3"));
+    await act(async () => {
+      latest().dispatch("ended");
+    });
+    expect(onError).not.toHaveBeenCalled();
   });
 
   it("play() bị từ chối (vd 404) gọi onError với url + rate", async () => {
@@ -84,6 +109,21 @@ describe("useStaticAudio", () => {
       result.current.play("/audio/pinyin/ma-5.mp3", { rate: 0.65 });
     });
     expect(onError).toHaveBeenCalledWith("/audio/pinyin/ma-5.mp3", 0.65);
+  });
+
+  it("404 thật: cả event error lẫn play() reject → onError chỉ 1 lần", async () => {
+    const onError = vi.fn();
+    const { result } = renderHook(() => useStaticAudio({ onError }));
+    act(() => result.current.play("/audio/pinyin/ma-1.mp3"));
+    act(() => {
+      (latest().play as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("404"));
+    });
+    await act(async () => {
+      result.current.play("/audio/pinyin/ma-5.mp3"); // play() sẽ reject
+      latest().dispatch("error"); // 404 thật: event error đến (trùng request)
+    });
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(onError).toHaveBeenCalledWith("/audio/pinyin/ma-5.mp3", 1);
   });
 
   it("sự kiện error của element gọi onError với url + rate", async () => {
