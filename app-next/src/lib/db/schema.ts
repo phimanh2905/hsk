@@ -221,6 +221,28 @@ export const contentShadowingSubtitles = sqliteTable(
   (t) => [primaryKey({ columns: [t.videoId, t.chunk] })]
 );
 
+type ReadingSentenceRow = { zh: string; py: string; vi: string; audio: string | null; durSec: number };
+type ReadingVocabRow = { word: string; py: string; vi: string };
+type ReadingQuestionRow = { q: string; qVi: string; options: string[]; answer: number; evidence?: { si: number; s: number; e: number }[] };
+
+export const contentReadings = sqliteTable(
+  "content_readings",
+  {
+    id: text("id").primaryKey(),
+    level: text("level").notNull(),
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    titleVi: text("title_vi").notNull(),
+    sentences: text("sentences", { mode: "json" }).$type<ReadingSentenceRow[]>().notNull(),
+    vocab: text("vocab", { mode: "json" }).$type<ReadingVocabRow[]>().notNull(),
+    questions: text("questions", { mode: "json" }).$type<ReadingQuestionRow[]>().notNull(),
+    audioDir: text("audio_dir").notNull(),
+    chars: integer("chars").notNull(),
+    durationSec: integer("duration_sec").notNull(),
+  },
+  (t) => [index("content_readings_level_idx").on(t.level)]
+);
+
 /* ================= HybridStore sync (spec 2026-10-24 Wave 4) =================
    localStorage-first: client ghi local + debounce POST /api/v1/sync; server chỉ
    lưu + merge. updatedAt/deletedAt là EPOCH MS do client sinh (so sánh clock
