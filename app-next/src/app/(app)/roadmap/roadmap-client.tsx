@@ -10,7 +10,7 @@ import { MilestoneBanner } from "@/components/roadmap/milestone-banner";
 import { SerpentinePath } from "@/components/roadmap/serpentine-path";
 import { StationDrawer } from "@/components/roadmap/station-drawer";
 import { getRoadmapLevel, type LevelId, type RoadmapLevel } from "@/content/roadmap-stations";
-import { bannerSummary, overallRoadmapPct, useRoadmapProgress, PINYIN_SESSIONS } from "@/lib/roadmap-progress";
+import { bannerSummary, gateStatus, overallRoadmapPct, useRoadmapProgress, PINYIN_SESSIONS, type GateStatus } from "@/lib/roadmap-progress";
 import { progressStore } from "@/lib/store/progress-store";
 import { ReviewCard } from "@/components/roadmap/review-card";
 import { useToastSafe } from "@/components/shell/toast-provider";
@@ -23,9 +23,11 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const level = getRoadmapLevel(search.get("level") ?? "") ?? getRoadmapLevel("hsk-2")!;
   const [drawerId, setDrawerId] = useState<string | null>(null);
   const { views, mounted } = useRoadmapProgress(level);
-  // HSK 1 không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
+  // Level pinyin không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
   const [pinyinDone, setPinyinDone] = useState(0);
   const [overall, setOverall] = useState(0);
+  // Cổng đầu vào (hsk-1): đọc sau mount, re-sync theo bye:progress qua pinyinDone (dep dưới)
+  const [gate, setGate] = useState<GateStatus | null>(null);
   useEffect(() => {
     if (!mounted) return;
     const sync = () => {
@@ -44,6 +46,14 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
     window.addEventListener("bye:progress", sync);
     return () => window.removeEventListener("bye:progress", sync);
   }, [mounted]);
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      setGate(gateStatus(level.id, progressStore, pinyinDone));
+    } catch {
+      setGate(null);
+    }
+  }, [mounted, level.id, pinyinDone]);
   const pinyinPct = Math.round((pinyinDone / PINYIN_SESSIONS) * 100);
 
   const summary = bannerSummary(level, views);
@@ -90,7 +100,11 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
           <MilestoneBanner
             kicker={level.kicker}
             title={level.title}
-            sub={<>Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–3</>}
+            sub={
+              level.id === "hsk-7-9"
+                ? "Đích đến: HSK 7–9 — đọc hiểu văn bản học thuật, báo chí chuyên sâu và giao tiếp thành thạo như người bản ngữ."
+                : (<>Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–5</>)
+            }
             pct={0}
             ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={<>Trạng thái: <b>Chưa mở</b></>}
@@ -104,9 +118,19 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             pct={pinyinPct}
             ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={
-              pinyinDone === 0
-                ? "Chưa bắt đầu · mở lộ trình Pinyin"
-                : `Đã hoàn thành ${pinyinDone}/${PINYIN_SESSIONS} buổi · ôn tập giữ streak`
+              pinyinDone === 0 ? (
+                <span className="flex flex-col gap-0.5">
+                  {mounted && overall === 0 && (
+                    <span
+                      data-testid="journey-start"
+                      className="text-[11px] font-extrabold text-learning-streak"
+                    >
+                      🚩 Bắt đầu ở đây
+                    </span>
+                  )}
+                  Chưa bắt đầu · mở lộ trình Pinyin
+                </span>
+              ) : `Đã hoàn thành ${pinyinDone}/${PINYIN_SESSIONS} buổi · ôn tập giữ streak`
             }
             endLabel={
               <Link href="/roadmap/pinyin" className="font-bold text-action-primary">
@@ -122,13 +146,25 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             pct={summary.pct}
             ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={
-              allDone ? (
-                <>🎉 Hoàn thành toàn bộ trạm</>
-              ) : summary.currentTitle ? (
-                <>Trạm hiện tại: <b>{summary.currentTitle}</b></>
-              ) : (
-                "Chưa bắt đầu"
-              )
+              <span className="flex flex-col gap-0.5">
+                {allDone ? (
+                  <>🎉 Hoàn thành toàn bộ trạm</>
+                ) : summary.currentTitle ? (
+                  <>Trạm hiện tại: <b>{summary.currentTitle}</b></>
+                ) : (
+                  "Chưa bắt đầu"
+                )}
+                {level.id === "hsk-1" && gate && (
+                  <span data-testid="entry-gate-status">
+                    Cổng đầu vào:{" "}
+                    {gate === "locked"
+                      ? "Kiểm tra nghe pinyin (trong trạm 1)"
+                      : gate === "open"
+                        ? "Đã qua ✅"
+                        : "Đã miễn (Pinyin xong) ✅"}
+                  </span>
+                )}
+              </span>
             }
             endLabel={
               <span className="flex flex-col items-end gap-0.5">

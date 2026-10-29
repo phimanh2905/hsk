@@ -4,7 +4,18 @@ import type { RoadmapLevel, Station } from "@/content/roadmap-stations";
 import { progressStore, type StationProgress } from "@/lib/store/progress-store";
 import { PASS_PCT } from "@/lib/roadmap-progress";
 
-export type QuizQuestion = { prompt: string; options: string[]; answerIndex: number };
+export type QuizQuestion = {
+  prompt: string;
+  options: string[];
+  answerIndex: number;
+  /** Câu nghe: audioText là hanzi để TTS phát; readVariant hỏi ngược pinyin → hanzi. */
+  listen?: {
+    audioText: string;
+    readPrompt: string;
+    readOptions: string[];
+    readAnswerIndex: number;
+  };
+};
 export type StationPool = {
   vocab: Array<[string, string, string]>; // [zh, pinyin, việt]
   gram: Array<[string, string]>;          // [tên mẫu, ý nghĩa]
@@ -54,14 +65,50 @@ function gramOptionsFor(
   return optionsFor(answer, candidates, rng);
 }
 
+/** Câu hỏi nghĩa↔từ cho 1 từ vựng (dùng chung station + milestone). */
+function vocabMeaningQuestion(w: [string, string, string], pool: StationPool, rng: Rng, toZh?: boolean): QuizQuestion {
+  const [zh, , vn] = w;
+  const flip = toZh ?? rng() < 0.5;
+  const { options, answerIndex } = flip
+    ? optionsFor(zh, pool.vocab.map(([z]) => z), rng)
+    : optionsFor(vn, pool.vocab.map(([, , v]) => v), rng);
+  return flip
+    ? { prompt: `Từ nào có nghĩa là “${vn}”?`, options, answerIndex }
+    : { prompt: `“${zh}” có nghĩa là gì?`, options, answerIndex };
+}
+
+/** Câu nghe: phát hanzi (audioText), chọn pinyin đúng trong 4 phiên âm có dấu;
+    readVariant hỏi ngược "đọc là {pinyin}" → chọn hanzi. Distractor ưu tiên
+    pinyin/hanzi khác trong pool. */
+function listenQuestion(w: [string, string, string], pool: StationPool, rng: Rng): QuizQuestion {
+  const [zh, py] = w;
+  const pinyinOpts = optionsFor(py, pool.vocab.map(([, p]) => p), rng);
+  const readOpts = optionsFor(zh, pool.vocab.map(([z]) => z), rng);
+  return {
+    prompt: "Nghe từ rồi chọn phiên âm đúng.",
+    options: pinyinOpts.options,
+    answerIndex: pinyinOpts.answerIndex,
+    listen: {
+      audioText: zh,
+      readPrompt: `Từ nào đọc là “${py}”?`,
+      readOptions: readOpts.options,
+      readAnswerIndex: readOpts.answerIndex,
+    },
+  };
+}
+
 export function buildStationQuestions(
   station: Station,
   pool: StationPool = { vocab: station.vocab, gram: station.gram },
   rng: Rng = Math.random,
+  opts?: { listenEvery?: number; maxQuestions?: number },
 ): QuizQuestion[] {
   const qs: QuizQuestion[] = [];
-  station.vocab.forEach(([zh, , vn], i) => {
-    if (i % 2 === 0) {
+  const listenEvery = opts?.listenEvery ?? 0;
+  station.vocab.forEach(([zh, py, vn], i) => {
+    if (listenEvery > 0 && i % listenEvery === listenEvery - 1) {
+      qs.push(listenQuestion([zh, py, vn], pool, rng));
+    } else if (i % 2 === 0) {
       // nghĩa → từ
       const { options, answerIndex } = optionsFor(zh, pool.vocab.map(([z]) => z), rng);
       qs.push({ prompt: `Từ nào có nghĩa là “${vn}”?`, options, answerIndex });
@@ -84,24 +131,49 @@ export function buildStationQuestions(
       qs.push({ prompt: `Ý nghĩa “${desc}” ứng với mẫu nào?`, options, answerIndex });
     }
   });
+  /* Spec Roadmap Journey §3.3: quiz trạm thường đúng 8 câu. Trạm generator
+     fetch cả nhóm 5 bài (~100 từ) → lấy mẫu: ưu tiên 1 câu nghe + fill còn
+     lại từ câu nghĩa; curated (≤8) không đổi. */
+  const max = opts?.maxQuestions ?? 0;
+  if (max > 0 && qs.length > max) {
+    const listen = shuffle(qs.filter((q) => q.listen), rng);
+    const rest = shuffle(qs.filter((q) => !q.listen), rng);
+    const picked: QuizQuestion[] = listen.length > 0 ? [listen[0]!] : [];
+    for (const q of rest) {
+      if (picked.length >= max) break;
+      picked.push(q);
+    }
+    for (const q of listen.slice(1)) {
+      if (picked.length >= max) break;
+      picked.push(q);
+    }
+    return shuffle(picked, rng);
+  }
   return shuffle(qs, rng);
 }
 
-export function sampleMilestoneQuestions(level: RoadmapLevel, rng: Rng = Math.random): QuizQuestion[] {
-  const pool = levelPool(level);
+/** Warm-up đầu chặng: đúng 4 câu vocab-only (không câu nghe). */
+export function sampleWarmupQuestions(pool: StationPool, rng: Rng = Math.random): QuizQuestion[] {
+  return shuffle(pool.vocab, rng)
+    .slice(0, 4)
+    .map((w) => vocabMeaningQuestion(w, pool, rng));
+}
+
+/** Milestone cuối chặng: đúng 12 câu — 9 vocab + 3 gram khi gram đủ (≥3);
+    gram mỏng/rỗng → 12 vocab (pool nhỏ hơn 12 thì lặp lại từ đã xáo).
+    Mỗi câu vocab thứ 4 (index 3, 7, … trong thứ tự sinh) là câu nghe. */
+export function sampleMilestoneQuestions(pool: StationPool, rng: Rng = Math.random): QuizQuestion[] {
   const qs: QuizQuestion[] = [];
-  const vocabPicks = shuffle(pool.vocab, rng).slice(0, 8);
-  const gramPicks = shuffle(pool.gram, rng).slice(0, 2);
-  for (const [zh, , vn] of vocabPicks) {
-    const toZh = rng() < 0.5;
-    const { options, answerIndex } = toZh
-      ? optionsFor(zh, pool.vocab.map(([z]) => z), rng)
-      : optionsFor(vn, pool.vocab.map(([, , v]) => v), rng);
-    qs.push(
-      toZh
-        ? { prompt: `Từ nào có nghĩa là “${vn}”?`, options, answerIndex }
-        : { prompt: `“${zh}” có nghĩa là gì?`, options, answerIndex },
-    );
+  const gramPicks = pool.gram.length >= 3 ? shuffle(pool.gram, rng).slice(0, 3) : [];
+  const vocabPicks = shuffle(pool.vocab, rng);
+  const vocabCount = 12 - gramPicks.length;
+  for (let i = 0; i < vocabCount; i++) {
+    const w = vocabPicks[i % vocabPicks.length]!;
+    if (i % 4 === 3) {
+      qs.push(listenQuestion(w, pool, rng));
+    } else {
+      qs.push(vocabMeaningQuestion(w, pool, rng));
+    }
   }
   for (const [name, desc] of gramPicks) {
     const { options, answerIndex } = gramOptionsFor(

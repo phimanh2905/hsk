@@ -118,5 +118,30 @@ describe("getToday + roadmap learnSeen (fix wave 2026-10-01)", () => {
   });
 });
 
+describe("roadmap gates", () => {
+  it("set/get best-of", () => {
+    const s = fresh();
+    s.setRoadmapGate("hsk1", 50);
+    expect(s.getRoadmapGate("hsk1")?.pct).toBe(50);
+    s.setRoadmapGate("hsk1", 90);
+    expect(s.getRoadmapGate("hsk1")?.pct).toBe(90);
+    s.setRoadmapGate("hsk1", 40); // best-of — không hạ
+    expect(s.getRoadmapGate("hsk1")?.pct).toBe(90);
+    expect(s.getRoadmapGate("hsk2")).toBeNull();
+  });
+  it("gate lưu key bye.roadmap.gates.v1, at là epoch ms, phát event bye:progress", () => {
+    const events: string[] = [];
+    const on = () => events.push("evt");
+    window.addEventListener("bye:progress", on);
+    const s = fresh();
+    s.setRoadmapGate("hsk1", 60);
+    const rec = s.getRoadmapGate("hsk1");
+    expect(localStorage.getItem("bye.roadmap.gates.v1")).toBe(JSON.stringify({ hsk1: rec }));
+    expect(rec?.at).toBeGreaterThan(0);
+    expect(events.length).toBe(1);
+    window.removeEventListener("bye:progress", on);
+  });
+});
+
 /* recordReview của lesson giờ dùng mapping applyGrade của hệ review —
    test mapping nằm ở __tests__/record-review.test.ts (review-redesign). */
