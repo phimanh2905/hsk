@@ -48,6 +48,10 @@ export type HanziQuizRec = {
 /* Bản nháp bài đọc (Wave 0 W0.4 — /reading auto-save), key bye.reading.drafts */
 export type ReadingDraft = { text: string; at: string };
 
+/* Kết quả quiz bài đọc (spec 2026-10-30 §4.4), key nhai.reading.progress:
+   Record<readingId, {correct, total, attempts, completedAt}> — correct giữ max. */
+export type ReadingProgressRec = { correct: number; total: number; attempts: number; completedAt: string };
+
 /* Stats chép chính tả per video/line (Task 2), key bye.shadowing.dictStats.<videoId> */
 export type DictLineStat = { lastScore: number; errors: number; replays: number };
 export type DictStats = Record<string, DictLineStat>;
@@ -113,6 +117,8 @@ export interface ProgressStoreApi {
   recordSoundRulesResult(correct: number): void;
   getReadingDrafts(): ReadingDraft[];
   saveReadingDraft(text: string): void;
+  getReadingProgress(): Record<string, ReadingProgressRec>;
+  saveReadingProgress(id: string, correct: number, total: number): ReadingProgressRec;
   getDictStats(videoId: string): DictStats;
   recordDictCheck(videoId: string, lineN: number, score: number, errors: number): void;
   recordReplay(videoId: string, lineN: number): void;
@@ -811,6 +817,42 @@ export class ProgressStore implements ProgressStoreApi {
     drafts.unshift({ text: trimmed, at: new Date().toISOString() });
     writeJSON("bye.reading.drafts", drafts.slice(0, 5));
     dispatchProgress();
+  }
+
+  /* ---------- reading quiz progress (nhai.reading.progress — spec 2026-10-30 §4.4) ---------- */
+
+  getReadingProgress(): Record<string, ReadingProgressRec> {
+    const v = readJSON<Record<string, ReadingProgressRec>>("nhai.reading.progress", {});
+    if (!v || typeof v !== "object") return {};
+    const out: Record<string, ReadingProgressRec> = {};
+    for (const [id, rec] of Object.entries(v)) {
+      if (
+        rec &&
+        typeof rec === "object" &&
+        typeof rec.correct === "number" &&
+        typeof rec.total === "number" &&
+        typeof rec.attempts === "number" &&
+        typeof rec.completedAt === "string"
+      ) {
+        out[id] = rec;
+      }
+    }
+    return out;
+  }
+
+  saveReadingProgress(id: string, correct: number, total: number): ReadingProgressRec {
+    const all = this.getReadingProgress();
+    const cur = all[id];
+    const rec: ReadingProgressRec = {
+      correct: Math.max(typeof cur?.correct === "number" ? cur.correct : 0, correct),
+      total,
+      attempts: (typeof cur?.attempts === "number" ? cur.attempts : 0) + 1,
+      completedAt: new Date().toISOString(),
+    };
+    all[id] = rec;
+    writeJSON("nhai.reading.progress", all);
+    dispatchProgress();
+    return rec;
   }
 
   /* ---------- dictation stats (bye.shadowing.dictStats.<videoId> — Task 2) ---------- */

@@ -4,16 +4,18 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress, reviewLogs } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
+  mergeReadingProgress,
   SRS_STATUSES,
   type SrsSyncStatus,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
   type SyncLessonRecord,
+  type SyncReadingRecord,
   type SyncReviewLogRecord,
 } from "@/lib/store/sync-merge";
 
@@ -71,6 +73,19 @@ const bodySchema = z.object({
       })
     )
     .max(1000)
+    .default([]),
+  readingProgress: z
+    .array(
+      z.object({
+        readingId: z.string().min(1).max(200),
+        correct: z.number().int().min(0),
+        total: z.number().int().min(0),
+        attempts: z.number().int().min(0),
+        completedAt: z.string().max(50),
+        updatedAt: z.number().int().positive(),
+      })
+    )
+    .max(500)
     .default([]),
 });
 
@@ -289,7 +304,56 @@ export async function POST(req: NextRequest) {
       }
   }
 
-  // 5) Purge tombstone >90 ngày
+  // 5) readingProgress (spec 2026-10-30 §4.4 — không tombstone).
+  const incReadingMap = new Map<string, SyncReadingRecord>();
+  for (const inc of body.readingProgress) {
+    const prev = incReadingMap.get(inc.readingId);
+    incReadingMap.set(inc.readingId, prev ? mergeReadingProgress(prev, inc) : inc);
+  }
+  const existingReadings = await db.select().from(readingProgress).where(eq(readingProgress.userId, userId));
+  const readingMap = new Map(existingReadings.map((r) => [r.readingId, r]));
+  const mergedReadings: SyncReadingRecord[] = [...incReadingMap.values()].map((inc) => {
+    const ex = readingMap.get(inc.readingId);
+    if (!ex) return inc;
+    return mergeReadingProgress(
+      {
+        readingId: ex.readingId,
+        correct: ex.correct,
+        total: ex.total,
+        attempts: ex.attempts,
+        completedAt: ex.completedAt ?? "",
+        updatedAt: ex.updatedAt,
+      },
+      inc
+    );
+  });
+  if (mergedReadings.length) {
+    for (const part of chunk(mergedReadings.map((r) => ({
+          userId,
+          readingId: r.readingId,
+          correct: r.correct,
+          total: r.total,
+          attempts: r.attempts,
+          completedAt: r.completedAt,
+          updatedAt: r.updatedAt,
+        })))) {
+        await db
+          .insert(readingProgress)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [readingProgress.userId, readingProgress.readingId],
+          set: {
+            correct: sql`excluded.correct`,
+            total: sql`excluded.total`,
+            attempts: sql`excluded.attempts`,
+            completedAt: sql`excluded.completed_at`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        });
+      }
+  }
+
+  // 6) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -303,12 +367,13 @@ export async function POST(req: NextRequest) {
       )
     );
 
-  // 6) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons, finalLogs] = await Promise.all([
+  // 7) Trả về toàn bộ state server của user sau merge
+  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
     db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
+    db.select().from(readingProgress).where(eq(readingProgress.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -345,11 +410,21 @@ export async function POST(req: NextRequest) {
     reviewedAt: r.reviewedAt,
   }));
 
+  const readingOut: SyncReadingRecord[] = finalReadings.map((r) => ({
+    readingId: r.readingId,
+    correct: r.correct,
+    total: r.total,
+    attempts: r.attempts,
+    completedAt: r.completedAt ?? "",
+    updatedAt: r.updatedAt,
+  }));
+
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
     studyDay: studyDayOut,
     lessonProgress: lessonOut,
     reviewLogs: reviewLogsOut,
+    readingProgress: readingOut,
   });
 }

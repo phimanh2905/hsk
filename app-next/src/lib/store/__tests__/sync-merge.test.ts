@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   mergeLesson,
+  mergeReadingProgress,
   mergeReviewLogs,
   mergeSrs,
   mergeStudyDay,
   type SyncLessonRecord,
+  type SyncReadingRecord,
   type SyncReviewLogRecord,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
@@ -217,6 +219,52 @@ describe("mergeReviewLogs", () => {
     const aCopy = structuredClone(a);
     const bCopy = structuredClone(b);
     mergeReviewLogs(a, b);
+    expect(a).toEqual(aCopy);
+    expect(b).toEqual(bCopy);
+  });
+});
+
+describe("mergeReadingProgress", () => {
+  const rrec = (over: Partial<SyncReadingRecord>): SyncReadingRecord => ({
+    readingId: "hsk1-reading-1",
+    correct: 3,
+    total: 5,
+    attempts: 1,
+    completedAt: "2026-10-30T00:00:00.000Z",
+    updatedAt: 1000,
+    ...over,
+  });
+
+  it("updatedAt lớn thắng cho total/completedAt, counter max", () => {
+    const a = rrec({ correct: 3, attempts: 2, updatedAt: 1000 });
+    const b = rrec({ correct: 5, total: 6, attempts: 1, completedAt: "2026-10-30T09:00:00.000Z", updatedAt: 2000 });
+    const m = mergeReadingProgress(a, b);
+    expect(m).toEqual({
+      readingId: "hsk1-reading-1",
+      correct: 5,
+      total: 6,
+      attempts: 2,
+      completedAt: "2026-10-30T09:00:00.000Z",
+      updatedAt: 2000,
+    });
+  });
+
+  it("bản cũ hơn vẫn giữ khi counter của nó lớn hơn (correct/attempts max)", () => {
+    const a = rrec({ correct: 5, attempts: 3, updatedAt: 500 });
+    const b = rrec({ correct: 2, attempts: 1, updatedAt: 9000 });
+    const m = mergeReadingProgress(a, b);
+    expect(m.correct).toBe(5);
+    expect(m.attempts).toBe(3);
+    expect(m.updatedAt).toBe(9000);
+    expect(m.completedAt).toBe(b.completedAt);
+  });
+
+  it("input invalid (không phải object shape) — merge không mutate input", () => {
+    const a = rrec({});
+    const b = rrec({ readingId: "hsk1-reading-2", updatedAt: 50 });
+    const aCopy = structuredClone(a);
+    const bCopy = structuredClone(b);
+    mergeReadingProgress(a, b);
     expect(a).toEqual(aCopy);
     expect(b).toEqual(bCopy);
   });

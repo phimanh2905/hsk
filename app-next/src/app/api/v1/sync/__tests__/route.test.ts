@@ -31,16 +31,19 @@ function req(body?: unknown) {
   }) as unknown as import("next/server").NextRequest;
 }
 
-/** Route select 7 lần: 3 domain existing + 4 domain final (thêm reviewLogs). */
+/** Route select 9 lần: 4 domain existing (srs, studyDay, lessonProgress, readingProgress)
+    + 5 domain final (thêm reviewLogs). */
 function queueSelects(existing: Record<string, unknown[]>, final: Record<string, unknown[]>) {
   where
     .mockResolvedValueOnce(existing.srs ?? [])
     .mockResolvedValueOnce(existing.studyDay ?? [])
     .mockResolvedValueOnce(existing.lessonProgress ?? [])
+    .mockResolvedValueOnce(existing.readingProgress ?? [])
     .mockResolvedValueOnce(final.srs ?? [])
     .mockResolvedValueOnce(final.studyDay ?? [])
     .mockResolvedValueOnce(final.lessonProgress ?? [])
-    .mockResolvedValueOnce(final.reviewLogs ?? []);
+    .mockResolvedValueOnce(final.reviewLogs ?? [])
+    .mockResolvedValueOnce(final.readingProgress ?? []);
 }
 
 const srsFix = (over: Record<string, unknown>) => ({

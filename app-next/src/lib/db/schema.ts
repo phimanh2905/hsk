@@ -299,6 +299,25 @@ export const lessonProgress = sqliteTable(
     (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
 );
 
+/* Kết quả quiz bài đọc (spec 2026-10-30 §4.4). Không tombstone — không xóa,
+   chỉ ghi đè theo updatedAt lớn hơn thắng. */
+export const readingProgress = sqliteTable(
+  "reading_progress",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    readingId: text("reading_id").notNull(), // content_readings.id
+    correct: integer("correct").notNull().default(0),
+    total: integer("total").notNull().default(0),
+    attempts: integer("attempts").notNull().default(0),
+    completedAt: text("completed_at"), // ISO client
+    updatedAt: integer("updated_at").notNull(), // epoch ms — client clock
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.readingId] }),
+    index("reading_progress_user_idx").on(t.userId),
+  ]
+);
+
 /* ================= Wave 5 — review logs (W5.2) =================
    Append-only log mọi lần ôn; sync 1 chiều push (merge append-only theo
    (user_id, item_key, reviewed_at)). Không tombstone, không merge field-wise. */
