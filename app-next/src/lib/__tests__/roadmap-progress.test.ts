@@ -1,12 +1,36 @@
 import { describe, it, expect } from "vitest";
-import { getRoadmapLevel } from "@/content/roadmap-stations";
+import { getRoadmapLevel, roadmapLevels } from "@/content/roadmap-stations";
 import {
   PASS_PCT,
+  PINYIN_SESSIONS,
   bannerSummary,
   deriveStationStates,
+  gateStatus,
   overallRoadmapPct,
 } from "../roadmap-progress";
 import type { StationProgress } from "@/lib/store/progress-store";
+
+/* Task 5 — trọng số động: đếm trạm lesson từ content thay vì assertion tuyệt đối
+   (regression Task 2 đã chuyển sang đếm động). */
+const lessonWeight = (levelId: string) => {
+  const l = getRoadmapLevel(levelId)!;
+  return l.stations.filter((s) => s.kind === "lesson").length;
+};
+const TOTAL_WEIGHT = roadmapLevels
+  .filter((l) => l.status === "available")
+  .reduce((sum, l) => sum + (l.id === "pinyin" ? PINYIN_SESSIONS : lessonWeight(l.id)), 0);
+const weightedOverall = (pinyinPct: number, byLevel: Record<string, number>) => {
+  let wSum = 0;
+  let wpSum = 0;
+  for (const l of roadmapLevels.filter((l) => l.status === "available")) {
+    const w = l.id === "pinyin" ? PINYIN_SESSIONS : lessonWeight(l.id);
+    if (w === 0) continue;
+    const pct = l.id === "pinyin" ? pinyinPct : (byLevel[l.id] ?? 0);
+    wSum += w;
+    wpSum += w * pct;
+  }
+  return wSum > 0 ? Math.round(wpSum / wSum) : 0;
+};
 
 const hsk2 = getRoadmapLevel("hsk-2")!;
 const lessonCount = hsk2.stations.filter((s) => s.kind === "lesson").length;
@@ -181,17 +205,120 @@ describe("bannerSummary", () => {
 });
 
 describe("overallRoadmapPct", () => {
-  it("trung bình pinyin % và hsk-2 summary %, làm tròn", () => {
+  it("trong số có trọng số: pinyin 4/8 = 50% chia cho tổng trọng số toàn chặng", () => {
     const store = {
       getRoadmapDone: () => [1, 2, 3, 4], // 4/8 = 50%
+      getStationProgress: () => ({}),
+    };
+    expect(overallRoadmapPct(store)).toBe(weightedOverall(50, {}));
+  });
+
+  it("hsk-2 có record → đóng góp theo trọng số = số trạm lesson", () => {
+    const store = {
+      getRoadmapDone: () => [1, 2, 3, 4],
       getStationProgress: (id: string) => (id === "hsk-2" ? mk([["1", 100]]) : {}),
     };
-    // hsk-2 lessons: 1(100) còn lại 0 → round(100/lessonCount); overall = round((50+…)/2)
-    expect(overallRoadmapPct(store)).toBe(Math.round((50 + Math.round(100 / lessonCount)) / 2));
+    const hsk2w = lessonWeight("hsk-2");
+    const hsk2Pct = Math.round(100 / hsk2w); // bannerSummary: trạm 1=100, còn lại 0
+    expect(overallRoadmapPct(store)).toBe(weightedOverall(50, { "hsk-2": hsk2Pct }));
   });
 
   it("trống → 0", () => {
     const store = { getRoadmapDone: () => [], getStationProgress: () => ({}) };
     expect(overallRoadmapPct(store)).toBe(0);
+  });
+
+  it("bỏ level upcoming (hsk-6, hsk-7-9) và level không trạm lesson", () => {
+    const store = {
+      getRoadmapDone: () => Array.from({ length: PINYIN_SESSIONS }, (_, i) => i + 1), // pinyin 100%
+      getStationProgress: () => ({}),
+    };
+    expect(overallRoadmapPct(store)).toBe(weightedOverall(100, {}));
+  });
+});
+
+describe("gateStatus", () => {
+  const mkStore = (gatePct: number | null) => ({
+    getRoadmapDone: () => [] as number[],
+    getStationProgress: () => ({}) as Record<string, StationProgress>,
+    getRoadmapGate: (id: string) => (gatePct != null ? { pct: gatePct, at: 0 } : null),
+  });
+
+  it("level ≠ hsk-1 → open (kể cả khi không có gate)", () => {
+    expect(gateStatus("hsk-2", mkStore(null), 0)).toBe("open");
+    expect(gateStatus("hsk-3", mkStore(null), 0)).toBe("open");
+    expect(gateStatus("pinyin", mkStore(null), 0)).toBe("open");
+  });
+
+  it("hsk-1: gate pct ≥ PASS_PCT → open", () => {
+    expect(gateStatus("hsk-1", mkStore(PASS_PCT), 0)).toBe("open");
+    expect(gateStatus("hsk-1", mkStore(90), 0)).toBe("open");
+  });
+
+  it("hsk-1: gate thiếu hoặc pct < PASS_PCT → locked", () => {
+    expect(gateStatus("hsk-1", mkStore(null), 0)).toBe("locked");
+    expect(gateStatus("hsk-1", mkStore(PASS_PCT - 1), 0)).toBe("locked");
+  });
+
+  it("hsk-1: pinyinDoneCount ≥ PINYIN_SESSIONS → exempt (ưu tiên hơn gate)", () => {
+    expect(gateStatus("hsk-1", mkStore(null), PINYIN_SESSIONS)).toBe("exempt");
+    expect(gateStatus("hsk-1", mkStore(null), PINYIN_SESSIONS + 3)).toBe("exempt");
+    // exempt kể cả khi gate đã open — hoàn thành pinyin thay thế gate
+    expect(gateStatus("hsk-1", mkStore(100), PINYIN_SESSIONS)).toBe("exempt");
+    expect(gateStatus("hsk-1", mkStore(null), PINYIN_SESSIONS - 1)).not.toBe("exempt");
+  });
+});
+
+describe("deriveStationStates — lessonDone (Task 5)", () => {
+  const doneTrue = () => true;
+  const doneFor = (pages: string[]) => (_book: string, page: string) => pages.includes(page);
+
+  it("trạm 1 bài, lessonDone true → pct 100, done dù không có record", () => {
+    const views = deriveStationStates(hsk2, {}, doneTrue);
+    expect(views.find((v) => v.station.id === "1")!.pct).toBe(100);
+    expect(views.find((v) => v.station.id === "1")!.state).toBe("done");
+    expect(views.find((v) => v.station.id === "2")!.state).toBe("done");
+  });
+
+  it("pct = max(rec.pct, doneLessons/totalLessons) — record 50 + 1/1 bài done → 100", () => {
+    const views = deriveStationStates(hsk2, mk([["1", 50]]), doneTrue);
+    const v = views.find((v) => v.station.id === "1")!;
+    expect(v.pct).toBe(100);
+    expect(v.state).toBe("done");
+  });
+
+  it("record 100 nhưng chưa có bài nào done → giữ pct record (merge = max)", () => {
+    const views = deriveStationStates(hsk2, mk([["1", 100]]), doneFor([]));
+    const v = views.find((v) => v.station.id === "1")!;
+    expect(v.pct).toBe(100);
+    expect(v.state).toBe("done");
+  });
+
+  it("trạm milestone 'm' (curated, lessons rỗng) giữ hành vi cũ — chỉ rec.pct", () => {
+    const views = deriveStationStates(hsk2, {}, doneTrue);
+    const m = views.find((v) => v.station.id === "m")!;
+    expect(m.pct).toBe(0);
+    // tuần tự: các trạm trước done (theo lessonDone) → m là mắt xích chưa done đầu tiên = active
+    expect(m.state).toBe("active");
+    // có record → như cũ
+    const withRec = deriveStationStates(hsk2, mk([["m", 85]]), doneTrue);
+    expect(withRec.find((v) => v.station.id === "m")!.state).toBe("done");
+  });
+
+  it("không truyền lessonDone → hành vi cũ nguyên vẹn (record-only)", () => {
+    const views = deriveStationStates(hsk2, mk([["1", 50]]));
+    expect(views.find((v) => v.station.id === "1")!.pct).toBe(50);
+    expect(views.find((v) => v.station.id === "1")!.state).toBe("active");
+  });
+
+  it("done theo pct đã merge: generator trạm nhiều bài, 4/5 bài done = 80 → done", () => {
+    const hsk1 = getRoadmapLevel("hsk-1")!;
+    const g1 = hsk1.stations[0]; // trạm generator, lessons 5 bài
+    expect(g1.lessons!.length).toBe(5);
+    const pages = g1.lessons!.slice(0, 4).map((l) => l.page);
+    const views = deriveStationStates(hsk1, {}, doneFor(pages));
+    const v = views.find((v2) => v2.station.id === g1.id)!;
+    expect(v.pct).toBe(80);
+    expect(v.state).toBe("done");
   });
 });
