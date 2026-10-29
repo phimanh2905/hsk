@@ -11,9 +11,11 @@ type StaticAudioArgs = { onError?: (url: string, rate: number) => void };
    Lỗi load/play (vd 404 tone 5 không được render) gọi onError để caller fallback
    sang useTts.speak — chỉ khi url lỗi trùng url của request hiện tại (lastUrl):
    event "error" đến trễ (clip cũ đã bị thay) hoặc ended (hết clip tự nhiên) không
-   được tính là lỗi. Một request chỉ fallback đúng 1 lần (404 thật bắn cả event
-   "error" lẫn reject play()). onError giữ trong ref để StrictMode re-render không
-   attach listener lại. */
+   được tính là lỗi. So sánh dùng pathname chuẩn hoá (a.src là URL tuyệt đối ở
+   browser thật, chuỗi tương đối ở jsdom — normalize cả hai về pathname để guard
+   hoạt động đúng ở cả hai). Một request chỉ fallback đúng 1 lần (404 thật bắn cả
+   event "error" lẫn reject play()). onError giữ trong ref để StrictMode re-render
+   không attach listener lại. */
 let audio: HTMLAudioElement | null = null;
 let lastUrl = "";
 let handledErrorUrl: string | null = null;
@@ -45,7 +47,10 @@ export function useStaticAudio({ onError }: StaticAudioArgs = {}) {
   useEffect(() => {
     const a = getAudio();
     const handleError = () => {
-      const url = a.src;
+      /* a.src là URL tuyệt đối ở browser thật (vd https://site/audio/x.mp3) nhưng
+         chuỗi tương đối như gán ở jsdom — chuẩn hoá về pathname trước khi so sánh
+         với lastUrl (luôn tương đối) để guard không thành no-op ở production. */
+      const url = new URL(a.src, window.location.href).pathname;
       if (url !== lastUrl || handledErrorUrl === url) return;
       handledErrorUrl = url;
       stopCurrent(a);

@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import shutil
 import subprocess
 import sys
@@ -201,7 +202,10 @@ def main(argv: list[str] | None = None) -> int:
         for i, (cell, tone, text, mp3, _reason) in enumerate(to_render, 1):
             base = cell["base"]
             try:
-                tmp_wav = tmp_dir / f"{base}-{tone}.wav"
+                # basename: guard against a base ever containing a path
+                # separator (would escape tmp_dir); impossible with current
+                # data, but cheap to enforce.
+                tmp_wav = tmp_dir / f"{os.path.basename(base)}-{tone}.wav"
                 synth(pipeline, text, tmp_wav, soundfile, numpy)
                 transcode_to_mp3(tmp_wav, mp3)
                 tmp_wav.unlink()
