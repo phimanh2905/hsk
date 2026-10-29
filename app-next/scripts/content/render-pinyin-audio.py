@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -161,7 +162,7 @@ def main(argv: list[str] | None = None) -> int:
         import soundfile
 
         pipeline = KPipeline(lang_code="z")
-        soundfile, numpy = soundfile, np
+        numpy = np
 
     plan: list[tuple[dict, int, str, Path, str | None]] = []  # (cell, tone, text, mp3, skip_reason)
     for cell in cells:
@@ -197,7 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     failed: list[dict] = []
     duration_ok = rms_ok = 0
     try:
-        for i, (cell, tone, text, mp3, reason) in enumerate([p for p in plan if p[4] is None], 1):
+        for i, (cell, tone, text, mp3, _reason) in enumerate(to_render, 1):
             base = cell["base"]
             try:
                 tmp_wav = tmp_dir / f"{base}-{tone}.wav"
@@ -229,16 +230,16 @@ def main(argv: list[str] | None = None) -> int:
                 failed.append({"syllable": base, "tone": tone, "reason": repr(exc)})
                 print(f"ERROR {base}-{tone}: {exc!r}")
     finally:
-        for f in tmp_dir.glob("*.wav"):
-            f.unlink(missing_ok=True)
-        tmp_dir.rmdir()
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
     skipped = [{"syllable": p[0]["base"], "tone": p[1], "reason": p[4]} for p in plan if p[4] is not None]
+    skipped_existing = len(plan) - len(to_render) - len(skipped)
     report = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "voice": VOICE,
         "rendered": rendered,
         "skipped": skipped,
+        "skippedExisting": skipped_existing,
         "failed": failed,
         "qa": {"durationOk": duration_ok, "rmsOk": rms_ok},
     }
@@ -246,7 +247,7 @@ def main(argv: list[str] | None = None) -> int:
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"ghi {args.report}")
     print(f"xong: rendered={rendered} failed={len(failed)} skipped={len(skipped)} "
-          f"(qa durationOk={duration_ok} rmsOk={rms_ok})")
+          f"skipExisting={skipped_existing} (qa durationOk={duration_ok} rmsOk={rms_ok})")
     return 1 if failed else 0
 
 
