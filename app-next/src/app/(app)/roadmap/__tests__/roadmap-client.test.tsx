@@ -112,6 +112,47 @@ describe("RoadmapClient", () => {
     expect(nav.replace).toHaveBeenCalledWith("/roadmap?level=hsk-3", { scroll: false });
   });
 
+  it("Task 9 — banner pinyin khi overall=0: dòng '🚩 Bắt đầu ở đây' (journey-start)", () => {
+    renderClient("pinyin");
+    expect(screen.getByTestId("journey-start")).toBeTruthy();
+  });
+
+  it("Task 9 — banner pinyin khi overall>0: KHÔNG hiện journey-start", () => {
+    localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
+    renderClient("pinyin");
+    expect(screen.queryByTestId("journey-start")).toBeNull();
+  });
+
+  it("Task 9 — banner hsk-1 gate locked: 'Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)'", () => {
+    renderClient("hsk-1");
+    expect(screen.getByText("Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)")).toBeTruthy();
+  });
+
+  it("Task 9 — banner hsk-1 gate open (gate 90%): 'Đã qua ✅'", () => {
+    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ "hsk-1": { pct: 90, at: 1 } }));
+    renderClient("hsk-1");
+    expect(screen.getByText("Cổng đầu vào: Đã qua ✅")).toBeTruthy();
+  });
+
+  it("Task 9 — banner hsk-1 gate exempt (pinyin 8/8): 'Đã miễn (Pinyin xong) ✅'", () => {
+    localStorage.setItem(
+      "bye.roadmap.pinyin",
+      JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8]),
+    );
+    renderClient("hsk-1");
+    expect(screen.getByText("Cổng đầu vào: Đã miễn (Pinyin xong) ✅")).toBeTruthy();
+  });
+
+  it("Task 9 — upcoming hsk-7-9: sub 'Đích đến: HSK 7–9 — …' + endLabel 'Theo dõi cập nhật'", () => {
+    renderClient("hsk-7-9");
+    expect(
+      screen.getByText(
+        "Đích đến: HSK 7–9 — đọc hiểu văn bản học thuật, báo chí chuyên sâu và giao tiếp thành thạo như người bản ngữ.",
+      ),
+    ).toBeTruthy();
+    expect(screen.getByText("Theo dõi cập nhật")).toBeTruthy();
+  });
+
   it("F6b — mọi trạm done: banner 'Hoàn thành toàn bộ trạm', không còn 'Tiếp tục học'", () => {
     const all = Object.fromEntries(
       getRoadmapLevel("hsk-2")!.stations.map((s) => [s.id, { pct: 100, stars: 3 }]),

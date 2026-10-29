@@ -45,6 +45,17 @@ describe("StationCard", () => {
     expect(screen.getByText(/Trạm 5/)).toBeTruthy();
   });
 
+  it("Task 9 — trạm generator (zh rỗng): không render span.zh (done + active variant)", () => {
+    const genDone: StationView = { ...mkView("1", "done"), station: { ...hsk2.stations[0], zh: "" } };
+    const { rerender } = render(
+      <StationCard view={genDone} side="left" onOpen={() => {}} onContinue={() => {}} />,
+    );
+    expect(document.querySelector("span.zh")).toBeNull();
+    const genActive: StationView = { ...mkView("1", "active"), station: { ...hsk2.stations[0], zh: "" } };
+    rerender(<StationCard view={genActive} side="left" onOpen={() => {}} onContinue={() => {}} />);
+    expect(document.querySelector("span.zh")).toBeNull();
+  });
+
   it("milestone: MILESTONE + diamond gem, locked treatment (.station locked), click mở drawer", async () => {
     const onOpen = vi.fn();
     render(<StationCard view={mkView("m", "locked")} side="right" onOpen={onOpen} onContinue={() => {}} />);

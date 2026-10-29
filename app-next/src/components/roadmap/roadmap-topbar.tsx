@@ -29,12 +29,15 @@ export function RoadmapTopbar({
           <ArrowLeft size={15} strokeWidth={2.4} aria-hidden="true" />
           Home
         </Link>
-        <LevelSwitcher
-          className="mx-auto max-[640px]:order-last max-[640px]:w-full"
-          levels={levels}
-          value={value}
-          onChange={onLevelChange}
-        />
+        {/* 8 level: dưới 640px wrapper cuộn ngang (w-max không co nút), desktop giữ nguyên */}
+        <div className="mx-auto min-w-0 max-[640px]:order-last max-[640px]:w-full max-[640px]:overflow-x-auto">
+          <LevelSwitcher
+            className="max-[640px]:w-max"
+            levels={levels}
+            value={value}
+            onChange={onLevelChange}
+          />
+        </div>
         <div className="flex items-center gap-2 text-[12.5px] font-bold text-text-secondary" aria-label={`Tiến độ toàn lộ trình ${pct}%`}>
           <span>{pct}%</span>
           <span className="h-1.5 w-[90px] overflow-hidden rounded-full bg-ring-track">
