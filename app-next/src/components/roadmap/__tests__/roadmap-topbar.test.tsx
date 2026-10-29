@@ -16,6 +16,10 @@ describe("RoadmapTopbar", () => {
     render(<RoadmapTopbar levels={levels} value="hsk-2" onLevelChange={() => {}} pct={30} />);
     expect(screen.getByText("30%")).toBeTruthy();
   });
+  it("aria-label toàn lộ trình (Task 5)", () => {
+    render(<RoadmapTopbar levels={levels} value="hsk-2" onLevelChange={() => {}} pct={30} />);
+    expect(screen.getByLabelText("Tiến độ toàn lộ trình 30%")).toBeTruthy();
+  });
   it("không có nút theme toggle (shell đã có — spec §6)", () => {
     render(<RoadmapTopbar levels={levels} value="hsk-2" onLevelChange={() => {}} pct={0} />);
     expect(screen.queryByRole("button", { name: /chế độ sáng tối/i })).toBeNull();

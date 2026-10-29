@@ -7,10 +7,11 @@ import RoadmapClient from "../roadmap-client";
 
 const nav = vi.hoisted(() => ({
   replace: vi.fn(),
+  push: vi.fn(),
   search: new URLSearchParams("level=hsk-2"),
 }));
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ replace: nav.replace }),
+  useRouter: () => ({ replace: nav.replace, push: nav.push }),
   useSearchParams: () => nav.search,
 }));
 
@@ -23,7 +24,10 @@ function renderClient(level: string) {
   );
 }
 
-beforeEach(() => localStorage.clear());
+beforeEach(() => {
+  localStorage.clear();
+  nav.push.mockClear();
+});
 
 describe("RoadmapClient", () => {
   it("HSK 2: topbar + banner Chặng 1 + path 7 trạm + drawer đóng", () => {
@@ -46,8 +50,8 @@ describe("RoadmapClient", () => {
 
   it("I-3 — upcoming level: header pct 0 (không 100%) dù summary.pct rỗng=100", () => {
     renderClient("hsk-3");
-    // topbar = div aria-label "Tiến độ N%"; banner dùng aria-label riêng "Tiến độ <title>"
-    expect(screen.getByLabelText("Tiến độ 0%")).toBeTruthy();
+    // topbar = div aria-label "Tiến độ toàn lộ trình N%"; banner dùng aria-label riêng "Tiến độ <title>"
+    expect(screen.getByLabelText("Tiến độ toàn lộ trình 0%")).toBeTruthy();
     expect(screen.queryByLabelText("Tiến độ 100%")).toBeNull();
   });
 
@@ -58,13 +62,29 @@ describe("RoadmapClient", () => {
     expect(screen.getByText(/Bài 2: Số đếm & Mua sắm/)).toBeTruthy();
   });
 
-  it("I-4 — banner-only hsk-1: pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
+  it("onContinue điều hướng thật: Trạm 1 active → /lesson/hsk2/lesson-1", async () => {
+    renderClient("hsk-2");
+    await userEvent.click(screen.getByRole("button", { name: "Vào bài học" }));
+    expect(nav.push).toHaveBeenCalledWith("/lesson/hsk2/lesson-1");
+  });
+
+  it("banner hsk-2: link 'Tiếp tục học →' trỏ bài active (Trạm 1)", () => {
+    renderClient("hsk-2");
+    expect(screen.getByRole("link", { name: "Tiếp tục học →" })).toHaveAttribute("href", "/lesson/hsk2/lesson-1");
+  });
+
+  it("topbar pct là % toàn lộ trình: pinyin 4/8 (50%) + hsk2 0% → 25%", () => {
+    localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
+    renderClient("hsk-1");
+    expect(screen.getByLabelText("Tiến độ toàn lộ trình 25%")).toBeTruthy();
+  });
+
+  it("I-4 — banner-only hsk-1: banner pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
     localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
     renderClient("hsk-1");
     expect(screen.getByRole("heading", { name: "Nền tảng: Pinyin & nét cơ bản" })).toBeTruthy();
-    // 4/8 buổi → 50% (header + banner cùng một con số thật)
+    // banner = 50% pinyin thật; topbar riêng đã assert 25% overall ở test trên
     expect(screen.getByRole("progressbar", { name: "Tiến độ Nền tảng: Pinyin & nét cơ bản" })).toHaveAttribute("aria-valuenow", "50");
-    expect(screen.getByLabelText("Tiến độ 50%")).toBeTruthy();
     expect(screen.getByText("Đã hoàn thành 4/8 buổi · ôn tập giữ streak")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Xem lộ trình Pinyin/ })).toHaveAttribute("href", "/roadmap/pinyin");
     expect(screen.queryByRole("button", { name: /— đang học/ })).toBeNull();
@@ -81,5 +101,15 @@ describe("RoadmapClient", () => {
     renderClient("hsk-2");
     await userEvent.click(screen.getByRole("button", { name: "HSK 3" }));
     expect(nav.replace).toHaveBeenCalledWith("/roadmap?level=hsk-3", { scroll: false });
+  });
+
+  it("F6b — mọi trạm done: banner 'Hoàn thành toàn bộ trạm', không còn 'Tiếp tục học'", () => {
+    const all = Object.fromEntries(
+      ["1", "2", "3", "4", "5", "m", "6"].map((id) => [id, { pct: 100, stars: 3 }]),
+    );
+    localStorage.setItem("bye.roadmap.stations.v1", JSON.stringify({ "hsk-2": all }));
+    renderClient("hsk-2");
+    expect(screen.getByText("🎉 Hoàn thành toàn bộ trạm")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Tiếp tục học →" })).toBeNull();
   });
 });

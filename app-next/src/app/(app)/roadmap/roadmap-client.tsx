@@ -10,12 +10,10 @@ import { MilestoneBanner } from "@/components/roadmap/milestone-banner";
 import { SerpentinePath } from "@/components/roadmap/serpentine-path";
 import { StationDrawer } from "@/components/roadmap/station-drawer";
 import { getRoadmapLevel, type LevelId, type RoadmapLevel } from "@/content/roadmap-stations";
-import { bannerSummary, useRoadmapProgress } from "@/lib/roadmap-progress";
+import { bannerSummary, overallRoadmapPct, useRoadmapProgress, PINYIN_SESSIONS } from "@/lib/roadmap-progress";
 import { progressStore } from "@/lib/store/progress-store";
+import { ReviewCard } from "@/components/roadmap/review-card";
 import { useToastSafe } from "@/components/shell/toast-provider";
-
-/* Lộ trình Pinyin có 8 buổi (/roadmap/pinyin) — nền tảng cho level hsk-1. */
-const PINYIN_SESSIONS = 8;
 
 export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const search = useSearchParams();
@@ -27,23 +25,41 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const { views, mounted } = useRoadmapProgress(level);
   // HSK 1 không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
   const [pinyinDone, setPinyinDone] = useState(0);
+  const [overall, setOverall] = useState(0);
   useEffect(() => {
     if (!mounted) return;
-    try {
-      setPinyinDone(progressStore.getRoadmapDone().length);
-    } catch {
-      setPinyinDone(0);
-    }
+    const sync = () => {
+      try {
+        setPinyinDone(progressStore.getRoadmapDone().length);
+      } catch {
+        setPinyinDone(0);
+      }
+      try {
+        setOverall(overallRoadmapPct(progressStore));
+      } catch {
+        setOverall(0);
+      }
+    };
+    sync();
+    window.addEventListener("bye:progress", sync);
+    return () => window.removeEventListener("bye:progress", sync);
   }, [mounted]);
   const pinyinPct = Math.round((pinyinDone / PINYIN_SESSIONS) * 100);
 
   const summary = bannerSummary(level, views);
-  // Header pct 0 cho upcoming + hsk-1 (summary.pct = 100 khi level không có lesson — I-3)
-  const headerPct = !mounted || level.status === "upcoming" ? 0 : level.stations.length === 0 ? pinyinPct : summary.pct;
+  const headerPct = mounted ? overall : 0;
   const doneCount = views.filter((v) => v.station.kind === "lesson" && v.state === "done").length;
   const lessonTotal = views.filter((v) => v.station.kind === "lesson").length;
   const activeView = views.find((v) => v.state === "active" && v.station.kind === "lesson") ?? null;
   const drawerView = views.find((v) => v.station.id === drawerId) ?? null;
+  // Tiếp tục học: bài active có lesson → /lesson; không (milestone) → /course/hsk2; hết → không link
+  const continueLesson = activeView?.station.lesson;
+  const continueHref = activeView
+    ? continueLesson
+      ? `/lesson/${continueLesson.book}/${continueLesson.page}`
+      : "/course/hsk2"
+    : null;
+  const allDone = views.length > 0 && views.every((v) => v.state === "done");
 
   const closeDrawer = useCallback(() => setDrawerId(null), []);
 
@@ -61,8 +77,9 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   };
 
   const onContinue = (id: string) => {
-    const no = views.find((v) => v.station.id === id)?.station.no ?? "bài học";
-    toast(`Vào ${no} — chúc học tốt!`);
+    const v = views.find((x) => x.station.id === id);
+    const lesson = v?.station.lesson;
+    router.push(lesson ? `/lesson/${lesson.book}/${lesson.page}` : "/course/hsk2");
   };
 
   return (
@@ -105,23 +122,35 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             pct={summary.pct}
             ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={
-              summary.currentTitle ? (
+              allDone ? (
+                <>🎉 Hoàn thành toàn bộ trạm</>
+              ) : summary.currentTitle ? (
                 <>Trạm hiện tại: <b>{summary.currentTitle}</b></>
               ) : (
                 "Chưa bắt đầu"
               )
             }
             endLabel={
-              summary.remainingToMilestone != null ? (
-                <>Còn <b>{summary.remainingToMilestone} bài</b> tới mốc kiểm tra</>
-              ) : null
+              <span className="flex flex-col items-end gap-0.5">
+                {continueHref && (
+                  <Link href={continueHref} className="font-bold text-action-primary">
+                    Tiếp tục học →
+                  </Link>
+                )}
+                {activeView && summary.remainingToMilestone != null && (
+                  <span>
+                    Còn <b>{summary.remainingToMilestone} bài</b> tới mốc
+                  </span>
+                )}
+              </span>
             }
           />
         )}
+        <ReviewCard />
         {level.status !== "upcoming" && level.stations.length > 0 && (
           <SerpentinePath views={views} onOpen={openDrawer} onContinue={onContinue} />
         )}
-        <StationDrawer view={drawerView} open={drawerId !== null} onClose={closeDrawer} />
+        <StationDrawer view={drawerView} level={level} open={drawerId !== null} onClose={closeDrawer} />
       </main>
     </>
   );

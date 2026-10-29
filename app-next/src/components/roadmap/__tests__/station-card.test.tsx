@@ -33,10 +33,16 @@ describe("StationCard", () => {
     expect(onOpen).not.toHaveBeenCalled();
   });
 
-  it("locked: meta khóa, không sao", () => {
-    render(<StationCard view={mkView("5", "locked")} side="left" onOpen={() => {}} onContinue={() => {}} />);
-    expect(screen.getByText(/Khóa · mở sau khi xong Bài 4/)).toBeTruthy();
+  it("locked: muted treatment, không sao, click mở drawer", () => {
+    const onOpen = vi.fn();
+    render(<StationCard view={mkView("5", "locked")} side="left" onOpen={onOpen} onContinue={() => {}} />);
+    // meta "Khóa · mở sau khi xong…" chưa được implement — locked hiện chỉ là treatment mờ
+    const btn = screen.getByRole("button");
+    expect(btn.className).toContain("cursor-not-allowed");
+    expect(btn.className).toContain("opacity-85");
+    expect(btn.className).toContain("bg-surface-muted");
     expect(screen.queryByLabelText(/sao/)).toBeNull();
+    expect(screen.getByText(/Trạm 5/)).toBeTruthy();
   });
 
   it("milestone: MILESTONE + diamond gem, locked treatment (.station locked), click mở drawer", async () => {
