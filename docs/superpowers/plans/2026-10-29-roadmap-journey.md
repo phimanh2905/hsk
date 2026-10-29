@@ -511,7 +511,7 @@ it("câu nghe: có nút aria-label 'Nghe lại'; TTS unavailable → hiện câu
 - Consumes: `gateStatus`, `overallRoadmapPct` (T5), `progressStore`.
 - Produces: UI hành vi —
   1. Banner chặng `pinyin` (US1): khi `overall === 0` → thêm dòng "🚩 Bắt đầu ở đây" (badge `data-testid="journey-start"`).
-  2. Banner `hsk-1`: dòng trạng thái cổng — locked: "Cổng đầu vào: Kiểm tra nghe pinyin (drawer trạm 1)"; open: "Cổng đầu vào: Đã qua ✅"; exempt: "Cổng đầu vào: Đã miễn (Pinyin xong) ✅".
+  2. Banner `hsk-1`: dòng trạng thái cổng — locked: "Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)"; open: "Cổng đầu vào: Đã qua ✅"; exempt: "Cổng đầu vào: Đã miễn (Pinyin xong) ✅".
   3. `hsk-7-9` upcoming (US8): banner với sub "Đích đến: HSK 7–9 — đọc hiểu văn bản học thuật, báo chí chuyên sâu và giao tiếp thành thạo như người bản ngữ." + endLabel "Theo dõi cập nhật".
   4. Topbar: switcher 8 level, `overflow-x-auto` dưới 640px.
 
