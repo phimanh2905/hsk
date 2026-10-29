@@ -7,6 +7,10 @@ import { getRoadmapLevel } from "@/content/roadmap-stations";
 const toast = vi.hoisted(() => vi.fn());
 vi.mock("@/components/shell/toast-provider", () => ({ useToastSafe: () => toast }));
 
+// Task 8: StationQuiz render câu nghe (useTts) — mock để test không phụ thuộc engine thật
+const tts = vi.hoisted(() => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }));
+vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => tts }));
+
 const hsk2 = getRoadmapLevel("hsk-2")!;
 const s1 = hsk2.stations.find((s) => s.id === "1")!;
 
