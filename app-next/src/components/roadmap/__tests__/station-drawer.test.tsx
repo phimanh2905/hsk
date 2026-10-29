@@ -189,4 +189,31 @@ describe("StationDrawer", () => {
       { timeout: 3000 },
     );
   });
+
+  it("M-1 — TTS lỗi: click 'Nghe lại' revert câu nghe rồi fallback câu đọc lần nữa (timer re-arm)", async () => {
+    stubVocabFetch();
+    const user = userEvent.setup();
+    render(<StationDrawer view={mkView(hsk2, "b1", "active")} level={hsk2} open onClose={() => {}} />);
+    await user.click(screen.getByTestId("drawer-tab-quiz"));
+    await waitFor(() => expect(screen.getByTestId("quiz-counter")).toBeTruthy());
+    for (let guard = 0; guard < 40; guard++) {
+      if (screen.queryByRole("button", { name: "Nghe lại" })) break;
+      await user.click(screen.getAllByRole("button", { name: /^quiz-opt-/ })[0]!);
+      await user.click(screen.getByRole("button", { name: "Câu tiếp" }));
+    }
+    // lần fallback đầu (speaking mock luôn false)
+    await waitFor(
+      () => expect(screen.getByTestId("quiz-prompt").textContent).toContain("Từ nào đọc là"),
+      { timeout: 3000 },
+    );
+    // click "Nghe lại" → optimistic quay lại câu nghe, speak() được gọi lại
+    await user.click(screen.getByRole("button", { name: "Nghe lại" }));
+    expect(screen.getByTestId("quiz-prompt").textContent).toContain("Nghe từ rồi chọn phiên âm");
+    expect(tts.speak).toHaveBeenCalled();
+    // TTS vẫn lỗi → sau 1.5s fallback câu đọc lần nữa (timer được re-arm, không kẹt câu nghe)
+    await waitFor(
+      () => expect(screen.getByTestId("quiz-prompt").textContent).toContain("Từ nào đọc là"),
+      { timeout: 3000 },
+    );
+  });
 });

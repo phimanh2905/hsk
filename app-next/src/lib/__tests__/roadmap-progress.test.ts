@@ -324,6 +324,23 @@ describe("deriveStationStates — lessonDone (Task 5)", () => {
     expect(views.find((v) => v.station.id === "1")!.state).toBe("active");
   });
 
+  it("I-1 — milestone generator có lessons: đủ pageDone mọi bài vẫn KHÔNG done (chỉ quiz mới done)", () => {
+    const hsk1 = getRoadmapLevel("hsk-1")!;
+    const m = hsk1.stations.find((s) => s.kind === "milestone")!;
+    expect(m.lessons!.length).toBeGreaterThan(0);
+    // học đủ MỌI bài của level (markPageDone) mà không có station record nào
+    const allPages = hsk1.stations
+      .flatMap((s) => s.lessons ?? (s.lesson ? [s.lesson] : []))
+      .map((l) => l.page);
+    const views = deriveStationStates(hsk1, {}, doneFor(allPages));
+    const mv = views.find((v) => v.station.id === m.id)!;
+    expect(mv.pct).toBe(0); // không merge lessonDone vào milestone
+    expect(mv.state).not.toBe("done"); // các lesson trước done → milestone active, chờ quiz
+    // làm quiz đề mix ≥ PASS_PCT → done
+    const viewsRec = deriveStationStates(hsk1, mk([[m.id, PASS_PCT]]), doneFor(allPages));
+    expect(viewsRec.find((v) => v.station.id === m.id)!.state).toBe("done");
+  });
+
   it("done theo pct đã merge: generator trạm nhiều bài, 4/5 bài done = 80 → done", () => {
     const hsk1 = getRoadmapLevel("hsk-1")!;
     const g1 = hsk1.stations[0]; // trạm generator, lessons 5 bài

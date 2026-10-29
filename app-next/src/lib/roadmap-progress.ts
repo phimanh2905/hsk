@@ -35,7 +35,10 @@ export function deriveStationStates(
     // Task 5: pct trạm = max(record, % bài done theo progressStore) — chỉ khi
     // trạm có lessons; trạm curated không lessons (milestone "m") giữ hành vi cũ.
     let pct = rec?.pct ?? 0;
-    if (lessonDone) {
+    // I-1: milestone (kể cả generator gắn lessons để QuizBody fetch) KHÔNG
+    // merge lessonDone — chỉ done theo rec.pct (quiz đề mix, spec §3.3).
+    // Merge đủ bài vào milestone sẽ tự "done" mà không cần làm quiz.
+    if (lessonDone && station.kind !== "milestone") {
       const stationLessons = station.lessons ?? (station.lesson ? [station.lesson] : []);
       if (stationLessons.length > 0) {
         const done = stationLessons.filter((l) => lessonDone(l.book, l.page)).length;

@@ -79,21 +79,38 @@ export function StationQuiz({
      câu đọc thay vì câu nghe. Effect phát KHÔNG phụ thuộc speaking. */
   const [ttsReady, setTtsReady] = useState(true);
   const spokenRef = useRef(false);
+  /* M-1: speaking mirror qua ref — timer "Nghe lại" cần biết TTS có đang phát
+     thật (speaking true lâu hơn 1.5s) để không fallback nhầm. */
+  const speakingRef = useRef(false);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearRetryTimer = () => {
+    if (retryTimerRef.current != null) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+  };
+  /* Re-arm fallback sau 1 lần phát (effect hoặc click "Nghe lại"): sau 1.5s nếu
+     chưa từng phát được (speaking/spoken chưa từng true) → ttsReady=false. */
+  const armFallback = () => {
+    clearRetryTimer();
+    retryTimerRef.current = setTimeout(() => {
+      if (!spokenRef.current && !speakingRef.current) setTtsReady(false);
+    }, TTS_FALLBACK_MS);
+  };
   useEffect(() => {
     const q = questions[qIndex];
     if (!q?.listen) return;
     spokenRef.current = false;
     speak(q.listen.audioText);
-    const t = setTimeout(() => {
-      if (!spokenRef.current) setTtsReady(false);
-    }, TTS_FALLBACK_MS);
+    armFallback();
     return () => {
-      clearTimeout(t);
+      clearRetryTimer();
       cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run per câu; speak/cancel ổn định qua useCallback
   }, [qIndex, questions]);
   useEffect(() => {
+    speakingRef.current = speaking;
     if (speaking) spokenRef.current = true;
   }, [speaking]);
 
@@ -191,9 +208,13 @@ export function StationQuiz({
           type="button"
           aria-label="Nghe lại"
           onClick={() => {
-            spokenRef.current = true;
+            // M-1: attempt phát lại tính như attempt mới — reset spokenRef và
+            // re-arm fallback 1.5s; nếu TTS vẫn lỗi → hiện câu đọc thay vì
+            // kẹt ở câu nghe không âm thanh.
+            spokenRef.current = false;
             setTtsReady(true);
             speak(q.listen!.audioText);
+            armFallback();
           }}
           className="mt-2 flex min-h-9 items-center gap-1.5 rounded-full border border-border-default bg-surface-muted px-3 text-[12.5px] font-bold hover:border-action-primary hover:text-action-primary"
         >
