@@ -19,6 +19,7 @@
    Bỏ qua token "." và ký tự không CJK. Ô vẫn null → null trong JSON. */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseTone } from "../../src/lib/pinyin/tone-mark";
 import {
   pinyinInitials,
@@ -217,4 +218,8 @@ function main(): void {
   console.log(`Written: ${outPath}`);
 }
 
-main();
+/* Chỉ chạy main khi file này là entry point — import (test) không được
+   re-run generator và ghi đè render-input.json. */
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}
