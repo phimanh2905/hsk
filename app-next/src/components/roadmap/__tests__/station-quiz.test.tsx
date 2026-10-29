@@ -7,6 +7,10 @@ import { getRoadmapLevel } from "@/content/roadmap-stations";
 const toast = vi.hoisted(() => vi.fn());
 vi.mock("@/components/shell/toast-provider", () => ({ useToastSafe: () => toast }));
 
+// Task 8: StationQuiz render câu nghe (useTts) — mock để test không phụ thuộc engine thật
+const tts = vi.hoisted(() => ({ speak: vi.fn(), cancel: vi.fn(), speaking: false }));
+vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => tts }));
+
 const hsk2 = getRoadmapLevel("hsk-2")!;
 const s1 = hsk2.stations.find((s) => s.id === "1")!;
 
@@ -52,11 +56,11 @@ describe("StationQuiz", () => {
     expect(screen.getByTestId("quiz-prompt")).toBeTruthy();
   });
 
-  it("Milestone dùng sampler 10 câu", () => {
+  it("Milestone dùng sampler 12 câu", () => {
     const m = hsk2.stations.find((s) => s.id === "m")!;
     const { rerender } = render(<StationQuiz station={m} level={hsk2} onClose={() => {}} />);
     // đếm qua UI không tiện → check qua hành vi: chip tổng câu
-    expect(screen.getByTestId("quiz-counter")).toHaveTextContent("1/10");
+    expect(screen.getByTestId("quiz-counter")).toHaveTextContent("1/12");
     rerender(<StationQuiz station={s1} level={hsk2} onClose={() => {}} />);
     expect(screen.getByTestId("quiz-counter")).toHaveTextContent(`1/${s1.vocab.length + s1.gram.length}`);
   });

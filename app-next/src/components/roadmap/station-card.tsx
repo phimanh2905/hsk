@@ -63,7 +63,7 @@ export function StationCard({
           {station.no.toUpperCase()} ĐANG HỌC · {pct}%
         </span>
         <h3 className="text-sm leading-snug">
-          {station.title} <span className="zh font-bold text-text-secondary">{station.zh}</span>
+          {station.title} {station.zh && <span className="zh font-bold text-text-secondary">{station.zh}</span>}
         </h3>
         <p className="mt-1 text-[12.5px] text-text-secondary">
           Tiến độ: <b className="text-text-primary">{pct}%</b>
@@ -87,7 +87,7 @@ export function StationCard({
   return (
     <button type="button" onClick={() => onOpen(station.id)} className={base}>
       <h3 className="text-sm leading-snug">
-        {station.no}: {station.title} <span className="zh font-bold text-text-secondary">{station.zh}</span>
+        {station.no}: {station.title} {station.zh && <span className="zh font-bold text-text-secondary">{station.zh}</span>}
       </h3>
       <p className="mt-1 text-[12.5px] text-text-secondary">{station.meta}</p>
       {state === "done" && (

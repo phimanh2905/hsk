@@ -1,9 +1,13 @@
 "use client";
 
-/* Station quiz trong drawer (spec 2026-10-28 §5.2): MCQ từng câu, chấm ngay,
-   kết quả ghi progress qua submitStationResult (best-of, ≥80% pass). */
-import { useMemo, useState } from "react";
-import { Check, X } from "@/components/ui/icon";
+/* Station quiz trong drawer (spec 2026-10-28 §5.2 + Roadmap Journey v2 Task 8):
+   MCQ từng câu, chấm ngay, kết quả ghi progress qua submitStationResult
+   (best-of, ≥80% pass). Task 8 mở rộng: nhận pool ngoài (trạm generator fetch
+   qua useStationVocab), listenEvery (câu nghe mỗi N từ) và render câu nghe —
+   nút "Nghe lại" + fallback câu đọc khi TTS không phát được sau 1.5s
+   (pattern của EntryGate). */
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, Volume2, X } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
 import {
   buildStationQuestions,
@@ -11,28 +15,53 @@ import {
   sampleMilestoneQuestions,
   submitStationResult,
   type QuizQuestion,
+  type StationPool,
 } from "@/lib/station-quiz";
 import { useToastSafe } from "@/components/shell/toast-provider";
+import { useTts } from "@/lib/tts/use-tts";
 import { PASS_PCT } from "@/lib/roadmap-progress";
 import type { Station, RoadmapLevel } from "@/content/roadmap-stations";
+
+const TTS_FALLBACK_MS = 1500;
 
 export function StationQuiz({
   station,
   level,
   onClose,
+  pool,
+  listenEvery,
+  rng,
 }: {
   station: Station;
   level: RoadmapLevel;
   onClose: () => void;
+  /** Pool ngoài (Task 8): trạm generator dùng pool fetch; bỏ trống → pool level. */
+  pool?: StationPool;
+  /** Câu nghe mỗi N từ (chỉ trạm generator; trạm curated giữ hành vi cũ). */
+  listenEvery?: number;
+  /** RNG tiêm vào (test); mặc định Math.random. */
+  rng?: () => number;
 }) {
   const toast = useToastSafe();
+  const { speak, cancel, speaking } = useTts();
   const [seed, setSeed] = useState(0);
+  const activePool = pool ?? levelPool(level);
+  /* Trạm generator (vocab nhúng rỗng): nguồn câu hỏi là pool fetch
+     (pseudo-station), pool vẫn lo distractor. Trạm curated giữ nguyên. */
+  const questionSource: Station =
+    station.vocab.length === 0 && activePool.vocab.length > 0
+      ? { ...station, vocab: activePool.vocab, gram: activePool.gram }
+      : station;
   const questions = useMemo<QuizQuestion[]>(
     () =>
       station.kind === "milestone"
-        ? sampleMilestoneQuestions(level)
-        : buildStationQuestions(station, levelPool(level)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- seed đổi khi "Làm lại"
+        ? sampleMilestoneQuestions(activePool, rng)
+        : buildStationQuestions(questionSource, activePool, rng, {
+            listenEvery,
+            // Spec Journey §3.3: trạm generator fetch cả nhóm (~100 từ) → đúng 8 câu
+            maxQuestions: station.vocab.length === 0 ? 8 : 0,
+          }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- activePool/rng/questionSource ổn định theo station; seed đổi khi "Làm lại"
     [station.id, level.id, seed],
   );
   const [qIndex, setQIndex] = useState(0);
@@ -44,6 +73,46 @@ export function StationQuiz({
     passed: boolean;
     improved: boolean;
   } | null>(null);
+
+  /* TTS fallback (pattern EntryGate): vào câu nghe → phát ngay; 1.5s sau nếu
+     chưa từng phát được (speaking chưa từng true) → ttsReady=false, render
+     câu đọc thay vì câu nghe. Effect phát KHÔNG phụ thuộc speaking. */
+  const [ttsReady, setTtsReady] = useState(true);
+  const spokenRef = useRef(false);
+  /* M-1: speaking mirror qua ref — timer "Nghe lại" cần biết TTS có đang phát
+     thật (speaking true lâu hơn 1.5s) để không fallback nhầm. */
+  const speakingRef = useRef(false);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearRetryTimer = () => {
+    if (retryTimerRef.current != null) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+  };
+  /* Re-arm fallback sau 1 lần phát (effect hoặc click "Nghe lại"): sau 1.5s nếu
+     chưa từng phát được (speaking/spoken chưa từng true) → ttsReady=false. */
+  const armFallback = () => {
+    clearRetryTimer();
+    retryTimerRef.current = setTimeout(() => {
+      if (!spokenRef.current && !speakingRef.current) setTtsReady(false);
+    }, TTS_FALLBACK_MS);
+  };
+  useEffect(() => {
+    const q = questions[qIndex];
+    if (!q?.listen) return;
+    spokenRef.current = false;
+    speak(q.listen.audioText);
+    armFallback();
+    return () => {
+      clearRetryTimer();
+      cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run per câu; speak/cancel ổn định qua useCallback
+  }, [qIndex, questions]);
+  useEffect(() => {
+    speakingRef.current = speaking;
+    if (speaking) spokenRef.current = true;
+  }, [speaking]);
 
   const q = questions[qIndex];
   const total = questions.length;
@@ -58,6 +127,7 @@ export function StationQuiz({
     if (qIndex < total - 1) {
       setQIndex((i) => i + 1);
       setPicked(null);
+      setTtsReady(true); // câu mới optimistic — fallback chỉ do timer 1.5s
       return;
     }
     const finalCorrect = correct;
@@ -76,6 +146,7 @@ export function StationQuiz({
     setPicked(null);
     setCorrect(0);
     setFinished(null);
+    setTtsReady(true);
   };
 
   if (finished) {
@@ -118,17 +189,42 @@ export function StationQuiz({
     );
   }
 
+  /* Câu nghe: TTS fallback → swap sang câu đọc (prompt/options/readAnswerIndex). */
+  const useRead = q.listen != null && !ttsReady;
+  const prompt = useRead ? q.listen!.readPrompt : q.prompt;
+  const options = useRead ? q.listen!.readOptions : q.options;
+  const answerIndex = useRead ? q.listen!.readAnswerIndex : q.answerIndex;
+
   return (
     <div>
       <p data-testid="quiz-counter" className="text-xs font-bold text-text-secondary">
         Câu {qIndex + 1}/{total}
       </p>
       <p data-testid="quiz-prompt" className="mt-2 text-[15px] leading-snug">
-        {q.prompt}
+        {prompt}
       </p>
+      {q.listen && (
+        <button
+          type="button"
+          aria-label="Nghe lại"
+          onClick={() => {
+            // M-1: attempt phát lại tính như attempt mới — reset spokenRef và
+            // re-arm fallback 1.5s; nếu TTS vẫn lỗi → hiện câu đọc thay vì
+            // kẹt ở câu nghe không âm thanh.
+            spokenRef.current = false;
+            setTtsReady(true);
+            speak(q.listen!.audioText);
+            armFallback();
+          }}
+          className="mt-2 flex min-h-9 items-center gap-1.5 rounded-full border border-border-default bg-surface-muted px-3 text-[12.5px] font-bold hover:border-action-primary hover:text-action-primary"
+        >
+          <Volume2 size={14} strokeWidth={2} aria-hidden="true" />
+          Nghe lại
+        </button>
+      )}
       <div className="mt-3 grid gap-2">
-        {q.options.map((opt, i) => {
-          const isAnswer = i === q.answerIndex;
+        {options.map((opt, i) => {
+          const isAnswer = i === answerIndex;
           const isPicked = picked === i;
           return (
             <button
@@ -154,7 +250,7 @@ export function StationQuiz({
       </div>
       {picked !== null && (
         <p data-testid="quiz-feedback" className="mt-2 text-sm font-bold">
-          {picked === q.answerIndex ? "✅ Đúng" : "❌ Sai"}
+          {picked === answerIndex ? "✅ Đúng" : "❌ Sai"}
         </p>
       )}
       <button
