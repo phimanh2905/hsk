@@ -100,10 +100,15 @@ export function gateStatus(levelId: string, store: GateStore, pinyinDoneCount: n
 export function overallRoadmapPct(store: {
   getRoadmapDone(): number[];
   getStationProgress(id: string): Record<string, StationProgress>;
+  /** Optional (Task 5 fix): % bài học đã học (markPageDone, chưa có station record)
+      phải tính vào % toàn lộ trình — đồng bộ với banner level (spec §3.5). */
+  getPageDone?(book: string, page: string): boolean;
 }): number {
   // Task 5: trung bình có trọng số trên mọi level available — pinyin weight 8,
   // level khác weight = số trạm lesson; pct level = bannerSummary (bỏ hard-code hsk-2).
   const pinyinDone = store.getRoadmapDone().length;
+  const doneCheck =
+    store.getPageDone != null ? (book: string, page: string) => store.getPageDone!(book, page) : undefined;
   let weightSum = 0;
   let weightedPctSum = 0;
   for (const level of roadmapLevels) {
@@ -116,7 +121,7 @@ export function overallRoadmapPct(store: {
     } else {
       weight = level.stations.filter((s) => s.kind === "lesson").length;
       if (weight === 0) continue;
-      const views = deriveStationStates(level, store.getStationProgress(level.id));
+      const views = deriveStationStates(level, store.getStationProgress(level.id), doneCheck);
       pct = bannerSummary(level, views).pct;
     }
     weightSum += weight;

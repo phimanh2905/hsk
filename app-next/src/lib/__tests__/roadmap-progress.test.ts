@@ -235,6 +235,18 @@ describe("overallRoadmapPct", () => {
     };
     expect(overallRoadmapPct(store)).toBe(weightedOverall(100, {}));
   });
+
+  it("fix round 1 — getPageDone (markPageDone, chưa có station record) được tính vào % tổng", () => {
+    // hsk-2: chưa có station record nào, nhưng bài lesson-1 đã học qua markPageDone
+    const store = {
+      getRoadmapDone: () => [],
+      getStationProgress: () => ({}),
+      getPageDone: (book: string, page: string) => book === "hsk2" && page === "lesson-1",
+    };
+    const hsk2w = lessonWeight("hsk-2");
+    const hsk2Pct = Math.round(100 / hsk2w); // trạm 1 (1 bài) done qua lessonDone; còn lại 0
+    expect(overallRoadmapPct(store)).toBe(weightedOverall(0, { "hsk-2": hsk2Pct }));
+  });
 });
 
 describe("gateStatus", () => {
