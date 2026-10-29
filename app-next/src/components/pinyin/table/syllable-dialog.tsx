@@ -1,22 +1,39 @@
 "use client";
 /* Dialog chi tiết 1 âm tiết: 5 nút thanh (tone 1-5) + ví dụ từ pinyinExamples.
-   TTS qua useTts (Kokoro) — rate 0.95, chậm 0.65. Pure presentational.
+   Audio: mp3 tĩnh từ CDN /audio/pinyin/{base}-{tone}.mp3 (useStaticAudio, singleton,
+   1 clip tại 1 thời điểm); file lỗi/không có (vd tone 5 không render) thì fallback
+   useTts (Kokoro) — giữ hành vi cũ. "Nghe chậm" dùng cùng file rate 0.65.
    Export riêng để test độc lập với SyllableTable. */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Volume2 } from "@/components/ui/icon";
 import { toneForms, type Tone } from "@/lib/pinyin/tone-mark";
 import { examplesFor, type SyllableCell } from "@/lib/pinyin/syllable-table-data";
 import { useTts } from "@/lib/tts/use-tts";
+import { useStaticAudio } from "@/lib/tts/use-static-audio";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 
 const TONE_LABELS = ["Thanh 1", "Thanh 2", "Thanh 3", "Thanh 4", "Thanh nhẹ"];
+
+const staticUrl = (base: string, tone: Tone) => `/audio/pinyin/${base}-${tone}.mp3`;
 
 export function SyllableDialog({ cell, onClose }: { cell: SyllableCell; onClose: () => void }) {
   const { speak } = useTts();
   const [tone, setTone] = useState<Tone>(1);
   const forms = toneForms(cell.base);
   const examples = examplesFor(cell.base);
+  const { play: playStatic, stop: stopStatic } = useStaticAudio({
+    onError: (url, rate) => {
+      /* file không tồn tại (vd tone 5 không được render) → fallback TTS đúng
+         thanh. Rate play gốc (1) là tốc độ chuẩn của mp3 — TTS fallback dùng
+         0.95; "Nghe chậm" (0.65) giữ nguyên 0.65. */
+      const m = /-(\d)\.mp3$/.exec(url);
+      const failedTone = (m ? Number(m[1]) : tone) as Tone;
+      speak(forms[failedTone - 1], { rate: rate === 0.65 ? 0.65 : 0.95 });
+    },
+  });
+
+  useEffect(() => stopStatic, [stopStatic]);
 
   return (
     <Dialog open onClose={onClose} labelledBy="syllable-dialog-title" role="dialog">
@@ -36,7 +53,7 @@ export function SyllableDialog({ cell, onClose }: { cell: SyllableCell; onClose:
             type="button"
             onClick={() => {
               setTone((i + 1) as Tone);
-              speak(form, { rate: 0.95 });
+              playStatic(staticUrl(cell.base, (i + 1) as Tone));
             }}
             aria-pressed={tone === i + 1}
             className={`flex min-h-[44px] cursor-pointer flex-col items-center justify-center rounded-card border px-1 py-1.5 text-sm font-bold transition-colors ${
@@ -52,7 +69,11 @@ export function SyllableDialog({ cell, onClose }: { cell: SyllableCell; onClose:
       </div>
 
       <div className="mt-3 flex items-center justify-end">
-        <Button variant="ghost" size="sm" onClick={() => speak(forms[tone - 1], { rate: 0.65 })}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => playStatic(staticUrl(cell.base, tone), { rate: 0.65 })}
+        >
           <Volume2 className="size-4" aria-hidden="true" /> Nghe chậm
         </Button>
       </div>
