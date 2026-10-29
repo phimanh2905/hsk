@@ -1,13 +1,49 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SyllableTable } from "../syllable-table";
 import { SyllableDialog } from "../syllable-dialog";
+import { _resetStaticAudioForTest } from "@/lib/tts/use-static-audio";
 
 const speak = vi.fn();
 vi.mock("@/lib/tts/use-tts", () => ({
   useTts: () => ({ speak, cancel: vi.fn(), speaking: false }),
 }));
+
+/* Fake Audio cho useStaticAudio — stub global Audio; singleton của hook là
+   module-level nên reset qua _resetStaticAudioForTest trước mỗi test */
+class FakeAudio {
+  static instances: FakeAudio[] = [];
+  src = "";
+  playbackRate = 1;
+  preservesPitch = true;
+  play = vi.fn(() => Promise.resolve());
+  pause = vi.fn();
+  private listeners = new Map<string, (() => void)[]>();
+  constructor() {
+    FakeAudio.instances.push(this);
+  }
+  addEventListener(type: string, fn: () => void) {
+    this.listeners.set(type, [...(this.listeners.get(type) ?? []), fn]);
+  }
+  removeEventListener(type: string, fn: () => void) {
+    this.listeners.set(type, (this.listeners.get(type) ?? []).filter((f) => f !== fn));
+  }
+  dispatch(type: string) {
+    for (const fn of this.listeners.get(type) ?? []) fn();
+  }
+}
+
+const lastAudio = () => FakeAudio.instances[FakeAudio.instances.length - 1];
+
+beforeEach(() => {
+  FakeAudio.instances = [];
+  _resetStaticAudioForTest();
+  vi.stubGlobal("Audio", FakeAudio);
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("SyllableDialog", () => {
   beforeEach(() => speak.mockClear());
@@ -24,10 +60,31 @@ describe("SyllableDialog", () => {
       toneButtons.map((b) => b.textContent?.replace(/Thanh (nhẹ|\d)/, "").trim()),
     ).toEqual(["bā", "bá", "bǎ", "bà", "ba"]);
   });
-  it("click nút thanh gọi speak với pinyin có dấu", async () => {
+  it("click nút thanh phát mp3 tĩnh đúng file, không gọi TTS", async () => {
     render(<SyllableDialog cell={cell} onClose={() => {}} />);
     await userEvent.click(within(screen.getByRole("dialog")).getByText("bǎ"));
+    expect(lastAudio().src).toBe("/audio/pinyin/ba-3.mp3");
+    expect(lastAudio().play).toHaveBeenCalled();
+    expect(speak).not.toHaveBeenCalled();
+  });
+  it("file mp3 lỗi → fallback speak đúng thanh + rate 0.95", async () => {
+    render(<SyllableDialog cell={cell} onClose={() => {}} />);
+    await userEvent.click(within(screen.getByRole("dialog")).getByText("bǎ"));
+    await act(async () => {
+      lastAudio().dispatch("error");
+    });
     expect(speak).toHaveBeenCalledWith("bǎ", expect.objectContaining({ rate: 0.95 }));
+  });
+  it('"Nghe chậm" phát cùng file tone hiện tại rate 0.65, lỗi → fallback rate 0.65', async () => {
+    render(<SyllableDialog cell={cell} onClose={() => {}} />);
+    await userEvent.click(within(screen.getByRole("dialog")).getByText("bǎ"));
+    await userEvent.click(within(screen.getByRole("dialog")).getByText("Nghe chậm"));
+    expect(lastAudio().src).toBe("/audio/pinyin/ba-3.mp3");
+    expect(lastAudio().playbackRate).toBe(0.65);
+    await act(async () => {
+      lastAudio().dispatch("error");
+    });
+    expect(speak).toHaveBeenCalledWith("bǎ", expect.objectContaining({ rate: 0.65 }));
   });
   it("hiện ví dụ từ pinyinExamples (chữ Hán + nghĩa)", () => {
     render(<SyllableDialog cell={cell} onClose={() => {}} />);

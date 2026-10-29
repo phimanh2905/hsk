@@ -1,0 +1,4865 @@
+{
+  "generatedAt": "2026-10-29T17:10:51.191Z",
+  "cells": [
+    {
+      "initial": "Ø",
+      "final": "a",
+      "base": "a",
+      "hanzi": [
+        "阿",
+        "啊",
+        "啊",
+        "啊",
+        "啊"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "o",
+      "base": "o",
+      "hanzi": [
+        "喔",
+        "哦",
+        "嚄",
+        "哦",
+        "哦"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "e",
+      "base": "e",
+      "hanzi": [
+        "妸",
+        "䖸",
+        "恶",
+        "饿",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "er",
+      "base": "er",
+      "hanzi": [
+        null,
+        "儿",
+        "耳",
+        "二",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ai",
+      "base": "ai",
+      "hanzi": [
+        "哀",
+        "挨",
+        "矮",
+        "爱",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ei",
+      "base": "ei",
+      "hanzi": [
+        "欸",
+        "欸",
+        "欸",
+        "欸",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ao",
+      "base": "ao",
+      "hanzi": [
+        "凹",
+        "嗷",
+        "拗",
+        "傲",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ou",
+      "base": "ou",
+      "hanzi": [
+        "欧",
+        "吽",
+        "偶",
+        "怄",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "an",
+      "base": "an",
+      "hanzi": [
+        "安",
+        "啽",
+        "俺",
+        "案",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "en",
+      "base": "en",
+      "hanzi": [
+        "嗯",
+        null,
+        null,
+        "嗯",
+        "嗯"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ang",
+      "base": "ang",
+      "hanzi": [
+        "肮",
+        "卬",
+        null,
+        "枊",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "eng",
+      "base": "eng",
+      "hanzi": [
+        "鞥",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "i",
+      "base": "yi",
+      "hanzi": [
+        "一",
+        "宜",
+        "以",
+        "意",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ia",
+      "base": "ya",
+      "hanzi": [
+        "压",
+        "芽",
+        "疋",
+        "亚",
+        "呀"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ie",
+      "base": "ye",
+      "hanzi": [
+        "倻",
+        "爷",
+        "也",
+        "业",
+        "耶"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "iao",
+      "base": "yao",
+      "hanzi": [
+        "腰",
+        "摇",
+        "咬",
+        "要",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "iu",
+      "base": "you",
+      "hanzi": [
+        "优",
+        "游",
+        "友",
+        "右",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ian",
+      "base": "yan",
+      "hanzi": [
+        "烟",
+        "颜",
+        "眼",
+        "验",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "in",
+      "base": "yin",
+      "hanzi": [
+        "音",
+        "银",
+        "饮",
+        "印",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "iang",
+      "base": "yang",
+      "hanzi": [
+        "央",
+        "阳",
+        "养",
+        "样",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ing",
+      "base": "ying",
+      "hanzi": [
+        "英",
+        "迎",
+        "影",
+        "映",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "iong",
+      "base": "yong",
+      "hanzi": [
+        "拥",
+        "喁",
+        "永",
+        "用",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "u",
+      "base": "wu",
+      "hanzi": [
+        "屋",
+        "无",
+        "五",
+        "务",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ua",
+      "base": "wa",
+      "hanzi": [
+        "凹",
+        "娃",
+        "搲",
+        "袜",
+        "哇"
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "uo",
+      "base": "wo",
+      "hanzi": [
+        "倭",
+        null,
+        "我",
+        "握",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "uai",
+      "base": "wai",
+      "hanzi": [
+        "歪",
+        null,
+        "崴",
+        "外",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ui",
+      "base": "wei",
+      "hanzi": [
+        "危",
+        "维",
+        "伟",
+        "喂",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "uan",
+      "base": "wan",
+      "hanzi": [
+        "弯",
+        "玩",
+        "晚",
+        "万",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "un",
+      "base": "wen",
+      "hanzi": [
+        "温",
+        "文",
+        "稳",
+        "问",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "uang",
+      "base": "wang",
+      "hanzi": [
+        "尢",
+        "王",
+        "网",
+        "忘",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ueng",
+      "base": "weng",
+      "hanzi": [
+        "嗡",
+        null,
+        "塕",
+        "瓮",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ü",
+      "base": "yu",
+      "hanzi": [
+        "淤",
+        "鱼",
+        "雨",
+        "育",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "üe",
+      "base": "yue",
+      "hanzi": [
+        "约",
+        null,
+        "哕",
+        "月",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "üan",
+      "base": "yuan",
+      "hanzi": [
+        "冤",
+        "元",
+        "远",
+        "院",
+        null
+      ]
+    },
+    {
+      "initial": "Ø",
+      "final": "ün",
+      "base": "yun",
+      "hanzi": [
+        "奫",
+        "云",
+        "允",
+        "运",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "a",
+      "base": "ba",
+      "hanzi": [
+        "八",
+        "拔",
+        "把",
+        "爸",
+        "吧"
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ai",
+      "base": "bai",
+      "hanzi": [
+        "掰",
+        "白",
+        "百",
+        "败",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ei",
+      "base": "bei",
+      "hanzi": [
+        "杯",
+        null,
+        "北",
+        "背",
+        "呗"
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ao",
+      "base": "bao",
+      "hanzi": [
+        "包",
+        "薄",
+        "饱",
+        "报",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "an",
+      "base": "ban",
+      "hanzi": [
+        "班",
+        null,
+        "板",
+        "半",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "en",
+      "base": "ben",
+      "hanzi": [
+        "奔",
+        null,
+        "本",
+        "笨",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ang",
+      "base": "bang",
+      "hanzi": [
+        "帮",
+        null,
+        "膀",
+        "棒",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "eng",
+      "base": "beng",
+      "hanzi": [
+        "伻",
+        "甭",
+        "埄",
+        "泵",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "i",
+      "base": "bi",
+      "hanzi": [
+        "屄",
+        "鼻",
+        "笔",
+        "必",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ie",
+      "base": "bie",
+      "hanzi": [
+        "憋",
+        "别",
+        "瘪",
+        "别",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "iao",
+      "base": "biao",
+      "hanzi": [
+        "标",
+        "嫑",
+        "表",
+        "俵",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ian",
+      "base": "bian",
+      "hanzi": [
+        "边",
+        null,
+        "匾",
+        "便",
+        "边"
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "in",
+      "base": "bin",
+      "hanzi": [
+        "宾",
+        null,
+        null,
+        "髩",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "ing",
+      "base": "bing",
+      "hanzi": [
+        "冰",
+        null,
+        "柄",
+        "病",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "u",
+      "base": "bu",
+      "hanzi": [
+        "晡",
+        "醭",
+        "补",
+        "不",
+        null
+      ]
+    },
+    {
+      "initial": "b",
+      "final": "uo",
+      "base": "bo",
+      "hanzi": [
+        "播",
+        "博",
+        "簸",
+        "捭",
+        "啵"
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "a",
+      "base": "pa",
+      "hanzi": [
+        "啪",
+        "爬",
+        null,
+        "怕",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ai",
+      "base": "pai",
+      "hanzi": [
+        "拍",
+        "排",
+        "迫",
+        "派",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ei",
+      "base": "pei",
+      "hanzi": [
+        "呸",
+        "培",
+        null,
+        "配",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ao",
+      "base": "pao",
+      "hanzi": [
+        "泡",
+        "刨",
+        "跑",
+        "泡",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ou",
+      "base": "pou",
+      "hanzi": [
+        "剖",
+        "垺",
+        "㕻",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "an",
+      "base": "pan",
+      "hanzi": [
+        "扳",
+        "盘",
+        null,
+        "判",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "en",
+      "base": "pen",
+      "hanzi": [
+        "喷",
+        "盆",
+        null,
+        "喷",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ang",
+      "base": "pang",
+      "hanzi": [
+        "乓",
+        "旁",
+        "嗙",
+        "胖",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "eng",
+      "base": "peng",
+      "hanzi": [
+        "䦕",
+        "朋",
+        "捧",
+        "碰",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "i",
+      "base": "pi",
+      "hanzi": [
+        "批",
+        "啤",
+        "匹",
+        "僻",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ie",
+      "base": "pie",
+      "hanzi": [
+        "撆",
+        null,
+        "丿",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "iao",
+      "base": "piao",
+      "hanzi": [
+        "漂",
+        "嫖",
+        "殍",
+        "票",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ian",
+      "base": "pian",
+      "hanzi": [
+        "篇",
+        "便",
+        "谝",
+        "片",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "in",
+      "base": "pin",
+      "hanzi": [
+        "拼",
+        "频",
+        "品",
+        "牝",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "ing",
+      "base": "ping",
+      "hanzi": [
+        "乒",
+        "苹",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "u",
+      "base": "pu",
+      "hanzi": [
+        "仆",
+        "葡",
+        "普",
+        "堡",
+        null
+      ]
+    },
+    {
+      "initial": "p",
+      "final": "uo",
+      "base": "po",
+      "hanzi": [
+        "泼",
+        "婆",
+        "叵",
+        "破",
+        "桲"
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "a",
+      "base": "ma",
+      "hanzi": [
+        "妈",
+        "麻",
+        "马",
+        "骂",
+        "吗"
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "e",
+      "base": "me",
+      "hanzi": [
+        null,
+        null,
+        null,
+        null,
+        "么"
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ai",
+      "base": "mai",
+      "hanzi": [
+        null,
+        "埋",
+        "买",
+        "卖",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ei",
+      "base": "mei",
+      "hanzi": [
+        null,
+        "没",
+        "每",
+        "妹",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ao",
+      "base": "mao",
+      "hanzi": [
+        "猫",
+        "毛",
+        "冇",
+        "冒",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ou",
+      "base": "mou",
+      "hanzi": [
+        "哞",
+        "侔",
+        "某",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "an",
+      "base": "man",
+      "hanzi": [
+        "嫚",
+        "埋",
+        "满",
+        "慢",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "en",
+      "base": "men",
+      "hanzi": [
+        "闷",
+        "门",
+        null,
+        "暪",
+        "们"
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ang",
+      "base": "mang",
+      "hanzi": [
+        "牤",
+        "忙",
+        "漭",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "eng",
+      "base": "meng",
+      "hanzi": [
+        "蒙",
+        "䖟",
+        "勐",
+        "梦",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "i",
+      "base": "mi",
+      "hanzi": [
+        "咪",
+        "迷",
+        "米",
+        "密",
+        "袮"
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ie",
+      "base": "mie",
+      "hanzi": [
+        "乜",
+        null,
+        null,
+        "灭",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "iao",
+      "base": "miao",
+      "hanzi": [
+        "喵",
+        "描",
+        "秒",
+        "庙",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "iu",
+      "base": "miu",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "缪",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ian",
+      "base": "mian",
+      "hanzi": [
+        null,
+        "眠",
+        "免",
+        "面",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "in",
+      "base": "min",
+      "hanzi": [
+        null,
+        "民",
+        "敏",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "ing",
+      "base": "ming",
+      "hanzi": [
+        null,
+        "名",
+        "酩",
+        "命",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "u",
+      "base": "mu",
+      "hanzi": [
+        null,
+        "模",
+        "母",
+        "目",
+        null
+      ]
+    },
+    {
+      "initial": "m",
+      "final": "uo",
+      "base": "mo",
+      "hanzi": [
+        "摸",
+        "模",
+        "抹",
+        "末",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "a",
+      "base": "fa",
+      "hanzi": [
+        "发",
+        "伐",
+        "法",
+        "珐",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "ei",
+      "base": "fei",
+      "hanzi": [
+        "飞",
+        "肥",
+        "匪",
+        "费",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "ou",
+      "base": "fou",
+      "hanzi": [
+        null,
+        "紑",
+        "否",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "an",
+      "base": "fan",
+      "hanzi": [
+        "翻",
+        "繁",
+        "反",
+        "饭",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "en",
+      "base": "fen",
+      "hanzi": [
+        "分",
+        "坆",
+        "粉",
+        "份",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "ang",
+      "base": "fang",
+      "hanzi": [
+        "方",
+        "房",
+        "访",
+        "放",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "eng",
+      "base": "feng",
+      "hanzi": [
+        "风",
+        "夆",
+        "唪",
+        "缝",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "u",
+      "base": "fu",
+      "hanzi": [
+        "夫",
+        "服",
+        "腐",
+        "复",
+        null
+      ]
+    },
+    {
+      "initial": "f",
+      "final": "uo",
+      "base": "fo",
+      "hanzi": [
+        null,
+        "坲",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "a",
+      "base": "da",
+      "hanzi": [
+        "咑",
+        "答",
+        "打",
+        "大",
+        "疸"
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "e",
+      "base": "de",
+      "hanzi": [
+        "嘚",
+        "得",
+        null,
+        "嘚",
+        "的"
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ai",
+      "base": "dai",
+      "hanzi": [
+        "呆",
+        null,
+        "歹",
+        "带",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ei",
+      "base": "dei",
+      "hanzi": [
+        null,
+        null,
+        "得",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ao",
+      "base": "dao",
+      "hanzi": [
+        "刀",
+        "捯",
+        "导",
+        "到",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ou",
+      "base": "dou",
+      "hanzi": [
+        "都",
+        null,
+        "唞",
+        "豆",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "an",
+      "base": "dan",
+      "hanzi": [
+        "单",
+        null,
+        "胆",
+        "蛋",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "en",
+      "base": "den",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "㩐",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ang",
+      "base": "dang",
+      "hanzi": [
+        "当",
+        null,
+        "挡",
+        "凼",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "eng",
+      "base": "deng",
+      "hanzi": [
+        "灯",
+        null,
+        "等",
+        "凳",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ong",
+      "base": "dong",
+      "hanzi": [
+        "东",
+        null,
+        "懂",
+        "栋",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "i",
+      "base": "di",
+      "hanzi": [
+        "低",
+        "敌",
+        "底",
+        "弟",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ia",
+      "base": "dia",
+      "hanzi": [
+        null,
+        null,
+        "嗲",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ie",
+      "base": "die",
+      "hanzi": [
+        "爹",
+        "佚",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "iao",
+      "base": "diao",
+      "hanzi": [
+        "凋",
+        null,
+        "屌",
+        "掉",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "iu",
+      "base": "diu",
+      "hanzi": [
+        "丢",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ian",
+      "base": "dian",
+      "hanzi": [
+        "傎",
+        null,
+        "点",
+        "电",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "in",
+      "base": "din",
+      "hanzi": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ing",
+      "base": "ding",
+      "hanzi": [
+        "丁",
+        null,
+        "顶",
+        "定",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "u",
+      "base": "du",
+      "hanzi": [
+        "厾",
+        "读",
+        "堵",
+        "度",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "uo",
+      "base": "duo",
+      "hanzi": [
+        "多",
+        "度",
+        "朵",
+        "刴",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "ui",
+      "base": "dui",
+      "hanzi": [
+        "堆",
+        null,
+        "㨃",
+        "对",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "uan",
+      "base": "duan",
+      "hanzi": [
+        "媏",
+        null,
+        "短",
+        "段",
+        null
+      ]
+    },
+    {
+      "initial": "d",
+      "final": "un",
+      "base": "dun",
+      "hanzi": [
+        "吨",
+        null,
+        "盹",
+        "顿",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "a",
+      "base": "ta",
+      "hanzi": [
+        "他",
+        null,
+        "塔",
+        "嗒",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "e",
+      "base": "te",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "特",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ai",
+      "base": "tai",
+      "hanzi": [
+        "台",
+        "台",
+        "呔",
+        "太",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ei",
+      "base": "tei",
+      "hanzi": [
+        "忒",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ao",
+      "base": "tao",
+      "hanzi": [
+        "叨",
+        "萄",
+        "讨",
+        "套",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ou",
+      "base": "tou",
+      "hanzi": [
+        "偷",
+        "头",
+        "妵",
+        "透",
+        "头"
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "an",
+      "base": "tan",
+      "hanzi": [
+        "坍",
+        "谈",
+        "坦",
+        "宕",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ang",
+      "base": "tang",
+      "hanzi": [
+        "汤",
+        "糖",
+        "躺",
+        "趟",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "eng",
+      "base": "teng",
+      "hanzi": [
+        "熥",
+        "疼",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ong",
+      "base": "tong",
+      "hanzi": [
+        "通",
+        "同",
+        "统",
+        "痛",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "i",
+      "base": "ti",
+      "hanzi": [
+        "踢",
+        "题",
+        "体",
+        "替",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ie",
+      "base": "tie",
+      "hanzi": [
+        "贴",
+        null,
+        "铁",
+        "呫",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "iao",
+      "base": "tiao",
+      "hanzi": [
+        "挑",
+        "条",
+        "䠷",
+        "跳",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ian",
+      "base": "tian",
+      "hanzi": [
+        "天",
+        "甜",
+        "㥏",
+        "掭",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ing",
+      "base": "ting",
+      "hanzi": [
+        "听",
+        "庭",
+        "挺",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "u",
+      "base": "tu",
+      "hanzi": [
+        "突",
+        "图",
+        "土",
+        "兔",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "uo",
+      "base": "tuo",
+      "hanzi": [
+        "脱",
+        "佗",
+        "妥",
+        "唾",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "ui",
+      "base": "tui",
+      "hanzi": [
+        "推",
+        "蹪",
+        "腿",
+        "退",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "uan",
+      "base": "tuan",
+      "hanzi": [
+        "圕",
+        "团",
+        "畽",
+        "彖",
+        null
+      ]
+    },
+    {
+      "initial": "t",
+      "final": "un",
+      "base": "tun",
+      "hanzi": [
+        "吞",
+        "㹠",
+        "氽",
+        "褪",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "a",
+      "base": "na",
+      "hanzi": [
+        "南",
+        "拿",
+        "哪",
+        "那",
+        "哪"
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "e",
+      "base": "ne",
+      "hanzi": [
+        null,
+        "哪",
+        null,
+        "㕯",
+        "呢"
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ai",
+      "base": "nai",
+      "hanzi": [
+        null,
+        null,
+        "奶",
+        "耐",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ei",
+      "base": "nei",
+      "hanzi": [
+        null,
+        null,
+        "哪",
+        "内",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ao",
+      "base": "nao",
+      "hanzi": [
+        "孬",
+        "呶",
+        "脑",
+        "闹",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ou",
+      "base": "nou",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "獳",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "an",
+      "base": "nan",
+      "hanzi": [
+        "囝",
+        "男",
+        "戁",
+        "难",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "en",
+      "base": "nen",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "嫩",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ang",
+      "base": "nang",
+      "hanzi": [
+        "乪",
+        "囊",
+        "攮",
+        "齉",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "eng",
+      "base": "neng",
+      "hanzi": [
+        null,
+        "能",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ong",
+      "base": "nong",
+      "hanzi": [
+        null,
+        "农",
+        null,
+        "弄",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "i",
+      "base": "ni",
+      "hanzi": [
+        "妮",
+        "泥",
+        "你",
+        "伲",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ie",
+      "base": "nie",
+      "hanzi": [
+        "捏",
+        "苶",
+        null,
+        "喦",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "iao",
+      "base": "niao",
+      "hanzi": [
+        null,
+        null,
+        "鸟",
+        "㞙",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "iu",
+      "base": "niu",
+      "hanzi": [
+        "妞",
+        "牛",
+        "钮",
+        "拗",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ian",
+      "base": "nian",
+      "hanzi": [
+        "拈",
+        "年",
+        "捻",
+        "念",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "in",
+      "base": "nin",
+      "hanzi": [
+        null,
+        "您",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "iang",
+      "base": "niang",
+      "hanzi": [
+        null,
+        "娘",
+        null,
+        "酿",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ing",
+      "base": "ning",
+      "hanzi": [
+        null,
+        "宁",
+        "拧",
+        "佞",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "u",
+      "base": "nu",
+      "hanzi": [
+        null,
+        "奴",
+        "努",
+        "怒",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "uo",
+      "base": "nuo",
+      "hanzi": [
+        null,
+        "娜",
+        "㛂",
+        "㐡",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "uan",
+      "base": "nuan",
+      "hanzi": [
+        null,
+        null,
+        "暖",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "un",
+      "base": "nun",
+      "hanzi": [
+        null,
+        "黁",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "ü",
+      "base": "nü",
+      "hanzi": [
+        null,
+        null,
+        "女",
+        "衄",
+        null
+      ]
+    },
+    {
+      "initial": "n",
+      "final": "üe",
+      "base": "nüe",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "虐",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "a",
+      "base": "la",
+      "hanzi": [
+        "拉",
+        "剌",
+        "喇",
+        "蜡",
+        "啦"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "o",
+      "base": "lo",
+      "hanzi": [
+        null,
+        null,
+        null,
+        null,
+        "咯"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "e",
+      "base": "le",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "乐",
+        "了"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ai",
+      "base": "lai",
+      "hanzi": [
+        null,
+        "来",
+        null,
+        "藾",
+        "𫪁"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ei",
+      "base": "lei",
+      "hanzi": [
+        "勒",
+        "雷",
+        "儡",
+        "累",
+        "嘞"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ao",
+      "base": "lao",
+      "hanzi": [
+        "粩",
+        "劳",
+        "老",
+        "嫪",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ou",
+      "base": "lou",
+      "hanzi": [
+        "搂",
+        "楼",
+        "𪣻",
+        "漏",
+        "喽"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "an",
+      "base": "lan",
+      "hanzi": [
+        null,
+        "蓝",
+        "览",
+        "烂",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ang",
+      "base": "lang",
+      "hanzi": [
+        "啷",
+        "郎",
+        "朗",
+        "浪",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "eng",
+      "base": "leng",
+      "hanzi": [
+        "棱",
+        "塄",
+        "冷",
+        "愣",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ong",
+      "base": "long",
+      "hanzi": [
+        "隆",
+        "龙",
+        "儱",
+        "哢",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "i",
+      "base": "li",
+      "hanzi": [
+        null,
+        "离",
+        "里",
+        "力",
+        "哩"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ia",
+      "base": "lia",
+      "hanzi": [
+        null,
+        null,
+        "俩",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ie",
+      "base": "lie",
+      "hanzi": [
+        "咧",
+        null,
+        "咧",
+        "烈",
+        "咧"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "iao",
+      "base": "liao",
+      "hanzi": [
+        "撩",
+        "聊",
+        "了",
+        "料",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "iu",
+      "base": "liu",
+      "hanzi": [
+        "溜",
+        "留",
+        "柳",
+        "六",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ian",
+      "base": "lian",
+      "hanzi": [
+        null,
+        "联",
+        "脸",
+        "练",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "in",
+      "base": "lin",
+      "hanzi": [
+        "拎",
+        "临",
+        "僯",
+        "吝",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "iang",
+      "base": "liang",
+      "hanzi": [
+        null,
+        "凉",
+        "两",
+        "亮",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ing",
+      "base": "ling",
+      "hanzi": [
+        "昤",
+        "零",
+        "领",
+        "另",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "u",
+      "base": "lu",
+      "hanzi": [
+        "噜",
+        "玈",
+        "橹",
+        "路",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "uo",
+      "base": "luo",
+      "hanzi": [
+        "捋",
+        "逻",
+        "倮",
+        "落",
+        "啰"
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "uan",
+      "base": "luan",
+      "hanzi": [
+        null,
+        "𪢮",
+        "卵",
+        "乱",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "un",
+      "base": "lun",
+      "hanzi": [
+        "抡",
+        "轮",
+        null,
+        "论",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "ü",
+      "base": "lü",
+      "hanzi": [
+        null,
+        "藘",
+        "旅",
+        "绿",
+        null
+      ]
+    },
+    {
+      "initial": "l",
+      "final": "üe",
+      "base": "lüe",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "圙",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "a",
+      "base": "za",
+      "hanzi": [
+        "匝",
+        "杂",
+        "咋",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "e",
+      "base": "ze",
+      "hanzi": [
+        null,
+        "则",
+        null,
+        "仄",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ai",
+      "base": "zai",
+      "hanzi": [
+        "灾",
+        null,
+        "仔",
+        "再",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ei",
+      "base": "zei",
+      "hanzi": [
+        null,
+        "戝",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ao",
+      "base": "zao",
+      "hanzi": [
+        "糟",
+        "凿",
+        "早",
+        "造",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ou",
+      "base": "zou",
+      "hanzi": [
+        "掫",
+        null,
+        "走",
+        "奏",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "an",
+      "base": "zan",
+      "hanzi": [
+        "簪",
+        "咱",
+        "儹",
+        "赞",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "en",
+      "base": "zen",
+      "hanzi": [
+        null,
+        null,
+        "怎",
+        "谮",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ang",
+      "base": "zang",
+      "hanzi": [
+        "牂",
+        null,
+        "驵",
+        "脏",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "eng",
+      "base": "zeng",
+      "hanzi": [
+        "增",
+        null,
+        null,
+        "赠",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ong",
+      "base": "zong",
+      "hanzi": [
+        "综",
+        null,
+        "总",
+        "粽",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "u",
+      "base": "zu",
+      "hanzi": [
+        "租",
+        "族",
+        "组",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "uo",
+      "base": "zuo",
+      "hanzi": [
+        "作",
+        "昨",
+        "左",
+        "坐",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "ui",
+      "base": "zui",
+      "hanzi": [
+        "厜",
+        null,
+        "嘴",
+        "最",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "uan",
+      "base": "zuan",
+      "hanzi": [
+        "躜",
+        null,
+        "籫",
+        "揝",
+        null
+      ]
+    },
+    {
+      "initial": "z",
+      "final": "un",
+      "base": "zun",
+      "hanzi": [
+        "尊",
+        null,
+        "僔",
+        "俊",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "a",
+      "base": "ca",
+      "hanzi": [
+        "擦",
+        null,
+        "礤",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "e",
+      "base": "ce",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "测",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ai",
+      "base": "cai",
+      "hanzi": [
+        "猜",
+        "才",
+        "彩",
+        "菜",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ao",
+      "base": "cao",
+      "hanzi": [
+        "操",
+        "嘈",
+        "草",
+        "操",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ou",
+      "base": "cou",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "腠",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "an",
+      "base": "can",
+      "hanzi": [
+        "餐",
+        "惭",
+        "憯",
+        "孱",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "en",
+      "base": "cen",
+      "hanzi": [
+        "参",
+        "岑",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ang",
+      "base": "cang",
+      "hanzi": [
+        "苍",
+        "藏",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "eng",
+      "base": "ceng",
+      "hanzi": [
+        "噌",
+        "层",
+        null,
+        "蹭",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ong",
+      "base": "cong",
+      "hanzi": [
+        "聪",
+        "从",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "u",
+      "base": "cu",
+      "hanzi": [
+        "粗",
+        "徂",
+        "皻",
+        "促",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "uo",
+      "base": "cuo",
+      "hanzi": [
+        "搓",
+        "嵯",
+        "脞",
+        "错",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "ui",
+      "base": "cui",
+      "hanzi": [
+        "催",
+        null,
+        "漼",
+        "脆",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "uan",
+      "base": "cuan",
+      "hanzi": [
+        "汆",
+        "攒",
+        null,
+        "爨",
+        null
+      ]
+    },
+    {
+      "initial": "c",
+      "final": "un",
+      "base": "cun",
+      "hanzi": [
+        "村",
+        "存",
+        "刌",
+        "寸",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "a",
+      "base": "sa",
+      "hanzi": [
+        "仨",
+        null,
+        "洒",
+        "卅",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "e",
+      "base": "se",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "色",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ai",
+      "base": "sai",
+      "hanzi": [
+        "嘥",
+        null,
+        null,
+        "赛",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ao",
+      "base": "sao",
+      "hanzi": [
+        "慅",
+        null,
+        "扫",
+        "喿",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ou",
+      "base": "sou",
+      "hanzi": [
+        "艘",
+        null,
+        "叟",
+        "嗽",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "an",
+      "base": "san",
+      "hanzi": [
+        "三",
+        null,
+        "伞",
+        "散",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "en",
+      "base": "sen",
+      "hanzi": [
+        "森",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ang",
+      "base": "sang",
+      "hanzi": [
+        "桑",
+        null,
+        "嗓",
+        "丧",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "eng",
+      "base": "seng",
+      "hanzi": [
+        "僧",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ong",
+      "base": "song",
+      "hanzi": [
+        "松",
+        "𪨊",
+        "悚",
+        "送",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "u",
+      "base": "su",
+      "hanzi": [
+        "窣",
+        "俗",
+        null,
+        "诉",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "uo",
+      "base": "suo",
+      "hanzi": [
+        "缩",
+        null,
+        "所",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "ui",
+      "base": "sui",
+      "hanzi": [
+        "虽",
+        "随",
+        "䯝",
+        "岁",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "uan",
+      "base": "suan",
+      "hanzi": [
+        "酸",
+        null,
+        "匴",
+        "算",
+        null
+      ]
+    },
+    {
+      "initial": "s",
+      "final": "un",
+      "base": "sun",
+      "hanzi": [
+        "孙",
+        null,
+        "损",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "a",
+      "base": "zha",
+      "hanzi": [
+        "劄",
+        "扎",
+        "拃",
+        "䃎",
+        "馇"
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "e",
+      "base": "zhe",
+      "hanzi": [
+        "嫬",
+        "折",
+        "者",
+        "这",
+        "着"
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ai",
+      "base": "zhai",
+      "hanzi": [
+        "摘",
+        "宅",
+        "窄",
+        "寨",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ei",
+      "base": "zhei",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "这",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ao",
+      "base": "zhao",
+      "hanzi": [
+        "招",
+        "着",
+        "找",
+        "照",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ou",
+      "base": "zhou",
+      "hanzi": [
+        "周",
+        "妯",
+        "帚",
+        "冑",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "an",
+      "base": "zhan",
+      "hanzi": [
+        "粘",
+        null,
+        "展",
+        "站",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "en",
+      "base": "zhen",
+      "hanzi": [
+        "真",
+        null,
+        "诊",
+        "阵",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ang",
+      "base": "zhang",
+      "hanzi": [
+        "张",
+        null,
+        "长",
+        "账",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "eng",
+      "base": "zheng",
+      "hanzi": [
+        "争",
+        null,
+        "整",
+        "正",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ong",
+      "base": "zhong",
+      "hanzi": [
+        "中",
+        null,
+        "种",
+        "重",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "u",
+      "base": "zhu",
+      "hanzi": [
+        "猪",
+        "烛",
+        "主",
+        "住",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ua",
+      "base": "zhua",
+      "hanzi": [
+        "抓",
+        null,
+        "爪",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "uo",
+      "base": "zhuo",
+      "hanzi": [
+        "桌",
+        "䅵",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "uai",
+      "base": "zhuai",
+      "hanzi": [
+        "拽",
+        null,
+        "拽",
+        "拽",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "ui",
+      "base": "zhui",
+      "hanzi": [
+        "追",
+        null,
+        null,
+        "惴",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "uan",
+      "base": "zhuan",
+      "hanzi": [
+        "专",
+        null,
+        "转",
+        "赚",
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "un",
+      "base": "zhun",
+      "hanzi": [
+        "屯",
+        null,
+        "准",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "zh",
+      "final": "uang",
+      "base": "zhuang",
+      "hanzi": [
+        "装",
+        null,
+        "奘",
+        "状",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "a",
+      "base": "cha",
+      "hanzi": [
+        "叉",
+        "茶",
+        "叉",
+        "差",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "e",
+      "base": "che",
+      "hanzi": [
+        "车",
+        null,
+        "尺",
+        "彻",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ai",
+      "base": "chai",
+      "hanzi": [
+        "拆",
+        "柴",
+        "茝",
+        "囆",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ao",
+      "base": "chao",
+      "hanzi": [
+        "超",
+        "朝",
+        "吵",
+        "耖",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ou",
+      "base": "chou",
+      "hanzi": [
+        "抽",
+        "愁",
+        "丑",
+        "臭",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "an",
+      "base": "chan",
+      "hanzi": [
+        "幨",
+        "僝",
+        "产",
+        "儳",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "en",
+      "base": "chen",
+      "hanzi": [
+        "嗔",
+        "晨",
+        "碜",
+        "衬",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ang",
+      "base": "chang",
+      "hanzi": [
+        "娼",
+        "常",
+        "场",
+        "唱",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "eng",
+      "base": "cheng",
+      "hanzi": [
+        "称",
+        "城",
+        "悜",
+        "秤",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ong",
+      "base": "chong",
+      "hanzi": [
+        "充",
+        "虫",
+        "宠",
+        "揰",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "u",
+      "base": "chu",
+      "hanzi": [
+        "出",
+        "除",
+        "楚",
+        "处",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ua",
+      "base": "chua",
+      "hanzi": [
+        "欻",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "uo",
+      "base": "chuo",
+      "hanzi": [
+        "戳",
+        null,
+        null,
+        "㲋",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "uai",
+      "base": "chuai",
+      "hanzi": [
+        "揣",
+        "膗",
+        "揣",
+        "嘬",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "ui",
+      "base": "chui",
+      "hanzi": [
+        "吹",
+        "圌",
+        null,
+        "龡",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "uan",
+      "base": "chuan",
+      "hanzi": [
+        "穿",
+        "船",
+        "喘",
+        "串",
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "un",
+      "base": "chun",
+      "hanzi": [
+        "春",
+        "纯",
+        "蠢",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "ch",
+      "final": "uang",
+      "base": "chuang",
+      "hanzi": [
+        "窗",
+        "床",
+        "闯",
+        "创",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "a",
+      "base": "sha",
+      "hanzi": [
+        "沙",
+        "倽",
+        "傻",
+        "嗄",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "e",
+      "base": "she",
+      "hanzi": [
+        "奓",
+        "蛇",
+        "舍",
+        "设",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ai",
+      "base": "shai",
+      "hanzi": [
+        "籭",
+        null,
+        "色",
+        "晒",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ei",
+      "base": "shei",
+      "hanzi": [
+        null,
+        "谁",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ao",
+      "base": "shao",
+      "hanzi": [
+        "烧",
+        "㲈",
+        "少",
+        "绍",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ou",
+      "base": "shou",
+      "hanzi": [
+        "收",
+        null,
+        "手",
+        "受",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "an",
+      "base": "shan",
+      "hanzi": [
+        "山",
+        null,
+        "闪",
+        "扇",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "en",
+      "base": "shen",
+      "hanzi": [
+        "身",
+        "什",
+        "审",
+        "甚",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ang",
+      "base": "shang",
+      "hanzi": [
+        "商",
+        null,
+        "赏",
+        "上",
+        "裳"
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "eng",
+      "base": "sheng",
+      "hanzi": [
+        "生",
+        "绳",
+        "省",
+        "胜",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "u",
+      "base": "shu",
+      "hanzi": [
+        "书",
+        "熟",
+        "属",
+        "树",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ua",
+      "base": "shua",
+      "hanzi": [
+        "刷",
+        null,
+        "耍",
+        "刷",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "uo",
+      "base": "shuo",
+      "hanzi": [
+        "说",
+        null,
+        null,
+        "硕",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "uai",
+      "base": "shuai",
+      "hanzi": [
+        "摔",
+        null,
+        "甩",
+        "帅",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "ui",
+      "base": "shui",
+      "hanzi": [
+        null,
+        "谁",
+        "水",
+        "睡",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "uan",
+      "base": "shuan",
+      "hanzi": [
+        "拴",
+        null,
+        null,
+        "涮",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "un",
+      "base": "shun",
+      "hanzi": [
+        null,
+        null,
+        "吮",
+        "顺",
+        null
+      ]
+    },
+    {
+      "initial": "sh",
+      "final": "uang",
+      "base": "shuang",
+      "hanzi": [
+        "双",
+        null,
+        "爽",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "e",
+      "base": "re",
+      "hanzi": [
+        null,
+        null,
+        "喏",
+        "热",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ao",
+      "base": "rao",
+      "hanzi": [
+        null,
+        "娆",
+        "扰",
+        "绕",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ou",
+      "base": "rou",
+      "hanzi": [
+        null,
+        "厹",
+        null,
+        "肉",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "an",
+      "base": "ran",
+      "hanzi": [
+        null,
+        "然",
+        "染",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "en",
+      "base": "ren",
+      "hanzi": [
+        null,
+        "人",
+        "忍",
+        "认",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ang",
+      "base": "rang",
+      "hanzi": [
+        null,
+        "勷",
+        "嚷",
+        "让",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "eng",
+      "base": "reng",
+      "hanzi": [
+        "扔",
+        "仍",
+        null,
+        "芿",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ong",
+      "base": "rong",
+      "hanzi": [
+        null,
+        "容",
+        "冗",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "u",
+      "base": "ru",
+      "hanzi": [
+        null,
+        "如",
+        "乳",
+        "入",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ua",
+      "base": "rua",
+      "hanzi": [
+        null,
+        "挼",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "uo",
+      "base": "ruo",
+      "hanzi": [
+        null,
+        "挼",
+        null,
+        "弱",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "ui",
+      "base": "rui",
+      "hanzi": [
+        null,
+        "緌",
+        "繠",
+        "壡",
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "uan",
+      "base": "ruan",
+      "hanzi": [
+        null,
+        "堧",
+        "软",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "r",
+      "final": "un",
+      "base": "run",
+      "hanzi": [
+        null,
+        "犉",
+        null,
+        "润",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "i",
+      "base": "ji",
+      "hanzi": [
+        "机",
+        "级",
+        "己",
+        "记",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ia",
+      "base": "jia",
+      "hanzi": [
+        "家",
+        "䛟",
+        "假",
+        "价",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ie",
+      "base": "jie",
+      "hanzi": [
+        "街",
+        "节",
+        "姐",
+        "介",
+        "价"
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "iao",
+      "base": "jiao",
+      "hanzi": [
+        "交",
+        "嚼",
+        "角",
+        "叫",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "iu",
+      "base": "jiu",
+      "hanzi": [
+        "究",
+        null,
+        "九",
+        "就",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ian",
+      "base": "jian",
+      "hanzi": [
+        "间",
+        null,
+        "简",
+        "见",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "in",
+      "base": "jin",
+      "hanzi": [
+        "今",
+        null,
+        "仅",
+        "进",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "iang",
+      "base": "jiang",
+      "hanzi": [
+        "将",
+        null,
+        "讲",
+        "降",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ing",
+      "base": "jing",
+      "hanzi": [
+        "京",
+        null,
+        "警",
+        "净",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "iong",
+      "base": "jiong",
+      "hanzi": [
+        "冂",
+        null,
+        "冏",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ü",
+      "base": "ju",
+      "hanzi": [
+        "居",
+        "局",
+        "举",
+        "句",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "üe",
+      "base": "jue",
+      "hanzi": [
+        "噘",
+        "觉",
+        "蹶",
+        "倔",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "üan",
+      "base": "juan",
+      "hanzi": [
+        "圈",
+        null,
+        "卷",
+        "倦",
+        null
+      ]
+    },
+    {
+      "initial": "j",
+      "final": "ün",
+      "base": "jun",
+      "hanzi": [
+        "均",
+        null,
+        null,
+        "峻",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "i",
+      "base": "qi",
+      "hanzi": [
+        "七",
+        "骑",
+        "起",
+        "气",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ia",
+      "base": "qia",
+      "hanzi": [
+        "掐",
+        "拤",
+        "卡",
+        "恰",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ie",
+      "base": "qie",
+      "hanzi": [
+        "切",
+        "伽",
+        "且",
+        "切",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "iao",
+      "base": "qiao",
+      "hanzi": [
+        "敲",
+        "桥",
+        "巧",
+        "俏",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "iu",
+      "base": "qiu",
+      "hanzi": [
+        "秋",
+        "球",
+        "糗",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ian",
+      "base": "qian",
+      "hanzi": [
+        "千",
+        "钱",
+        "浅",
+        "歉",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "in",
+      "base": "qin",
+      "hanzi": [
+        "亲",
+        "勤",
+        "昑",
+        "沁",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "iang",
+      "base": "qiang",
+      "hanzi": [
+        "枪",
+        "墙",
+        "抢",
+        "呛",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ing",
+      "base": "qing",
+      "hanzi": [
+        "轻",
+        "情",
+        "请",
+        "庆",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "iong",
+      "base": "qiong",
+      "hanzi": [
+        "銎",
+        "穷",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ü",
+      "base": "qu",
+      "hanzi": [
+        "区",
+        "佢",
+        "取",
+        "去",
+        "戌"
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "üe",
+      "base": "que",
+      "hanzi": [
+        "缺",
+        "瘸",
+        null,
+        "确",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "üan",
+      "base": "quan",
+      "hanzi": [
+        "圈",
+        "全",
+        "犬",
+        "劝",
+        null
+      ]
+    },
+    {
+      "initial": "q",
+      "final": "ün",
+      "base": "qun",
+      "hanzi": [
+        "囷",
+        "裙",
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "i",
+      "base": "xi",
+      "hanzi": [
+        "息",
+        "习",
+        "喜",
+        "系",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ia",
+      "base": "xia",
+      "hanzi": [
+        "呷",
+        "匣",
+        null,
+        "下",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ie",
+      "base": "xie",
+      "hanzi": [
+        "些",
+        "鞋",
+        "写",
+        "谢",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "iao",
+      "base": "xiao",
+      "hanzi": [
+        "消",
+        "洨",
+        "小",
+        "笑",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "iu",
+      "base": "xiu",
+      "hanzi": [
+        "休",
+        null,
+        "宿",
+        "秀",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ian",
+      "base": "xian",
+      "hanzi": [
+        "先",
+        "咸",
+        "显",
+        "现",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "in",
+      "base": "xin",
+      "hanzi": [
+        "新",
+        "镡",
+        "伈",
+        "信",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "iang",
+      "base": "xiang",
+      "hanzi": [
+        "香",
+        "详",
+        "想",
+        "向",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ing",
+      "base": "xing",
+      "hanzi": [
+        "星",
+        "行",
+        "醒",
+        "姓",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "iong",
+      "base": "xiong",
+      "hanzi": [
+        "兄",
+        "雄",
+        null,
+        "诇",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ü",
+      "base": "xu",
+      "hanzi": [
+        "需",
+        "徐",
+        "许",
+        "续",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "üe",
+      "base": "xue",
+      "hanzi": [
+        "削",
+        "学",
+        "雪",
+        "血",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "üan",
+      "base": "xuan",
+      "hanzi": [
+        "宣",
+        "㻽",
+        "选",
+        "旋",
+        null
+      ]
+    },
+    {
+      "initial": "x",
+      "final": "ün",
+      "base": "xun",
+      "hanzi": [
+        "壎",
+        "询",
+        null,
+        "训",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "a",
+      "base": "ga",
+      "hanzi": [
+        "伽",
+        "嘎",
+        "嘎",
+        "尬",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "e",
+      "base": "ge",
+      "hanzi": [
+        "哥",
+        "格",
+        "合",
+        "个",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ai",
+      "base": "gai",
+      "hanzi": [
+        "该",
+        null,
+        "改",
+        "概",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ei",
+      "base": "gei",
+      "hanzi": [
+        "假",
+        null,
+        "给",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ao",
+      "base": "gao",
+      "hanzi": [
+        "高",
+        null,
+        "搞",
+        "告",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ou",
+      "base": "gou",
+      "hanzi": [
+        "沟",
+        null,
+        "狗",
+        "够",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "an",
+      "base": "gan",
+      "hanzi": [
+        "乾",
+        null,
+        "感",
+        "干",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "en",
+      "base": "gen",
+      "hanzi": [
+        "跟",
+        "哏",
+        "艮",
+        "艮",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ang",
+      "base": "gang",
+      "hanzi": [
+        "刚",
+        null,
+        "港",
+        "杠",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "eng",
+      "base": "geng",
+      "hanzi": [
+        "㹴",
+        null,
+        "哽",
+        "更",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ong",
+      "base": "gong",
+      "hanzi": [
+        "公",
+        null,
+        "廾",
+        "共",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "u",
+      "base": "gu",
+      "hanzi": [
+        "姑",
+        null,
+        "古",
+        "顾",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ua",
+      "base": "gua",
+      "hanzi": [
+        "瓜",
+        null,
+        "寡",
+        "挂",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "uo",
+      "base": "guo",
+      "hanzi": [
+        "锅",
+        "国",
+        "果",
+        "过",
+        "过"
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "uai",
+      "base": "guai",
+      "hanzi": [
+        "乖",
+        null,
+        "拐",
+        "怪",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "ui",
+      "base": "gui",
+      "hanzi": [
+        "规",
+        null,
+        "鬼",
+        "贵",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "uan",
+      "base": "guan",
+      "hanzi": [
+        "关",
+        null,
+        "馆",
+        "惯",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "un",
+      "base": "gun",
+      "hanzi": [
+        null,
+        null,
+        "滚",
+        "棍",
+        null
+      ]
+    },
+    {
+      "initial": "g",
+      "final": "uang",
+      "base": "guang",
+      "hanzi": [
+        "光",
+        null,
+        "广",
+        "逛",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "a",
+      "base": "ka",
+      "hanzi": [
+        "咖",
+        null,
+        "卡",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "e",
+      "base": "ke",
+      "hanzi": [
+        "科",
+        "咳",
+        "可",
+        "客",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ai",
+      "base": "kai",
+      "hanzi": [
+        "开",
+        null,
+        "慨",
+        "愒",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ei",
+      "base": "kei",
+      "hanzi": [
+        "剋",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ao",
+      "base": "kao",
+      "hanzi": [
+        "尻",
+        null,
+        "考",
+        "靠",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ou",
+      "base": "kou",
+      "hanzi": [
+        "芤",
+        null,
+        "口",
+        "扣",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "an",
+      "base": "kan",
+      "hanzi": [
+        "刊",
+        null,
+        "砍",
+        "看",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "en",
+      "base": "ken",
+      "hanzi": [
+        null,
+        null,
+        "肯",
+        "掯",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ang",
+      "base": "kang",
+      "hanzi": [
+        "康",
+        "扛",
+        null,
+        "亢",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "eng",
+      "base": "keng",
+      "hanzi": [
+        "吭",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ong",
+      "base": "kong",
+      "hanzi": [
+        "空",
+        null,
+        "恐",
+        "控",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "u",
+      "base": "ku",
+      "hanzi": [
+        "哭",
+        null,
+        "苦",
+        "裤",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ua",
+      "base": "kua",
+      "hanzi": [
+        "夸",
+        null,
+        "侉",
+        "㐄",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "uo",
+      "base": "kuo",
+      "hanzi": [
+        null,
+        null,
+        null,
+        "阔",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "uai",
+      "base": "kuai",
+      "hanzi": [
+        null,
+        null,
+        "蒯",
+        "块",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "ui",
+      "base": "kui",
+      "hanzi": [
+        "亏",
+        "喹",
+        "傀",
+        "喟",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "uan",
+      "base": "kuan",
+      "hanzi": [
+        "宽",
+        null,
+        "款",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "un",
+      "base": "kun",
+      "hanzi": [
+        "坤",
+        null,
+        "悃",
+        "困",
+        null
+      ]
+    },
+    {
+      "initial": "k",
+      "final": "uang",
+      "base": "kuang",
+      "hanzi": [
+        "劻",
+        "狂",
+        "夼",
+        "况",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "a",
+      "base": "ha",
+      "hanzi": [
+        "哈",
+        "蛤",
+        "哈",
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "e",
+      "base": "he",
+      "hanzi": [
+        "喝",
+        "和",
+        null,
+        "贺",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ai",
+      "base": "hai",
+      "hanzi": [
+        "咍",
+        "孩",
+        "海",
+        "害",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ei",
+      "base": "hei",
+      "hanzi": [
+        "黑",
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ao",
+      "base": "hao",
+      "hanzi": [
+        "嚆",
+        "毫",
+        "好",
+        "号",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ou",
+      "base": "hou",
+      "hanzi": [
+        "齁",
+        "猴",
+        "吼",
+        "候",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "an",
+      "base": "han",
+      "hanzi": [
+        "憨",
+        "寒",
+        "喊",
+        "汉",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "en",
+      "base": "hen",
+      "hanzi": [
+        null,
+        "拫",
+        "很",
+        "恨",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ang",
+      "base": "hang",
+      "hanzi": [
+        "夯",
+        "航",
+        null,
+        "沆",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "eng",
+      "base": "heng",
+      "hanzi": [
+        "亨",
+        "姮",
+        null,
+        "堼",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ong",
+      "base": "hong",
+      "hanzi": [
+        "吽",
+        "红",
+        "哄",
+        "澒",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "u",
+      "base": "hu",
+      "hanzi": [
+        "忽",
+        "湖",
+        "虎",
+        "护",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ua",
+      "base": "hua",
+      "hanzi": [
+        "花",
+        "华",
+        null,
+        "话",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "uo",
+      "base": "huo",
+      "hanzi": [
+        "劐",
+        "活",
+        "火",
+        "或",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "uai",
+      "base": "huai",
+      "hanzi": [
+        null,
+        "怀",
+        null,
+        "坏",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "ui",
+      "base": "hui",
+      "hanzi": [
+        "挥",
+        "回",
+        "悔",
+        "会",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "uan",
+      "base": "huan",
+      "hanzi": [
+        "欢",
+        "环",
+        "缓",
+        "换",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "un",
+      "base": "hun",
+      "hanzi": [
+        "婚",
+        "楎",
+        null,
+        "圂",
+        null
+      ]
+    },
+    {
+      "initial": "h",
+      "final": "uang",
+      "base": "huang",
+      "hanzi": [
+        "慌",
+        "黄",
+        "幌",
+        "㿠",
+        null
+      ]
+    }
+  ]
+}

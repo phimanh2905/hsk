@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyTone, toneForms } from "../tone-mark";
+import { applyTone, parseTone, toneForms } from "../tone-mark";
 import { pinyinValid } from "@/content/pinyin";
 
 describe("applyTone", () => {
@@ -47,5 +47,24 @@ describe("applyTone", () => {
   });
   it("toneForms trả đủ 5 dạng theo thứ tự", () => {
     expect(toneForms("ma")).toEqual(["mā", "má", "mǎ", "mà", "ma"]);
+  });
+});
+
+describe("parseTone", () => {
+  it("parse dạng dấu thanh", () => {
+    expect(parseTone("bà")).toEqual({ base: "ba", tone: 4 });
+    expect(parseTone("mā")).toEqual({ base: "ma", tone: 1 });
+    expect(parseTone("nǚ")).toEqual({ base: "nü", tone: 3 });
+    expect(parseTone("liú")).toEqual({ base: "liu", tone: 2 });
+    expect(parseTone("ba")).toEqual({ base: "ba", tone: 5 });
+  });
+  it("parse dạng số (vocab dùng chen2/le5)", () => {
+    expect(parseTone("ba4")).toEqual({ base: "ba", tone: 4 });
+    expect(parseTone("le5")).toEqual({ base: "le", tone: 5 });
+    expect(parseTone("zhui1")).toEqual({ base: "zhui", tone: 1 });
+  });
+  it("input rỗng/ký tự lạ → null", () => {
+    expect(parseTone("")).toBeNull();
+    expect(parseTone("12")).toBeNull();
   });
 });
