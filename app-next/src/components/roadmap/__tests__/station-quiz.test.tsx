@@ -52,11 +52,11 @@ describe("StationQuiz", () => {
     expect(screen.getByTestId("quiz-prompt")).toBeTruthy();
   });
 
-  it("Milestone dùng sampler 10 câu", () => {
+  it("Milestone dùng sampler 12 câu", () => {
     const m = hsk2.stations.find((s) => s.id === "m")!;
     const { rerender } = render(<StationQuiz station={m} level={hsk2} onClose={() => {}} />);
     // đếm qua UI không tiện → check qua hành vi: chip tổng câu
-    expect(screen.getByTestId("quiz-counter")).toHaveTextContent("1/10");
+    expect(screen.getByTestId("quiz-counter")).toHaveTextContent("1/12");
     rerender(<StationQuiz station={s1} level={hsk2} onClose={() => {}} />);
     expect(screen.getByTestId("quiz-counter")).toHaveTextContent(`1/${s1.vocab.length + s1.gram.length}`);
   });

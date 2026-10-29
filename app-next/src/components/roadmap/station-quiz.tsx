@@ -30,7 +30,7 @@ export function StationQuiz({
   const questions = useMemo<QuizQuestion[]>(
     () =>
       station.kind === "milestone"
-        ? sampleMilestoneQuestions(level)
+        ? sampleMilestoneQuestions(levelPool(level))
         : buildStationQuestions(station, levelPool(level)),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- seed đổi khi "Làm lại"
     [station.id, level.id, seed],

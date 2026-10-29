@@ -3,6 +3,7 @@ import {
   buildStationQuestions,
   levelPool,
   sampleMilestoneQuestions,
+  sampleWarmupQuestions,
   submitStationResult,
   type StationPool,
 } from "../station-quiz";
@@ -87,10 +88,61 @@ describe("buildStationQuestions", () => {
 });
 
 describe("sampleMilestoneQuestions", () => {
-  it("đúng 10 câu (8 vocab + 2 gram), 4 options mỗi câu", () => {
-    const qs = sampleMilestoneQuestions(hsk2, detRng);
-    expect(qs.length).toBe(10);
+  it("đúng 12 câu (9 vocab + 3 gram khi gram đủ), 4 options mỗi câu, mỗi câu vocab thứ 4 là nghe", () => {
+    const pool = levelPool(hsk2);
+    const qs = sampleMilestoneQuestions(pool, detRng);
+    expect(qs.length).toBe(12);
     for (const q of qs) expect(q.options.length).toBe(4);
+    expect(qs.filter((q) => q.listen).length).toBeGreaterThan(0);
+  });
+
+  it("gram rỗng → toàn vocab 12 câu", () => {
+    const pool: StationPool = {
+      vocab: [
+        ["你好", "nǐ hǎo", "xin chào"], ["谢谢", "xièxie", "cảm ơn"], ["再见", "zàijiàn", "tạm biệt"],
+        ["请", "qǐng", "xin mời"], ["对不起", "duìbuqǐ", "xin lỗi"], ["老师", "lǎoshī", "giáo viên"],
+        ["学生", "xuésheng", "học sinh"], ["同学", "tóngxué", "bạn cùng lớp"], ["医生", "yīshēng", "bác sĩ"],
+        ["爸爸", "bàba", "bố"], ["妈妈", "māma", "mẹ"], ["哥哥", "gēge", "anh trai"],
+      ],
+      gram: [],
+    };
+    const qs = sampleMilestoneQuestions(pool, detRng);
+    expect(qs.length).toBe(12);
+    for (const q of qs) expect(q.prompt).not.toContain("ngữ pháp");
+  });
+});
+
+describe("station-quiz v2", () => {
+  const pool: StationPool = {
+    vocab: [["你好", "nǐ hǎo", "xin chào"], ["谢谢", "xièxie", "cảm ơn"], ["再见", "zàijiàn", "tạm biệt"],
+      ["请", "qǐng", "xin mời"], ["对不起", "duìbuqǐ", "xin lỗi"], ["老师", "lǎoshī", "giáo viên"],
+      ["学生", "xuésheng", "học sinh"], ["同学", "tóngxué", "bạn cùng lớp"]],
+    gram: [],
+  };
+  it("listenEvery=4: câu 4 có listen {audioText=hanzi, options=pinyin, readVariant đầy đủ}", () => {
+    const qs = buildStationQuestions(
+      { id: "g1", no: "Trạm 1", kind: "lesson", title: "T", zh: "", meta: "", vocab: pool.vocab, gram: [] },
+      pool,
+      () => 0.42,
+      { listenEvery: 4 },
+    );
+    const listenQs = qs.filter((q) => q.listen);
+    expect(listenQs).toHaveLength(2); // 8 vocab câu → 2 câu nghe
+    const q = listenQs[0]!;
+    expect(q.listen!.audioText.length).toBeGreaterThan(0); // hanzi
+    expect(q.options.every((o) => /[\u0300-\u036fāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/.test(o))).toBe(true);
+    expect(q.listen!.readOptions).toHaveLength(4);
+    expect(q.listen!.readOptions[q.listen!.readAnswerIndex]).toBeTruthy();
+  });
+  it("sampleWarmupQuestions trả đúng 4 câu vocab-only", () => {
+    const qs = sampleWarmupQuestions(pool, () => 0.3);
+    expect(qs).toHaveLength(4);
+    expect(qs.every((q) => !q.listen)).toBe(true);
+  });
+  it("sampleMilestoneQuestions(pool) trả 12 câu, gram rỗng → toàn vocab, mỗi câu thứ 4 là nghe", () => {
+    const qs = sampleMilestoneQuestions(pool, () => 0.6);
+    expect(qs).toHaveLength(12);
+    expect(qs.filter((q) => q.listen).length).toBe(3);
   });
 });
 
