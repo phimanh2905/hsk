@@ -125,16 +125,17 @@ import { buildLevelStations, getRoadmapLevel, roadmapLevels } from "../roadmap-s
 
 describe("buildLevelStations", () => {
   const mk = (i: number) => ({ book: "hsk1", page: `lesson-${i}`, title: `Bài ${i}`, wordCount: 15 });
-  it("27 bài → 6 trạm (5 nhóm) + milestone cuối, mỗi trạm ≤5 lessons", () => {
+  it("27 bài → 6 trạm lesson (5+5+5+5+5+2) + milestone cuối = 7 trạm", () => {
     const lessons = Array.from({ length: 27 }, (_, i) => mk(i + 1));
     const stations = buildLevelStations(lessons);
-    expect(stations).toHaveLength(6);
-    expect(stations[5].kind).toBe("milestone");
+    expect(stations).toHaveLength(7);
     const lessonStations = stations.filter((s) => s.kind === "lesson");
-    expect(lessonStations.map((s) => s.lessons.length)).toEqual([5, 5, 5, 5, 5, 2]);
+    expect(lessonStations).toHaveLength(6);
+    expect(lessonStations.map((s) => s.lessons!.length)).toEqual([5, 5, 5, 5, 5, 2]);
+    expect(stations[6].kind).toBe("milestone");
     expect(lessonStations[0].id).toBe("g1");
-    expect(stations[5].id).toBe("milestone");
-    expect(lessonStations[0].lessons[0]).toEqual({ book: "hsk1", page: "lesson-1" });
+    expect(stations[6].id).toBe("milestone");
+    expect(lessonStations[0].lessons![0]).toEqual({ book: "hsk1", page: "lesson-1" });
     expect(lessonStations[0].title).toBe("Bài 1");
   });
 });
