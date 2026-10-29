@@ -101,7 +101,7 @@ export function buildStationQuestions(
   station: Station,
   pool: StationPool = { vocab: station.vocab, gram: station.gram },
   rng: Rng = Math.random,
-  opts?: { listenEvery?: number },
+  opts?: { listenEvery?: number; maxQuestions?: number },
 ): QuizQuestion[] {
   const qs: QuizQuestion[] = [];
   const listenEvery = opts?.listenEvery ?? 0;
@@ -131,6 +131,24 @@ export function buildStationQuestions(
       qs.push({ prompt: `Ý nghĩa “${desc}” ứng với mẫu nào?`, options, answerIndex });
     }
   });
+  /* Spec Roadmap Journey §3.3: quiz trạm thường đúng 8 câu. Trạm generator
+     fetch cả nhóm 5 bài (~100 từ) → lấy mẫu: ưu tiên 1 câu nghe + fill còn
+     lại từ câu nghĩa; curated (≤8) không đổi. */
+  const max = opts?.maxQuestions ?? 0;
+  if (max > 0 && qs.length > max) {
+    const listen = shuffle(qs.filter((q) => q.listen), rng);
+    const rest = shuffle(qs.filter((q) => !q.listen), rng);
+    const picked: QuizQuestion[] = listen.length > 0 ? [listen[0]!] : [];
+    for (const q of rest) {
+      if (picked.length >= max) break;
+      picked.push(q);
+    }
+    for (const q of listen.slice(1)) {
+      if (picked.length >= max) break;
+      picked.push(q);
+    }
+    return shuffle(picked, rng);
+  }
   return shuffle(qs, rng);
 }
 

@@ -10,11 +10,11 @@ import { cn } from "@/lib/cn";
 import { pinyinExamples } from "@/content/pinyin";
 import { useTts } from "@/lib/tts/use-tts";
 import { progressStore } from "@/lib/store/progress-store";
-import { PASS_PCT, type GateStatus } from "@/lib/roadmap-progress";
+import { GATE_STORE_ID, PASS_PCT, type GateStatus } from "@/lib/roadmap-progress";
 import type { QuizQuestion } from "@/lib/station-quiz";
 
 const GATE_TOTAL = 12;
-const GATE_LEVEL = "hsk1";
+
 const TTS_FALLBACK_MS = 1500;
 
 /* useSyncExternalStore với snapshot tĩnh (pct không đổi khi card đang mở) */
@@ -116,7 +116,7 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
      useSyncExternalStore để tránh setState-in-effect + hydration mismatch. */
   const gatePct = useSyncExternalStore(
     subscribeNoop,
-    () => progressStore.getRoadmapGate(GATE_LEVEL)?.pct ?? null,
+    () => progressStore.getRoadmapGate(GATE_STORE_ID)?.pct ?? null,
     () => null,
   );
 
@@ -194,7 +194,7 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
     }
     const pct = Math.round((correct / total) * 100);
     const passed = pct >= PASS_PCT;
-    if (passed) progressStore.setRoadmapGate(GATE_LEVEL, pct); // best-of
+    if (passed) progressStore.setRoadmapGate(GATE_STORE_ID, pct); // best-of
     setFinished({ pct, passed });
     if (passed) onPass?.();
   };

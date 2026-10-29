@@ -56,7 +56,11 @@ export function StationQuiz({
     () =>
       station.kind === "milestone"
         ? sampleMilestoneQuestions(activePool, rng)
-        : buildStationQuestions(questionSource, activePool, rng, { listenEvery }),
+        : buildStationQuestions(questionSource, activePool, rng, {
+            listenEvery,
+            // Spec Journey §3.3: trạm generator fetch cả nhóm (~100 từ) → đúng 8 câu
+            maxQuestions: station.vocab.length === 0 ? 8 : 0,
+          }),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- activePool/rng/questionSource ổn định theo station; seed đổi khi "Làm lại"
     [station.id, level.id, seed],
   );

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getRoadmapLevel, roadmapLevels } from "@/content/roadmap-stations";
 import {
+  GATE_STORE_ID,
   PASS_PCT,
   PINYIN_SESSIONS,
   bannerSummary,
@@ -8,7 +9,7 @@ import {
   gateStatus,
   overallRoadmapPct,
 } from "../roadmap-progress";
-import type { StationProgress } from "@/lib/store/progress-store";
+import { progressStore, type StationProgress } from "@/lib/store/progress-store";
 
 /* Task 5 — trọng số động: đếm trạm lesson từ content thay vì assertion tuyệt đối
    (regression Task 2 đã chuyển sang đếm động). */
@@ -332,5 +333,21 @@ describe("deriveStationStates — lessonDone (Task 5)", () => {
     const v = views.find((v2) => v2.station.id === g1.id)!;
     expect(v.pct).toBe(80);
     expect(v.state).toBe("done");
+  });
+});
+
+/* Task 10 QA fix: gateStatus tra cứu gate theo GATE_STORE_ID ("hsk1") — id
+   EntryGate setRoadmapGate — KHÔNG phải levelId "hsk-1" (trước fix cổng
+   không bao giờ mở dù đã pass). */
+describe("gateStatus — gate store key (GATE_STORE_ID)", () => {
+  it("progressStore thật: setRoadmapGate('hsk1', 83) → gateStatus('hsk-1') open", () => {
+    localStorage.clear();
+    progressStore.setRoadmapGate(GATE_STORE_ID, 83);
+    expect(gateStatus("hsk-1", progressStore, 0)).toBe("open");
+  });
+  it("gate lưu nhầm levelId 'hsk-1' không được nhận (không đọc nhầm key khác)", () => {
+    localStorage.clear();
+    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ "hsk-1": { pct: 100, at: 0 } }));
+    expect(gateStatus("hsk-1", progressStore, 0)).toBe("locked");
   });
 });

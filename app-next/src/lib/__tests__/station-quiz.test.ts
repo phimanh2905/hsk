@@ -144,6 +144,23 @@ describe("station-quiz v2", () => {
     expect(qs).toHaveLength(12);
     expect(qs.filter((q) => q.listen).length).toBe(3);
   });
+  it("maxQuestions=8 (trạm generator pool lớn): đúng 8 câu, ≥1 câu nghe, mọi câu đủ 4 options", () => {
+    const bigPool: StationPool = {
+      vocab: Array.from({ length: 100 }, (_, i) => [`词${i}`, `cí ${i}`, `nghĩa ${i}`] as [string, string, string]),
+      gram: [],
+    };
+    const genStation: Station = { id: "g1", no: "Trạm 1", kind: "lesson", title: "T", zh: "", meta: "", vocab: [], gram: [] };
+    // StationQuiz mount: questionSource = {...station, vocab: pool.vocab} trước khi build
+    const questionSource = { ...genStation, vocab: bigPool.vocab, gram: bigPool.gram };
+    const qs = buildStationQuestions(questionSource, bigPool, () => 0.42, { listenEvery: 4, maxQuestions: 8 });
+    expect(qs).toHaveLength(8);
+    expect(qs.filter((q) => q.listen).length).toBeGreaterThanOrEqual(1);
+    for (const q of qs) expect(q.options).toHaveLength(4);
+  });
+  it("maxQuestions không đổi quiz curated ngắn (≤8 câu)", () => {
+    const qs = buildStationQuestions(s1, undefined, () => 0.42, { maxQuestions: 8 });
+    expect(qs).toHaveLength(s1.vocab.length + s1.gram.length);
+  });
 });
 
 describe("submitStationResult", () => {

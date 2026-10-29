@@ -81,6 +81,11 @@ export function bannerSummary(level: RoadmapLevel, views: StationView[]): Banner
 /** Trạng thái cổng vào level: locked (chưa đạt) / open (được học) / exempt (pinyin xong, miễn gate). */
 export type GateStatus = "locked" | "open" | "exempt";
 
+/** ID gate trong bye.roadmap.gates.v1 — KHÔNG phải levelId ("hsk1" ≠ "hsk-1");
+    EntryGate setRoadmapGate("hsk1") cũng dùng id này (Task 10 fix: gateStatus
+    tra cứu theo levelId nên cổng không bao giờ mở dù đã pass). */
+export const GATE_STORE_ID = "hsk1";
+
 /** Store tối thiểu gateStatus cần (progressStore thỏa cấu trúc này). */
 export type GateStore = {
   getRoadmapDone(): number[];
@@ -92,7 +97,7 @@ export type GateStore = {
 export function gateStatus(levelId: string, store: GateStore, pinyinDoneCount: number): GateStatus {
   if (levelId !== "hsk-1") return "open";
   if (pinyinDoneCount >= PINYIN_SESSIONS) return "exempt";
-  const gate = store.getRoadmapGate(levelId);
+  const gate = store.getRoadmapGate(GATE_STORE_ID);
   if (gate != null && gate.pct >= PASS_PCT) return "open";
   return "locked";
 }

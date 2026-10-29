@@ -141,7 +141,8 @@ describe("RoadmapClient", () => {
   });
 
   it("Task 9 — banner hsk-1 gate open (gate 90%): 'Đã qua ✅'", () => {
-    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ "hsk-1": { pct: 90, at: 1 } }));
+    // GATE_STORE_ID — id EntryGate setRoadmapGate (fix Task 10: key cũ "hsk-1" là bug key-mismatch)
+    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ hsk1: { pct: 90, at: 1 } }));
     renderClient("hsk-1");
     expect(screen.getByText("Cổng đầu vào: Đã qua ✅")).toBeTruthy();
   });
