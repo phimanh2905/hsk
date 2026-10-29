@@ -123,6 +123,18 @@ describe("RoadmapClient", () => {
     expect(screen.queryByTestId("journey-start")).toBeNull();
   });
 
+  it("Task 9 (fix R1) — overall>0 cô lập qua station record (không seed pinyin): vẫn ẩn journey-start", () => {
+    // Station hsk-2 "1" pct>=80 → overallRoadmapPct > 0 dù pinyinDone = 0:
+    // điều kiện ẩn là overall === 0 (false DO overall), không phải pinyinDone > 0.
+    localStorage.setItem(
+      "bye.roadmap.stations.v1",
+      JSON.stringify({ "hsk-2": { "1": { pct: 100, stars: 3 } } }),
+    );
+    renderClient("pinyin");
+    expect(screen.getByText("Chưa bắt đầu · mở lộ trình Pinyin")).toBeTruthy();
+    expect(screen.queryByTestId("journey-start")).toBeNull();
+  });
+
   it("Task 9 — banner hsk-1 gate locked: 'Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)'", () => {
     renderClient("hsk-1");
     expect(screen.getByText("Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)")).toBeTruthy();
