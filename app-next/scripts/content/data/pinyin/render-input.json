@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T17:04:44.574Z",
+  "generatedAt": "2026-10-29T17:10:51.191Z",
   "cells": [
     {
       "initial": "Ø",
@@ -7,9 +7,9 @@
       "base": "a",
       "hanzi": [
         "阿",
-        null,
-        null,
-        null,
+        "啊",
+        "啊",
+        "啊",
         "啊"
       ]
     },
@@ -18,11 +18,11 @@
       "final": "o",
       "base": "o",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
-        null
+        "喔",
+        "哦",
+        "嚄",
+        "哦",
+        "哦"
       ]
     },
     {
@@ -30,9 +30,9 @@
       "final": "e",
       "base": "e",
       "hanzi": [
-        null,
-        null,
-        null,
+        "妸",
+        "䖸",
+        "恶",
         "饿",
         null
       ]
@@ -54,8 +54,8 @@
       "final": "ai",
       "base": "ai",
       "hanzi": [
-        null,
-        null,
+        "哀",
+        "挨",
         "矮",
         "爱",
         null
@@ -66,10 +66,10 @@
       "final": "ei",
       "base": "ei",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "欸",
+        "欸",
+        "欸",
+        "欸",
         null
       ]
     },
@@ -78,10 +78,10 @@
       "final": "ao",
       "base": "ao",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "凹",
+        "嗷",
+        "拗",
+        "傲",
         null
       ]
     },
@@ -90,10 +90,10 @@
       "final": "ou",
       "base": "ou",
       "hanzi": [
-        null,
-        null,
+        "欧",
+        "吽",
         "偶",
-        null,
+        "怄",
         null
       ]
     },
@@ -103,8 +103,8 @@
       "base": "an",
       "hanzi": [
         "安",
-        null,
-        null,
+        "啽",
+        "俺",
         "案",
         null
       ]
@@ -114,11 +114,11 @@
       "final": "en",
       "base": "en",
       "hanzi": [
+        "嗯",
         null,
         null,
-        null,
-        null,
-        null
+        "嗯",
+        "嗯"
       ]
     },
     {
@@ -126,10 +126,10 @@
       "final": "ang",
       "base": "ang",
       "hanzi": [
+        "肮",
+        "卬",
         null,
-        null,
-        null,
-        null,
+        "枊",
         null
       ]
     },
@@ -138,7 +138,7 @@
       "final": "eng",
       "base": "eng",
       "hanzi": [
-        null,
+        "鞥",
         null,
         null,
         null,
@@ -164,7 +164,7 @@
       "hanzi": [
         "压",
         "芽",
-        null,
+        "疋",
         "亚",
         "呀"
       ]
@@ -174,11 +174,11 @@
       "final": "ie",
       "base": "ye",
       "hanzi": [
-        null,
+        "倻",
         "爷",
         "也",
         "业",
-        null
+        "耶"
       ]
     },
     {
@@ -259,7 +259,7 @@
       "base": "yong",
       "hanzi": [
         "拥",
-        null,
+        "喁",
         "永",
         "用",
         null
@@ -282,11 +282,11 @@
       "final": "ua",
       "base": "wa",
       "hanzi": [
-        null,
-        null,
-        null,
+        "凹",
+        "娃",
+        "搲",
         "袜",
-        null
+        "哇"
       ]
     },
     {
@@ -294,7 +294,7 @@
       "final": "uo",
       "base": "wo",
       "hanzi": [
-        null,
+        "倭",
         null,
         "我",
         "握",
@@ -306,9 +306,9 @@
       "final": "uai",
       "base": "wai",
       "hanzi": [
+        "歪",
         null,
-        null,
-        null,
+        "崴",
         "外",
         null
       ]
@@ -354,7 +354,7 @@
       "final": "uang",
       "base": "wang",
       "hanzi": [
-        null,
+        "尢",
         "王",
         "网",
         "忘",
@@ -366,10 +366,10 @@
       "final": "ueng",
       "base": "weng",
       "hanzi": [
+        "嗡",
         null,
-        null,
-        null,
-        null,
+        "塕",
+        "瓮",
         null
       ]
     },
@@ -378,7 +378,7 @@
       "final": "ü",
       "base": "yu",
       "hanzi": [
-        null,
+        "淤",
         "鱼",
         "雨",
         "育",
@@ -392,7 +392,7 @@
       "hanzi": [
         "约",
         null,
-        null,
+        "哕",
         "月",
         null
       ]
@@ -402,7 +402,7 @@
       "final": "üan",
       "base": "yuan",
       "hanzi": [
-        null,
+        "冤",
         "元",
         "远",
         "院",
@@ -414,7 +414,7 @@
       "final": "ün",
       "base": "yun",
       "hanzi": [
-        null,
+        "奫",
         "云",
         "允",
         "运",
@@ -438,7 +438,7 @@
       "final": "ai",
       "base": "bai",
       "hanzi": [
-        null,
+        "掰",
         "白",
         "百",
         "败",
@@ -454,7 +454,7 @@
         null,
         "北",
         "背",
-        null
+        "呗"
       ]
     },
     {
@@ -486,7 +486,7 @@
       "final": "en",
       "base": "ben",
       "hanzi": [
-        null,
+        "奔",
         null,
         "本",
         "笨",
@@ -510,10 +510,10 @@
       "final": "eng",
       "base": "beng",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "伻",
+        "甭",
+        "埄",
+        "泵",
         null
       ]
     },
@@ -522,7 +522,7 @@
       "final": "i",
       "base": "bi",
       "hanzi": [
-        null,
+        "屄",
         "鼻",
         "笔",
         "必",
@@ -534,10 +534,10 @@
       "final": "ie",
       "base": "bie",
       "hanzi": [
-        null,
+        "憋",
         "别",
-        null,
-        null,
+        "瘪",
+        "别",
         null
       ]
     },
@@ -547,9 +547,9 @@
       "base": "biao",
       "hanzi": [
         "标",
-        null,
+        "嫑",
         "表",
-        null,
+        "俵",
         null
       ]
     },
@@ -560,9 +560,9 @@
       "hanzi": [
         "边",
         null,
-        null,
+        "匾",
         "便",
-        null
+        "边"
       ]
     },
     {
@@ -573,7 +573,7 @@
         "宾",
         null,
         null,
-        null,
+        "髩",
         null
       ]
     },
@@ -594,8 +594,8 @@
       "final": "u",
       "base": "bu",
       "hanzi": [
-        null,
-        null,
+        "晡",
+        "醭",
         "补",
         "不",
         null
@@ -608,9 +608,9 @@
       "hanzi": [
         "播",
         "博",
-        null,
-        null,
-        null
+        "簸",
+        "捭",
+        "啵"
       ]
     },
     {
@@ -618,7 +618,7 @@
       "final": "a",
       "base": "pa",
       "hanzi": [
-        null,
+        "啪",
         "爬",
         null,
         "怕",
@@ -632,7 +632,7 @@
       "hanzi": [
         "拍",
         "排",
-        null,
+        "迫",
         "派",
         null
       ]
@@ -642,7 +642,7 @@
       "final": "ei",
       "base": "pei",
       "hanzi": [
-        null,
+        "呸",
         "培",
         null,
         "配",
@@ -654,10 +654,10 @@
       "final": "ao",
       "base": "pao",
       "hanzi": [
-        null,
-        null,
+        "泡",
+        "刨",
         "跑",
-        null,
+        "泡",
         null
       ]
     },
@@ -666,9 +666,9 @@
       "final": "ou",
       "base": "pou",
       "hanzi": [
-        null,
-        null,
-        null,
+        "剖",
+        "垺",
+        "㕻",
         null,
         null
       ]
@@ -678,7 +678,7 @@
       "final": "an",
       "base": "pan",
       "hanzi": [
-        null,
+        "扳",
         "盘",
         null,
         "判",
@@ -693,7 +693,7 @@
         "喷",
         "盆",
         null,
-        null,
+        "喷",
         null
       ]
     },
@@ -702,9 +702,9 @@
       "final": "ang",
       "base": "pang",
       "hanzi": [
-        null,
+        "乓",
         "旁",
-        null,
+        "嗙",
         "胖",
         null
       ]
@@ -714,9 +714,9 @@
       "final": "eng",
       "base": "peng",
       "hanzi": [
-        null,
+        "䦕",
         "朋",
-        null,
+        "捧",
         "碰",
         null
       ]
@@ -729,7 +729,7 @@
         "批",
         "啤",
         "匹",
-        null,
+        "僻",
         null
       ]
     },
@@ -738,9 +738,9 @@
       "final": "ie",
       "base": "pie",
       "hanzi": [
+        "撆",
         null,
-        null,
-        null,
+        "丿",
         null,
         null
       ]
@@ -751,8 +751,8 @@
       "base": "piao",
       "hanzi": [
         "漂",
-        null,
-        null,
+        "嫖",
+        "殍",
         "票",
         null
       ]
@@ -763,8 +763,8 @@
       "base": "pian",
       "hanzi": [
         "篇",
-        null,
-        null,
+        "便",
+        "谝",
         "片",
         null
       ]
@@ -777,7 +777,7 @@
         "拼",
         "频",
         "品",
-        null,
+        "牝",
         null
       ]
     },
@@ -786,7 +786,7 @@
       "final": "ing",
       "base": "ping",
       "hanzi": [
-        null,
+        "乒",
         "苹",
         null,
         null,
@@ -798,10 +798,10 @@
       "final": "u",
       "base": "pu",
       "hanzi": [
-        null,
+        "仆",
         "葡",
         "普",
-        null,
+        "堡",
         null
       ]
     },
@@ -812,9 +812,9 @@
       "hanzi": [
         "泼",
         "婆",
-        null,
+        "叵",
         "破",
-        null
+        "桲"
       ]
     },
     {
@@ -847,7 +847,7 @@
       "base": "mai",
       "hanzi": [
         null,
-        null,
+        "埋",
         "买",
         "卖",
         null
@@ -872,7 +872,7 @@
       "hanzi": [
         "猫",
         "毛",
-        null,
+        "冇",
         "冒",
         null
       ]
@@ -882,8 +882,8 @@
       "final": "ou",
       "base": "mou",
       "hanzi": [
-        null,
-        null,
+        "哞",
+        "侔",
         "某",
         null,
         null
@@ -894,8 +894,8 @@
       "final": "an",
       "base": "man",
       "hanzi": [
-        null,
-        null,
+        "嫚",
+        "埋",
         "满",
         "慢",
         null
@@ -906,10 +906,10 @@
       "final": "en",
       "base": "men",
       "hanzi": [
-        null,
+        "闷",
         "门",
         null,
-        null,
+        "暪",
         "们"
       ]
     },
@@ -918,9 +918,9 @@
       "final": "ang",
       "base": "mang",
       "hanzi": [
-        null,
+        "牤",
         "忙",
-        null,
+        "漭",
         null,
         null
       ]
@@ -930,9 +930,9 @@
       "final": "eng",
       "base": "meng",
       "hanzi": [
-        null,
-        null,
-        null,
+        "蒙",
+        "䖟",
+        "勐",
         "梦",
         null
       ]
@@ -942,11 +942,11 @@
       "final": "i",
       "base": "mi",
       "hanzi": [
-        null,
+        "咪",
         "迷",
         "米",
         "密",
-        null
+        "袮"
       ]
     },
     {
@@ -954,7 +954,7 @@
       "final": "ie",
       "base": "mie",
       "hanzi": [
-        null,
+        "乜",
         null,
         null,
         "灭",
@@ -966,7 +966,7 @@
       "final": "iao",
       "base": "miao",
       "hanzi": [
-        null,
+        "喵",
         "描",
         "秒",
         "庙",
@@ -981,7 +981,7 @@
         null,
         null,
         null,
-        null,
+        "缪",
         null
       ]
     },
@@ -1016,7 +1016,7 @@
       "hanzi": [
         null,
         "名",
-        null,
+        "酩",
         "命",
         null
       ]
@@ -1027,7 +1027,7 @@
       "base": "mu",
       "hanzi": [
         null,
-        null,
+        "模",
         "母",
         "目",
         null
@@ -1040,7 +1040,7 @@
       "hanzi": [
         "摸",
         "模",
-        null,
+        "抹",
         "末",
         null
       ]
@@ -1053,7 +1053,7 @@
         "发",
         "伐",
         "法",
-        null,
+        "珐",
         null
       ]
     },
@@ -1064,7 +1064,7 @@
       "hanzi": [
         "飞",
         "肥",
-        null,
+        "匪",
         "费",
         null
       ]
@@ -1075,7 +1075,7 @@
       "base": "fou",
       "hanzi": [
         null,
-        null,
+        "紑",
         "否",
         null,
         null
@@ -1099,7 +1099,7 @@
       "base": "fen",
       "hanzi": [
         "分",
-        null,
+        "坆",
         "粉",
         "份",
         null
@@ -1123,8 +1123,8 @@
       "base": "feng",
       "hanzi": [
         "风",
-        null,
-        null,
+        "夆",
+        "唪",
         "缝",
         null
       ]
@@ -1147,7 +1147,7 @@
       "base": "fo",
       "hanzi": [
         null,
-        null,
+        "坲",
         null,
         null,
         null
@@ -1158,11 +1158,11 @@
       "final": "a",
       "base": "da",
       "hanzi": [
-        null,
+        "咑",
         "答",
         "打",
         "大",
-        null
+        "疸"
       ]
     },
     {
@@ -1170,10 +1170,10 @@
       "final": "e",
       "base": "de",
       "hanzi": [
-        null,
+        "嘚",
         "得",
         null,
-        null,
+        "嘚",
         "的"
       ]
     },
@@ -1184,7 +1184,7 @@
       "hanzi": [
         "呆",
         null,
-        null,
+        "歹",
         "带",
         null
       ]
@@ -1196,7 +1196,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "得",
         null,
         null
       ]
@@ -1207,7 +1207,7 @@
       "base": "dao",
       "hanzi": [
         "刀",
-        null,
+        "捯",
         "导",
         "到",
         null
@@ -1220,7 +1220,7 @@
       "hanzi": [
         "都",
         null,
-        null,
+        "唞",
         "豆",
         null
       ]
@@ -1245,7 +1245,7 @@
         null,
         null,
         null,
-        null,
+        "㩐",
         null
       ]
     },
@@ -1257,7 +1257,7 @@
         "当",
         null,
         "挡",
-        null,
+        "凼",
         null
       ]
     },
@@ -1269,7 +1269,7 @@
         "灯",
         null,
         "等",
-        null,
+        "凳",
         null
       ]
     },
@@ -1304,7 +1304,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "嗲",
         null,
         null
       ]
@@ -1314,8 +1314,8 @@
       "final": "ie",
       "base": "die",
       "hanzi": [
-        null,
-        null,
+        "爹",
+        "佚",
         null,
         null,
         null
@@ -1326,9 +1326,9 @@
       "final": "iao",
       "base": "diao",
       "hanzi": [
+        "凋",
         null,
-        null,
-        null,
+        "屌",
         "掉",
         null
       ]
@@ -1350,7 +1350,7 @@
       "final": "ian",
       "base": "dian",
       "hanzi": [
-        null,
+        "傎",
         null,
         "点",
         "电",
@@ -1374,7 +1374,7 @@
       "final": "ing",
       "base": "ding",
       "hanzi": [
-        null,
+        "丁",
         null,
         "顶",
         "定",
@@ -1386,7 +1386,7 @@
       "final": "u",
       "base": "du",
       "hanzi": [
-        null,
+        "厾",
         "读",
         "堵",
         "度",
@@ -1399,9 +1399,9 @@
       "base": "duo",
       "hanzi": [
         "多",
-        null,
+        "度",
         "朵",
-        null,
+        "刴",
         null
       ]
     },
@@ -1412,7 +1412,7 @@
       "hanzi": [
         "堆",
         null,
-        null,
+        "㨃",
         "对",
         null
       ]
@@ -1422,7 +1422,7 @@
       "final": "uan",
       "base": "duan",
       "hanzi": [
-        null,
+        "媏",
         null,
         "短",
         "段",
@@ -1436,7 +1436,7 @@
       "hanzi": [
         "吨",
         null,
-        null,
+        "盹",
         "顿",
         null
       ]
@@ -1448,8 +1448,8 @@
       "hanzi": [
         "他",
         null,
-        null,
-        null,
+        "塔",
+        "嗒",
         null
       ]
     },
@@ -1470,9 +1470,9 @@
       "final": "ai",
       "base": "tai",
       "hanzi": [
-        null,
         "台",
-        null,
+        "台",
+        "呔",
         "太",
         null
       ]
@@ -1482,7 +1482,7 @@
       "final": "ei",
       "base": "tei",
       "hanzi": [
-        null,
+        "忒",
         null,
         null,
         null,
@@ -1494,7 +1494,7 @@
       "final": "ao",
       "base": "tao",
       "hanzi": [
-        null,
+        "叨",
         "萄",
         "讨",
         "套",
@@ -1508,9 +1508,9 @@
       "hanzi": [
         "偷",
         "头",
-        null,
+        "妵",
         "透",
-        null
+        "头"
       ]
     },
     {
@@ -1518,10 +1518,10 @@
       "final": "an",
       "base": "tan",
       "hanzi": [
-        null,
+        "坍",
         "谈",
         "坦",
-        null,
+        "宕",
         null
       ]
     },
@@ -1533,7 +1533,7 @@
         "汤",
         "糖",
         "躺",
-        null,
+        "趟",
         null
       ]
     },
@@ -1542,7 +1542,7 @@
       "final": "eng",
       "base": "teng",
       "hanzi": [
-        null,
+        "熥",
         "疼",
         null,
         null,
@@ -1581,7 +1581,7 @@
         "贴",
         null,
         "铁",
-        null,
+        "呫",
         null
       ]
     },
@@ -1592,7 +1592,7 @@
       "hanzi": [
         "挑",
         "条",
-        null,
+        "䠷",
         "跳",
         null
       ]
@@ -1604,8 +1604,8 @@
       "hanzi": [
         "天",
         "甜",
-        null,
-        null,
+        "㥏",
+        "掭",
         null
       ]
     },
@@ -1639,9 +1639,9 @@
       "base": "tuo",
       "hanzi": [
         "脱",
-        null,
-        null,
-        null,
+        "佗",
+        "妥",
+        "唾",
         null
       ]
     },
@@ -1651,7 +1651,7 @@
       "base": "tui",
       "hanzi": [
         "推",
-        null,
+        "蹪",
         "腿",
         "退",
         null
@@ -1662,10 +1662,10 @@
       "final": "uan",
       "base": "tuan",
       "hanzi": [
-        null,
+        "圕",
         "团",
-        null,
-        null,
+        "畽",
+        "彖",
         null
       ]
     },
@@ -1674,10 +1674,10 @@
       "final": "un",
       "base": "tun",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "吞",
+        "㹠",
+        "氽",
+        "褪",
         null
       ]
     },
@@ -1686,11 +1686,11 @@
       "final": "a",
       "base": "na",
       "hanzi": [
-        null,
+        "南",
         "拿",
         "哪",
         "那",
-        null
+        "哪"
       ]
     },
     {
@@ -1699,9 +1699,9 @@
       "base": "ne",
       "hanzi": [
         null,
+        "哪",
         null,
-        null,
-        null,
+        "㕯",
         "呢"
       ]
     },
@@ -1724,7 +1724,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "哪",
         "内",
         null
       ]
@@ -1734,8 +1734,8 @@
       "final": "ao",
       "base": "nao",
       "hanzi": [
-        null,
-        null,
+        "孬",
+        "呶",
         "脑",
         "闹",
         null
@@ -1749,7 +1749,7 @@
         null,
         null,
         null,
-        null,
+        "獳",
         null
       ]
     },
@@ -1758,10 +1758,10 @@
       "final": "an",
       "base": "nan",
       "hanzi": [
-        null,
+        "囝",
         "男",
-        null,
-        null,
+        "戁",
+        "难",
         null
       ]
     },
@@ -1773,7 +1773,7 @@
         null,
         null,
         null,
-        null,
+        "嫩",
         null
       ]
     },
@@ -1782,10 +1782,10 @@
       "final": "ang",
       "base": "nang",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "乪",
+        "囊",
+        "攮",
+        "齉",
         null
       ]
     },
@@ -1818,10 +1818,10 @@
       "final": "i",
       "base": "ni",
       "hanzi": [
-        null,
+        "妮",
         "泥",
         "你",
-        null,
+        "伲",
         null
       ]
     },
@@ -1830,10 +1830,10 @@
       "final": "ie",
       "base": "nie",
       "hanzi": [
+        "捏",
+        "苶",
         null,
-        null,
-        null,
-        null,
+        "喦",
         null
       ]
     },
@@ -1845,7 +1845,7 @@
         null,
         null,
         "鸟",
-        null,
+        "㞙",
         null
       ]
     },
@@ -1854,10 +1854,10 @@
       "final": "iu",
       "base": "niu",
       "hanzi": [
-        null,
+        "妞",
         "牛",
         "钮",
-        null,
+        "拗",
         null
       ]
     },
@@ -1866,9 +1866,9 @@
       "final": "ian",
       "base": "nian",
       "hanzi": [
-        null,
+        "拈",
         "年",
-        null,
+        "捻",
         "念",
         null
       ]
@@ -1893,7 +1893,7 @@
         null,
         "娘",
         null,
-        null,
+        "酿",
         null
       ]
     },
@@ -1904,8 +1904,8 @@
       "hanzi": [
         null,
         "宁",
-        null,
-        null,
+        "拧",
+        "佞",
         null
       ]
     },
@@ -1915,9 +1915,9 @@
       "base": "nu",
       "hanzi": [
         null,
-        null,
+        "奴",
         "努",
-        null,
+        "怒",
         null
       ]
     },
@@ -1927,9 +1927,9 @@
       "base": "nuo",
       "hanzi": [
         null,
-        null,
-        null,
-        null,
+        "娜",
+        "㛂",
+        "㐡",
         null
       ]
     },
@@ -1951,7 +1951,7 @@
       "base": "nun",
       "hanzi": [
         null,
-        null,
+        "黁",
         null,
         null,
         null
@@ -1977,7 +1977,7 @@
         null,
         null,
         null,
-        null,
+        "虐",
         null
       ]
     },
@@ -1987,10 +1987,10 @@
       "base": "la",
       "hanzi": [
         "拉",
-        null,
-        null,
+        "剌",
+        "喇",
         "蜡",
-        null
+        "啦"
       ]
     },
     {
@@ -2002,7 +2002,7 @@
         null,
         null,
         null,
-        null
+        "咯"
       ]
     },
     {
@@ -2025,8 +2025,8 @@
         null,
         "来",
         null,
-        null,
-        null
+        "藾",
+        "𫪁"
       ]
     },
     {
@@ -2034,11 +2034,11 @@
       "final": "ei",
       "base": "lei",
       "hanzi": [
-        null,
+        "勒",
         "雷",
-        null,
+        "儡",
         "累",
-        null
+        "嘞"
       ]
     },
     {
@@ -2046,10 +2046,10 @@
       "final": "ao",
       "base": "lao",
       "hanzi": [
-        null,
+        "粩",
         "劳",
         "老",
-        null,
+        "嫪",
         null
       ]
     },
@@ -2058,11 +2058,11 @@
       "final": "ou",
       "base": "lou",
       "hanzi": [
-        null,
+        "搂",
         "楼",
-        null,
+        "𪣻",
         "漏",
-        null
+        "喽"
       ]
     },
     {
@@ -2082,7 +2082,7 @@
       "final": "ang",
       "base": "lang",
       "hanzi": [
-        null,
+        "啷",
         "郎",
         "朗",
         "浪",
@@ -2094,10 +2094,10 @@
       "final": "eng",
       "base": "leng",
       "hanzi": [
-        null,
-        null,
+        "棱",
+        "塄",
         "冷",
-        null,
+        "愣",
         null
       ]
     },
@@ -2106,10 +2106,10 @@
       "final": "ong",
       "base": "long",
       "hanzi": [
-        null,
+        "隆",
         "龙",
-        null,
-        null,
+        "儱",
+        "哢",
         null
       ]
     },
@@ -2122,7 +2122,7 @@
         "离",
         "里",
         "力",
-        null
+        "哩"
       ]
     },
     {
@@ -2142,11 +2142,11 @@
       "final": "ie",
       "base": "lie",
       "hanzi": [
+        "咧",
         null,
-        null,
-        null,
+        "咧",
         "烈",
-        null
+        "咧"
       ]
     },
     {
@@ -2154,9 +2154,9 @@
       "final": "iao",
       "base": "liao",
       "hanzi": [
-        null,
+        "撩",
         "聊",
-        null,
+        "了",
         "料",
         null
       ]
@@ -2166,9 +2166,9 @@
       "final": "iu",
       "base": "liu",
       "hanzi": [
-        null,
+        "溜",
         "留",
-        null,
+        "柳",
         "六",
         null
       ]
@@ -2190,10 +2190,10 @@
       "final": "in",
       "base": "lin",
       "hanzi": [
-        null,
+        "拎",
         "临",
-        null,
-        null,
+        "僯",
+        "吝",
         null
       ]
     },
@@ -2214,7 +2214,7 @@
       "final": "ing",
       "base": "ling",
       "hanzi": [
-        null,
+        "昤",
         "零",
         "领",
         "另",
@@ -2226,9 +2226,9 @@
       "final": "u",
       "base": "lu",
       "hanzi": [
-        null,
-        null,
-        null,
+        "噜",
+        "玈",
+        "橹",
         "路",
         null
       ]
@@ -2238,11 +2238,11 @@
       "final": "uo",
       "base": "luo",
       "hanzi": [
-        null,
+        "捋",
         "逻",
-        null,
+        "倮",
         "落",
-        null
+        "啰"
       ]
     },
     {
@@ -2251,8 +2251,8 @@
       "base": "luan",
       "hanzi": [
         null,
-        null,
-        null,
+        "𪢮",
+        "卵",
         "乱",
         null
       ]
@@ -2262,7 +2262,7 @@
       "final": "un",
       "base": "lun",
       "hanzi": [
-        null,
+        "抡",
         "轮",
         null,
         "论",
@@ -2275,7 +2275,7 @@
       "base": "lü",
       "hanzi": [
         null,
-        null,
+        "藘",
         "旅",
         "绿",
         null
@@ -2289,7 +2289,7 @@
         null,
         null,
         null,
-        null,
+        "圙",
         null
       ]
     },
@@ -2298,9 +2298,9 @@
       "final": "a",
       "base": "za",
       "hanzi": [
-        null,
+        "匝",
         "杂",
-        null,
+        "咋",
         null,
         null
       ]
@@ -2313,7 +2313,7 @@
         null,
         "则",
         null,
-        null,
+        "仄",
         null
       ]
     },
@@ -2335,7 +2335,7 @@
       "base": "zei",
       "hanzi": [
         null,
-        null,
+        "戝",
         null,
         null,
         null
@@ -2347,7 +2347,7 @@
       "base": "zao",
       "hanzi": [
         "糟",
-        null,
+        "凿",
         "早",
         "造",
         null
@@ -2358,10 +2358,10 @@
       "final": "ou",
       "base": "zou",
       "hanzi": [
-        null,
+        "掫",
         null,
         "走",
-        null,
+        "奏",
         null
       ]
     },
@@ -2370,9 +2370,9 @@
       "final": "an",
       "base": "zan",
       "hanzi": [
-        null,
+        "簪",
         "咱",
-        null,
+        "儹",
         "赞",
         null
       ]
@@ -2385,7 +2385,7 @@
         null,
         null,
         "怎",
-        null,
+        "谮",
         null
       ]
     },
@@ -2394,9 +2394,9 @@
       "final": "ang",
       "base": "zang",
       "hanzi": [
+        "牂",
         null,
-        null,
-        null,
+        "驵",
         "脏",
         null
       ]
@@ -2421,7 +2421,7 @@
         "综",
         null,
         "总",
-        null,
+        "粽",
         null
       ]
     },
@@ -2442,7 +2442,7 @@
       "final": "uo",
       "base": "zuo",
       "hanzi": [
-        null,
+        "作",
         "昨",
         "左",
         "坐",
@@ -2454,7 +2454,7 @@
       "final": "ui",
       "base": "zui",
       "hanzi": [
-        null,
+        "厜",
         null,
         "嘴",
         "最",
@@ -2466,10 +2466,10 @@
       "final": "uan",
       "base": "zuan",
       "hanzi": [
+        "躜",
         null,
-        null,
-        null,
-        null,
+        "籫",
+        "揝",
         null
       ]
     },
@@ -2480,8 +2480,8 @@
       "hanzi": [
         "尊",
         null,
-        null,
-        null,
+        "僔",
+        "俊",
         null
       ]
     },
@@ -2492,7 +2492,7 @@
       "hanzi": [
         "擦",
         null,
-        null,
+        "礤",
         null,
         null
       ]
@@ -2527,9 +2527,9 @@
       "base": "cao",
       "hanzi": [
         "操",
-        null,
+        "嘈",
         "草",
-        null,
+        "操",
         null
       ]
     },
@@ -2541,7 +2541,7 @@
         null,
         null,
         null,
-        null,
+        "腠",
         null
       ]
     },
@@ -2551,9 +2551,9 @@
       "base": "can",
       "hanzi": [
         "餐",
-        null,
-        null,
-        null,
+        "惭",
+        "憯",
+        "孱",
         null
       ]
     },
@@ -2562,8 +2562,8 @@
       "final": "en",
       "base": "cen",
       "hanzi": [
-        null,
-        null,
+        "参",
+        "岑",
         null,
         null,
         null
@@ -2586,10 +2586,10 @@
       "final": "eng",
       "base": "ceng",
       "hanzi": [
-        null,
+        "噌",
         "层",
         null,
-        null,
+        "蹭",
         null
       ]
     },
@@ -2611,8 +2611,8 @@
       "base": "cu",
       "hanzi": [
         "粗",
-        null,
-        null,
+        "徂",
+        "皻",
         "促",
         null
       ]
@@ -2622,9 +2622,9 @@
       "final": "uo",
       "base": "cuo",
       "hanzi": [
-        null,
-        null,
-        null,
+        "搓",
+        "嵯",
+        "脞",
         "错",
         null
       ]
@@ -2634,9 +2634,9 @@
       "final": "ui",
       "base": "cui",
       "hanzi": [
+        "催",
         null,
-        null,
-        null,
+        "漼",
         "脆",
         null
       ]
@@ -2646,10 +2646,10 @@
       "final": "uan",
       "base": "cuan",
       "hanzi": [
+        "汆",
+        "攒",
         null,
-        null,
-        null,
-        null,
+        "爨",
         null
       ]
     },
@@ -2660,7 +2660,7 @@
       "hanzi": [
         "村",
         "存",
-        null,
+        "刌",
         "寸",
         null
       ]
@@ -2670,10 +2670,10 @@
       "final": "a",
       "base": "sa",
       "hanzi": [
-        null,
+        "仨",
         null,
         "洒",
-        null,
+        "卅",
         null
       ]
     },
@@ -2694,7 +2694,7 @@
       "final": "ai",
       "base": "sai",
       "hanzi": [
-        null,
+        "嘥",
         null,
         null,
         "赛",
@@ -2706,10 +2706,10 @@
       "final": "ao",
       "base": "sao",
       "hanzi": [
-        null,
+        "慅",
         null,
         "扫",
-        null,
+        "喿",
         null
       ]
     },
@@ -2720,8 +2720,8 @@
       "hanzi": [
         "艘",
         null,
-        null,
-        null,
+        "叟",
+        "嗽",
         null
       ]
     },
@@ -2754,10 +2754,10 @@
       "final": "ang",
       "base": "sang",
       "hanzi": [
+        "桑",
         null,
-        null,
-        null,
-        null,
+        "嗓",
+        "丧",
         null
       ]
     },
@@ -2766,7 +2766,7 @@
       "final": "eng",
       "base": "seng",
       "hanzi": [
-        null,
+        "僧",
         null,
         null,
         null,
@@ -2779,8 +2779,8 @@
       "base": "song",
       "hanzi": [
         "松",
-        null,
-        null,
+        "𪨊",
+        "悚",
         "送",
         null
       ]
@@ -2790,7 +2790,7 @@
       "final": "u",
       "base": "su",
       "hanzi": [
-        null,
+        "窣",
         "俗",
         null,
         "诉",
@@ -2816,7 +2816,7 @@
       "hanzi": [
         "虽",
         "随",
-        null,
+        "䯝",
         "岁",
         null
       ]
@@ -2828,7 +2828,7 @@
       "hanzi": [
         "酸",
         null,
-        null,
+        "匴",
         "算",
         null
       ]
@@ -2850,11 +2850,11 @@
       "final": "a",
       "base": "zha",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
-        null
+        "劄",
+        "扎",
+        "拃",
+        "䃎",
+        "馇"
       ]
     },
     {
@@ -2862,7 +2862,7 @@
       "final": "e",
       "base": "zhe",
       "hanzi": [
-        null,
+        "嫬",
         "折",
         "者",
         "这",
@@ -2875,9 +2875,9 @@
       "base": "zhai",
       "hanzi": [
         "摘",
-        null,
-        null,
-        null,
+        "宅",
+        "窄",
+        "寨",
         null
       ]
     },
@@ -2889,7 +2889,7 @@
         null,
         null,
         null,
-        null,
+        "这",
         null
       ]
     },
@@ -2899,7 +2899,7 @@
       "base": "zhao",
       "hanzi": [
         "招",
-        null,
+        "着",
         "找",
         "照",
         null
@@ -2911,9 +2911,9 @@
       "base": "zhou",
       "hanzi": [
         "周",
-        null,
-        null,
-        null,
+        "妯",
+        "帚",
+        "冑",
         null
       ]
     },
@@ -2996,7 +2996,7 @@
       "hanzi": [
         "抓",
         null,
-        null,
+        "爪",
         null,
         null
       ]
@@ -3007,7 +3007,7 @@
       "base": "zhuo",
       "hanzi": [
         "桌",
-        null,
+        "䅵",
         null,
         null,
         null
@@ -3018,10 +3018,10 @@
       "final": "uai",
       "base": "zhuai",
       "hanzi": [
+        "拽",
         null,
-        null,
-        null,
-        null,
+        "拽",
+        "拽",
         null
       ]
     },
@@ -3033,7 +3033,7 @@
         "追",
         null,
         null,
-        null,
+        "惴",
         null
       ]
     },
@@ -3054,7 +3054,7 @@
       "final": "un",
       "base": "zhun",
       "hanzi": [
-        null,
+        "屯",
         null,
         "准",
         null,
@@ -3068,7 +3068,7 @@
       "hanzi": [
         "装",
         null,
-        null,
+        "奘",
         "状",
         null
       ]
@@ -3080,7 +3080,7 @@
       "hanzi": [
         "叉",
         "茶",
-        null,
+        "叉",
         "差",
         null
       ]
@@ -3092,7 +3092,7 @@
       "hanzi": [
         "车",
         null,
-        null,
+        "尺",
         "彻",
         null
       ]
@@ -3104,8 +3104,8 @@
       "hanzi": [
         "拆",
         "柴",
-        null,
-        null,
+        "茝",
+        "囆",
         null
       ]
     },
@@ -3117,7 +3117,7 @@
         "超",
         "朝",
         "吵",
-        null,
+        "耖",
         null
       ]
     },
@@ -3138,10 +3138,10 @@
       "final": "an",
       "base": "chan",
       "hanzi": [
-        null,
-        null,
+        "幨",
+        "僝",
         "产",
-        null,
+        "儳",
         null
       ]
     },
@@ -3150,9 +3150,9 @@
       "final": "en",
       "base": "chen",
       "hanzi": [
-        null,
+        "嗔",
         "晨",
-        null,
+        "碜",
         "衬",
         null
       ]
@@ -3162,7 +3162,7 @@
       "final": "ang",
       "base": "chang",
       "hanzi": [
-        null,
+        "娼",
         "常",
         "场",
         "唱",
@@ -3176,8 +3176,8 @@
       "hanzi": [
         "称",
         "城",
-        null,
-        null,
+        "悜",
+        "秤",
         null
       ]
     },
@@ -3188,8 +3188,8 @@
       "hanzi": [
         "充",
         "虫",
-        null,
-        null,
+        "宠",
+        "揰",
         null
       ]
     },
@@ -3210,7 +3210,7 @@
       "final": "ua",
       "base": "chua",
       "hanzi": [
-        null,
+        "欻",
         null,
         null,
         null,
@@ -3222,10 +3222,10 @@
       "final": "uo",
       "base": "chuo",
       "hanzi": [
+        "戳",
         null,
         null,
-        null,
-        null,
+        "㲋",
         null
       ]
     },
@@ -3234,10 +3234,10 @@
       "final": "uai",
       "base": "chuai",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "揣",
+        "膗",
+        "揣",
+        "嘬",
         null
       ]
     },
@@ -3247,9 +3247,9 @@
       "base": "chui",
       "hanzi": [
         "吹",
+        "圌",
         null,
-        null,
-        null,
+        "龡",
         null
       ]
     },
@@ -3260,8 +3260,8 @@
       "hanzi": [
         "穿",
         "船",
-        null,
-        null,
+        "喘",
+        "串",
         null
       ]
     },
@@ -3272,7 +3272,7 @@
       "hanzi": [
         "春",
         "纯",
-        null,
+        "蠢",
         null,
         null
       ]
@@ -3295,9 +3295,9 @@
       "base": "sha",
       "hanzi": [
         "沙",
-        null,
+        "倽",
         "傻",
-        null,
+        "嗄",
         null
       ]
     },
@@ -3306,7 +3306,7 @@
       "final": "e",
       "base": "she",
       "hanzi": [
-        null,
+        "奓",
         "蛇",
         "舍",
         "设",
@@ -3318,9 +3318,9 @@
       "final": "ai",
       "base": "shai",
       "hanzi": [
+        "籭",
         null,
-        null,
-        null,
+        "色",
         "晒",
         null
       ]
@@ -3331,7 +3331,7 @@
       "base": "shei",
       "hanzi": [
         null,
-        null,
+        "谁",
         null,
         null,
         null
@@ -3343,7 +3343,7 @@
       "base": "shao",
       "hanzi": [
         "烧",
-        null,
+        "㲈",
         "少",
         "绍",
         null
@@ -3394,7 +3394,7 @@
         null,
         "赏",
         "上",
-        null
+        "裳"
       ]
     },
     {
@@ -3429,7 +3429,7 @@
         "刷",
         null,
         "耍",
-        null,
+        "刷",
         null
       ]
     },
@@ -3452,7 +3452,7 @@
       "hanzi": [
         "摔",
         null,
-        null,
+        "甩",
         "帅",
         null
       ]
@@ -3474,10 +3474,10 @@
       "final": "uan",
       "base": "shuan",
       "hanzi": [
+        "拴",
         null,
         null,
-        null,
-        null,
+        "涮",
         null
       ]
     },
@@ -3488,7 +3488,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "吮",
         "顺",
         null
       ]
@@ -3512,7 +3512,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "喏",
         "热",
         null
       ]
@@ -3523,7 +3523,7 @@
       "base": "rao",
       "hanzi": [
         null,
-        null,
+        "娆",
         "扰",
         "绕",
         null
@@ -3535,7 +3535,7 @@
       "base": "rou",
       "hanzi": [
         null,
-        null,
+        "厹",
         null,
         "肉",
         null
@@ -3571,8 +3571,8 @@
       "base": "rang",
       "hanzi": [
         null,
-        null,
-        null,
+        "勷",
+        "嚷",
         "让",
         null
       ]
@@ -3585,7 +3585,7 @@
         "扔",
         "仍",
         null,
-        null,
+        "芿",
         null
       ]
     },
@@ -3596,7 +3596,7 @@
       "hanzi": [
         null,
         "容",
-        null,
+        "冗",
         null,
         null
       ]
@@ -3608,7 +3608,7 @@
       "hanzi": [
         null,
         "如",
-        null,
+        "乳",
         "入",
         null
       ]
@@ -3619,7 +3619,7 @@
       "base": "rua",
       "hanzi": [
         null,
-        null,
+        "挼",
         null,
         null,
         null
@@ -3631,7 +3631,7 @@
       "base": "ruo",
       "hanzi": [
         null,
-        null,
+        "挼",
         null,
         "弱",
         null
@@ -3643,9 +3643,9 @@
       "base": "rui",
       "hanzi": [
         null,
-        null,
-        null,
-        null,
+        "緌",
+        "繠",
+        "壡",
         null
       ]
     },
@@ -3655,7 +3655,7 @@
       "base": "ruan",
       "hanzi": [
         null,
-        null,
+        "堧",
         "软",
         null,
         null
@@ -3667,7 +3667,7 @@
       "base": "run",
       "hanzi": [
         null,
-        null,
+        "犉",
         null,
         "润",
         null
@@ -3691,7 +3691,7 @@
       "base": "jia",
       "hanzi": [
         "家",
-        null,
+        "䛟",
         "假",
         "价",
         null
@@ -3706,7 +3706,7 @@
         "节",
         "姐",
         "介",
-        null
+        "价"
       ]
     },
     {
@@ -3715,7 +3715,7 @@
       "base": "jiao",
       "hanzi": [
         "交",
-        null,
+        "嚼",
         "角",
         "叫",
         null
@@ -3786,9 +3786,9 @@
       "final": "iong",
       "base": "jiong",
       "hanzi": [
+        "冂",
         null,
-        null,
-        null,
+        "冏",
         null,
         null
       ]
@@ -3810,10 +3810,10 @@
       "final": "üe",
       "base": "jue",
       "hanzi": [
-        null,
+        "噘",
         "觉",
-        null,
-        null,
+        "蹶",
+        "倔",
         null
       ]
     },
@@ -3822,10 +3822,10 @@
       "final": "üan",
       "base": "juan",
       "hanzi": [
-        null,
+        "圈",
         null,
         "卷",
-        null,
+        "倦",
         null
       ]
     },
@@ -3858,10 +3858,10 @@
       "final": "ia",
       "base": "qia",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "掐",
+        "拤",
+        "卡",
+        "恰",
         null
       ]
     },
@@ -3870,8 +3870,8 @@
       "final": "ie",
       "base": "qie",
       "hanzi": [
-        null,
-        null,
+        "切",
+        "伽",
         "且",
         "切",
         null
@@ -3885,7 +3885,7 @@
         "敲",
         "桥",
         "巧",
-        null,
+        "俏",
         null
       ]
     },
@@ -3896,7 +3896,7 @@
       "hanzi": [
         "秋",
         "球",
-        null,
+        "糗",
         null,
         null
       ]
@@ -3920,8 +3920,8 @@
       "hanzi": [
         "亲",
         "勤",
-        null,
-        null,
+        "昑",
+        "沁",
         null
       ]
     },
@@ -3933,7 +3933,7 @@
         "枪",
         "墙",
         "抢",
-        null,
+        "呛",
         null
       ]
     },
@@ -3954,7 +3954,7 @@
       "final": "iong",
       "base": "qiong",
       "hanzi": [
-        null,
+        "銎",
         "穷",
         null,
         null,
@@ -3967,10 +3967,10 @@
       "base": "qu",
       "hanzi": [
         "区",
-        null,
+        "佢",
         "取",
         "去",
-        null
+        "戌"
       ]
     },
     {
@@ -3979,7 +3979,7 @@
       "base": "que",
       "hanzi": [
         "缺",
-        null,
+        "瘸",
         null,
         "确",
         null
@@ -3992,7 +3992,7 @@
       "hanzi": [
         "圈",
         "全",
-        null,
+        "犬",
         "劝",
         null
       ]
@@ -4002,7 +4002,7 @@
       "final": "ün",
       "base": "qun",
       "hanzi": [
-        null,
+        "囷",
         "裙",
         null,
         null,
@@ -4026,8 +4026,8 @@
       "final": "ia",
       "base": "xia",
       "hanzi": [
-        null,
-        null,
+        "呷",
+        "匣",
         null,
         "下",
         null
@@ -4051,7 +4051,7 @@
       "base": "xiao",
       "hanzi": [
         "消",
-        null,
+        "洨",
         "小",
         "笑",
         null
@@ -4064,7 +4064,7 @@
       "hanzi": [
         "休",
         null,
-        null,
+        "宿",
         "秀",
         null
       ]
@@ -4087,8 +4087,8 @@
       "base": "xin",
       "hanzi": [
         "新",
-        null,
-        null,
+        "镡",
+        "伈",
         "信",
         null
       ]
@@ -4125,7 +4125,7 @@
         "兄",
         "雄",
         null,
-        null,
+        "诇",
         null
       ]
     },
@@ -4135,7 +4135,7 @@
       "base": "xu",
       "hanzi": [
         "需",
-        null,
+        "徐",
         "许",
         "续",
         null
@@ -4146,7 +4146,7 @@
       "final": "üe",
       "base": "xue",
       "hanzi": [
-        null,
+        "削",
         "学",
         "雪",
         "血",
@@ -4159,9 +4159,9 @@
       "base": "xuan",
       "hanzi": [
         "宣",
-        null,
+        "㻽",
         "选",
-        null,
+        "旋",
         null
       ]
     },
@@ -4170,7 +4170,7 @@
       "final": "ün",
       "base": "xun",
       "hanzi": [
-        null,
+        "壎",
         "询",
         null,
         "训",
@@ -4182,10 +4182,10 @@
       "final": "a",
       "base": "ga",
       "hanzi": [
-        null,
-        null,
-        null,
-        null,
+        "伽",
+        "嘎",
+        "嘎",
+        "尬",
         null
       ]
     },
@@ -4196,7 +4196,7 @@
       "hanzi": [
         "哥",
         "格",
-        null,
+        "合",
         "个",
         null
       ]
@@ -4218,7 +4218,7 @@
       "final": "ei",
       "base": "gei",
       "hanzi": [
-        null,
+        "假",
         null,
         "给",
         null,
@@ -4267,9 +4267,9 @@
       "base": "gen",
       "hanzi": [
         "跟",
-        null,
-        null,
-        null,
+        "哏",
+        "艮",
+        "艮",
         null
       ]
     },
@@ -4280,8 +4280,8 @@
       "hanzi": [
         "刚",
         null,
-        null,
-        null,
+        "港",
+        "杠",
         null
       ]
     },
@@ -4290,9 +4290,9 @@
       "final": "eng",
       "base": "geng",
       "hanzi": [
+        "㹴",
         null,
-        null,
-        null,
+        "哽",
         "更",
         null
       ]
@@ -4304,7 +4304,7 @@
       "hanzi": [
         "公",
         null,
-        null,
+        "廾",
         "共",
         null
       ]
@@ -4328,7 +4328,7 @@
       "hanzi": [
         "瓜",
         null,
-        null,
+        "寡",
         "挂",
         null
       ]
@@ -4342,7 +4342,7 @@
         "国",
         "果",
         "过",
-        null
+        "过"
       ]
     },
     {
@@ -4350,9 +4350,9 @@
       "final": "uai",
       "base": "guai",
       "hanzi": [
+        "乖",
         null,
-        null,
-        null,
+        "拐",
         "怪",
         null
       ]
@@ -4389,7 +4389,7 @@
         null,
         null,
         "滚",
-        null,
+        "棍",
         null
       ]
     },
@@ -4436,8 +4436,8 @@
       "hanzi": [
         "开",
         null,
-        null,
-        null,
+        "慨",
+        "愒",
         null
       ]
     },
@@ -4446,7 +4446,7 @@
       "final": "ei",
       "base": "kei",
       "hanzi": [
-        null,
+        "剋",
         null,
         null,
         null,
@@ -4458,7 +4458,7 @@
       "final": "ao",
       "base": "kao",
       "hanzi": [
-        null,
+        "尻",
         null,
         "考",
         "靠",
@@ -4470,7 +4470,7 @@
       "final": "ou",
       "base": "kou",
       "hanzi": [
-        null,
+        "芤",
         null,
         "口",
         "扣",
@@ -4482,7 +4482,7 @@
       "final": "an",
       "base": "kan",
       "hanzi": [
-        null,
+        "刊",
         null,
         "砍",
         "看",
@@ -4497,7 +4497,7 @@
         null,
         null,
         "肯",
-        null,
+        "掯",
         null
       ]
     },
@@ -4507,9 +4507,9 @@
       "base": "kang",
       "hanzi": [
         "康",
+        "扛",
         null,
-        null,
-        null,
+        "亢",
         null
       ]
     },
@@ -4518,7 +4518,7 @@
       "final": "eng",
       "base": "keng",
       "hanzi": [
-        null,
+        "吭",
         null,
         null,
         null,
@@ -4554,10 +4554,10 @@
       "final": "ua",
       "base": "kua",
       "hanzi": [
+        "夸",
         null,
-        null,
-        null,
-        null,
+        "侉",
+        "㐄",
         null
       ]
     },
@@ -4580,7 +4580,7 @@
       "hanzi": [
         null,
         null,
-        null,
+        "蒯",
         "块",
         null
       ]
@@ -4591,9 +4591,9 @@
       "base": "kui",
       "hanzi": [
         "亏",
-        null,
-        null,
-        null,
+        "喹",
+        "傀",
+        "喟",
         null
       ]
     },
@@ -4614,9 +4614,9 @@
       "final": "un",
       "base": "kun",
       "hanzi": [
+        "坤",
         null,
-        null,
-        null,
+        "悃",
         "困",
         null
       ]
@@ -4626,9 +4626,9 @@
       "final": "uang",
       "base": "kuang",
       "hanzi": [
-        null,
+        "劻",
         "狂",
-        null,
+        "夼",
         "况",
         null
       ]
@@ -4639,8 +4639,8 @@
       "base": "ha",
       "hanzi": [
         "哈",
-        null,
-        null,
+        "蛤",
+        "哈",
         null,
         null
       ]
@@ -4662,7 +4662,7 @@
       "final": "ai",
       "base": "hai",
       "hanzi": [
-        null,
+        "咍",
         "孩",
         "海",
         "害",
@@ -4686,7 +4686,7 @@
       "final": "ao",
       "base": "hao",
       "hanzi": [
-        null,
+        "嚆",
         "毫",
         "好",
         "号",
@@ -4698,9 +4698,9 @@
       "final": "ou",
       "base": "hou",
       "hanzi": [
-        null,
+        "齁",
         "猴",
-        null,
+        "吼",
         "候",
         null
       ]
@@ -4710,7 +4710,7 @@
       "final": "an",
       "base": "han",
       "hanzi": [
-        null,
+        "憨",
         "寒",
         "喊",
         "汉",
@@ -4723,7 +4723,7 @@
       "base": "hen",
       "hanzi": [
         null,
-        null,
+        "拫",
         "很",
         "恨",
         null
@@ -4734,10 +4734,10 @@
       "final": "ang",
       "base": "hang",
       "hanzi": [
-        null,
+        "夯",
         "航",
         null,
-        null,
+        "沆",
         null
       ]
     },
@@ -4746,10 +4746,10 @@
       "final": "eng",
       "base": "heng",
       "hanzi": [
+        "亨",
+        "姮",
         null,
-        null,
-        null,
-        null,
+        "堼",
         null
       ]
     },
@@ -4758,10 +4758,10 @@
       "final": "ong",
       "base": "hong",
       "hanzi": [
-        null,
+        "吽",
         "红",
-        null,
-        null,
+        "哄",
+        "澒",
         null
       ]
     },
@@ -4794,7 +4794,7 @@
       "final": "uo",
       "base": "huo",
       "hanzi": [
-        null,
+        "劐",
         "活",
         "火",
         "或",
@@ -4843,9 +4843,9 @@
       "base": "hun",
       "hanzi": [
         "婚",
+        "楎",
         null,
-        null,
-        null,
+        "圂",
         null
       ]
     },
@@ -4856,8 +4856,8 @@
       "hanzi": [
         "慌",
         "黄",
-        null,
-        null,
+        "幌",
+        "㿠",
         null
       ]
     }
