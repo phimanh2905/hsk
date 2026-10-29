@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ToastProvider } from "@/components/shell/toast-provider";
-import { roadmapLevels } from "@/content/roadmap-stations";
+import { roadmapLevels, getRoadmapLevel } from "@/content/roadmap-stations";
 import RoadmapClient from "../roadmap-client";
 
 const nav = vi.hoisted(() => ({
@@ -42,14 +42,14 @@ describe("RoadmapClient", () => {
     expect(screen.getByRole("heading", { name: "Chặng 1: Giao tiếp thường nhật" })).toBeTruthy();
   });
 
-  it("upcoming level (hsk-3): banner Sắp ra mắt, không render path", () => {
-    renderClient("hsk-3");
+  it("upcoming level (hsk-6): banner Sắp ra mắt, không render path", () => {
+    renderClient("hsk-6");
     expect(screen.getByText(/sắp ra mắt/i)).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Trạm 1/ })).toBeNull();
   });
 
   it("I-3 — upcoming level: header pct 0 (không 100%) dù summary.pct rỗng=100", () => {
-    renderClient("hsk-3");
+    renderClient("hsk-6");
     // topbar = div aria-label "Tiến độ toàn lộ trình N%"; banner dùng aria-label riêng "Tiến độ <title>"
     expect(screen.getByLabelText("Tiến độ toàn lộ trình 0%")).toBeTruthy();
     expect(screen.queryByLabelText("Tiến độ 100%")).toBeNull();
@@ -75,13 +75,13 @@ describe("RoadmapClient", () => {
 
   it("topbar pct là % toàn lộ trình: pinyin 4/8 (50%) + hsk2 0% → 25%", () => {
     localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
-    renderClient("hsk-1");
+    renderClient("pinyin");
     expect(screen.getByLabelText("Tiến độ toàn lộ trình 25%")).toBeTruthy();
   });
 
-  it("I-4 — banner-only hsk-1: banner pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
+  it("I-4 — banner-only pinyin: banner pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
     localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
-    renderClient("hsk-1");
+    renderClient("pinyin");
     expect(screen.getByRole("heading", { name: "Nền tảng: Pinyin & nét cơ bản" })).toBeTruthy();
     // banner = 50% pinyin thật; topbar riêng đã assert 25% overall ở test trên
     expect(screen.getByRole("progressbar", { name: "Tiến độ Nền tảng: Pinyin & nét cơ bản" })).toHaveAttribute("aria-valuenow", "50");
@@ -90,8 +90,8 @@ describe("RoadmapClient", () => {
     expect(screen.queryByRole("button", { name: /— đang học/ })).toBeNull();
   });
 
-  it("I-4 — hsk-1 chưa xong buổi nào: pct 0 + copy 'Chưa bắt đầu' (không 'Đã hoàn thành')", () => {
-    renderClient("hsk-1");
+  it("I-4 — pinyin chưa xong buổi nào: pct 0 + copy 'Chưa bắt đầu' (không 'Đã hoàn thành')", () => {
+    renderClient("pinyin");
     expect(screen.getByRole("progressbar", { name: "Tiến độ Nền tảng: Pinyin & nét cơ bản" })).toHaveAttribute("aria-valuenow", "0");
     expect(screen.getByText("Chưa bắt đầu · mở lộ trình Pinyin")).toBeTruthy();
     expect(screen.queryByText(/Đã hoàn thành/)).toBeNull();
@@ -105,7 +105,7 @@ describe("RoadmapClient", () => {
 
   it("F6b — mọi trạm done: banner 'Hoàn thành toàn bộ trạm', không còn 'Tiếp tục học'", () => {
     const all = Object.fromEntries(
-      ["1", "2", "3", "4", "5", "m", "6"].map((id) => [id, { pct: 100, stars: 3 }]),
+      getRoadmapLevel("hsk-2")!.stations.map((s) => [s.id, { pct: 100, stars: 3 }]),
     );
     localStorage.setItem("bye.roadmap.stations.v1", JSON.stringify({ "hsk-2": all }));
     renderClient("hsk-2");

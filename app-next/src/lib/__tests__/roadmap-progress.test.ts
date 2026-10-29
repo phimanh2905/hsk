@@ -9,6 +9,7 @@ import {
 import type { StationProgress } from "@/lib/store/progress-store";
 
 const hsk2 = getRoadmapLevel("hsk-2")!;
+const lessonCount = hsk2.stations.filter((s) => s.kind === "lesson").length;
 const stateOf = (record: Record<string, StationProgress>, id: string) => {
   const views = deriveStationStates(hsk2, record);
   const v = views.find((v) => v.station.id === id);
@@ -69,7 +70,7 @@ describe("deriveStationStates (tuần tự)", () => {
   it("mọi station done → không còn active", () => {
     const views = deriveStationStates(
       hsk2,
-      mk([["1", 100], ["2", 100], ["3", 100], ["4", 100], ["5", 100], ["m", 100], ["6", 100]]),
+      mk(hsk2.stations.map((s) => [s.id, 100])),
     );
     expect(views.every((v) => v.state === "done")).toBe(true);
   });
@@ -79,7 +80,7 @@ describe("deriveStationStates (cũ — regression gate)", () => {
   it("Review Focus #1 — store rỗng: deterministic, trạm 1 active, còn lại locked", () => {
     const views = deriveStationStates(hsk2, {});
     expect(views.map((v) => v.state)).toEqual([
-      "active", "locked", "locked", "locked", "locked", "locked", "locked",
+      "active", ...hsk2.stations.slice(1).map(() => "locked" as const),
     ]);
     expect(views[0].pct).toBe(0);
   });
@@ -142,8 +143,8 @@ describe("bannerSummary", () => {
   it("pct = trung bình lesson; currentTitle theo station active", () => {
     const views = deriveStationStates(hsk2, mk([["1", 100], ["2", 50]]));
     const s = bannerSummary(hsk2, views);
-    // lessons: 1(100) 2(50) 3(0) 4(0) 5(0) 6(0) — milestone không tính
-    expect(s.pct).toBe(Math.round((100 + 50 + 0 + 0 + 0 + 0) / 6));
+    // lessons: 1(100) 2(50) còn lại 0 — milestone không tính
+    expect(s.pct).toBe(Math.round((100 + 50) / lessonCount));
     expect(s.currentTitle).toContain("Trạm 2");
     expect(s.remainingToMilestone).toBe(4); // 2,3,4,5 chưa hết trước m (1 done)
   });
@@ -153,8 +154,8 @@ describe("bannerSummary", () => {
     ["1", "2", "3"].forEach((id) => (rec2[id] = { pct: 100, stars: 0 }));
     rec2["4"] = { pct: 50, stars: 0 };
     const views = deriveStationStates(hsk2, rec2);
-    // 3 trăm + 1 nửa trên 6 lesson = (100+100+100+50+0+0)/6 ≈ 58
-    expect(bannerSummary(hsk2, views).pct).toBe(58);
+    // 3 trăm + 1 nửa trên toàn bộ lesson = (100+100+100+50+0…)/lessonCount
+    expect(bannerSummary(hsk2, views).pct).toBe(Math.round(350 / lessonCount));
   });
 
   it("currentTitle = 'Trạm 4: Sở thích & Thời gian rảnh'", () => {
@@ -171,9 +172,9 @@ describe("bannerSummary", () => {
     expect(bannerSummary(hsk2, views).remainingToMilestone).toBe(2); // trạm 4, 5
   });
 
-  it("level không trạm (hsk-1): pct 100, current null", () => {
-    const hsk1 = getRoadmapLevel("hsk-1")!;
-    const s = bannerSummary(hsk1, deriveStationStates(hsk1, {}));
+  it("level không trạm (pinyin banner-only): pct 100, current null", () => {
+    const pinyin = getRoadmapLevel("pinyin")!;
+    const s = bannerSummary(pinyin, deriveStationStates(pinyin, {}));
     expect(s.pct).toBe(100);
     expect(s.currentTitle).toBeNull();
   });
@@ -185,8 +186,8 @@ describe("overallRoadmapPct", () => {
       getRoadmapDone: () => [1, 2, 3, 4], // 4/8 = 50%
       getStationProgress: (id: string) => (id === "hsk-2" ? mk([["1", 100]]) : {}),
     };
-    // hsk-2 lessons: 1(100) còn lại 0 → 100/6 ≈ 17 → round 17; overall = round((50+17)/2) = 34
-    expect(overallRoadmapPct(store)).toBe(Math.round((50 + Math.round(100 / 6)) / 2));
+    // hsk-2 lessons: 1(100) còn lại 0 → round(100/lessonCount); overall = round((50+…)/2)
+    expect(overallRoadmapPct(store)).toBe(Math.round((50 + Math.round(100 / lessonCount)) / 2));
   });
 
   it("trống → 0", () => {

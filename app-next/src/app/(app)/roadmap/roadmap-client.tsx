@@ -23,7 +23,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const level = getRoadmapLevel(search.get("level") ?? "") ?? getRoadmapLevel("hsk-2")!;
   const [drawerId, setDrawerId] = useState<string | null>(null);
   const { views, mounted } = useRoadmapProgress(level);
-  // HSK 1 không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
+  // Level pinyin không có station → tiến độ thật đọc từ store Pinyin, mount-gate (không đọc localStorage lúc render)
   const [pinyinDone, setPinyinDone] = useState(0);
   const [overall, setOverall] = useState(0);
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
           <MilestoneBanner
             kicker={level.kicker}
             title={level.title}
-            sub={<>Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–3</>}
+            sub={<>Lộ trình <b>sắp ra mắt</b> · Demo hiện tập trung HSK 1–5</>}
             pct={0}
             ariaLabel={`Tiến độ ${level.title}`}
             currentLabel={<>Trạng thái: <b>Chưa mở</b></>}
