@@ -5,6 +5,7 @@
    KHÔNG side-effect trong setQuiz updater (StrictMode) — đọc state qua quizRef.
    Quiz build sau mount (hydration-safe); XP + best qua progressStore. */
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   PINYIN_LAB_ART_FIN, PINYIN_LAB_ART_INI, PINYIN_LAB_BASE,
   PINYIN_LAB_FINALS, PINYIN_LAB_GROUPS,
@@ -276,6 +277,9 @@ export default function PinyinLabRoot({
                     onSpeak={(s) => { pop(); speak(s, { rate: 0.95 }); }}
                   />
                 )}
+                <p className="mt-2 text-xs text-text-secondary">
+                  Muốn tra toàn bộ tổ hợp? <Link href="/pinyin/bang-am" className="underline">Xem đủ 405 âm tiết →</Link>
+                </p>
               </section>
               <SoundInspector
                 sel={sel}

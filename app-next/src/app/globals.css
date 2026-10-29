@@ -197,6 +197,15 @@ body {
   .animate-\[pop_0\.5s_ease\], .animate-\[shake_0\.35s_ease\] { animation: none; }
 }
 
+/* confetti tổng kết quiz Pinyin Lab (ConfettiBurst — overlay aria-hidden) */
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(320px) rotate(540deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="confetti-fall"] { animation: none !important; }
+}
+
 /* rung khi trả lời sai (mode quiz, port class .shake của clone/js/lesson-quiz.js) */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }

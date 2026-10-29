@@ -3,6 +3,7 @@
 /* View luyện phản xạ — port #viewQuiz của mock: quiz-head + deck (emit, slow,
    4 options A–D, feedback, next). Presentational; engine + TTS ở root. */
 import { Flame, Volume2 } from "@/components/ui/icon";
+import { ConfettiBurst } from "@/components/pinyin/lab/confetti-burst";
 import { IconButton } from "@/components/ui/icon-button";
 import { PINYIN_LAB_DESC } from "@/content/pinyin-lab";
 import type { PinyinLabPoolItem } from "@/lib/pinyin/quiz-engine";
@@ -40,9 +41,18 @@ export function QuizView(p: QuizViewProps) {
         <span>Câu {Math.min(p.qi + 1, p.total)} / {p.total}</span>
         <span className="text-text-secondary">·</span>
         <span>Độ chính xác: {acc === null ? "—" : acc + "%"}</span>
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-amber-line bg-amber-wash px-3 py-1 text-xs font-extrabold text-amber-ink">
-          <Flame size={13} aria-hidden="true" /> Chuỗi đúng: <b>{p.streak}</b>
-        </span>
+        {p.streak >= 5 && !p.done ? (
+          <span
+            data-testid="streak-celebrate"
+            className="ml-auto inline-flex animate-pulse items-center gap-1.5 rounded-full border border-amber-line bg-amber-wash px-3 py-1 text-xs font-extrabold text-amber-ink"
+          >
+            <Flame size={13} aria-hidden="true" /> Chuỗi {p.streak}!
+          </span>
+        ) : (
+          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-amber-line bg-amber-wash px-3 py-1 text-xs font-extrabold text-amber-ink">
+            <Flame size={13} aria-hidden="true" /> Chuỗi đúng: <b>{p.streak}</b>
+          </span>
+        )}
         <IconButton
           label="Chơi lại phiên mới"
           variant="ghost"
@@ -131,8 +141,9 @@ export function QuizView(p: QuizViewProps) {
         {p.done && (
           <div
             data-od-id="quiz-feedback"
-            className="mt-3.5 rounded-xl border border-border-subtle bg-surface-muted p-3.5 text-left text-[13.5px] text-text-primary"
+            className="relative mt-3.5 overflow-hidden rounded-xl border border-border-subtle bg-surface-muted p-3.5 text-left text-[13.5px] text-text-primary"
           >
+            {p.score >= 8 && <ConfettiBurst />}
             <b className="text-feedback-success">Hoàn thành phiên!</b> Đúng {p.score}/{p.total} ({Math.round((p.score / p.total) * 100)}%).{" "}
             {p.score >= 8 ? "Tai nghe rất thính!" : p.score >= 5 ? "Tiến bộ rõ — luyện thêm nhóm âm yếu nhé." : "Hãy nghe chậm và đối chiếu từng cặp."}
           </div>

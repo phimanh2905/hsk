@@ -8,7 +8,7 @@ import Topbar from "@/components/shell/topbar";
 import BottomNav from "@/components/shell/bottom-nav";
 import SettingsModal from "@/components/shell/settings-modal";
 import TtsConsentDialog from "@/components/shell/tts-consent-dialog";
-import AiWidget from "@/components/social/ai-widget";
+// import AiWidget from "@/components/social/ai-widget";
 import { SITE_URL } from "@/lib/config";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Noto_Sans_SC } from "next/font/google";
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <SettingsModal />
               <TtsConsentDialog />
               <LoginModal />
-              <AiWidget />
+              {/* <AiWidget /> */}
             </LoginProvider>
           </ToastProvider>
         </ThemeProvider>
