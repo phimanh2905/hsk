@@ -60,3 +60,6 @@ scripts/vendor/mmc/*.txt
 # Virtualenv Python của pipeline content (local-only, chứa site-packages vendor)
 scripts/content/.venv/
 scripts/content/.venv-*/
+
+# CC-CEDICT raw dict (tải local cho generator, không commit)
+scripts/content/data/pinyin/cedict_ts.u8
