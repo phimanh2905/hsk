@@ -56,3 +56,7 @@ public/kokoro/vendor/
 
 # Make Me a Hanzi vendor data (luc build) — khong commit
 scripts/vendor/mmc/*.txt
+
+# Virtualenv Python của pipeline content (local-only, chứa site-packages vendor)
+scripts/content/.venv/
+scripts/content/.venv-*/

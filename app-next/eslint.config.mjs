@@ -17,6 +17,10 @@ const eslintConfig = defineConfig([
     // File vendor sinh tự động bởi `pnpm vendor:kokoro` (untracked, bundle minified
     // — không phải source). Lint toàn lỗi từ code bundle nên bỏ qua.
     "public/kokoro/vendor/**",
+    // Virtualenv Python của pipeline content (untracked, chứa site-packages
+    // của torch/yt-dlp — JS vendor không phải source của app).
+    "scripts/content/.venv/**",
+    "scripts/content/.venv-*/**",
   ]),
   {
     // Quy ước dự án (xem SDD ledger: ruling mount-gate): mọi trang đọc

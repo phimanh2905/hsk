@@ -32,9 +32,8 @@ export default function WaveformVisual({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let levels: number[] = [];
+    const levels: number[] = [];
     let running = true;
-    let resizeObs: ResizeObserver | undefined;
 
     const setupSize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -95,7 +94,7 @@ export default function WaveformVisual({
     };
 
     setupSize();
-    resizeObs = new ResizeObserver(setupSize);
+    const resizeObs = new ResizeObserver(setupSize);
     resizeObs.observe(canvas);
     rafRef.current = requestAnimationFrame(frame);
 
@@ -113,7 +112,7 @@ export default function WaveformVisual({
       running = false;
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
-      resizeObs?.disconnect();
+      resizeObs.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
