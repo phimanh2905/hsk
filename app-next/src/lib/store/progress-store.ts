@@ -56,6 +56,10 @@ export type ProgressSnapshot = { xp: number };
 
 export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
 
+/* Cổng đầu vào (Roadmap Journey v2) — kết quả kiểm tra tốt nhất per gate id,
+   key bye.roadmap.gates.v1: Record<gateId, { pct, at }> */
+export type RoadmapGateRec = { pct: number; at: number };
+
 export interface ProgressStoreApi {
   getXp(): number;
   getToday(): number;
@@ -85,6 +89,8 @@ export interface ProgressStoreApi {
   markRoadmapLearnSeen(n: number): void;
   getStationProgress(levelId: string): Record<string, StationProgress>;
   setStationProgress(levelId: string, stationId: string, rec: StationProgress): void;
+  getRoadmapGate(id: string): RoadmapGateRec | null;
+  setRoadmapGate(id: string, pct: number): void;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -185,6 +191,9 @@ const ROADMAP_LEARN_SEEN_KEY = "bye.roadmap.learnSeen";
 
 /* Lộ trình serpentine (spec 2026-10-04): Record<levelId, Record<stationId, {pct, stars}>> */
 const ROADMAP_STATIONS_KEY = "bye.roadmap.stations.v1";
+
+/* Cổng đầu vào HSK (Roadmap Journey v2): Record<gateId, { pct, at }> — best-of theo pct */
+const ROADMAP_GATES_KEY = "bye.roadmap.gates.v1";
 
 function readNumArray(key: string): number[] {
   const arr = readJSON<unknown>(key, []);
@@ -534,6 +543,32 @@ export class ProgressStore implements ProgressStoreApi {
       const all = readJSON<Record<string, Record<string, StationProgress>>>(ROADMAP_STATIONS_KEY, {});
       all[levelId] = { ...all[levelId], [stationId]: rec };
       writeJSON(ROADMAP_STATIONS_KEY, all);
+      window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
+    } catch {
+      /* silent */
+    }
+  }
+
+  /* ---------- gates (bye.roadmap.gates.v1 — Roadmap Journey v2, best-of theo pct) ---------- */
+
+  getRoadmapGate(id: string): RoadmapGateRec | null {
+    try {
+      const all = readJSON<Record<string, RoadmapGateRec>>(ROADMAP_GATES_KEY, {});
+      const rec = all[id];
+      return rec && typeof rec === "object" && typeof rec.pct === "number" && typeof rec.at === "number" ? rec : null;
+    } catch {
+      return null;
+    }
+  }
+
+  setRoadmapGate(id: string, pct: number): void {
+    if (!id || typeof pct !== "number" || !Number.isFinite(pct)) return;
+    try {
+      const all = readJSON<Record<string, RoadmapGateRec>>(ROADMAP_GATES_KEY, {});
+      const cur = all[id];
+      if (cur && typeof cur.pct === "number" && pct <= cur.pct) return; // best-of — không hạ
+      all[id] = { pct, at: Date.now() };
+      writeJSON(ROADMAP_GATES_KEY, all);
       window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
     } catch {
       /* silent */
