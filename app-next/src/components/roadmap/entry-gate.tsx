@@ -4,7 +4,7 @@
    pinyin từ pinyinExamples, ≥80% → progressStore.setRoadmapGate("hsk1", pct)
    (best-of) rồi onPass. TTS không phát được sau 1.5s → fallback câu đọc
    "Từ nào đọc là …" với options hanzi. Cấu trúc tham khảo station-quiz.tsx. */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { Check, X } from "@/components/ui/icon";
 import { cn } from "@/lib/cn";
 import { pinyinExamples } from "@/content/pinyin";
@@ -17,47 +17,53 @@ const GATE_TOTAL = 12;
 const GATE_LEVEL = "hsk1";
 const TTS_FALLBACK_MS = 1500;
 
+/* useSyncExternalStore với snapshot tĩnh (pct không đổi khi card đang mở) */
+const subscribeNoop = () => () => {};
+
+function shuffle<T>(arr: T[], rng: () => number): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j]!, a[i]!];
+  }
+  return a;
+}
+
 /* Sinh 12 câu hỏi gate từ pinyinExamples: mỗi entry = 1 câu nghe
    (audioText = hanzi, options = 4 pinyin có dấu) + readVariant fallback
-   (options = 4 hanzi). Pure. */
+   (options = 4 hanzi). Distractor unique theo cả hanzi lẫn pinyin. Pure. */
 export function buildGateQuestions(rng: () => number = Math.random): QuizQuestion[] {
   const pool = Object.values(pinyinExamples).flat();
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [pool[i], pool[j]] = [pool[j]!, pool[i]!];
-  }
-  const picked = pool.slice(0, GATE_TOTAL);
+  const shuffled = shuffle(pool, rng);
+  const picked = shuffled.slice(0, GATE_TOTAL);
   return picked.map(([hanzi, pinyin]) => {
-    const distractors = pool.filter((e) => e[1] !== pinyin).map((e) => e[1]);
-    const dset = new Set<string>();
-    for (const d of distractors) {
-      if (dset.size < 3) dset.add(d);
+    // 3 distractor: pinyin khác đáp án, hanzi chưa xuất hiện (kể cả đáp án),
+    // pinyin không trùng nhau trong options
+    const chosen: string[][] = [];
+    const seenHanzi = new Set<string>([hanzi]);
+    const seenPinyin = new Set<string>([pinyin]);
+    for (const e of shuffled) {
+      if (chosen.length >= 3) break;
+      if (e[1] === pinyin || seenHanzi.has(e[0]) || seenPinyin.has(e[1])) continue;
+      chosen.push(e);
+      seenHanzi.add(e[0]);
+      seenPinyin.add(e[1]);
     }
-    const pinyinOpts = [...dset];
-    for (let i = pinyinOpts.length - 1; i > 0; i--) {
-      const j = Math.floor(rng() * (i + 1));
-      [pinyinOpts[i], pinyinOpts[j]] = [pinyinOpts[j]!, pinyinOpts[i]!];
-    }
+    const pinyinOpts = shuffle(chosen.map((e) => e[1]!), rng);
     pinyinOpts.push(pinyin);
-    for (let i = pinyinOpts.length - 1; i > 0; i--) {
-      const j = Math.floor(rng() * (i + 1));
-      [pinyinOpts[i], pinyinOpts[j]] = [pinyinOpts[j]!, pinyinOpts[i]!];
-    }
-    const readOpts = [...dset].map((p) => pool.find((e) => e[1] === p)![0]);
+    const options = shuffle(pinyinOpts, rng);
+    const readOpts = shuffle(chosen.map((e) => e[0]!), rng);
     readOpts.push(hanzi);
-    for (let i = readOpts.length - 1; i > 0; i--) {
-      const j = Math.floor(rng() * (i + 1));
-      [readOpts[i], readOpts[j]] = [readOpts[j]!, readOpts[i]!];
-    }
+    const readOptions = shuffle(readOpts, rng);
     return {
       prompt: "🔊 Nghe và chọn phiên âm đúng",
-      options: pinyinOpts,
-      answerIndex: pinyinOpts.indexOf(pinyin),
+      options,
+      answerIndex: options.indexOf(pinyin),
       listen: {
         audioText: hanzi,
         readPrompt: `Từ nào đọc là “${pinyin}”?`,
-        readOptions: readOpts,
-        readAnswerIndex: readOpts.indexOf(hanzi),
+        readOptions,
+        readAnswerIndex: readOptions.indexOf(hanzi),
       },
     };
   });
@@ -81,15 +87,14 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
      từng true) → ttsReady=false, render câu đọc thay vì câu nghe. */
   const [ttsReady, setTtsReady] = useState(true);
   const spokenRef = useRef(false);
-  useEffect(() => {
-    if (speaking) spokenRef.current = true;
-  }, [speaking]);
+  /* Effect phát audio — KHÔNG phụ thuộc speaking: speaking đổi true→false khi
+     audio kết thúc không được phép re-run (replay + reset spokenRef khiến câu
+     nghe tự fallback giữa chừng dù TTS hoạt động bình thường). */
   useEffect(() => {
     if (!started || finished) return;
     const q = questions[qIndex];
     if (!q?.listen) return;
     spokenRef.current = false;
-    if (speaking) spokenRef.current = true;
     speak(q.listen.audioText);
     const t = setTimeout(() => {
       if (!spokenRef.current) setTtsReady(false);
@@ -99,7 +104,21 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
       cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run per câu; speak/cancel ổn định qua useCallback của useTts
-  }, [started, finished, qIndex, questions, speaking]);
+  }, [started, finished, qIndex, questions]);
+  /* Effect riêng chỉ theo dõi speaking: lần đầu phát được → đánh dấu spoken
+     (KHÔNG reset) để timer 1.5s không fallback nhầm. ttsReady được reset về
+     true ở handler next()/retry() khi sang câu mới — mỗi câu optimistic. */
+  useEffect(() => {
+    if (speaking) spokenRef.current = true;
+  }, [speaking]);
+
+  /* pct đã lưu cho card "open" — đọc từ progressStore (localStorage) qua
+     useSyncExternalStore để tránh setState-in-effect + hydration mismatch. */
+  const gatePct = useSyncExternalStore(
+    subscribeNoop,
+    () => progressStore.getRoadmapGate(GATE_LEVEL)?.pct ?? null,
+    () => null,
+  );
 
   if (status === "exempt") {
     return (
@@ -125,7 +144,9 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
         className="flex items-center gap-2 rounded-card border border-border-default bg-surface-elevated px-4 py-3.5"
       >
         <Check size={16} aria-hidden="true" />
-        <p className="text-[13.5px] font-bold text-jade">Đã qua cổng đầu vào</p>
+        <p className="text-[13.5px] font-bold text-jade">
+          Đã qua cổng đầu vào{gatePct != null ? ` (${gatePct}%)` : ""}
+        </p>
       </div>
     );
   }
@@ -168,6 +189,7 @@ export function EntryGate({ status, onPass }: { status: GateStatus; onPass?: () 
     if (qIndex < total - 1) {
       setQIndex((i) => i + 1);
       setPicked(null);
+      setTtsReady(true); // câu mới optimistic — fallback chỉ do timer 1.5s
       return;
     }
     const pct = Math.round((correct / total) * 100);

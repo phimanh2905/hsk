@@ -2,13 +2,35 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { EntryGate } from "../entry-gate";
 
-/* useTts mock — object mutable để từng test chọn speaking true/false */
-const tts = vi.hoisted(() => ({
-  speak: vi.fn(),
-  cancel: vi.fn(),
-  speaking: false,
-}));
-vi.mock("@/lib/tts/use-tts", () => ({ useTts: () => tts }));
+/* useTts mock — state subscribable để mô phỏng vòng đời speaking thật
+   (true khi phát, false khi audio kết thúc) qua setSpeaking */
+const tts = vi.hoisted(() => {
+  const state = { speaking: false, listener: null as ((v: boolean) => void) | null };
+  return {
+    state,
+    speak: vi.fn(),
+    cancel: vi.fn(),
+    setSpeaking(v: boolean) {
+      state.speaking = v;
+      state.listener?.(v);
+    },
+  };
+});
+vi.mock("@/lib/tts/use-tts", async () => {
+  const { useState, useEffect } = await import("react");
+  return {
+    useTts: () => {
+      const [speaking, setSpeaking] = useState(tts.state.speaking);
+      useEffect(() => {
+        tts.state.listener = setSpeaking;
+        return () => {
+          if (tts.state.listener === setSpeaking) tts.state.listener = null;
+        };
+      }, []);
+      return { speak: tts.speak, cancel: tts.cancel, speaking };
+    },
+  };
+});
 
 const GATES_KEY = "bye.roadmap.gates.v1";
 
@@ -21,9 +43,10 @@ function answerQuestion(correct: boolean) {
 
 beforeEach(() => {
   localStorage.clear();
-  tts.speak = vi.fn();
-  tts.cancel = vi.fn();
-  tts.speaking = false;
+  tts.speak.mockReset();
+  tts.cancel.mockReset();
+  tts.setSpeaking(false);
+  tts.state.listener = null;
   vi.useFakeTimers();
 });
 
@@ -39,9 +62,13 @@ describe("EntryGate", () => {
     expect(screen.queryByRole("button", { name: /Bắt đầu/i })).toBeNull();
   });
 
-  it("open: card gọn 'Đã qua cổng đầu vào', không có nút bắt đầu", () => {
+  it("open: card gọn 'Đã qua cổng đầu vào (N%)' theo pct đã lưu", () => {
+    localStorage.setItem(
+      "bye.roadmap.gates.v1",
+      JSON.stringify({ hsk1: { pct: 85, at: 1 } }),
+    );
     render(<EntryGate status="open" />);
-    expect(screen.getByText(/Đã qua cổng đầu vào/i)).toBeTruthy();
+    expect(screen.getByText(/Đã qua cổng đầu vào \(85%\)/)).toBeTruthy();
     expect(screen.queryByRole("button", { name: /Bắt đầu/i })).toBeNull();
   });
 
@@ -88,15 +115,57 @@ describe("EntryGate", () => {
     expect(screen.getByTestId("gate-prompt")).toHaveTextContent(/Từ nào đọc là/i);
   });
 
-  it("TTS phát được (speaking=true) → giữ câu nghe, không fallback", () => {
-    tts.speaking = true;
+  it("TTS phát được (speaking=true sau khi vào câu) → giữ câu nghe, không fallback", () => {
     render(<EntryGate status="locked" />);
     fireEvent.click(screen.getByRole("button", { name: /Bắt đầu/i }));
+    // audio bắt đầu phát sau khi câu render (vòng đời thật)
+    act(() => {
+      tts.setSpeaking(true);
+    });
 
     act(() => {
       vi.advanceTimersByTime(1500);
     });
     expect(screen.getByTestId("gate-prompt")).toHaveTextContent(/Nghe/i);
     expect(screen.queryByText(/Từ nào đọc là/i)).toBeNull();
+  });
+
+  it("vòng đời TTS thật: speaking true (200ms) → false (500ms) → không replay, không fallback", () => {
+    render(<EntryGate status="locked" />);
+    fireEvent.click(screen.getByRole("button", { name: /Bắt đầu/i }));
+    expect(tts.speak).toHaveBeenCalledTimes(1);
+
+    // 200ms: audio bắt đầu phát
+    act(() => {
+      vi.advanceTimersByTime(200);
+      tts.setSpeaking(true);
+    });
+    // 500ms: audio kết thúc
+    act(() => {
+      vi.advanceTimersByTime(300);
+      tts.setSpeaking(false);
+    });
+    // qua mốc 1.5s: TTS đã phát được → KHÔNG fallback
+    act(() => {
+      vi.advanceTimersByTime(1500);
+    });
+
+    expect(screen.getByTestId("gate-prompt")).toHaveTextContent(/Nghe/i);
+    expect(screen.queryByText(/Từ nào đọc là/i)).toBeNull();
+    expect(tts.speak).toHaveBeenCalledTimes(1); // không phát lại audio
+  });
+
+  it("distractor unique: options pinyin và readOptions hanzi không trùng", async () => {
+    const { buildGateQuestions } = await import("../entry-gate");
+    for (let run = 0; run < 20; run++) {
+      for (const q of buildGateQuestions()) {
+        expect(new Set(q.options).size).toBe(4);
+        expect(new Set(q.listen!.readOptions).size).toBe(4);
+        // đáp án xuất hiện đúng 1 lần (distractor không trùng đáp án)
+        expect(
+          q.listen!.readOptions.filter((h) => h === q.listen!.audioText),
+        ).toHaveLength(1);
+      }
+    }
   });
 });
