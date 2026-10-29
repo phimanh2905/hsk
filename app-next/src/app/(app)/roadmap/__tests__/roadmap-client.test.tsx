@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { roadmapLevels, getRoadmapLevel } from "@/content/roadmap-stations";
+import { PINYIN_SESSIONS } from "@/lib/roadmap-progress";
 import RoadmapClient from "../roadmap-client";
 
 const nav = vi.hoisted(() => ({
@@ -73,17 +74,25 @@ describe("RoadmapClient", () => {
     expect(screen.getByRole("link", { name: "Tiếp tục học →" })).toHaveAttribute("href", "/lesson/hsk2/lesson-1");
   });
 
-  it("topbar pct là % toàn lộ trình: pinyin 4/8 (50%) + hsk2 0% → 25%", () => {
+  it("topbar pct là % toàn lộ trình có trọng số: pinyin 4/8 (50%) + các level khác 0%", () => {
     localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
     renderClient("pinyin");
-    expect(screen.getByLabelText("Tiến độ toàn lộ trình 25%")).toBeTruthy();
+    // Task 5: expectation ĐỘNG — weight pinyin = PINYIN_SESSIONS, level khác = số trạm lesson
+    // (đúng công thức production trong overallRoadmapPct); đổi content không vỡ test.
+    const weightOf = (id: string) =>
+      id === "pinyin" ? PINYIN_SESSIONS : getRoadmapLevel(id)!.stations.filter((s) => s.kind === "lesson").length;
+    const totalWeight = roadmapLevels
+      .filter((l) => l.status === "available")
+      .reduce((sum, l) => sum + weightOf(l.id), 0);
+    const expected = Math.round((50 * PINYIN_SESSIONS) / totalWeight);
+    expect(screen.getByLabelText(`Tiến độ toàn lộ trình ${expected}%`)).toBeTruthy();
   });
 
   it("I-4 — banner-only pinyin: banner pct + copy derive từ store Pinyin thật, không hardcode 100", () => {
     localStorage.setItem("bye.roadmap.pinyin", JSON.stringify([1, 2, 3, 4]));
     renderClient("pinyin");
     expect(screen.getByRole("heading", { name: "Nền tảng: Pinyin & nét cơ bản" })).toBeTruthy();
-    // banner = 50% pinyin thật; topbar riêng đã assert 25% overall ở test trên
+    // banner = 50% pinyin thật; topbar riêng đã assert overall có trọng số ở test trên
     expect(screen.getByRole("progressbar", { name: "Tiến độ Nền tảng: Pinyin & nét cơ bản" })).toHaveAttribute("aria-valuenow", "50");
     expect(screen.getByText("Đã hoàn thành 4/8 buổi · ôn tập giữ streak")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Xem lộ trình Pinyin/ })).toHaveAttribute("href", "/roadmap/pinyin");
