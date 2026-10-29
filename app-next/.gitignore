@@ -63,3 +63,7 @@ scripts/content/.venv-*/
 
 # CC-CEDICT raw dict (tải local cho generator, không commit)
 scripts/content/data/pinyin/cedict_ts.u8
+
+# Pinyin static audio (render output — commit trong task riêng nếu cần)
+public/audio/pinyin/
+scripts/content/data/pinyin/render-report.json
