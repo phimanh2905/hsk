@@ -232,12 +232,12 @@ describe("generateReading gọi chatJson (mock fetch)", () => {
     expect(body2.messages.some((m) => m.role === "assistant")).toBe(true);
   });
 
-  it("hết 3 lần thử → DraftValidationError", async () => {
+  it("hết 5 lần thử → DraftValidationError", async () => {
     const bad = llmResponse({ sentences: [], vocab: [], questions: [] });
     const fetchMock = vi.fn().mockResolvedValue(bad);
     vi.stubGlobal("fetch", fetchMock);
     await expect(generateReading(SAMPLE_TEXT)).rejects.toThrow("AI trả về dữ liệu không hợp lệ, thử lại sau");
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(fetchMock).toHaveBeenCalledTimes(5);
   });
 
   it("thiếu env → NO_LLM", async () => {
