@@ -61,7 +61,9 @@ function QuotaChip() {
 }
 
 /* 1 card draft: title + meta + rename inline + delete 2 bước. */
-function DraftCard({ draft, onOpen }: { draft: SavedReadingDraft; onOpen: () => void }) {
+function DraftCard({
+  draft, onOpen, onChanged,
+}: { draft: SavedReadingDraft; onOpen: () => void; onChanged: () => void }) {
   const [renaming, setRenaming] = useState(false);
   const [value, setValue] = useState(draft.title);
   const [confirming, setConfirming] = useState(false);
@@ -76,6 +78,7 @@ function DraftCard({ draft, onOpen }: { draft: SavedReadingDraft; onOpen: () => 
     const title = value.trim();
     if (title.length >= 1 && title.length <= 255) {
       progressStore.upsertReadingDraft({ ...draft, title, updatedAt: Date.now() });
+      onChanged();
     }
     setRenaming(false);
   };
@@ -131,6 +134,7 @@ function DraftCard({ draft, onOpen }: { draft: SavedReadingDraft; onOpen: () => 
           className="shrink-0 bg-action-danger text-white hover:opacity-90"
           onClick={() => {
             progressStore.removeReadingDraft(draft.id);
+            onChanged();
             setConfirming(false);
           }}
         >
@@ -157,6 +161,8 @@ export function MinePanel({ onOpen }: { onOpen: (draft: SavedReadingDraft) => vo
   useEffect(() => {
     setDrafts(progressStore.getReadingDrafts());
   }, []);
+
+  const refreshDrafts = () => setDrafts(progressStore.getReadingDrafts());
 
   const create = async () => {
     if (pending) return;
@@ -244,7 +250,7 @@ export function MinePanel({ onOpen }: { onOpen: (draft: SavedReadingDraft) => vo
       ) : (
         <div className="space-y-2">
           {drafts.map((d) => (
-            <DraftCard key={d.updatedAt + d.id} draft={d} onOpen={() => onOpen(d)} />
+            <DraftCard key={d.updatedAt + d.id} draft={d} onOpen={() => onOpen(d)} onChanged={refreshDrafts} />
           ))}
         </div>
       )}
