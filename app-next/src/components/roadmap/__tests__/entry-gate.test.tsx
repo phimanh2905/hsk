@@ -168,4 +168,28 @@ describe("EntryGate", () => {
       }
     }
   });
+
+  it("distractor gần-âm: 20 vòng × 12 câu, ≥50% câu có ≥1 option cùng thanh mẫu", async () => {
+    const { buildGateQuestions } = await import("../entry-gate");
+    const { pinyinInitial } = await import("@/lib/station-quiz");
+    const det = () => {
+      let s = 42;
+      return () => (s = (s * 16807) % 2147483647) / 2147483647;
+    };
+    let hit = 0, total = 0;
+    for (let run = 0; run < 20; run++) {
+      for (const q of buildGateQuestions(det())) {
+        total++;
+        expect(new Set(q.options).size).toBe(4);
+        expect(new Set(q.listen!.readOptions).size).toBe(4);
+        const ansPinyin = q.options[q.answerIndex]!;
+        const same = q.options.filter(
+          (o) => o !== ansPinyin && pinyinInitial(o) === pinyinInitial(ansPinyin),
+        ).length;
+        if (same >= 1) hit++;
+      }
+    }
+    expect(total).toBe(240);
+    expect(hit / total).toBeGreaterThanOrEqual(0.5);
+  });
 });
