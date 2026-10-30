@@ -9,10 +9,12 @@
 
 import {
   mergeLesson,
+  mergeReadingDrafts,
   mergeReadingProgress,
   mergeReviewLogs,
   mergeSrs,
   mergeStudyDay,
+  type SyncDraftRecord,
   type SyncLessonRecord,
   type SyncPayload,
   type SyncReadingRecord,
@@ -21,9 +23,9 @@ import {
   type SyncStudyDayRecord,
 } from "./sync-merge";
 import { isMature } from "@/lib/stats/review";
-import { normalizeSrsItem, progressStore, type SrsItem } from "./progress-store";
+import { isSavedReadingDraft, normalizeSrsItem, progressStore, type SavedReadingDraft, type SrsItem } from "./progress-store";
 
-export type SyncDomain = "srs" | "studyDay" | "lessonProgress" | "reviewLogs" | "readingProgress";
+export type SyncDomain = "srs" | "studyDay" | "lessonProgress" | "reviewLogs" | "readingProgress" | "readingDrafts";
 
 const DIRTY_KEY = "bye.sync.dirty";
 const TOMBSTONE_KEY = "bye.sync.tombstones";
@@ -39,6 +41,7 @@ const HEAT_KEY = "bye.heat";
 const PAGE_DONE_KEY = "bye.pageDone";
 const STATIONS_KEY = "bye.roadmap.stations.v1";
 const READING_PROGRESS_KEY = "nhai.reading.progress";
+const READING_DRAFTS2_KEY = "nhai.reading.drafts2";
 
 /* Method → domain: chỉ những method ghi data thuộc 4 bảng sync. setWordNote/
    toggleWordStar... nằm ngoài phạm vi (wordMeta chưa có bảng) — KHÔNG patch. */
@@ -51,6 +54,8 @@ const PATCHES: Array<[keyof typeof progressStore, SyncDomain[]]> = [
   ["markPageDone", ["lessonProgress"]],
   ["setStationProgress", ["lessonProgress"]],
   ["saveReadingProgress", ["readingProgress"]],
+  ["upsertReadingDraft", ["readingDrafts"]],
+  ["removeReadingDraft", ["readingDrafts"]], // tombstone nằm trên record — không cần recordTombstone riêng
 ];
 
 let inited = false;
@@ -62,10 +67,21 @@ const dirty = new Set<SyncDomain>();
    chứa thay đổi mới, nên KHÔNG được clear dirty (nếu clear → mất dữ liệu vĩnh viễn:
    ví dụ grade xảy ra trong lúc merge-push login đang bay → srs bị xóa khỏi dirty
    → item có reviewCount mới không bao giờ được gửi lên server). */
-const dirtyVersion: Record<SyncDomain, number> = { srs: 0, studyDay: 0, lessonProgress: 0, reviewLogs: 0, readingProgress: 0 };
+const dirtyVersion: Record<SyncDomain, number> = {
+  srs: 0,
+  studyDay: 0,
+  lessonProgress: 0,
+  reviewLogs: 0,
+  readingProgress: 0,
+  readingDrafts: 0,
+};
 let dirtySeq = 0;
 
-type Tombstones = { srs: Record<string, number>; lessonProgress: Record<string, number> };
+type Tombstones = {
+  srs: Record<string, number>;
+  lessonProgress: Record<string, number>;
+  readingDrafts: Record<string, number>;
+};
 
 /* ---------- helpers (copy pattern progress-store) ---------- */
 
@@ -90,8 +106,8 @@ function writeJSON(key: string, value: unknown): void {
 function readTombstones(): Tombstones {
   const raw = readJSON<Partial<Tombstones>>(TOMBSTONE_KEY, {});
   const cutoff = Date.now() - TOMBSTONE_TTL_MS;
-  const out: Tombstones = { srs: {}, lessonProgress: {} };
-  for (const domain of ["srs", "lessonProgress"] as const) {
+  const out: Tombstones = { srs: {}, lessonProgress: {}, readingDrafts: {} };
+  for (const domain of ["srs", "lessonProgress", "readingDrafts"] as const) {
     const map = raw[domain];
     if (!map || typeof map !== "object") continue;
     for (const [k, at] of Object.entries(map)) {
@@ -103,21 +119,27 @@ function readTombstones(): Tombstones {
   return out;
 }
 
-function recordTombstone(domain: "srs" | "lessonProgress", key: string): void {
+function recordTombstone(domain: "srs" | "lessonProgress" | "readingDrafts", key: string): void {
   const tombs = readTombstones();
   tombs[domain][key] = Date.now();
   writeJSON(TOMBSTONE_KEY, tombs);
 }
 
-function clearTombstone(domain: "srs" | "lessonProgress", key: string): void {
+function clearTombstone(domain: "srs" | "lessonProgress" | "readingDrafts", key: string): void {
   const tombs = readTombstones();
   if (!(key in tombs[domain])) return;
   delete tombs[domain][key];
   writeJSON(TOMBSTONE_KEY, tombs);
 }
 
-function readLastSentLogAt(): number {
-  const v = readJSON<number>(LOGSENT_KEY, 0);
+/* Đọc raw drafts (bao gồm tombstone — record tự mang deletedAt) vì
+   progressStore.getReadingDrafts() lọc tombstone. */
+function readLocalReadingDrafts(): SavedReadingDraft[] {
+  const v = readJSON<unknown>(READING_DRAFTS2_KEY, []);
+  return Array.isArray(v) ? v.filter(isSavedReadingDraft) : [];
+}
+
+function readLastSentLogAt(): number {  const v = readJSON<number>(LOGSENT_KEY, 0);
   return typeof v === "number" && Number.isFinite(v) && v > 0 ? v : 0;
 }
 
@@ -133,7 +155,7 @@ function persistDirty(): void {
 
 function restoreDirty(): void {
   const obj = readJSON<Partial<Record<SyncDomain, 1>>>(DIRTY_KEY, {});
-  for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs", "readingProgress"] as const) {
+  for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs", "readingProgress", "readingDrafts"] as const) {
     if (obj[d]) {
       dirty.add(d);
       dirtyVersion[d] = ++dirtySeq; // version mới → flush đang bay không xóa nhầm
@@ -280,7 +302,11 @@ function computePayload(): SyncPayload {
         updatedAt: Date.now(),
       }))
     : [];
-  return { srs, studyDay, lessonProgress, reviewLogs, readingProgress };
+  // Spec 2026-10-30 §4.3 — readingDrafts: đọc raw (record tự mang deletedAt).
+  const readingDrafts: SyncDraftRecord[] = dirty.has("readingDrafts")
+    ? readLocalReadingDrafts().map((d) => ({ ...d, deletedAt: d.deletedAt ?? null }))
+    : [];
+  return { srs, studyDay, lessonProgress, reviewLogs, readingProgress, readingDrafts };
 }
 
 /* ---- merge ngược server → local (ghi TRỰC TIẾP localStorage, KHÔNG qua
@@ -469,7 +495,35 @@ function applyServerPayload(server: SyncPayload): void {
   }
   if (readingDirty) writeJSON(READING_PROGRESS_KEY, readingProgress);
 
-  if (srsDirty || pageDirty || heatDirty || logsDirty || readingDirty) {
+  // Spec 2026-10-30 §4.3: readingDrafts — merge per-id (updatedAt thắng, tombstone
+  // deletedAt >= updatedAt bản sống), ghi thẳng localStorage không qua method patched.
+  let draftsDirty = false;
+  if (Array.isArray(server.readingDrafts)) {
+    const localDrafts = readLocalReadingDrafts();
+    for (const rec of server.readingDrafts) {
+      if (!rec || typeof rec.id !== "string" || !rec.doc || typeof rec.doc !== "object") continue;
+      const local = localDrafts.find((d) => d.id === rec.id);
+      if (!local) {
+        // tombstone mà local không có gì để xóa → bỏ qua, khỏi giữ rác
+        if (rec.deletedAt != null) continue;
+        localDrafts.push({ ...rec, deletedAt: undefined });
+        draftsDirty = true;
+        continue;
+      }
+      const merged = mergeReadingDrafts(rec, { ...local, deletedAt: local.deletedAt ?? null });
+      const next: SavedReadingDraft =
+        merged.deletedAt != null
+          ? { ...local, title: merged.title, textZh: merged.textZh, doc: merged.doc, chars: merged.chars, deletedAt: merged.deletedAt }
+          : { ...local, title: merged.title, textZh: merged.textZh, doc: merged.doc, chars: merged.chars, deletedAt: undefined, updatedAt: merged.updatedAt };
+      if (JSON.stringify(next) !== JSON.stringify(local)) {
+        localDrafts[localDrafts.findIndex((d) => d.id === rec.id)] = next;
+        draftsDirty = true;
+      }
+    }
+    if (draftsDirty) writeJSON(READING_DRAFTS2_KEY, localDrafts);
+  }
+
+  if (srsDirty || pageDirty || heatDirty || logsDirty || readingDirty || draftsDirty) {
     // merge ngược đổi dữ liệu local → bắn event để heatmap/my-vocab... re-render
     try {
       window.dispatchEvent(new CustomEvent("bye:progress"));
@@ -608,6 +662,7 @@ export async function hybridMergeOnLogin(): Promise<void> {
   bumpDirty("lessonProgress"); // push toàn bộ 2 chiều
   bumpDirty("reviewLogs");
   bumpDirty("readingProgress");
+  bumpDirty("readingDrafts");
   persistDirty();
   await flush();
 }

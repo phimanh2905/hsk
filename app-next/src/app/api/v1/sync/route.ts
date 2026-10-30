@@ -4,12 +4,13 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress, readingDrafts } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
   mergeReadingProgress,
+  mergeReadingDrafts,
   SRS_STATUSES,
   type SrsSyncStatus,
   type SyncSrsRecord,
@@ -17,6 +18,7 @@ import {
   type SyncLessonRecord,
   type SyncReadingRecord,
   type SyncReviewLogRecord,
+  type SyncDraftRecord,
 } from "@/lib/store/sync-merge";
 
 const bodySchema = z.object({
@@ -86,6 +88,35 @@ const bodySchema = z.object({
       })
     )
     .max(500)
+    .default([]),
+  readingDrafts: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(64),
+        title: z.string().max(255),
+        textZh: z.string().max(4000),
+        doc: z.object({
+          sentences: z.array(z.object({ zh: z.string().max(2000), py: z.string().max(2000), vi: z.string().max(2000) })),
+          vocab: z.array(z.object({ word: z.string().max(200), py: z.string().max(200), vi: z.string().max(500) })),
+          questions: z.array(
+            z.object({
+              q: z.string().max(2000),
+              qVi: z.string().max(2000),
+              options: z.array(z.string().max(500)),
+              answer: z.number().int().min(0),
+              evidence: z
+                .array(z.object({ si: z.number().int().min(0), s: z.number().int().min(0), e: z.number().int().min(0) }))
+                .optional(),
+            })
+          ),
+        }),
+        chars: z.number().int().min(0),
+        createdAt: z.number().int().positive(),
+        updatedAt: z.number().int().positive(),
+        deletedAt: z.number().int().nullable(),
+      })
+    )
+    .max(100)
     .default([]),
 });
 
@@ -353,7 +384,67 @@ export async function POST(req: NextRequest) {
       }
   }
 
-  // 6) Purge tombstone >90 ngày
+  // 6) readingDrafts (spec 2026-10-30 §4.3 — tombstone nằm trên record, merge
+  //    per-id updatedAt thắng; PK id — createdAt bất biến sau khi tạo).
+  const incDraftMap = new Map<string, SyncDraftRecord>();
+  for (const inc of body.readingDrafts) {
+    const prev = incDraftMap.get(inc.id);
+    incDraftMap.set(inc.id, prev ? mergeReadingDrafts(prev, inc) : inc);
+  }
+  const existingDrafts = await db.select().from(readingDrafts).where(eq(readingDrafts.userId, userId));
+  const draftMap = new Map(existingDrafts.map((r) => [r.id, r]));
+  const mergedDrafts: SyncDraftRecord[] = [...incDraftMap.values()].map((inc) => {
+    const ex = draftMap.get(inc.id);
+    if (!ex) return inc;
+    return mergeReadingDrafts(
+      {
+        id: ex.id,
+        title: ex.title,
+        textZh: ex.textZh,
+        doc: ex.doc,
+        chars: ex.chars,
+        createdAt: ex.createdAt,
+        updatedAt: ex.updatedAt,
+        deletedAt: ex.deletedAt,
+      },
+      inc
+    );
+  });
+  if (mergedDrafts.length) {
+    // DraftDocRow yêu cầu evidence luôn có — record từ client có thể thiếu
+    const toRowDoc = (r: SyncDraftRecord) => ({
+      ...r.doc,
+      questions: r.doc.questions.map((q) => ({ ...q, evidence: q.evidence ?? [] })),
+    });
+    for (const part of chunk(mergedDrafts.map((r) => ({
+          userId,
+          id: r.id,
+          title: r.title,
+          textZh: r.textZh,
+          doc: toRowDoc(r),
+          chars: r.chars,
+          createdAt: r.createdAt,
+          updatedAt: r.updatedAt,
+          deletedAt: r.deletedAt,
+        })))) {
+        await db
+          .insert(readingDrafts)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [readingDrafts.id],
+          set: {
+            title: sql`excluded.title`,
+            textZh: sql`excluded.text_zh`,
+            doc: sql`excluded.doc`,
+            chars: sql`excluded.chars`,
+            updatedAt: sql`excluded.updated_at`,
+            deletedAt: sql`excluded.deleted_at`,
+          },
+        });
+      }
+  }
+
+  // 7) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -366,14 +457,18 @@ export async function POST(req: NextRequest) {
         lt(lessonProgress.deletedAt, now - TOMBSTONE_TTL_MS)
       )
     );
+  await db
+    .delete(readingDrafts)
+    .where(and(eq(readingDrafts.userId, userId), isNotNull(readingDrafts.deletedAt), lt(readingDrafts.deletedAt, now - TOMBSTONE_TTL_MS)));
 
   // 7) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings] = await Promise.all([
+  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings, finalDrafts] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
     db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
     db.select().from(readingProgress).where(eq(readingProgress.userId, userId)),
+    db.select().from(readingDrafts).where(eq(readingDrafts.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -419,6 +514,17 @@ export async function POST(req: NextRequest) {
     updatedAt: r.updatedAt,
   }));
 
+  const draftsOut: SyncDraftRecord[] = finalDrafts.map((r) => ({
+    id: r.id,
+    title: r.title,
+    textZh: r.textZh,
+    doc: r.doc,
+    chars: r.chars,
+    createdAt: r.createdAt,
+    updatedAt: r.updatedAt,
+    deletedAt: r.deletedAt,
+  }));
+
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
@@ -426,5 +532,6 @@ export async function POST(req: NextRequest) {
     lessonProgress: lessonOut,
     reviewLogs: reviewLogsOut,
     readingProgress: readingOut,
+    readingDrafts: draftsOut,
   });
 }

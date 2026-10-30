@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   mergeLesson,
+  mergeReadingDrafts,
   mergeReadingProgress,
   mergeReviewLogs,
   mergeSrs,
   mergeStudyDay,
+  type SyncDraftRecord,
   type SyncLessonRecord,
   type SyncReadingRecord,
   type SyncReviewLogRecord,
@@ -265,6 +267,73 @@ describe("mergeReadingProgress", () => {
     const aCopy = structuredClone(a);
     const bCopy = structuredClone(b);
     mergeReadingProgress(a, b);
+    expect(a).toEqual(aCopy);
+    expect(b).toEqual(bCopy);
+  });
+});
+
+describe("mergeReadingDrafts", () => {
+  const drec = (over: Partial<SyncDraftRecord>): SyncDraftRecord => ({
+    id: "rd_000000000001",
+    title: "Bài một",
+    textZh: "我喜欢学中文。",
+    doc: {
+      sentences: [{ zh: "我喜欢学中文。", py: "wǒ xǐhuan xué zhōngwén.", vi: "Tôi thích học tiếng Trung." }],
+      vocab: [],
+      questions: [],
+    },
+    chars: 7,
+    createdAt: 1000,
+    updatedAt: 1000,
+    deletedAt: null,
+    ...over,
+  });
+
+  it("updatedAt lớn thắng toàn bộ trường", () => {
+    const a = drec({ title: "Bản cũ", updatedAt: 1000 });
+    const b = drec({ title: "Bản mới", updatedAt: 2000 });
+    const m = mergeReadingDrafts(a, b);
+    expect(m.title).toBe("Bản mới");
+    expect(m.updatedAt).toBe(2000);
+    expect(m.deletedAt).toBeNull();
+  });
+
+  it("tombstone thắng bản sống cũ hơn (deletedAt sau lần ghi cuối của bản sống)", () => {
+    const alive = drec({ updatedAt: 1000 });
+    const tomb = drec({ updatedAt: 1500, deletedAt: 2000 });
+    const m = mergeReadingDrafts(alive, tomb);
+    expect(m.deletedAt).toBe(2000);
+  });
+
+  it("bản sống mới hơn tombstone thắng khi deletedAt < updatedAt của nó", () => {
+    const alive = drec({ title: "Đã sửa lại", updatedAt: 3000 });
+    const tomb = drec({ updatedAt: 1500, deletedAt: 2000 });
+    const m = mergeReadingDrafts(alive, tomb);
+    expect(m.title).toBe("Đã sửa lại");
+    expect(m.deletedAt).toBeNull();
+    expect(m.updatedAt).toBe(3000);
+  });
+
+  it("tombstone updatedAt cũ nhưng deletedAt >= updatedAt bản sống → vẫn thắng", () => {
+    const alive = drec({ updatedAt: 3000 });
+    const tomb = drec({ updatedAt: 1500, deletedAt: 3500 });
+    const m = mergeReadingDrafts(alive, tomb);
+    expect(m.deletedAt).toBe(3500);
+  });
+
+  it("bản thắng tự tombstone → giữ deletedAt của nó", () => {
+    const tomb = drec({ updatedAt: 5000, deletedAt: 5000 });
+    const alive = drec({ updatedAt: 3000 });
+    const m = mergeReadingDrafts(tomb, alive);
+    expect(m.deletedAt).toBe(5000);
+  });
+
+  it("merge không mutate input", () => {
+    const a = drec({});
+    const b = drec({ title: "Khác", updatedAt: 9000 });
+    const aCopy = structuredClone(a);
+    const bCopy = structuredClone(b);
+    mergeReadingDrafts(a, b);
     expect(a).toEqual(aCopy);
     expect(b).toEqual(bCopy);
   });

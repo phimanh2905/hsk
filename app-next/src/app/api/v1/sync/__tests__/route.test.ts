@@ -31,19 +31,21 @@ function req(body?: unknown) {
   }) as unknown as import("next/server").NextRequest;
 }
 
-/** Route select 9 lần: 4 domain existing (srs, studyDay, lessonProgress, readingProgress)
-    + 5 domain final (thêm reviewLogs). */
+/** Route select 11 lần: 5 domain existing (srs, studyDay, lessonProgress,
+    readingProgress, readingDrafts) + 6 domain final (thêm reviewLogs). */
 function queueSelects(existing: Record<string, unknown[]>, final: Record<string, unknown[]>) {
   where
     .mockResolvedValueOnce(existing.srs ?? [])
     .mockResolvedValueOnce(existing.studyDay ?? [])
     .mockResolvedValueOnce(existing.lessonProgress ?? [])
     .mockResolvedValueOnce(existing.readingProgress ?? [])
+    .mockResolvedValueOnce(existing.readingDrafts ?? [])
     .mockResolvedValueOnce(final.srs ?? [])
     .mockResolvedValueOnce(final.studyDay ?? [])
     .mockResolvedValueOnce(final.lessonProgress ?? [])
     .mockResolvedValueOnce(final.reviewLogs ?? [])
-    .mockResolvedValueOnce(final.readingProgress ?? []);
+    .mockResolvedValueOnce(final.readingProgress ?? [])
+    .mockResolvedValueOnce(final.readingDrafts ?? []);
 }
 
 const srsFix = (over: Record<string, unknown>) => ({
@@ -235,7 +237,7 @@ describe("POST /api/v1/sync", () => {
       studyDay: [],
       lessonProgress: [{ book: "hsk1", lesson: "l9", modes: {}, knownCount: 0, updatedAt: 100, deletedAt: 1 }],
     }));
-    expect(deleteWhere).toHaveBeenCalledTimes(2);
+    expect(deleteWhere).toHaveBeenCalledTimes(3); // srs + lessonProgress + readingDrafts
   });
 
   it("payload > 9 cards: insert chunk ≤ 8 rows/statement (D1 100 bind params)", async () => {

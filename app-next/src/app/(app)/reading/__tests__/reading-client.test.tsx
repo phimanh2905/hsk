@@ -1,173 +1,178 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, act, waitFor } from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ReadingClient from "../reading-client";
+import type { ReadingDoc } from "@/lib/content/readings";
 import { progressStore } from "@/lib/store/progress-store";
 
-const speakMock = vi.fn();
+/* Task 9 plan 2026-10-30-reading-library: library UI test.
+   Mock loadReadings (readings-client — có test riêng), mock useReadingPlayer
+   (hook có test riêng) để tránh Audio/speechSynthesis trong jsdom. */
 
-// W3 T9: passages thật chưa gen — mock fixture 1 passage HSK1 cho picker.
-// passages là mảng mutable trong vi.hoisted để test fallback rỗng swap được.
-const { passages } = vi.hoisted(() => ({
-  passages: [
-    {
-      id: "hsk1-reading-1",
-      book: "hsk1",
-      lesson: "lesson-1",
-      title: "My small apartment",
-      titleVi: "Căn hộ nhỏ của tôi",
-      sentences: [
-        { zh: "我住在学校附近的一间小公寓。", py: "Wǒ zhù zài xuéxiào fùjìn de yì jiān xiǎo gōngyù.", vi: "Tôi sống trong một căn hộ nhỏ gần trường." },
-        { zh: "每天早上我七点起床。", py: "Měitiān zǎoshang wǒ qī diǎn qǐchuáng.", vi: "Mỗi sáng tôi ngủ dậy lúc bảy giờ." }
-      ],
-      vocab: [{ word: "公寓", py: "gōngyù", vi: "căn hộ" }],
-      questions: [
-        { q: "我住在哪里？", qVi: "Tôi sống ở đâu?", options: ["学校附近", "公司里面", "公园旁边"], answer: 0 }
-      ]
-    }
-  ] as unknown[],
-}));
-vi.mock("@/content/reading-passages", () => ({
-  readingPassages: passages,
+const fixture: ReadingDoc[] = [
+  {
+    id: "hsk1-reading-1", level: "hsk1", ord: 1,
+    title: "我的家", titleVi: "Gia đình tôi",
+    sentences: [
+      { zh: "我家在北京。", py: "Wǒ jiā zài Běijīng.", vi: "Nhà tôi ở Bắc Kinh.", audio: null, durSec: 3 },
+      { zh: "我家有四口人。", py: "Wǒ jiā yǒu sì kǒu rén.", vi: "Nhà tôi có bốn người.", audio: null, durSec: 4 },
+    ],
+    vocab: [{ word: "家", py: "jiā", vi: "nhà" }],
+    questions: [
+      { q: "我家有几口人？", qVi: "Nhà tôi có mấy người?", options: ["三口", "四口", "五口", "六口"], answer: 1, evidence: [{ si: 1, s: 0, e: 6 }] },
+      { q: "我家在哪里？", qVi: "Nhà tôi ở đâu?", options: ["上海", "北京", "广州", "深圳"], answer: 1 },
+    ],
+    audioDir: "audio/reading/hsk1-reading-1", chars: 12, durationSec: 95,
+  },
+  {
+    id: "hsk1-reading-2", level: "hsk1", ord: 2,
+    title: "上学", titleVi: "Đi học",
+    sentences: [
+      { zh: "我每天上学。", py: "Wǒ měitiān shàngxué.", vi: "Tôi đi học mỗi ngày.", audio: null, durSec: 2 },
+    ],
+    vocab: [],
+    questions: [
+      { q: "他对吗？", qVi: "Bạn ấy đúng không?", options: ["对", "错", "好", "不"], answer: 0 },
+      { q: "什么颜色？", qVi: "Màu gì?", options: ["红", "蓝", "绿", "黄"], answer: 2 },
+    ],
+    audioDir: "audio/reading/hsk1-reading-2", chars: 8, durationSec: 30,
+  },
+  {
+    id: "hsk2-reading-1", level: "hsk2", ord: 1,
+    title: "周末", titleVi: "Cuối tuần",
+    sentences: [{ zh: "周末我休息。", py: "Zhōumò wǒ xiūxi.", vi: "Cuối tuần tôi nghỉ ngơi.", audio: null, durSec: 2 }],
+    vocab: [],
+    questions: [{ q: "周末做什么？", qVi: "Cuối tuần làm gì?", options: ["休息", "工作"], answer: 0 }],
+    audioDir: "audio/reading/hsk2-reading-1", chars: 20, durationSec: 65,
+  },
+];
+
+const { docs, loadErr } = vi.hoisted(() => ({
+  docs: [] as unknown[],
+  loadErr: { v: null as Error | null },
 }));
 
-// UPG-2: account-box đọc session thật qua useSession, không đọc localStorage mock.
-const { session } = vi.hoisted(() => ({ session: { loggedIn: false } }));
-vi.mock("@/lib/use-session", () => ({
-  useSession: () => ({ ...session, name: "T", image: null, isPending: false, logout: vi.fn() }),
+vi.mock("@/lib/content/readings-client", () => ({
+  loadReadings: () => (loadErr.v ? Promise.reject(loadErr.v) : Promise.resolve(docs)),
+  __resetReadingsCache: () => {},
+}));
+
+vi.mock("@/components/reading/use-reading-player", () => ({
+  useReadingPlayer: () => ({
+    playing: false, curIdx: -1, charPos: null, rate: 1, loopSentence: false,
+    curTime: 0, duration: 0, hasAudio: false,
+    toggle: vi.fn(), next: vi.fn(), prev: vi.fn(), seekSentence: vi.fn(),
+    seekGlobal: vi.fn(), setRate: vi.fn(), setLoopSentence: vi.fn(),
+  }),
 }));
 
 beforeEach(() => {
+  docs.length = 0;
+  docs.push(...fixture);
+  loadErr.v = null;
   localStorage.clear();
-  session.loggedIn = false;
-  vi.stubGlobal("speechSynthesis", {
-    speak: speakMock, cancel: vi.fn(), speaking: false,
-    getVoices: vi.fn(() => [{ name: "Tingting", lang: "zh-CN" }]),
-  });
-  speakMock.mockClear();
+  window.history.replaceState(null, "", "/reading");
+  (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView = vi.fn();
 });
 
-describe("ReadingClient (G3)", () => {
-  it("điền văn bản mẫu → Tạo bài đọc → 11 câu (title dòng đầu)", async () => {
-    const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.click(screen.getByText("Điền văn bản mẫu"));
-    expect(screen.getByText("Đã điền văn bản mẫu — bấm “Tạo bài đọc” nhé!")).toBeInTheDocument();
-    await user.click(screen.getByText("Tạo bài đọc"));
-    // sampleText thực tế tách thành 13 câu (comment "11 câu" trong dữ liệu không khớp thực tế)
-    expect(screen.getByText(/13 câu/)).toBeInTheDocument();
-  });
-  it("mở bài demo từ sidebar → 13 câu + Câu hỏi & Từ vựng + MCQ đúng → toast", async () => {
-    const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.click(screen.getByText("一个人的生活"));
-    expect(screen.getByText(/13 câu/)).toBeInTheDocument();
-    expect(screen.getByText("Câu hỏi & Từ vựng")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "A. 先喝一杯温水" }));
-    expect(screen.getByText("Chính xác!")).toBeInTheDocument();
-  });
-  it("Phát câu 1: utterance lang zh-CN + rate; Phát cả bài đổi sang Dừng; Dừng huỷ sạch", async () => {
-    const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.click(screen.getByText("一个人的生活"));
-    await user.click(screen.getAllByRole("button", { name: "Đọc câu 1" })[0]);
-    expect(speakMock).toHaveBeenCalledTimes(1);
-    const u = speakMock.mock.calls[0][0] as SpeechSynthesisUtterance;
-    expect(u.lang).toBe("zh-CN");
-    expect(u.rate).toBe(1);
-    await user.click(screen.getByRole("button", { name: "Phát cả bài" }));
-    expect(screen.getByRole("button", { name: "Dừng" })).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Dừng" }));
-    expect(screen.getByRole("button", { name: "Phát cả bài" })).toBeInTheDocument();
-    expect(window.speechSynthesis.cancel).toHaveBeenCalled();
-  });
-  it("account-box: chưa login → nút Đăng nhập; có session → text demo", async () => {
-    const user = userEvent.setup();
-    session.loggedIn = false;
-    const { rerender } = render(<ReadingClient />);
-    expect(screen.getByText("Đăng nhập để lưu bài đã tạo và mở lại mọi lúc.")).toBeInTheDocument();
-    session.loggedIn = true;
-    rerender(<ReadingClient key="logged-in" />);
-    expect(screen.getByText(/Chưa có bài nào được lưu/)).toBeInTheDocument();
-  });
-  it("textarea cắt tại 3000 ký tự", { timeout: 30000 }, async () => {
-    const user = userEvent.setup();
-    render(<ReadingClient />);
-    const ta = screen.getByLabelText(/Nội dung bài đọc/) as HTMLTextAreaElement;
-    await user.type(ta, "好".repeat(3010));
-    expect(ta.value.length).toBe(3000);
-    expect(screen.getByText("3000/3000")).toBeInTheDocument();
-  });
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+  delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
 });
 
-describe("ReadingClient — picker bài đọc theo level (W3 T9)", () => {
-  it("render picker passage với option = title; chọn passage -> textarea chứa câu đầu", async () => {
-    const user = userEvent.setup();
-    render(<ReadingClient />);
-    const picker = screen.getByTestId("reading-passage-select") as HTMLSelectElement;
-    expect(picker).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: /My small apartment/ })).toBeInTheDocument();
-    await user.selectOptions(picker, "hsk1-reading-1");
-    const input = screen.getByLabelText(/Nội dung bài đọc/) as HTMLTextAreaElement;
-    expect(input.value).toContain("我住在学校附近的一间小公寓");
-    // draft tự lưu khi chọn passage (W0.4 behavior)
-    expect(progressStore.getReadingDrafts().some((d) => d.text.includes("我住在学校附近"))).toBe(true);
+function renderAndWait() {
+  const r = render(<ReadingClient />);
+  return screen.findByText("我的家").then(() => r);
+}
+
+describe("ReadingClient — library list", () => {
+  it("render tab level + section headers với đúng số bài", async () => {
+    await renderAndWait();
+    expect(screen.getByRole("button", { name: "Tất cả" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "HSK 1" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "HSK 2" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "HSK 1 (2 bài)" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "HSK 2 (1 bài)" })).toBeInTheDocument();
+    // meta card: 1:35 · 12 chữ
+    expect(screen.getByText("1:35 · 12 chữ")).toBeInTheDocument();
   });
 
-  it("chọn passage -> doc hiển thị câu + extras questions với đáp án đúng", async () => {
+  it("click card → ReadingPlayer render câu đầu + Back về list", async () => {
     const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.selectOptions(screen.getByTestId("reading-passage-select"), "hsk1-reading-1");
-    expect(screen.getByText(/2 câu/)).toBeInTheDocument();
-    expect(screen.getByText("Câu hỏi & Từ vựng")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "A. 学校附近" }));
-    expect(screen.getByText("Chính xác!")).toBeInTheDocument();
-    // option sai -> toast chưa đúng
-    await user.click(screen.getByRole("button", { name: "B. 公司里面" }));
-    expect(screen.getByText("Chưa đúng — thử lại nhé!")).toBeInTheDocument();
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: /我的家/ }));
+    expect(screen.getByText("我家在北京。")).toBeInTheDocument();
+    expect(screen.getByText("Câu hỏi")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "← Danh sách" }));
+    expect(screen.getByRole("button", { name: "HSK 1" })).toBeInTheDocument();
+    expect(screen.queryByText("我家在北京。")).not.toBeInTheDocument();
   });
 
-  it("passages rỗng -> không render picker (fallback demo)", () => {
-    const saved = [...passages];
-    passages.length = 0;
-    try {
-      render(<ReadingClient key="empty" />);
-      expect(screen.queryByTestId("reading-passage-select")).not.toBeInTheDocument();
-    } finally {
-      passages.push(...saved);
-    }
+  it("click tab HSK 2 → chỉ grid hsk2 + replaceState ?level=hsk2; Back về list đầy đủ", async () => {
+    const user = userEvent.setup();
+    await renderAndWait();
+    const replace = vi.spyOn(window.history, "replaceState");
+    await user.click(screen.getByRole("button", { name: "HSK 2" }));
+    expect(replace).toHaveBeenCalledWith(null, "", expect.stringContaining("level=hsk2"));
+    expect(screen.getByRole("button", { name: /周末/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /我的家/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "← Danh sách" }));
+    expect(screen.getByRole("button", { name: /我的家/ })).toBeInTheDocument();
+  });
+
+  it("?level=hsk2 lúc mount (initLevel) → chỉ grid hsk2", async () => {
+    render(<ReadingClient initLevel="hsk2" />);
+    await screen.findByText("周末");
+    expect(screen.getByRole("button", { name: /周末/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /我的家/ })).not.toBeInTheDocument();
+  });
+
+  it("loadReadings reject → nút thử lại; bấm thử lại → load lại và render", async () => {
+    loadErr.v = new Error("boom");
+    const user = userEvent.setup();
+    render(<ReadingClient />);
+    const retry = await screen.findByRole("button", { name: "Thử lại" });
+    loadErr.v = null;
+    await user.click(retry);
+    await screen.findByText("我的家");
+    expect(screen.getByText("1:35 · 12 chữ")).toBeInTheDocument();
   });
 });
 
-describe("ReadingClient — bản nháp tự lưu (W0.4)", () => {
-  it("Tạo bài đọc → draft lưu vào bye.reading.drafts", async () => {
+describe("ReadingClient — progress + XP", () => {
+  it("onComplete lần đầu ≥60% → saveReadingProgress + addXp(total*10); lần sau không addXp", async () => {
     const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.type(screen.getByLabelText("Nội dung bài đọc"), "第一篇测试文章。");
-    await user.click(screen.getByText("Tạo bài đọc"));
-    const drafts = progressStore.getReadingDrafts();
-    expect(drafts.length).toBe(1);
-    expect(drafts[0].text).toContain("第一篇测试文章");
+    const saveSpy = vi.spyOn(progressStore, "saveReadingProgress");
+    const xpSpy = vi.spyOn(progressStore, "addXp");
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: /我的家/ }));
+    await user.click(screen.getByRole("button", { name: "四口" }));
+    await user.click(screen.getByRole("button", { name: "北京" }));
+    await waitFor(() => expect(saveSpy).toHaveBeenCalledWith("hsk1-reading-1", 2, 2));
+    expect(xpSpy).toHaveBeenCalledTimes(1);
+    expect(xpSpy).toHaveBeenCalledWith(20);
+    cleanup();
+
+    // remount → progress đã có → Done badge, quiz lại vẫn không cộng XP
+    await renderAndWait();
+    expect(screen.getAllByText("Done").length).toBeGreaterThanOrEqual(1);
+    await user.click(screen.getByRole("button", { name: /我的家/ }));
+    await user.click(screen.getByRole("button", { name: "四口" }));
+    await user.click(screen.getByRole("button", { name: "北京" }));
+    await waitFor(() => expect(saveSpy).toHaveBeenCalledTimes(2));
+    expect(xpSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("mount lại → textarea khôi phục draft mới nhất", async () => {
-    progressStore.saveReadingDraft("昨天的旧文章。今天很好。");
-    progressStore.saveReadingDraft("最新的一篇文章。今天很好。");
-    render(<ReadingClient />);
-    const input = screen.getByLabelText("Nội dung bài đọc") as HTMLTextAreaElement;
-    await waitFor(() => expect(input.value).toBe("最新的一篇文章。今天很好。"));
-    expect(screen.getByText("Bản nháp đã lưu")).toBeTruthy();
-    // text xuất hiện ở cả sidebar span lẫn textarea value → getAllByText
-    expect(screen.getAllByText("最新的一篇文章。今天很好。").length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("bấm draft cũ trong sidebar → nạp lại vào textarea", async () => {
-    progressStore.saveReadingDraft("文章甲。内容很长很好。");
-    progressStore.saveReadingDraft("文章乙。内容也很长。");
+  it("onComplete <60% → save nhưng không addXp", async () => {
     const user = userEvent.setup();
-    render(<ReadingClient />);
-    await user.click(screen.getByText("文章甲。内容很长很好。"));
-    const input = screen.getByLabelText("Nội dung bài đọc") as HTMLTextAreaElement;
-    expect(input.value).toBe("文章甲。内容很长很好。");
+    const saveSpy = vi.spyOn(progressStore, "saveReadingProgress");
+    const xpSpy = vi.spyOn(progressStore, "addXp");
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: /上学/ }));
+    await user.click(screen.getByRole("button", { name: "对" }));
+    await user.click(screen.getByRole("button", { name: "红" })); // sai (đáp án 绿)
+    await waitFor(() => expect(saveSpy).toHaveBeenCalledWith("hsk1-reading-2", 1, 2));
+    expect(xpSpy).not.toHaveBeenCalled();
   });
 });
