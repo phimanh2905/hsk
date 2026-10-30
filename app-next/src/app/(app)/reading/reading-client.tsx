@@ -1,9 +1,9 @@
 "use client";
 
-/* Thư viện bài đọc theo level HSK1–5 (Task 9, plan 2026-10-30-reading-library).
-   Data từ D1 qua loadReadings(); mở bài → ReadingPlayer (Task 8). Progress +
-   XP qua progress-store (guest local, login sync qua HybridStore). Phase 2 sẽ
-   thêm tab Mine (bài tạo-AI) — textarea/askAi cũ đã bỏ khỏi client này. */
+/* Thư viện bài đọc theo level HSK1–5 (Task 9, plan 2026-10-30-reading-library) +
+   tab "Bài của tôi" — bài tạo-AI (Task 6, plan 2026-10-30-reading-ai-mine).
+   Data từ D1 qua loadReadings(); Mine đọc draft từ progressStore. Mở bài →
+   ReadingPlayer (Task 8) — draft không có audio → fallback TTS của player. */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { loadReadings, __resetReadingsCache } from "@/lib/content/readings-client";
@@ -11,15 +11,38 @@ import type { ReadingDoc } from "@/lib/content/readings";
 import { ReadingPlayer } from "@/components/reading/reading-player";
 import { ToastProvider } from "@/components/shell/toast-provider";
 import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
+import { MinePanel } from "@/app/(app)/reading/mine-panel";
 import { BookOpen, Check, ChevronLeft, ChevronRight, Lightbulb } from "@/components/ui/icon";
 import { ICON_STROKE } from "@/components/ui/icon";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
-import { progressStore, type ReadingProgressRec } from "@/lib/store/progress-store";
+import {
+  progressStore,
+  type ReadingProgressRec,
+  type SavedReadingDraft,
+} from "@/lib/store/progress-store";
 
 const LEVELS = ["hsk1", "hsk2", "hsk3", "hsk4", "hsk5"] as const;
+
+/* Draft AI không có audio/độ dài → map về ReadingDoc: player tự fallback TTS
+   và ẩn seek (durSec = 0). */
+function draftToDoc(draft: SavedReadingDraft): ReadingDoc {
+  return {
+    id: draft.id,
+    level: "",
+    ord: 0,
+    title: draft.title,
+    titleVi: "",
+    sentences: draft.doc.sentences.map((s) => ({ ...s, audio: null, durSec: 0 })),
+    vocab: draft.doc.vocab,
+    questions: draft.doc.questions,
+    audioDir: "",
+    chars: draft.chars,
+    durationSec: 0,
+  };
+}
 
 function fmtTime(sec: number): string {
   const s = Math.max(0, Math.floor(sec));
@@ -156,12 +179,15 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
   const [loadFailed, setLoadFailed] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<string>(initLevel ?? "all");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [openDraft, setOpenDraft] = useState<SavedReadingDraft | null>(null);
+  const [tab, setTab] = useState<"library" | "mine">("library");
   const [progress, setProgress] = useState<Record<string, ReadingProgressRec>>({});
 
   useEffect(() => {
     if (typeof window !== "undefined" && initLevel === undefined) {
       const lv = new URLSearchParams(window.location.search).get("level");
       if (lv && LEVELS.includes(lv as (typeof LEVELS)[number])) setSelectedLevel(lv);
+      if (new URLSearchParams(window.location.search).get("tab") === "mine") setTab("mine");
     }
   }, [initLevel]);
 
@@ -182,6 +208,15 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
     window.history.replaceState(null, "", url);
   };
 
+  const chooseTab = (t: "library" | "mine") => {
+    setTab(t);
+    if (t === "mine") {
+      window.history.replaceState(null, "", "/reading?tab=mine");
+    } else {
+      chooseLevel(selectedLevel);
+    }
+  };
+
   const handleComplete = useCallback(
     (id: string, correct: number, total: number) => {
       // Store là nguồn sự thật: lần đầu = chưa có record nào trước khi save.
@@ -198,13 +233,22 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
   const openDoc = openId ? docs?.find((d) => d.id === openId) : undefined;
 
   /* ----- view bài ----- */
-  if (openDoc) {
+  if (openDoc || openDraft) {
+    const isDraft = !openDoc;
+    const doc = openDoc ?? draftToDoc(openDraft!);
+    const docId = doc.id;
     return (
       <div className="mx-auto w-full max-w-[820px]">
-        <Button type="button" variant="ghost" size="sm" onClick={() => setOpenId(null)} className="mb-4">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => (isDraft ? setOpenDraft(null) : setOpenId(null))}
+          className="mb-4"
+        >
           ← Danh sách
         </Button>
-        <ReadingPlayer doc={openDoc} onComplete={(c, t) => handleComplete(openDoc.id, c, t)} />
+        <ReadingPlayer doc={doc} onComplete={(c, t) => handleComplete(docId, c, t)} />
       </div>
     );
   }
@@ -229,17 +273,20 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
         <h1 className="text-3xl font-extrabold">Bài đọc</h1>
       </div>
 
-      <Callout />
-
-      {/* tab level */}
-      <nav aria-label="Chọn level" className="mb-5 flex gap-1 border-b border-border-default overflow-x-auto">
-        {tabs.map((lv) => {
-          const active = selectedLevel === lv;
+      {/* tab library / mine */}
+      <nav aria-label="Chọn nhóm bài" className="mb-4 flex gap-1 border-b border-border-default">
+        {(
+          [
+            { key: "library", label: "Bài khoá" },
+            { key: "mine", label: "Bài của tôi" },
+          ] as const
+        ).map((t) => {
+          const active = tab === t.key;
           return (
             <button
-              key={lv}
+              key={t.key}
               type="button"
-              onClick={() => chooseLevel(lv)}
+              onClick={() => chooseTab(t.key)}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "shrink-0 border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
@@ -248,11 +295,40 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
                   : "border-transparent text-text-secondary hover:text-text-primary",
               )}
             >
-              {lv === "all" ? "Tất cả" : `HSK ${lv.replace("hsk", "")}`}
+              {t.label}
             </button>
           );
         })}
       </nav>
+
+      {tab === "mine" && <MinePanel onOpen={setOpenDraft} />}
+
+      {tab === "library" && <Callout />}
+
+      {tab === "library" && (
+        <>
+        {/* tab level */}
+        <nav aria-label="Chọn level" className="mb-5 flex gap-1 border-b border-border-default overflow-x-auto">
+          {tabs.map((lv) => {
+            const active = selectedLevel === lv;
+            return (
+              <button
+                key={lv}
+                type="button"
+                onClick={() => chooseLevel(lv)}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "shrink-0 border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+                  active
+                    ? "border-action-primary text-action-primary"
+                    : "border-transparent text-text-secondary hover:text-text-primary",
+                )}
+              >
+                {lv === "all" ? "Tất cả" : `HSK ${lv.replace("hsk", "")}`}
+              </button>
+            );
+          })}
+        </nav>
 
       {/* loading skeleton */}
       {!docs && !loadFailed && (
@@ -315,6 +391,8 @@ function ReadingClientInner({ initLevel }: { initLevel?: string }) {
             />
           ))
         )
+      )}
+      </>
       )}
     </div>
   );

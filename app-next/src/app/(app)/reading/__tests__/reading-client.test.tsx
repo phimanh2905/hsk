@@ -66,6 +66,11 @@ vi.mock("@/components/reading/use-reading-player", () => ({
   }),
 }));
 
+/* Tab Mine (Task 6) dùng useSession — mock guest để không đụng authClient. */
+vi.mock("@/lib/use-session", () => ({
+  useSession: () => ({ loggedIn: false, isPending: false, name: "", image: null, logout: async () => {} }),
+}));
+
 beforeEach(() => {
   docs.length = 0;
   docs.push(...fixture);
@@ -137,6 +142,60 @@ describe("ReadingClient — library list", () => {
     await user.click(retry);
     await screen.findByText("我的家");
     expect(screen.getByText("1:35 · 12 chữ")).toBeInTheDocument();
+  });
+});
+
+describe("ReadingClient — tab Mine", () => {
+  it("bấm tab 'Bài của tôi' → MinePanel render, ẩn library; URL ?tab=mine", async () => {
+    const user = userEvent.setup();
+    const replace = vi.spyOn(window.history, "replaceState");
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: "Bài của tôi" }));
+    expect(replace).toHaveBeenCalledWith(null, "", "/reading?tab=mine");
+    expect(screen.getByRole("heading", { name: "Tạo bài đọc bằng AI" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tạo bài đọc" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "HSK 1 (2 bài)" })).not.toBeInTheDocument();
+    // quota chip ẩn khi guest
+    expect(screen.queryByText(/\/3 lượt/)).not.toBeInTheDocument();
+  });
+
+  it("?tab=mine lúc mount → mở ngay tab Mine", async () => {
+    window.history.replaceState(null, "", "/reading?tab=mine");
+    render(<ReadingClient />);
+    await screen.findByRole("heading", { name: "Tạo bài đọc bằng AI" });
+    expect(screen.queryByRole("button", { name: "Bài khoá" })).toBeInTheDocument();
+  });
+
+  it("tab Mine → quay lại 'Bài khoá' → library render lại", async () => {
+    const user = userEvent.setup();
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: "Bài của tôi" }));
+    await user.click(screen.getByRole("button", { name: "Bài khoá" }));
+    expect(screen.getByRole("heading", { name: "HSK 1 (2 bài)" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Tạo bài đọc bằng AI" })).not.toBeInTheDocument();
+  });
+
+  it("tab Mine → bấm card draft → player render câu draft (audio null, TTS fallback)", async () => {
+    const user = userEvent.setup();
+    progressStore.upsertReadingDraft({
+      id: "rd_x1",
+      title: "我的家",
+      textZh: "我的家在北京。",
+      doc: {
+        sentences: [{ zh: "我家在北京。", py: "Wǒ jiā zài Běijīng.", vi: "Nhà tôi ở Bắc Kinh." }],
+        vocab: [],
+        questions: [{ q: "q", qVi: "cq", options: ["a", "b"], answer: 0 }],
+      },
+      chars: 6,
+      createdAt: 1760000000000,
+      updatedAt: 1760000000000,
+    });
+    await renderAndWait();
+    await user.click(screen.getByRole("button", { name: "Bài của tôi" }));
+    await user.click(screen.getByRole("button", { name: /我的家/ }));
+    expect(screen.getByText("我家在北京。")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "← Danh sách" }));
+    expect(screen.getByRole("heading", { name: "Tạo bài đọc bằng AI" })).toBeInTheDocument();
   });
 });
 
