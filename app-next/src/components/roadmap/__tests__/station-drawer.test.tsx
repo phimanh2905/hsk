@@ -132,6 +132,55 @@ describe("StationDrawer", () => {
     expect(screen.getByText("Bắt đầu chặng — không cần ôn.")).toBeTruthy();
   });
 
+  it("prev generator: tab Ôn nhanh fetch vocab bài đầu trạm trước → 4 câu, không ghi progress", async () => {
+    const fetchFn = stubVocabFetch();
+    const user = userEvent.setup();
+    const b1 = hsk2.stations.find((s) => s.id === "b1")!;
+    const before = localStorage.getItem("bye.roadmap.stations.v1");
+    render(
+      <StationDrawer
+        view={mkView(hsk2, "b2", "active")}
+        level={hsk2}
+        prevStation={b1}
+        open
+        onClose={() => {}}
+      />,
+    );
+    await user.click(screen.getByTestId("drawer-tab-review"));
+    // chỉ fetch 1 bài — bài đầu của trạm trước
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(
+      fetchFn.mock.calls.some(([input]) =>
+        String(input).includes(`page=${b1.lessons![0]!.page}`),
+      ),
+    ).toBe(true);
+    await waitFor(() => expect(screen.getByTestId("warmup-prompt")).toBeTruthy());
+    for (let i = 0; i < 4; i++) {
+      await user.click(screen.getAllByRole("button", { name: /^warmup-opt-/ })[0]!);
+      await user.click(
+        screen.getByRole("button", { name: i === 3 ? "Kết thúc ôn" : "Câu tiếp" }),
+      );
+    }
+    expect(screen.getByTestId("warmup-done")).toBeTruthy();
+    // warm-up không tính điểm — progress storage byte-equal trước/sau
+    expect(localStorage.getItem("bye.roadmap.stations.v1")).toBe(before);
+  });
+
+  it("prev không có lessons (milestone curated m) → giữ placeholder", async () => {
+    const user = userEvent.setup();
+    render(
+      <StationDrawer
+        view={mkView(hsk2, "6", "active")}
+        level={hsk2}
+        prevStation={hsk2.stations.find((s) => s.id === "m")!}
+        open
+        onClose={() => {}}
+      />,
+    );
+    await user.click(screen.getByTestId("drawer-tab-review"));
+    expect(screen.getByText("Buổi sau sẽ có ôn nhanh.")).toBeTruthy();
+  });
+
   it("gate locked: tab quiz hiển thị EntryGate thay vì quiz trạm", async () => {
     const user = userEvent.setup();
     render(
