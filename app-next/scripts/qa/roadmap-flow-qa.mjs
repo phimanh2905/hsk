@@ -1,9 +1,11 @@
 /* Browser QA — roadmap flow (spec 2026-10-28 §9 + Roadmap Journey v2 Task 10).
    15 case hồi quy (điều chỉnh tối thiểu cho drawer 3 tab) + 13 case mới
    journey-start / entry-gate / warm-up / tab Học / học bài thật / topbar /
-   đích đến / milestone.
-   Run: node roadmap-flow-qa.mjs            → chạy cả 28
-        QA_ONLY=16,17 node roadmap-flow-qa.mjs → chạy chọn lọc */
+   đích đến / milestone + 2 case mới follow-up: warm-up trạm generator /
+   distractor câu nghe gần-âm.
+   Run: node roadmap-flow-qa.mjs            → chạy cả 30
+        QA_ONLY=16,17 node roadmap-flow-qa.mjs → chạy chọn lọc
+   Cần: dev :3101 + D1 hsk-dev đã seed (migrations + content-vocabs.sql). */
 import { chromium } from "@playwright/test";
 
 const BASE = "http://localhost:3101";
@@ -522,6 +524,104 @@ if (!ONLY || ONLY.includes("28")) await qa("28. Milestone HSK1: 12 câu, pass �
   await page.waitForSelector('button[aria-label="Milestone ôn tập chặng — hoàn thành"]', { timeout: 8000 });
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("bye.roadmap.stations.v1") || "{}"));
   if (stored["hsk-1"]?.milestone?.pct !== 100) throw new Error("store=" + JSON.stringify(stored["hsk-1"]?.milestone));
+});
+
+/* ---------- Case mới 29–30 (Roadmap Journey v2 Follow-up) ---------- */
+
+/* pinyinInitial (đối xứng src/lib/station-quiz.ts): ký tự đầu pinyin, ü có dấu quy "ü". */
+const pinyinInitial = (p) => {
+  const c = (p ?? "").trimStart()[0] ?? "";
+  return "ǖǘǚǜ".includes(c) ? "ü" : c;
+};
+
+if (!ONLY || ONLY.includes("29")) await qa("29. Warm-up trạm generator (Trạm 2 HSK1, g1 90%): 4 câu từ vocab D1, không placeholder, stations.v1 byte-equal", async () => {
+  await gotoApp("/roadmap?level=hsk-1", { "bye.roadmap.stations.v1": { "hsk-1": { g1: { pct: 90, stars: 2 } } } });
+  await openDrawer("Trạm 2: Số & lượng từ & Thời gian — đang học");
+  await eclick('aside [data-testid="drawer-tab-review"]');
+  // GeneratorWarmup fetch bài đầu trạm trước (hsk1/lesson-1) qua vocab-lesson API → cần D1 seed
+  await page.waitForSelector('aside [data-testid="warmup-prompt"]', { timeout: 25000 });
+  const txt = await page.locator("aside").innerText();
+  if (/Buổi sau sẽ có ôn nhanh/.test(txt)) throw new Error("vẫn placeholder — GeneratorWarmup không chạy");
+  if (!/Ôn 4 từ của \d+ từ trạm trước/.test(txt)) throw new Error("thiếu nhãn Ôn 4 từ: " + txt.replace(/\n/g, " ").slice(0, 120));
+  if (await page.locator('aside [aria-label="warmup-opt-3"]').count() === 0) throw new Error("ít hơn 4 câu warm-up");
+  const before = await page.evaluate(() => localStorage.getItem("bye.roadmap.stations.v1"));
+  for (let i = 0; i < 4; i++) {
+    await eclick('aside [aria-label="warmup-opt-0"]');
+    await eclick(`aside button:has-text("${i === 3 ? "Kết thúc ôn" : "Câu tiếp"}")`);
+  }
+  await page.waitForSelector('aside [data-testid="warmup-done"]', { timeout: 8000 });
+  await page.waitForSelector('aside >> text=Không tính điểm — tiến độ không thay đổi.', { timeout: 4000 });
+  const after = await page.evaluate(() => localStorage.getItem("bye.roadmap.stations.v1"));
+  if (before !== after) throw new Error(`stations.v1 bị đổi sau warm-up:\n${before}\n${after}`);
+});
+
+/* Distractor gần-âm (T1): câu nghe read-variant ưu tiên cùng pinyinInitial.
+   Chạy 3 lần reload: mỗi lần quiz trạm g1 (8 câu, listenEvery=4) có ≥1 câu
+   nghe; trên MỖI lần chạy, ≥1 câu nghe có distractor cùng ký tự đầu pinyin
+   với đáp án. Read-variant (headless, TTS lỗi): prompt chứa pinyin đáp án
+   "Từ nào đọc là “py”?", options là hanzi → map hanzi→pinyin từ vocab API.
+   Listen-variant (TTS phát được): options là pinyin → so trực tiếp. */
+if (!ONLY || ONLY.includes("30")) await qa("30. Distractor câu nghe gần-âm: ≥1 option cùng pinyinInitial với đáp án, 3 lần reload", async () => {
+  const PINYIN_SEED = [1, 2, 3, 4, 5, 6, 7, 8];
+  const scope = 'aside[aria-label="Chi tiết trạm học"]';
+  for (let run = 1; run <= 3; run++) {
+    await gotoApp("/roadmap?level=hsk-1", { "bye.roadmap.pinyin": PINYIN_SEED });
+    await openDrawer("Trạm 1: Chào hỏi & xưng hô — đang học");
+    await startStationQuiz(25000);
+    let listenSeen = 0;
+    let sameInitial = false;
+    const zhPy = await page.evaluate(async () => {
+      const map = new Map();
+      for (let p = 1; p <= 5; p++) {
+        const res = await fetch(`/api/v1/content/vocab-lesson?book=hsk1&page=lesson-${p}`);
+        if (!res.ok) continue;
+        for (const w of (await res.json())?.lesson?.words ?? []) {
+          if (!map.has(w.hanzi)) map.set(w.hanzi, new Set());
+          map.get(w.hanzi).add(w.pinyin);
+        }
+      }
+      return [...map].map(([k, v]) => [k, [...v]]);
+    });
+    const zhPyMap = new Map(zhPy);
+    const counter = await page.locator(`${scope} [data-testid="quiz-counter"]`).innerText();
+    const n = Number(counter.match(/\/(\d+)/)?.[1] ?? 0);
+    if (!n) throw new Error("không đọc được tổng câu: " + counter);
+    for (let i = 0; i < n && !sameInitial; i++) {
+      await waitReadFallback(`${scope} [data-testid="quiz-prompt"]`);
+      const isListen = (await page.locator(`${scope} [aria-label="Nghe lại"]`).count()) > 0;
+      const promptTxt = await page.locator(`${scope} [data-testid="quiz-prompt"]`).innerText();
+      if (isListen) {
+        listenSeen++;
+        const opts = await page.locator(`${scope} [data-correct] span.zh`).allInnerTexts();
+        const correctIdx = await page.locator(`${scope} [data-correct="true"] span.zh`).first().innerText();
+        let ansPy;
+        const readM = promptTxt.match(/Từ nào đọc là “(.+?)”\?/);
+        if (readM) ansPy = readM[1];
+        else ansPy = correctIdx; // listen-variant: option đúng là pinyin đáp án
+        const ansInit = pinyinInitial(ansPy);
+        // loại đúng option đáp án ở CẢ 2 variant — không thì tự khớp initial
+        const others = opts.filter((t) => t !== correctIdx);
+        for (const o of others) {
+          const pys = readM ? (zhPyMap.get(o) ?? []) : [o];
+          if (pys.some((p) => pinyinInitial(p) === ansInit)) {
+            sameInitial = true;
+            break;
+          }
+        }
+      }
+      await eclick(`${scope} [data-correct="true"]`);
+      await page.waitForSelector(`${scope} [data-testid="quiz-feedback"]`, { timeout: 5000 });
+      const last = i === n - 1;
+      await eclick(`${scope} button:has-text("${last ? "Xem kết quả" : "Câu tiếp"}")`);
+      if (!last) await page.waitForFunction(
+        ([sel, idx, total]) => document.querySelector(sel)?.textContent === `Câu ${idx + 2}/${total}`,
+        [`${scope} [data-testid="quiz-counter"]`, i, n],
+        { timeout: 5000 },
+      );
+    }
+    if (listenSeen === 0) throw new Error(`run ${run}: quiz không có câu nghe (Nghe lại)`);
+    if (!sameInitial) throw new Error(`run ${run}: ${listenSeen} câu nghe nhưng không distractor cùng thanh mẫu`);
+  }
 });
 
 await browser.close();

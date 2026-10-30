@@ -36,11 +36,14 @@ export function StationDrawer({
   level,
   open,
   onClose,
+  prevStation: prevStationProp,
 }: {
   view: StationView | null;
   level: RoadmapLevel;
   open: boolean;
   onClose: () => void;
+  /** Trạm trước trong views (controller truyền); thiếu → derive từ level.stations. */
+  prevStation?: Station | null;
 }) {
   const [tab, setTab] = useState<DrawerTab>("study");
   const panelRef = useRef<HTMLElement>(null);
@@ -104,7 +107,12 @@ export function StationDrawer({
   const station = view?.station ?? null;
   const state = view?.state ?? "locked";
   const stationIndex = station ? level.stations.findIndex((s) => s.id === station.id) : -1;
-  const prevStation = stationIndex > 0 ? (level.stations[stationIndex - 1] ?? null) : null;
+  const prevStation =
+    prevStationProp !== undefined
+      ? prevStationProp
+      : stationIndex > 0
+        ? (level.stations[stationIndex - 1] ?? null)
+        : null;
   const lessons = useMemo(() => (station ? stationLessons(station) : []), [station]);
 
   const tabs: Array<{ key: DrawerTab; label: string; meta?: string }> = [
@@ -222,12 +230,30 @@ function ReviewTab({ prev }: { prev: Station | null }) {
   if (!prev) {
     return <EmptyNote text="Bắt đầu chặng — không cần ôn." />;
   }
-  if (prev.vocab.length > 0) {
+  if (prev.kind === "lesson" && prev.vocab.length > 0) {
     // Trạm trước curated: pool nhúng — warm-up 4 câu, không ghi progress.
     return <WarmupQuiz key={prev.id} pool={{ vocab: prev.vocab, gram: prev.gram }} />;
   }
-  // Trạm trước generator (vocab rỗng): không fetch thêm — giữ scope Task 8.
+  const prevLessons = stationLessons(prev);
+  if (prevLessons.length > 0) {
+    // Trạm trước generator (vocab rỗng): fetch bài đầu trạm trước qua useStationVocab.
+    return <GeneratorWarmup key={prev.id} lesson={prevLessons[0]!} />;
+  }
+  // Milestone curated (không lessons): placeholder.
   return <EmptyNote text="Buổi sau sẽ có ôn nhanh." />;
+}
+
+/** Warm-up cho trạm trước generator — sub-component để hook fetch chỉ mount
+    khi tab Ôn nhanh active (tránh fetch vô ích). Không ghi progress. */
+function GeneratorWarmup({ lesson }: { lesson: LessonRef }) {
+  const { pool, loading } = useStationVocab([lesson]);
+  if (loading) {
+    return <EmptyNote text="Đang tải ôn nhanh…" />;
+  }
+  if (pool.vocab.length === 0) {
+    return <EmptyNote text="Buổi sau sẽ có ôn nhanh." />;
+  }
+  return <WarmupQuiz pool={pool} />;
 }
 
 function WarmupQuiz({ pool }: { pool: StationPool }) {

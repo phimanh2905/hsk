@@ -4,16 +4,18 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress, reviewLogs } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress, roadmapGates } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
+  mergeReadingProgress,
   SRS_STATUSES,
   type SrsSyncStatus,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
   type SyncLessonRecord,
+  type SyncReadingRecord,
   type SyncReviewLogRecord,
 } from "@/lib/store/sync-merge";
 
@@ -72,7 +74,32 @@ const bodySchema = z.object({
     )
     .max(1000)
     .default([]),
+  readingProgress: z
+    .array(
+      z.object({
+        readingId: z.string().min(1).max(200),
+        correct: z.number().int().min(0),
+        total: z.number().int().min(0),
+        attempts: z.number().int().min(0),
+        completedAt: z.string().max(50),
+        updatedAt: z.number().int().positive(),
+      })
+    )
+    .max(500)
+    .default([]),
+  roadmapGates: z
+    .array(
+      z.object({
+        gateId: z.string().min(1).max(200),
+        pct: z.number().int().min(0).max(100),
+        at: z.number().int().positive(),
+      })
+    )
+    .max(500)
+    .default([]),
 });
+
+type SyncRoadmapGateRecord = { gateId: string; pct: number; at: number };
 
 /* Payload legacy chưa có SM-2: ease 2.5, lapses 0, interval map theo status
    (learned→7, known→21 — cùng mapping backfill migration 0007). */
@@ -289,7 +316,91 @@ export async function POST(req: NextRequest) {
       }
   }
 
-  // 5) Purge tombstone >90 ngày
+  // 5) readingProgress (spec 2026-10-30 §4.4 — không tombstone).
+  const incReadingMap = new Map<string, SyncReadingRecord>();
+  for (const inc of body.readingProgress) {
+    const prev = incReadingMap.get(inc.readingId);
+    incReadingMap.set(inc.readingId, prev ? mergeReadingProgress(prev, inc) : inc);
+  }
+  const existingReadings = await db.select().from(readingProgress).where(eq(readingProgress.userId, userId));
+  const readingMap = new Map(existingReadings.map((r) => [r.readingId, r]));
+  const mergedReadings: SyncReadingRecord[] = [...incReadingMap.values()].map((inc) => {
+    const ex = readingMap.get(inc.readingId);
+    if (!ex) return inc;
+    return mergeReadingProgress(
+      {
+        readingId: ex.readingId,
+        correct: ex.correct,
+        total: ex.total,
+        attempts: ex.attempts,
+        completedAt: ex.completedAt ?? "",
+        updatedAt: ex.updatedAt,
+      },
+      inc
+    );
+  });
+  if (mergedReadings.length) {
+    for (const part of chunk(mergedReadings.map((r) => ({
+          userId,
+          readingId: r.readingId,
+          correct: r.correct,
+          total: r.total,
+          attempts: r.attempts,
+          completedAt: r.completedAt,
+          updatedAt: r.updatedAt,
+        })))) {
+        await db
+          .insert(readingProgress)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [readingProgress.userId, readingProgress.readingId],
+          set: {
+            correct: sql`excluded.correct`,
+            total: sql`excluded.total`,
+            attempts: sql`excluded.attempts`,
+            completedAt: sql`excluded.completed_at`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        });
+      }
+  }
+
+  // 6) roadmapGates — best-of hai chiều theo pct: incoming cao hơn thắng,
+  // tie/thấp hơn giữ server. Không tombstone.
+  const incGateMap = new Map<string, SyncRoadmapGateRecord>();
+  for (const inc of body.roadmapGates) {
+    const prev = incGateMap.get(inc.gateId);
+    incGateMap.set(inc.gateId, !prev || inc.pct > prev.pct ? inc : prev);
+  }
+  const existingGates = await db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId));
+  const gateMap = new Map(existingGates.map((r) => [r.gateId, r]));
+  const mergedGates: SyncRoadmapGateRecord[] = [...incGateMap.values()].map((inc) => {
+    const ex = gateMap.get(inc.gateId);
+    if (!ex) return inc;
+    return inc.pct > ex.pct ? inc : { gateId: ex.gateId, pct: ex.pct, at: ex.at };
+  });
+  if (mergedGates.length) {
+    for (const part of chunk(mergedGates.map((r) => ({
+          userId,
+          gateId: r.gateId,
+          pct: r.pct,
+          at: r.at,
+        })))) {
+        await db
+          .insert(roadmapGates)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [roadmapGates.userId, roadmapGates.gateId],
+          // merge đã tính giá trị cuối ở bước map → ghi đè bằng excluded
+          set: {
+            pct: sql`excluded.pct`,
+            at: sql`excluded.at`,
+          },
+        });
+      }
+  }
+
+  // 7) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -303,12 +414,14 @@ export async function POST(req: NextRequest) {
       )
     );
 
-  // 6) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons, finalLogs] = await Promise.all([
+  // 8) Trả về toàn bộ state server của user sau merge
+  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings, finalGates] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
     db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
+    db.select().from(readingProgress).where(eq(readingProgress.userId, userId)),
+    db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -345,11 +458,28 @@ export async function POST(req: NextRequest) {
     reviewedAt: r.reviewedAt,
   }));
 
+  const readingOut: SyncReadingRecord[] = finalReadings.map((r) => ({
+    readingId: r.readingId,
+    correct: r.correct,
+    total: r.total,
+    attempts: r.attempts,
+    completedAt: r.completedAt ?? "",
+    updatedAt: r.updatedAt,
+  }));
+
+  const gatesOut: SyncRoadmapGateRecord[] = finalGates.map((r) => ({
+    gateId: r.gateId,
+    pct: r.pct,
+    at: r.at,
+  }));
+
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
     studyDay: studyDayOut,
     lessonProgress: lessonOut,
     reviewLogs: reviewLogsOut,
+    readingProgress: readingOut,
+    roadmapGates: gatesOut,
   });
 }
