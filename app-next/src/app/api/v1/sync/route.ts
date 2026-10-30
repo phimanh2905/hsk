@@ -4,7 +4,7 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress, roadmapGates } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
@@ -87,7 +87,19 @@ const bodySchema = z.object({
     )
     .max(500)
     .default([]),
+  roadmapGates: z
+    .array(
+      z.object({
+        gateId: z.string().min(1).max(200),
+        pct: z.number().int().min(0).max(100),
+        at: z.number().int().positive(),
+      })
+    )
+    .max(500)
+    .default([]),
 });
+
+type SyncRoadmapGateRecord = { gateId: string; pct: number; at: number };
 
 /* Payload legacy chưa có SM-2: ease 2.5, lapses 0, interval map theo status
    (learned→7, known→21 — cùng mapping backfill migration 0007). */
@@ -353,7 +365,42 @@ export async function POST(req: NextRequest) {
       }
   }
 
-  // 6) Purge tombstone >90 ngày
+  // 6) roadmapGates — best-of hai chiều theo pct: incoming cao hơn thắng,
+  // tie/thấp hơn giữ server. Không tombstone.
+  const incGateMap = new Map<string, SyncRoadmapGateRecord>();
+  for (const inc of body.roadmapGates) {
+    const prev = incGateMap.get(inc.gateId);
+    incGateMap.set(inc.gateId, !prev || inc.pct > prev.pct ? inc : prev);
+  }
+  const existingGates = await db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId));
+  const gateMap = new Map(existingGates.map((r) => [r.gateId, r]));
+  const mergedGates: SyncRoadmapGateRecord[] = [...incGateMap.values()].map((inc) => {
+    const ex = gateMap.get(inc.gateId);
+    if (!ex) return inc;
+    return inc.pct > ex.pct ? inc : { gateId: ex.gateId, pct: ex.pct, at: ex.at };
+  });
+  if (mergedGates.length) {
+    for (const part of chunk(mergedGates.map((r) => ({
+          userId,
+          gateId: r.gateId,
+          pct: r.pct,
+          at: r.at,
+        })))) {
+        await db
+          .insert(roadmapGates)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [roadmapGates.userId, roadmapGates.gateId],
+          // merge đã tính giá trị cuối ở bước map → ghi đè bằng excluded
+          set: {
+            pct: sql`excluded.pct`,
+            at: sql`excluded.at`,
+          },
+        });
+      }
+  }
+
+  // 7) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -367,13 +414,14 @@ export async function POST(req: NextRequest) {
       )
     );
 
-  // 7) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings] = await Promise.all([
+  // 8) Trả về toàn bộ state server của user sau merge
+  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings, finalGates] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
     db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
     db.select().from(readingProgress).where(eq(readingProgress.userId, userId)),
+    db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -419,6 +467,12 @@ export async function POST(req: NextRequest) {
     updatedAt: r.updatedAt,
   }));
 
+  const gatesOut: SyncRoadmapGateRecord[] = finalGates.map((r) => ({
+    gateId: r.gateId,
+    pct: r.pct,
+    at: r.at,
+  }));
+
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
@@ -426,5 +480,6 @@ export async function POST(req: NextRequest) {
     lessonProgress: lessonOut,
     reviewLogs: reviewLogsOut,
     readingProgress: readingOut,
+    roadmapGates: gatesOut,
   });
 }
