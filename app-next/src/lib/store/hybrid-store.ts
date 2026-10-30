@@ -23,7 +23,16 @@ import {
 import { isMature } from "@/lib/stats/review";
 import { normalizeSrsItem, progressStore, type SrsItem } from "./progress-store";
 
-export type SyncDomain = "srs" | "studyDay" | "lessonProgress" | "reviewLogs" | "readingProgress";
+export type SyncDomain = "srs" | "studyDay" | "lessonProgress" | "reviewLogs" | "readingProgress" | "roadmapGates";
+
+/* Cổng đầu vào Roadmap Journey v2 — best-of hai chiều theo pct (cao hơn thắng,
+   tie giữ server). Định nghĩa tại đây (không sync-merge) vì luật merge là max
+   pct thuần, dùng chung bởi hybrid-store (pull-apply) và route (server merge). */
+export type SyncRoadmapGateRecord = { gateId: string; pct: number; at: number };
+
+/* SyncPayload (sync-merge.ts) chưa khai báo domain mới; mở rộng cục bộ để không
+   phải sửa file ngoài phạm vi task. */
+type SyncPayloadWithGates = SyncPayload & { roadmapGates?: SyncRoadmapGateRecord[] };
 
 const DIRTY_KEY = "bye.sync.dirty";
 const TOMBSTONE_KEY = "bye.sync.tombstones";
@@ -51,6 +60,7 @@ const PATCHES: Array<[keyof typeof progressStore, SyncDomain[]]> = [
   ["markPageDone", ["lessonProgress"]],
   ["setStationProgress", ["lessonProgress"]],
   ["saveReadingProgress", ["readingProgress"]],
+  ["setRoadmapGate", ["roadmapGates"]],
 ];
 
 let inited = false;
@@ -62,7 +72,7 @@ const dirty = new Set<SyncDomain>();
    chứa thay đổi mới, nên KHÔNG được clear dirty (nếu clear → mất dữ liệu vĩnh viễn:
    ví dụ grade xảy ra trong lúc merge-push login đang bay → srs bị xóa khỏi dirty
    → item có reviewCount mới không bao giờ được gửi lên server). */
-const dirtyVersion: Record<SyncDomain, number> = { srs: 0, studyDay: 0, lessonProgress: 0, reviewLogs: 0, readingProgress: 0 };
+const dirtyVersion: Record<SyncDomain, number> = { srs: 0, studyDay: 0, lessonProgress: 0, reviewLogs: 0, readingProgress: 0, roadmapGates: 0 };
 let dirtySeq = 0;
 
 type Tombstones = { srs: Record<string, number>; lessonProgress: Record<string, number> };
@@ -133,7 +143,7 @@ function persistDirty(): void {
 
 function restoreDirty(): void {
   const obj = readJSON<Partial<Record<SyncDomain, 1>>>(DIRTY_KEY, {});
-  for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs", "readingProgress"] as const) {
+  for (const d of ["srs", "studyDay", "lessonProgress", "reviewLogs", "readingProgress", "roadmapGates"] as const) {
     if (obj[d]) {
       dirty.add(d);
       dirtyVersion[d] = ++dirtySeq; // version mới → flush đang bay không xóa nhầm
@@ -172,7 +182,7 @@ function countKnown(book: string, lesson: string): number {
     .filter((it) => it.key.startsWith(prefix) && isMature(it)).length;
 }
 
-function computePayload(): SyncPayload {
+function computePayload(): SyncPayloadWithGates {
   const tombs = readTombstones();
   const srs: SyncSrsRecord[] = dirty.has("srs")
     ? progressStore
@@ -280,7 +290,14 @@ function computePayload(): SyncPayload {
         updatedAt: Date.now(),
       }))
     : [];
-  return { srs, studyDay, lessonProgress, reviewLogs, readingProgress };
+  const roadmapGates: SyncRoadmapGateRecord[] = dirty.has("roadmapGates")
+    ? Object.entries(progressStore.listRoadmapGates()).map(([gateId, rec]) => ({
+        gateId,
+        pct: rec.pct,
+        at: rec.at,
+      }))
+    : [];
+  return { srs, studyDay, lessonProgress, reviewLogs, readingProgress, roadmapGates };
 }
 
 /* ---- merge ngược server → local (ghi TRỰC TIẾP localStorage, KHÔNG qua
@@ -301,7 +318,7 @@ function srsItemToSync(it: SrsItem, deletedAt: number | null): SyncSrsRecord {
   };
 }
 
-function applyServerPayload(server: SyncPayload): void {
+function applyServerPayload(server: SyncPayloadWithGates): void {
   const tombs = readTombstones();
   let srsDirty = false;
 
@@ -469,6 +486,19 @@ function applyServerPayload(server: SyncPayload): void {
   }
   if (readingDirty) writeJSON(READING_PROGRESS_KEY, readingProgress);
 
+  // Roadmap gates — pull-apply qua setRoadmapGate (best-of tự chặn khi server
+  // thấp hơn). Local cao hơn server → dirty tự tích để push lại lần sau (không
+  // push ngay trong pull). Tie pct → giữ nguyên local, không tái dirty.
+  if (Array.isArray(server.roadmapGates)) for (const rec of server.roadmapGates as SyncRoadmapGateRecord[]) {
+    if (!rec || typeof rec.gateId !== "string" || typeof rec.pct !== "number") continue;
+    const local = progressStore.getRoadmapGate(rec.gateId);
+    if (!local || rec.pct > local.pct) {
+      progressStore.setRoadmapGate(rec.gateId, rec.pct);
+    } else if (local.pct > rec.pct) {
+      bumpDirty("roadmapGates");
+    }
+  }
+
   if (srsDirty || pageDirty || heatDirty || logsDirty || readingDirty) {
     // merge ngược đổi dữ liệu local → bắn event để heatmap/my-vocab... re-render
     try {
@@ -504,7 +534,7 @@ async function doFlush(): Promise<void> {
       return;
     }
     if (!res.ok) throw new Error(String(res.status));
-    const server = (await res.json()) as SyncPayload & { serverTime: number };
+    const server = (await res.json()) as SyncPayload & { serverTime: number; roadmapGates?: SyncRoadmapGateRecord[] };
     applyServerPayload(server);
     // reviewLogs: con trỏ chỉ tiến theo max reviewedAt ĐÃ gửi trong POST này
     // (KHÔNG theo max local/server — tránh bỏ sót log local chưa gửi dưới con trỏ).
@@ -608,6 +638,7 @@ export async function hybridMergeOnLogin(): Promise<void> {
   bumpDirty("lessonProgress"); // push toàn bộ 2 chiều
   bumpDirty("reviewLogs");
   bumpDirty("readingProgress");
+  bumpDirty("roadmapGates"); // push toàn bộ 2 chiều
   persistDirty();
   await flush();
 }
