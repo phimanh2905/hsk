@@ -97,7 +97,7 @@ function ReadingCard({
       <span className="relative flex aspect-video items-center justify-center overflow-hidden rounded-control bg-surface-muted p-2">
         <span className="zh text-xl font-bold line-clamp-2 text-center">{doc.title}</span>
         {done && (
-          <span className="absolute right-1 top-1 flex items-center gap-0.5 rounded-full bg-success-soft px-1.5 py-0.5 text-[10px] font-bold text-feedback-success">
+          <span className="absolute right-1 top-1 flex items-center gap-0.5 rounded-full bg-jade-wash px-1.5 py-0.5 text-[10px] font-bold text-jade-ink">
             <Check size={10} strokeWidth={2.5} aria-hidden="true" />
             Done
           </span>

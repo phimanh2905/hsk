@@ -278,4 +278,35 @@ describe("POST /api/v1/sync", () => {
     expect(dayArg).toHaveLength(1);
     expect(dayArg[0]).toMatchObject({ date: "2026-10-24", xp: 30, correct: 8, updatedAt: 200 });
   });
+
+  it("readingDrafts upsert setWhere theo userId — id trùng draft user khác không đè row nạn nhân", async () => {
+    // P0: PK reading_drafts là id đơn (client sinh). Attacker POST record cùng id
+    // với draft của nạn nhân → không có setWhere thì ON CONFLICT(id) đè title/
+    // textZh/doc của nạn nhân. Assert upsert có setWhere để SQL WHERE user_id = ? chặn.
+    getSession.mockResolvedValue({ user: { id: "attacker" } });
+    queueSelects({ srs: [], studyDay: [], lessonProgress: [] }, { srs: [], studyDay: [], lessonProgress: [] });
+    const res = await POST(req({
+      srs: [],
+      studyDay: [],
+      lessonProgress: [],
+      readingDrafts: [
+        {
+          id: "rd_victim",
+          title: "đè",
+          textZh: "đè",
+          doc: { sentences: [], vocab: [], questions: [] },
+          chars: 0,
+          createdAt: 1,
+          updatedAt: 999,
+          deletedAt: null,
+        },
+      ],
+    }));
+    expect(res.status).toBe(200);
+    const calls = insertChain.onConflictDoUpdate.mock.calls;
+    const conflictArg = calls[calls.length - 1][0];
+    expect(conflictArg.setWhere).toBeDefined();
+    // values mang userId của attacker — SQL setWhere so với chính user đang gọi
+    expect(insertChain.values.mock.calls[0][0][0]).toMatchObject({ userId: "attacker", id: "rd_victim" });
+  });
 });

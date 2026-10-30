@@ -55,17 +55,44 @@ vi.mock("@/lib/db", () => ({
           draftInsertCalls += 1;
         }
       };
+      // claim/release quota route (P1a): onConflictDoUpdate kèm setWhere (claim)
+      // → RETURNING rỗng khi đã đủ limit; không setWhere (release) → decrement.
+      const onConflict = (v: Record<string, unknown>, config: { setWhere?: unknown }) => {
+        if (table === readingUsage) {
+          const row = usageRows.find((r) => r.userId === v.userId && r.day === v.day);
+          if (!row) {
+            usageRows.push({ userId: v.userId as string, day: v.day as string, count: 1 });
+            return Promise.resolve([{ count: 1 }]);
+          }
+          if (config.setWhere !== undefined) {
+            // claim: count+1 chỉ khi count < limit
+            if (row.count < READING_DAILY_LIMIT) {
+              row.count += 1;
+              return Promise.resolve([{ count: row.count }]);
+            }
+            return Promise.resolve([]);
+          }
+          // release: count - 1
+          row.count = Math.max(0, row.count - 1);
+          return Promise.resolve([]);
+        }
+        return Promise.resolve([]);
+      };
       return {
-        values: (v: Record<string, unknown>) => ({
-          // Route await trực tiếp values() (draft insert) hoặc qua onConflictDoUpdate
-          // (usage upsert) — object phải thenable cho cả hai đường.
-          then: (
-            res: (x: unknown) => unknown,
-            rej: (e: unknown) => unknown
-          ) => Promise.resolve().then(() => run(v)).then(res, rej),
-          onConflictDoUpdate: () =>
-            Promise.resolve().then(() => run(v)),
-        }),
+        values: (v: Record<string, unknown>) => {
+          const direct = {
+            then: (
+              res: (x: unknown) => unknown,
+              rej: (e: unknown) => unknown
+            ) => Promise.resolve().then(() => run(v)).then(res, rej),
+            onConflictDoUpdate: (config: { setWhere?: unknown }) => ({
+              then: (res: (x: unknown) => unknown, rej: (e: unknown) => unknown) =>
+                onConflict(v, config).then(res, rej),
+              returning: () => onConflict(v, config),
+            }),
+          };
+          return direct;
+        },
       };
     },
     update: () => ({
@@ -159,22 +186,22 @@ describe("POST /api/v1/reading/generate", () => {
     expect(usageRows).toEqual([]);
   });
 
-  it("LLM validate fail → 502, usage 0", async () => {
+  it("LLM validate fail → 502, slot đã claim được trả lại (count về 0)", async () => {
     generateReadingMock.mockRejectedValue(new DraftValidationError("Dữ liệu AI trả về không đúng định dạng"));
     const res = await postGenerate(req("POST", `${BASE}/generate`, { text: SAMPLE }));
     expect(res.status).toBe(502);
     expect((await res.json()).error).toBeTruthy();
-    expect(usageRows).toEqual([]);
+    expect(usageRows).toEqual([{ userId: "u1", day: today(), count: 0 }]);
   });
 
-  it("LLM lỗi khác → 500, usage 0", async () => {
+  it("LLM lỗi khác → 500, slot đã claim được trả lại (count về 0)", async () => {
     generateReadingMock.mockRejectedValue(new Error("boom"));
     const res = await postGenerate(req("POST", `${BASE}/generate`, { text: SAMPLE }));
     expect(res.status).toBe(500);
-    expect(usageRows).toEqual([]);
+    expect(usageRows).toEqual([{ userId: "u1", day: today(), count: 0 }]);
   });
 
-  it("đủ limit → 429 kèm nextAt, không gọi LLM", async () => {
+  it("đủ limit → claim RETURNING rỗng → 429 kèm nextAt, không gọi LLM, không tốn lượt", async () => {
     usageRows.push({ userId: "u1", day: today(), count: READING_DAILY_LIMIT });
     const res = await postGenerate(req("POST", `${BASE}/generate`, { text: SAMPLE }));
     expect(res.status).toBe(429);
@@ -182,6 +209,16 @@ describe("POST /api/v1/reading/generate", () => {
     expect(json.nextAt).toBeGreaterThan(Date.now());
     expect(generateReadingMock).not.toHaveBeenCalled();
     expect(draftInsertCalls).toBe(0);
+    expect(usageRows).toEqual([{ userId: "u1", day: today(), count: READING_DAILY_LIMIT }]);
+  });
+
+  it("claim nguyên tử: count limit-1 → nhận slot cuối, remaining = 0 (P1a TOCTOU)", async () => {
+    usageRows.push({ userId: "u1", day: today(), count: READING_DAILY_LIMIT - 1 });
+    const res = await postGenerate(req("POST", `${BASE}/generate`, { text: SAMPLE }));
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.remaining).toBe(0);
+    expect(usageRows).toEqual([{ userId: "u1", day: today(), count: READING_DAILY_LIMIT }]);
   });
 });
 

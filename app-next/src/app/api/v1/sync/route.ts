@@ -432,6 +432,10 @@ export async function POST(req: NextRequest) {
           .values(part)
             .onConflictDoUpdate({
           target: [readingDrafts.id],
+          // PK là id đơn (client sinh) — id có thể trùng draft của user khác.
+          // setWhere chặn UPDATE khi row hiện tại thuộc user khác: attacker không
+          // đè được title/textZh/doc của nạn nhân (row giữ nguyên, insert bị skip).
+          setWhere: eq(readingDrafts.userId, userId),
           set: {
             title: sql`excluded.title`,
             textZh: sql`excluded.text_zh`,

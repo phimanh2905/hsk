@@ -74,15 +74,11 @@ export function ReadingPlayer({ doc, onComplete }: ReadingPlayerProps) {
   );
 
   const player = useReadingPlayer(sentences);
-  const [showPy, setShowPy] = useState(false);
+  const [showPy, setShowPy] = useState(() => readToggle("nhai.reading.pinyin"));
   const [showVi, setShowVi] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() => doc.questions.map(() => null));
   const completedRef = useRef(false);
   const bodyRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setShowPy(readToggle("nhai.reading.pinyin"));
-  }, []);
 
   const togglePy = useCallback(() => {
     setShowPy((v) => {

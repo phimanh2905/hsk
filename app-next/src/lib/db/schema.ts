@@ -340,7 +340,7 @@ export const readingDrafts = sqliteTable(
   "reading_drafts",
   {
     id: text("id").primaryKey(), // rd_{random 12}
-    userId: text("user_id").notNull(),
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
     title: text("title").notNull(),
     textZh: text("text_zh").notNull(),
     doc: text("doc", { mode: "json" }).$type<DraftDocRow>().notNull(),

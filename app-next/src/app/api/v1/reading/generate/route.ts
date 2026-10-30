@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { and, eq, sql } from "drizzle-orm";
+import { lt, sql } from "drizzle-orm";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
 import { readingDrafts, readingUsage } from "@/lib/db/schema";
@@ -35,13 +35,22 @@ export async function POST(req: NextRequest) {
   }
 
   const db = createDb();
+  const userId = session.user.id;
   const day = hoChiMinhDay();
-  const usageRows = await db
-    .select()
-    .from(readingUsage)
-    .where(and(eq(readingUsage.userId, session.user.id), eq(readingUsage.day, day)));
-  const used = usageRows[0]?.count ?? 0;
-  if (used >= READING_DAILY_LIMIT) {
+  /* Claim slot nguyên tử TRƯỚC khi generate (P1a TOCTOU): INSERT count=1 hoặc
+     ON CONFLICT count+1 chỉ khi count < limit. Hai request song song không thể
+     cùng vượt 3 bài/ngày. RETURNING rỗng → hết lượt: 429, không tốn lượt,
+     không gọi LLM. */
+  const claimed = await db
+    .insert(readingUsage)
+    .values({ userId, day, count: 1 })
+    .onConflictDoUpdate({
+      target: [readingUsage.userId, readingUsage.day],
+      set: { count: sql`${readingUsage.count} + 1` },
+      setWhere: lt(readingUsage.count, READING_DAILY_LIMIT),
+    })
+    .returning({ count: readingUsage.count });
+  if (claimed.length === 0) {
     return NextResponse.json(
       { error: "Bạn đã hết lượt tạo bài hôm nay", nextAt: nextQuotaReset() },
       { status: 429 }
@@ -52,20 +61,19 @@ export async function POST(req: NextRequest) {
   try {
     doc = await generateReading(body.text);
   } catch (e) {
+    // Generate FAIL → trả lại slot đã claim (bù count - 1).
+    await db
+      .insert(readingUsage)
+      .values({ userId, day, count: 0 })
+      .onConflictDoUpdate({
+        target: [readingUsage.userId, readingUsage.day],
+        set: { count: sql`${readingUsage.count} - 1` },
+      });
     if (e instanceof DraftValidationError) {
       return NextResponse.json({ error: e.message }, { status: 502 });
     }
     return NextResponse.json({ error: "Không tạo được bài đọc, thử lại sau" }, { status: 500 });
   }
-
-  // Quota chỉ trừ khi generate THÀNH CÔNG (spec §4.2).
-  await db
-    .insert(readingUsage)
-    .values({ userId: session.user.id, day, count: 1 })
-    .onConflictDoUpdate({
-      target: [readingUsage.userId, readingUsage.day],
-      set: { count: sql`${readingUsage.count} + 1` },
-    });
 
   const now = Date.now();
   const draft = {
@@ -79,7 +87,7 @@ export async function POST(req: NextRequest) {
   };
   await db.insert(readingDrafts).values({
     id: draft.id,
-    userId: session.user.id,
+    userId,
     title: draft.title,
     textZh: draft.textZh,
     doc: draft.doc,
@@ -88,5 +96,5 @@ export async function POST(req: NextRequest) {
     updatedAt: draft.updatedAt,
   });
 
-  return NextResponse.json({ draft, remaining: READING_DAILY_LIMIT - used - 1 });
+  return NextResponse.json({ draft, remaining: READING_DAILY_LIMIT - claimed[0].count });
 }

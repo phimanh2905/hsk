@@ -28,7 +28,9 @@ function validateInput(text: string): string | null {
   const len = stripped.length;
   if (len < MIN_CHARS) return `Văn bản cần ít nhất ${MIN_CHARS} ký tự (hiện ${len} sau khi bỏ khoảng trắng)`;
   if (len > MAX_CHARS) return `Văn bản tối đa ${MAX_CHARS} ký tự`;
-  const han = text.match(/\p{Script=Han}/gu)?.length ?? 0;
+  // Tỉ lệ Hán đếm trên stripped (đã bỏ khoảng trắng) — khớp đúng cách server
+  // assertValidInput tính, tránh client pass/reject lệch server.
+  const han = stripped.match(/\p{Script=Han}/gu)?.length ?? 0;
   if (len > 0 && han / len < 0.3) return "Văn bản chưa đủ tiếng Trung";
   return null;
 }

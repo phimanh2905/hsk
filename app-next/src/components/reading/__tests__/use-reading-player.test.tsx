@@ -172,6 +172,23 @@ describe("useReadingPlayer — MP3 mode", () => {
     expect(result.current.charPos).toEqual({ row: 1, char: charPosFromTime(sents[1].zh, 3) });
   });
 
+  it("play() reject (autoplay/AbortError) → playing false, không unhandled rejection (P3a)", async () => {
+    const created: Stub[] = [];
+    const makeReject: MakeAudio = (src) => {
+      const s = makeStub(src);
+      s.play = vi.fn(() => Promise.reject(new Error("AbortError")));
+      created.push(s);
+      return s as unknown as AudioLike;
+    };
+    const { result } = renderHook(() => useReadingPlayer(sents, makeReject));
+    act(() => result.current.toggle());
+    expect(result.current.playing).toBe(true);
+    await act(async () => {
+      await Promise.resolve(); // rejection settle — phải được bắt, không unhandled
+    });
+    expect(result.current.playing).toBe(false);
+  });
+
   it("tick curTime bằng setInterval: curTime = currentTime + offset, charPos theo trọng số", () => {
     vi.useFakeTimers();
     const { make, created } = makeFactory();

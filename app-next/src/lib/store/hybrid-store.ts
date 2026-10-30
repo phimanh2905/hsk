@@ -463,8 +463,11 @@ function applyServerPayload(server: SyncPayload): void {
   }
 
   // Spec 2026-10-30 §4.4: readingProgress — merge ngược vào nhai.reading.progress.
-  // Local rec không có updatedAt → coi như 0 (merge max counter nên correct/attempts
-  // không bao giờ bị hạ), total/completedAt theo bản server mới hơn.
+  // Local rec không có updatedAt → correct/attempts merge max counter (không bao giờ
+  // bị hạ). total/completedAt: local có thể mới hơn server (bản ghi local do lần
+  // luyện này sinh, server trả snapshot chậm hơn) — guard reverse-merge lùi total:
+  // total lấy max(local, server); completedAt giữ local khi local không thua kém
+  // server (local.total ≥ server.total && local.attempts ≥ server.attempts).
   const readingProgress = readJSON<Record<string, { correct: number; total: number; attempts: number; completedAt: string }>>(
     READING_PROGRESS_KEY,
     {}
@@ -473,20 +476,24 @@ function applyServerPayload(server: SyncPayload): void {
   if (Array.isArray(server.readingProgress)) for (const rec of server.readingProgress) {
     if (!rec || typeof rec.readingId !== "string") continue;
     const local = readingProgress[rec.readingId];
+    const localTotal = local && typeof local.total === "number" ? local.total : 0;
+    const localAttempts = local && typeof local.attempts === "number" ? local.attempts : 0;
+    const localCompletedAt = local && typeof local.completedAt === "string" ? local.completedAt : "";
     const localSync: SyncReadingRecord = {
       readingId: rec.readingId,
       correct: local && typeof local.correct === "number" ? local.correct : 0,
-      total: local && typeof local.total === "number" ? local.total : 0,
-      attempts: local && typeof local.attempts === "number" ? local.attempts : 0,
-      completedAt: local && typeof local.completedAt === "string" ? local.completedAt : "",
+      total: localTotal,
+      attempts: localAttempts,
+      completedAt: localCompletedAt,
       updatedAt: 0,
     };
     const merged = mergeReadingProgress(rec, localSync);
+    const keepLocalCompletedAt = !!local && localTotal >= rec.total && localAttempts >= rec.attempts;
     const next = {
       correct: merged.correct,
-      total: merged.total,
+      total: Math.max(merged.total, localTotal),
       attempts: merged.attempts,
-      completedAt: merged.completedAt,
+      completedAt: keepLocalCompletedAt && localCompletedAt ? localCompletedAt : merged.completedAt,
     };
     if (!local || local.correct !== next.correct || local.attempts !== next.attempts || local.total !== next.total) {
       readingProgress[rec.readingId] = next;

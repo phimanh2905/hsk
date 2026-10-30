@@ -99,6 +99,13 @@
       "when": 1793318121213,
       "tag": "0013_jazzy_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1793374647207,
+      "tag": "0014_dazzling_eddie_brock",
+      "breakpoints": true
     }
   ]
 }

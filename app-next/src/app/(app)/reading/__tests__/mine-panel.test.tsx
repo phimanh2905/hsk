@@ -127,6 +127,17 @@ describe("MinePanel — tạo bài", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("tỉ lệ Hán đếm trên stripped (khớp server): 100 Hán + nhiều khoảng trắng vẫn hợp lệ (P2c)", async () => {
+    // stripped = 100 Hán → server ratio = 1 ≥ 0.3; đếm trên raw (bug cũ) thì
+    // ratio ~0.2 < 0.3 → client reject lệch server. Sau fix: guest → openLogin.
+    const user = userEvent.setup();
+    setup();
+    await user.type(screen.getByPlaceholderText(/dán văn bản/i), `${HAN_TEXT_100}${" ".repeat(400)}`);
+    await user.click(screen.getByRole("button", { name: "Tạo bài đọc" }));
+    expect(toastMock).not.toHaveBeenCalled();
+    expect(openLoginMock).toHaveBeenCalledTimes(1);
+  });
+
   it("guest bấm Tạo với text hợp lệ → openLogin, không fetch", async () => {
     const user = userEvent.setup();
     setup();
