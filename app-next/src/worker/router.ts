@@ -66,17 +66,41 @@ export class Router {
   async handle(req: Request): Promise<Response> {
     const url = new URL(req.url);
     const segs = url.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+    // HEAD chạy handler GET rồi strip body (giữ status + headers).
+    const method = req.method === "HEAD" ? "GET" : req.method;
+    let allow: string[] | null = null;
     for (const r of this.routes) {
-      if (r.method !== "*" && r.method !== req.method) continue;
-      const params = match(r.segments, segs);
-      if (params) {
-        try {
-          return await r.handler(req, params);
-        } catch (err) {
-          console.error("[worker]", url.pathname, err);
-          return json({ error: "Lỗi máy chủ" }, { status: 500 });
-        }
+      // decodeURIComponent trong match() ném URIError cho path malformed (%zz):
+      // bắt ngay đây vì handle() nằm ngoài try/catch của caller (worker 1101).
+      let params: Record<string, string> | null;
+      try {
+        params = match(r.segments, segs);
+      } catch (err) {
+        if (err instanceof URIError) return json({ error: "invalid path" }, { status: 400 });
+        throw err;
       }
+      if (!params) continue;
+      if (r.method !== "*" && r.method !== method) {
+        // path khớp pattern nhưng method sai: ghi lại để trả 405 + Allow thay vì 404.
+        (allow ??= []).push(r.method);
+        continue;
+      }
+      try {
+        const res = await r.handler(req, params);
+        if (req.method === "HEAD") {
+          return new Response(null, { status: res.status, headers: res.headers });
+        }
+        return res;
+      } catch (err) {
+        console.error("[worker]", url.pathname, err);
+        return json({ error: "Lỗi máy chủ" }, { status: 500 });
+      }
+    }
+    if (allow?.length) {
+      return json({ error: "method not allowed" }, {
+        status: 405,
+        headers: { allow: allow.join(", ") },
+      });
     }
     return json({ error: "not found" }, { status: 404 });
   }

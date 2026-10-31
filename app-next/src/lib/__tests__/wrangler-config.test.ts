@@ -16,6 +16,10 @@ describe("wrangler.jsonc (prod)", () => {
     expect((cfg.observability as { enabled?: boolean } | undefined)?.enabled).toBe(true);
   });
 
+  it("set vars.NODE_ENV = production (guard dev-login phụ thuộc NODE_ENV, worker không tự có)", () => {
+    expect((cfg.vars as { NODE_ENV?: string } | undefined)?.NODE_ENV).toBe("production");
+  });
+
   it("giữ D1 binding DB tên hsk", () => {
     const dbs = cfg.d1_databases as Array<{ binding: string; database_name: string }>;
     expect(dbs.some((d) => d.binding === "DB" && d.database_name === "hsk")).toBe(true);

@@ -3,6 +3,8 @@
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Worker không có NODE_ENV: gán "production" để guard dev-login (process.env.NODE_ENV !== "production") khoá đúng ở prod.
+  "vars": { "NODE_ENV": "production" },
   "observability": { "enabled": true },
   "assets": {
     "directory": "out",

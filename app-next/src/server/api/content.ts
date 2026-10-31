@@ -10,7 +10,9 @@ import {
 import { getReadings } from "@/lib/content/readings";
 import { json } from "./json";
 
-/* Content dataset đọc hiếm/ghi hiếm — cache CDN 1h, stale 1 ngày. */
+/* Content dataset đọc hiếm/ghi hiếm — cache CDN 1h, stale 1 ngày.
+   Lưu ý: s-maxage ở đây chỉ là browser-level hint vì Worker response không tự
+   vào edge cache — nếu cần cache edge thật thì dùng Cache API (caches.default); defer. */
 const CACHE = "public, s-maxage=3600, stale-while-revalidate=86400";
 
 export async function handleContentVocab(): Promise<Response> {

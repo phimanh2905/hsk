@@ -36,4 +36,31 @@ describe("Router", () => {
     expect((await r.handle(req("/nope"))).status).toBe(404);
     expect((await r.handle(req("/boom"))).status).toBe(500);
   });
+
+  it("400 JSON cho path malformed (%zz) thay vì ném URIError", async () => {
+    const r = new Router();
+    r.get("/api/v1/notebook/entries/:id", () => json({ ok: 1 }));
+    const res = await r.handle(req("/api/v1/notebook/entries/%zz"));
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: "invalid path" });
+  });
+
+  it("405 + Allow cho method không mount trên path đã tồn tại", async () => {
+    const r = new Router();
+    r.get("/api/v1/notebook/entries", () => json({ ok: 1 }));
+    r.post("/api/v1/notebook/entries", () => json({ ok: 1 }));
+    const res = await r.handle(req("/api/v1/notebook/entries", "DELETE"));
+    expect(res.status).toBe(405);
+    expect(res.headers.get("allow")).toBe("GET, POST");
+    expect(await res.json()).toEqual({ error: "method not allowed" });
+  });
+
+  it("HEAD chạy GET handler và strip body", async () => {
+    const r = new Router();
+    r.get("/api/v1/content/vocab", () => json({ items: [1] }));
+    const res = await r.handle(req("/api/v1/content/vocab", "HEAD"));
+    expect(res.status).toBe(200);
+    expect(await res.text()).toBe("");
+    expect(res.headers.get("content-type")).toContain("application/json");
+  });
 });

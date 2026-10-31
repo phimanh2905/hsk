@@ -30,3 +30,6 @@ build/
 .superpowers/
 .gitnexus/
 graphify-out/
+
+# build-static.mjs stash src/app/api tạm thời trong lúc next build
+.api-stash/
