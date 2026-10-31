@@ -7,6 +7,9 @@ const speakMock = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/tts/use-tts", () => ({
   useTts: () => ({ speak: speakMock, cancel: () => {}, speaking: false }),
 }));
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => new URLSearchParams(window.location.search),
+}));
 
 function getByODId(id: string) {
   return document.querySelector(`[data-od-id="${id}"]`) as HTMLElement;

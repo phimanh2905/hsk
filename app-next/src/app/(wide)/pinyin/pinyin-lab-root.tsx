@@ -6,6 +6,7 @@
    Quiz build sau mount (hydration-safe); XP + best qua progressStore. */
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   PINYIN_LAB_ART_FIN, PINYIN_LAB_ART_INI, PINYIN_LAB_BASE,
   PINYIN_LAB_FINALS, PINYIN_LAB_GROUPS,
@@ -49,12 +50,23 @@ export default function PinyinLabRoot({
   initialMode,
   initialDrill,
 }: {
-  initialMode: Mode;
-  initialDrill: string | null;
+  /** Override cho unit test; production đọc query ?mode=&drill= ở dưới. */
+  initialMode?: Mode;
+  initialDrill?: string | null;
 }) {
   const toast = useToastSafe();
   const { speak } = useTts();
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const sp = useSearchParams();
+  /* Đọc query 1 lần: state khởi "matrix" trên cả server/client (hydration-safe),
+     boot effect mới áp mode/drill từ query. */
+  const queryRef = useRef<{ mode: Mode; drill: string | null } | null>(null);
+  if (queryRef.current === null) {
+    queryRef.current = {
+      mode: sp.get("mode") === "quiz" ? "quiz" : "matrix",
+      drill: sp.get("drill"),
+    };
+  }
+  const [mode, setMode] = useState<Mode>(initialMode ?? "matrix");
   const [cat, setCat] = useState<Cat>("ini");
   const [art, setArt] = useState<string>("all");
   const [sel, setSel] = useState("b");
@@ -67,7 +79,7 @@ export default function PinyinLabRoot({
   quizRef.current = quiz;
   const speakRef = useRef(speak);
   speakRef.current = speak;
-  const drillRef = useRef<string | null>(initialDrill);
+  const drillRef = useRef<string | null>(initialDrill ?? null);
   const settledRef = useRef(false); // XP/best chỉ ghi 1 lần/phiên (Review Focus #5)
   const spokenQRef = useRef(-1); // mỗi câu chỉ tự phát 1 lần
   const bootedRef = useRef(false);
@@ -168,11 +180,18 @@ export default function PinyinLabRoot({
     Enter: () => { if (mode === "quiz") next(); },
   });
 
-  /* mount lần đầu ở quiz mode → bắt đầu phiên (hydration: server render skeleton) */
+  /* mount lần đầu: áp mode/drill (props test > query) — hydration-safe */
   useEffect(() => {
     if (bootedRef.current) return;
     bootedRef.current = true;
-    if (initialMode === "quiz") startQuiz(initialDrill);
+    const q = queryRef.current!;
+    const drill = initialDrill !== undefined ? initialDrill : q.drill ?? null;
+    drillRef.current = drill;
+    const useMode = initialMode ?? q.mode;
+    if (useMode === "quiz") {
+      setMode("quiz");
+      startQuiz(drill);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
