@@ -13,7 +13,7 @@
     "test:e2e": "playwright test",
     "build:static": "pnpm vendor:kokoro && rm -rf .next out && node scripts/build-static.mjs",
     "preview": "pnpm build:static && pnpm wrangler dev",
-    "deploy": "pnpm build:static && pnpm wrangler deploy"
+    "deploy": "pnpm build:static && OPEN_NEXT_DEPLOY=1 pnpm wrangler deploy"
   },
   "dependencies": {
     "@uzen/kokoro-js": "1.2.4",
