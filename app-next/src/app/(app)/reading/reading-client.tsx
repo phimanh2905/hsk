@@ -1,66 +1,55 @@
 "use client";
 
-/* Port 1:1 từ clone/js/reading.js — trang Bài đọc (/reading).
-   Karaoke: TTS từng câu + highlight span ký tự (onboundary nếu có, fallback timer 260ms/ký tự/rate,
-   grace 2500ms). Dán đoạn văn ≤ 3000 ký tự; demo doc + MCQ + từ vựng (demo). */
+/* Thư viện bài đọc theo level HSK1–5 (Task 9, plan 2026-10-30-reading-library) +
+   tab "Bài của tôi" — bài tạo-AI (Task 6, plan 2026-10-30-reading-ai-mine).
+   Data từ D1 qua loadReadings(); Mine đọc draft từ progressStore. Mở bài →
+   ReadingPlayer (Task 8) — draft không có audio → fallback TTS của player. */
 
-import { useEffect, useState } from "react";
-import { readingData, type ReadingQuestion, type ReadingSentence, type ReadingVocab } from "@/content/reading";
-import { readingPassages, type ReadingPassage } from "@/content/reading-passages";
-import { useKaraoke, buildSentences, extractTitle, type KaraokeSentence } from "@/components/reading/karaoke";
-import { ToastProvider, useToastSafe } from "@/components/shell/toast-provider";
-import { LoginProvider, LoginModal, useLoginModal } from "@/components/shell/login-modal";
-import { useSession } from "@/lib/use-session";
-import { Volume2, Square, Play, Lightbulb, Star } from "@/components/ui/icon";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { loadReadings, __resetReadingsCache } from "@/lib/content/readings-client";
+import type { ReadingDoc } from "@/lib/content/readings";
+import { ReadingPlayer } from "@/components/reading/reading-player";
+import { ToastProvider } from "@/components/shell/toast-provider";
+import { LoginProvider, LoginModal } from "@/components/shell/login-modal";
+import { MinePanel } from "@/app/(app)/reading/mine-panel";
+import { BookOpen, Check, ChevronLeft, ChevronRight, Lightbulb } from "@/components/ui/icon";
 import { ICON_STROKE } from "@/components/ui/icon";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Chip } from "@/components/ui/chip";
-import { Select } from "@/components/ui/select";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/cn";
-import { askAi } from "@/lib/ai-client";
-import { progressStore, type ReadingDraft } from "@/lib/store/progress-store";
+import {
+  progressStore,
+  type ReadingProgressRec,
+  type SavedReadingDraft,
+} from "@/lib/store/progress-store";
 
-const MAX = 3000;
+const LEVELS = ["hsk1", "hsk2", "hsk3", "hsk4", "hsk5"] as const;
 
-function zhFull(doc: { sentences: { zh: string }[] }) {
-  return doc.sentences.map((s) => s.zh).join("");
-}
-function normalize(t: string) {
-  return String(t).replace(/\s+/g, "");
-}
-
-type Doc = {
-  title: string;
-  meta: string;
-  sentences: KaraokeSentence[];
-  /* W3 T9: passage thật (readingPassages) hoặc demoDoc — Extras chỉ dùng questions + vocab */
-  extras: { questions: ReadingQuestion[]; vocab: ReadingVocab[] } | null;
-};
-
-/* ---------- account-box (sidebar) ---------- */
-function AccountBox() {
-  const { loggedIn } = useSession();
-  const { openLogin } = useLoginModal();
-  if (loggedIn) {
-    return (
-      <p className="text-sm text-text-secondary">
-        Chưa có bài nào được lưu — bài bạn bấm “Tạo bài đọc” sẽ xuất hiện ở đây (demo).
-      </p>
-    );
-  }
-  return (
-    <>
-      <p className="text-sm text-text-secondary mb-3">Đăng nhập để lưu bài đã tạo và mở lại mọi lúc.</p>
-      <Button type="button" variant="secondary" onClick={openLogin} className="w-full">
-        Đăng nhập
-      </Button>
-    </>
-  );
+/* Draft AI không có audio/độ dài → map về ReadingDoc: player tự fallback TTS
+   và ẩn seek (durSec = 0). */
+function draftToDoc(draft: SavedReadingDraft): ReadingDoc {
+  return {
+    id: draft.id,
+    level: "",
+    ord: 0,
+    title: draft.title,
+    titleVi: "",
+    sentences: draft.doc.sentences.map((s) => ({ ...s, audio: null, durSec: 0 })),
+    vocab: draft.doc.vocab,
+    questions: draft.doc.questions,
+    audioDir: "",
+    chars: draft.chars,
+    durationSec: 0,
+  };
 }
 
-/* ---------- callout thu gọn (text verbatim clone/reading.html) ---------- */
+function fmtTime(sec: number): string {
+  const s = Math.max(0, Math.floor(sec));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+/* ---------- callout thu gọn (giữ nguyên từ bản cũ) ---------- */
 function Callout() {
   const [open, setOpen] = useState(false);
   return (
@@ -91,423 +80,329 @@ function Callout() {
   );
 }
 
-/* ---------- Câu hỏi & Từ vựng (chỉ cho văn bản mẫu) ---------- */
-function Extras({ doc, toast }: { doc: NonNullable<Doc["extras"]>; toast: (m: string) => void }) {
-  const [solved, setSolved] = useState<Record<number, number>>({});
+/* ---------- 1 card bài đọc ---------- */
+function ReadingCard({
+  doc, done, onOpen, fixedWidth = true,
+}: { doc: ReadingDoc; done: boolean; onOpen: () => void; fixedWidth?: boolean }) {
   return (
-    <>
-      <h3 className="text-xl font-extrabold mt-6 mb-3">Câu hỏi &amp; Từ vựng</h3>
-      <div className="space-y-3">
-        {doc.questions.map((q, qi) => (
-          <div key={qi} className="border border-border-default rounded-card p-3">
-            <p className="zh font-bold">{q.q}</p>
-            <p className="text-xs text-text-secondary mb-2">{q.qVi}</p>
-            <div className="grid sm:grid-cols-2 gap-2">
-              {q.options.map((opt, oi) => {
-                const isCorrect = solved[qi] === oi;
-                return (
-                  <button
-                    key={oi}
-                    type="button"
-                    onClick={() => {
-                      if (oi === q.answer) {
-                        setSolved((s) => ({ ...s, [qi]: oi }));
-                        toast("Chính xác!");
-                      } else {
-                        toast("Chưa đúng — thử lại nhé!");
-                      }
-                    }}
-                    className={cn(
-                      "zh text-left min-h-[52px] px-3 py-2 rounded-control border text-sm bg-surface-elevated text-text-primary transition-colors",
-                      isCorrect
-                        ? "border-feedback-success text-feedback-success font-bold"
-                        : "border-border-default hover:border-action-primary",
-                    )}
-                  >
-                    {String.fromCharCode(65 + oi)}. {opt}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-      <h3 className="text-lg font-extrabold mt-6 mb-2">Từ vựng trong bài</h3>
-      <ul className="grid sm:grid-cols-2 gap-2 mb-2">
-        {doc.vocab.map((v) => (
-          <li key={v.word} className="border border-border-default rounded-card px-3 py-2 flex items-center gap-3">
-            <span className="zh font-bold text-lg">{v.word}</span>
-            <span className="zh text-xs text-text-secondary">{v.py}</span>
-            <span className="text-sm text-text-secondary flex-1">{v.vi}</span>
-            <IconButton
-              label={`Thêm ${v.word} vào sổ từ vựng`}
-              onClick={() => toast(`Đã thêm「${v.word}」vào sổ từ vựng (demo)`)}
-              className="shrink-0"
-            >
-              <Star size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />
-            </IconButton>
-          </li>
-        ))}
-      </ul>
-    </>
+    <Button
+      type="button"
+      variant="secondary"
+      onClick={onOpen}
+      className={cn(
+        "shrink-0 snap-start flex-col items-stretch gap-1 p-2 h-auto",
+        fixedWidth ? "w-[200px]" : "w-full",
+      )}
+    >
+      <span className="relative flex aspect-video items-center justify-center overflow-hidden rounded-control bg-surface-muted p-2">
+        <span className="zh text-xl font-bold line-clamp-2 text-center">{doc.title}</span>
+        {done && (
+          <span className="absolute right-1 top-1 flex items-center gap-0.5 rounded-full bg-jade-wash px-1.5 py-0.5 text-[10px] font-bold text-jade-ink">
+            <Check size={10} strokeWidth={2.5} aria-hidden="true" />
+            Done
+          </span>
+        )}
+      </span>
+      <span className="text-xs text-text-secondary line-clamp-1 text-left">{doc.titleVi}</span>
+      <span className="text-xs text-text-secondary text-left">
+        {fmtTime(doc.durationSec)} · {doc.chars} chữ
+      </span>
+    </Button>
   );
 }
 
-function ReadingClientInner() {
-  const toast = useToastSafe();
-  const [text, setText] = useState("");
-  const [doc, setDoc] = useState<Doc | null>(null);
-  const [annotating, setAnnotating] = useState(false);
-  const [showVi, setShowVi] = useState(false);
-  const [showPy, setShowPy] = useState(false);
-  const k = useKaraoke(doc?.sentences ?? []);
+/* ---------- 1 level section: hàng ngang scroll + 2 mũi tên khi tràn ---------- */
+function LevelSection({
+  level, docs, progress, onOpen, onSeeAll,
+}: {
+  level: string; docs: ReadingDoc[];
+  progress: Record<string, ReadingProgressRec>;
+  onOpen: (id: string) => void;
+  onSeeAll: (level: string) => void;
+}) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [overflow, setOverflow] = useState(false);
 
-  /* W0.4: bản nháp tự lưu — khôi phục sau mount (hydration), sidebar liệt kê để mở lại */
-  const [drafts, setDrafts] = useState<ReadingDraft[]>([]);
-  useEffect(() => {
-    const list = progressStore.getReadingDrafts();
-    setDrafts(list);
-    if (list[0]) setText(list[0].text);
+  const measure = useCallback(() => {
+    const el = scrollerRef.current;
+    if (el) setOverflow(el.scrollWidth > el.clientWidth);
   }, []);
 
-  const syncCounter = (v: string) => (v.length > MAX ? v.slice(0, MAX) : v);
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure, docs.length]);
 
-  const fillSample = () => {
-    setText(syncCounter(readingData.sampleText));
-    toast("Đã điền văn bản mẫu — bấm “Tạo bài đọc” nhé!");
-  };
+  const n = docs.length;
+  return (
+    <section className="mb-6">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h2 className="text-lg font-extrabold">
+          HSK {level.replace("hsk", "")} <span className="text-sm font-normal text-text-secondary">({n} bài)</span>
+        </h2>
+        <Button type="button" variant="ghost" size="sm" onClick={() => onSeeAll(level)}>
+          Xem tất cả
+        </Button>
+      </div>
+      <div className="flex items-center gap-2">
+        {overflow && (
+          <IconButton
+            label="Cuộn trái"
+            onClick={() => scrollerRef.current?.scrollBy({ left: -0.8 * scrollerRef.current.clientWidth, behavior: "smooth" })}
+            className="shrink-0"
+          >
+            <ChevronLeft size={18} />
+          </IconButton>
+        )}
+        <div ref={scrollerRef} className="flex min-w-0 flex-1 gap-3 overflow-x-auto snap-x pb-1">
+          {docs.map((d) => (
+            <ReadingCard key={d.id} doc={d} done={!!progress[d.id]} onOpen={() => onOpen(d.id)} />
+          ))}
+        </div>
+        {overflow && (
+          <IconButton
+            label="Cuộn phải"
+            onClick={() => scrollerRef.current?.scrollBy({ left: 0.8 * scrollerRef.current.clientWidth, behavior: "smooth" })}
+            className="shrink-0"
+          >
+            <ChevronRight size={18} />
+          </IconButton>
+        )}
+      </div>
+    </section>
+  );
+}
 
-  const createDocFromText = (rawFull: string) => {
-    const raw = rawFull.trim();
-    if (!raw) return;
-    k.stop();
-    const sliced = raw.slice(0, MAX);
-    const { title, body } = extractTitle(sliced);
-    const sentenceMap: Record<string, ReadingSentence> = {};
-    readingData.demoDoc.sentences.forEach((s) => {
-      sentenceMap[s.zh] = s;
-    });
-    const sentences = buildSentences(body, sentenceMap);
-    if (!sentences.length) return false;
-    const isDemoFull = normalize(body) === normalize(zhFull(readingData.demoDoc));
-    setDoc({
-      title: title || sentences[0].zh,
-      meta: `${sentences.length} câu · ${body.length} ký tự`,
-      sentences,
-      extras: isDemoFull ? readingData.demoDoc : null,
-    });
-    return true;
-  };
+function ReadingClientInner({ initLevel }: { initLevel?: string }) {
+  const [docs, setDocs] = useState<ReadingDoc[] | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState<string>(initLevel ?? "all");
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [openDraft, setOpenDraft] = useState<SavedReadingDraft | null>(null);
+  const [tab, setTab] = useState<"library" | "mine">("library");
+  const [progress, setProgress] = useState<Record<string, ReadingProgressRec>>({});
 
-  const createDoc = () => {
-    if (!text.trim()) {
-      toast("Hãy dán văn bản tiếng Trung vào ô trước nhé!");
-      return;
+  useEffect(() => {
+    if (typeof window !== "undefined" && initLevel === undefined) {
+      const lv = new URLSearchParams(window.location.search).get("level");
+      if (lv && LEVELS.includes(lv as (typeof LEVELS)[number])) setSelectedLevel(lv);
+      if (new URLSearchParams(window.location.search).get("tab") === "mine") setTab("mine");
     }
-    if (createDocFromText(text)) {
-      progressStore.saveReadingDraft(text.slice(0, MAX));
-      setDrafts(progressStore.getReadingDrafts());
+  }, [initLevel]);
+
+  const load = useCallback(() => {
+    loadReadings()
+      .then(setDocs)
+      .catch(() => setLoadFailed(true));
+  }, []);
+
+  useEffect(() => {
+    load();
+    setProgress(progressStore.getReadingProgress());
+  }, [load]);
+
+  const chooseLevel = (lv: string) => {
+    setSelectedLevel(lv);
+    const url = lv === "all" ? "/reading" : `/reading?level=${lv}`;
+    window.history.replaceState(null, "", url);
+  };
+
+  const chooseTab = (t: "library" | "mine") => {
+    setTab(t);
+    if (t === "mine") {
+      window.history.replaceState(null, "", "/reading?tab=mine");
     } else {
-      toast("Không tìm thấy câu tiếng Trung nào trong văn bản.");
+      chooseLevel(selectedLevel);
     }
   };
 
-  const openDemo = () => {
-    k.stop();
-    const d = readingData.demoDoc;
-    setDoc({
-      title: d.title,
-      meta: `${d.meta} — ${d.sentences.length} câu`,
-      sentences: d.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
-      extras: d,
-    });
-  };
-
-  const openDraft = (d: ReadingDraft) => {
-    k.stop();
-    setText(syncCounter(d.text));
-    createDocFromText(d.text); // tái dùng pipeline tạo doc
-  };
-
-  /* W3 T9: mở passage tĩnh theo level — câu đã tách sẵn + pinyin + dịch + questions/vocab,
-     tái dùng engine karaoke + Extras của demoDoc. Text đổ vào textarea và lưu draft
-     (W0.4 autosave chỉ wire trên nút "Tạo bài đọc" nên phải gọi saveReadingDraft tại đây). */
-  const openPassage = (id: string) => {
-    const p = readingPassages.find((x) => x.id === id) as ReadingPassage | undefined;
-    if (!p) return;
-    k.stop();
-    const full = zhFull(p);
-    setText(syncCounter(full));
-    setDoc({
-      title: p.title,
-      meta: `HSK ${p.book.replace("hsk", "")} · ${p.titleVi} · ${p.sentences.length} câu · ${full.length} ký tự`,
-      sentences: p.sentences.map((s) => ({ zh: s.zh, py: s.py, vi: s.vi })),
-      extras: p,
-    });
-    progressStore.saveReadingDraft(full.slice(0, MAX));
-    setDrafts(progressStore.getReadingDrafts());
-  };
-
-  /* Wave 7 T6: AI dịch + pinyin từng câu — mỗi câu 1 request (route giới hạn 20 messages),
-     parse JSON an toàn, câu nào fail bỏ qua. Cap 20 câu còn thiếu pinyin để tránh
-     dội 30-70 request liên tiếp vào route (429 + UI treo) với bài dài. */
-  const AI_ANNOTATE_CAP = 20;
-  const annotateWithAi = async () => {
-    if (!doc || annotating) return;
-    const missing = doc.sentences.filter((s) => !s.py);
-    const targets = missing.slice(0, AI_ANNOTATE_CAP);
-    const skipped = missing.length - targets.length;
-    setAnnotating(true);
-    try {
-      for (const s of targets) {
-        let raw: string;
-        try {
-          raw = await askAi([
-            {
-              role: "user",
-              content: `Dịch câu sau sang tiếng Việt và thêm pinyin, trả JSON {"zh":"...","py":"...","vi":"..."}: ${s.zh}`,
-            },
-          ]);
-        } catch {
-          // 429/502/network — hẳn là dừng, không quét tiếp
-          toast("AI đang bận, thử lại sau");
-          return;
-        }
-        try {
-          const parsed = JSON.parse(raw.trim().replace(/^```(?:json)?|```$/g, "").trim()) as {
-            zh?: string; py?: string; vi?: string;
-          };
-          if (parsed.py || parsed.vi) {
-            setDoc((cur) =>
-              cur
-                ? {
-                    ...cur,
-                    sentences: cur.sentences.map((row) =>
-                      row.zh === s.zh
-                        ? { ...row, py: parsed.py ?? row.py, vi: parsed.vi ?? row.vi }
-                        : row,
-                    ),
-                  }
-                : cur,
-            );
-          }
-        } catch {
-          // JSON rác → bỏ qua câu đó
-        }
+  const handleComplete = useCallback(
+    (id: string, correct: number, total: number) => {
+      // Store là nguồn sự thật: lần đầu = chưa có record nào trước khi save.
+      const first = !progressStore.getReadingProgress()[id];
+      progressStore.saveReadingProgress(id, correct, total);
+      setProgress(progressStore.getReadingProgress());
+      if (first && total > 0 && correct / total >= 0.6) {
+        progressStore.addXp(total * 10);
       }
-      if (skipped > 0) {
-        toast(`Chỉ chú thích ${AI_ANNOTATE_CAP} câu đầu — bài dài sẽ được chia nhỏ ở bản sau`);
-      } else {
-        toast("Đã chú thích bằng AI");
-      }
-    } finally {
-      setAnnotating(false);
-    }
-  };
+    },
+    [],
+  );
+
+  const openDoc = openId ? docs?.find((d) => d.id === openId) : undefined;
+
+  /* ----- view bài ----- */
+  if (openDoc || openDraft) {
+    const isDraft = !openDoc;
+    const doc = openDoc ?? draftToDoc(openDraft!);
+    const docId = doc.id;
+    return (
+      <div className="mx-auto w-full max-w-[820px]">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => (isDraft ? setOpenDraft(null) : setOpenId(null))}
+          className="mb-4"
+        >
+          ← Danh sách
+        </Button>
+        <ReadingPlayer doc={doc} onComplete={(c, t) => handleComplete(docId, c, t)} />
+      </div>
+    );
+  }
+
+  const byLevel = new Map<string, ReadingDoc[]>();
+  (docs ?? []).forEach((d) => {
+    const list = byLevel.get(d.level) ?? [];
+    list.push(d);
+    byLevel.set(d.level, list);
+  });
+
+  const tabs = ["all", ...LEVELS];
+  const levelDocs = selectedLevel === "all" ? null : (byLevel.get(selectedLevel) ?? []);
 
   return (
     <div className="mx-auto w-full max-w-[820px]">
-      <div className="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
-        {/* ---------- sidebar ---------- */}
-        <aside className="space-y-4">
-          <Card className="p-4">
-            <h2 className="font-extrabold mb-2">Bài đọc mẫu</h2>
-            <button type="button" onClick={openDemo} className="w-full text-left px-3 py-2.5 rounded-control hover:bg-surface-paper">
-              <span className="zh font-bold text-base">一个人的生活</span>
-              <span className="block text-xs text-text-secondary mt-0.5">
-                Cuộc sống một mình — 2:29 · 654 ký tự
-              </span>
-            </button>
-          </Card>
-          {readingPassages.length > 0 && (
-            <Card className="p-4">
-              <h2 className="font-extrabold mb-2">Bài đọc theo level</h2>
-              <Select
-                data-testid="reading-passage-select"
-                defaultValue=""
-                onChange={(e) => openPassage(e.target.value)}
-                aria-label="Chọn bài đọc theo level"
-                className="w-full text-sm"
-              >
-                <option value="">— Chọn bài đọc —</option>
-                {readingPassages.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.title} · HSK {p.book.replace("hsk", "")}
-                  </option>
-                ))}
-              </Select>
-            </Card>
-          )}
-          {drafts.length > 0 && (
-            <Card className="p-4">
-              <h2 className="font-extrabold mb-2">Bản nháp đã lưu</h2>
-              <div className="space-y-1">
-                {drafts.map((d, i) => (
-                  <button
-                    key={`${d.at}-${i}`}
-                    type="button"
-                    onClick={() => openDraft(d)}
-                    className="w-full text-left px-3 py-2.5 rounded-control hover:bg-surface-paper"
-                  >
-                    <span className="zh font-bold text-sm line-clamp-2">{d.text.slice(0, 60)}</span>
-                    <span className="block text-xs text-text-secondary mt-0.5">
-                      {new Date(d.at).toLocaleString("vi-VN")}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </Card>
-          )}
-          <Card className="p-4">
-            <AccountBox />
-          </Card>
-        </aside>
-
-        {/* ---------- main ---------- */}
-        <div>
-          <h1 className="text-3xl font-extrabold mb-4">Bài đọc</h1>
-
-          <Callout />
-
-          <Card className="p-4 mb-4">
-            <label htmlFor="reading-input" className="sr-only">
-              Nội dung bài đọc
-            </label>
-            <textarea
-              id="reading-input"
-              data-input
-              value={text}
-              onChange={(e) => setText(syncCounter(e.target.value))}
-              rows={7}
-              className="w-full rounded-control border border-border-default bg-surface-elevated p-3 text-base zh focus:outline-none focus:ring-3 ring-action-focus ring-offset-2"
-              placeholder="Dán văn bản tiếng Trung vào đây…"
-            />
-            <div className="flex items-center justify-between gap-2 flex-wrap mt-2">
-              <span className="text-xs text-text-secondary" data-counter>
-                {text.length}/{MAX}
-              </span>
-              <div className="flex items-center gap-2">
-                <Button type="button" variant="secondary" size="sm" onClick={fillSample}>
-                  Điền văn bản mẫu
-                </Button>
-                <Button type="button" size="sm" onClick={createDoc}>
-                  Tạo bài đọc
-                </Button>
-              </div>
-            </div>
-          </Card>
-
-          {doc && (
-            <Card className="p-4">
-              <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
-                <div>
-                  <h2 className="zh text-2xl font-extrabold">{doc.title}</h2>
-                  <p className="text-sm text-text-secondary mt-0.5">{doc.meta}</p>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Button
-                    type="button"
-                    data-playing={k.playingAll ? "true" : "false"}
-                    onClick={() => (k.playingAll ? k.stop() : k.playFrom(0, true))}
-                  >
-                    {k.playingAll ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Volume2 size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
-                    {k.playingAll ? "Dừng" : "Phát cả bài"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    disabled={annotating}
-                    onClick={annotateWithAi}
-                  >
-                    ✨ AI dịch &amp; chú thích
-                  </Button>
-                  <Chip selected={showVi} onClick={() => setShowVi((v) => !v)}>
-                    Dịch
-                  </Chip>
-                  <Chip selected={showPy} onClick={() => setShowPy((v) => !v)}>
-                    Pinyin
-                  </Chip>
-                  <Select
-                    defaultValue="1"
-                    onChange={(e) => k.setRate(parseFloat(e.target.value) || 1)}
-                    aria-label="Tốc độ đọc"
-                    className="text-sm min-h-11 py-1.5"
-                  >
-                    <option value="0.7">0.7×</option>
-                    <option value="1">1×</option>
-                    <option value="1.3">1.3×</option>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {doc.sentences.map((s, i) => {
-                  const isActive = k.activeIdx === i;
-                  return (
-                    <div
-                      key={i}
-                      data-row={i}
-                      className={cn(
-                        "rounded-control border p-3 transition-colors",
-                        isActive ? "border-action-primary bg-action-primary/10" : "border-border-default",
-                      )}
-                    >
-                      <div className="flex items-start gap-2">
-                        <IconButton
-                          label={`Đọc câu ${i + 1}`}
-                          onClick={() => {
-                            k.stop();
-                            k.playFrom(i, false);
-                          }}
-                          className="shrink-0"
-                        >
-                          {isActive ? <Square size={16} strokeWidth={ICON_STROKE} aria-hidden="true" /> : <Play size={16} strokeWidth={ICON_STROKE} aria-hidden="true" />}
-                        </IconButton>
-                        <div className="min-w-0">
-                          {/* Highlight câu đang đọc: nền jade/10 + underline — không chỉ màu một mình */}
-                          <p
-                            className={cn(
-                              "zh text-xl leading-loose",
-                              isActive && "underline decoration-action-primary decoration-2 underline-offset-4",
-                            )}
-                          >
-                            {Array.from(s.zh).map((c, ci) => (
-                              <span
-                                key={ci}
-                                className={cn(
-                                  "zh-char inline-block",
-                                  k.highlight && k.highlight.row === i && k.highlight.char === ci &&
-                                    "bg-action-primary/10 underline decoration-action-primary decoration-2 underline-offset-4",
-                                )}
-                              >
-                                {c === " " ? "\u00A0" : c}
-                              </span>
-                            ))}
-                          </p>
-                          {showPy && s.py && <p className="zh text-sm text-text-secondary mt-1">{s.py}</p>}
-                          {showVi && <p className="text-sm text-text-secondary mt-1">{s.vi}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {doc.extras && <Extras doc={doc.extras} toast={toast} />}
-            </Card>
-          )}
-        </div>
+      {/* header */}
+      <div className="mb-4 flex items-center gap-3">
+        <span className="flex h-12 w-12 items-center justify-center rounded-control border-2 border-border-strong bg-surface-elevated text-action-primary">
+          <BookOpen size={24} strokeWidth={ICON_STROKE} aria-hidden="true" />
+        </span>
+        <h1 className="text-3xl font-extrabold">Bài đọc</h1>
       </div>
+
+      {/* tab library / mine */}
+      <nav aria-label="Chọn nhóm bài" className="mb-4 flex gap-1 border-b border-border-default">
+        {(
+          [
+            { key: "library", label: "Bài khoá" },
+            { key: "mine", label: "Bài của tôi" },
+          ] as const
+        ).map((t) => {
+          const active = tab === t.key;
+          return (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => chooseTab(t.key)}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "shrink-0 border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+                active
+                  ? "border-action-primary text-action-primary"
+                  : "border-transparent text-text-secondary hover:text-text-primary",
+              )}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {tab === "mine" && <MinePanel onOpen={setOpenDraft} />}
+
+      {tab === "library" && <Callout />}
+
+      {tab === "library" && (
+        <>
+        {/* tab level */}
+        <nav aria-label="Chọn level" className="mb-5 flex gap-1 border-b border-border-default overflow-x-auto">
+          {tabs.map((lv) => {
+            const active = selectedLevel === lv;
+            return (
+              <button
+                key={lv}
+                type="button"
+                onClick={() => chooseLevel(lv)}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "shrink-0 border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+                  active
+                    ? "border-action-primary text-action-primary"
+                    : "border-transparent text-text-secondary hover:text-text-primary",
+                )}
+              >
+                {lv === "all" ? "Tất cả" : `HSK ${lv.replace("hsk", "")}`}
+              </button>
+            );
+          })}
+        </nav>
+
+      {/* loading skeleton */}
+      {!docs && !loadFailed && (
+        <div className="space-y-6" aria-hidden="true">
+          {[0, 1].map((i) => (
+            <Card key={i} className="p-4">
+              <div className="mb-3 h-5 w-24 animate-pulse rounded bg-surface-muted" />
+              <div className="flex gap-3 overflow-hidden">
+                {[0, 1, 2].map((j) => (
+                  <div key={j} className="h-32 w-[200px] shrink-0 animate-pulse rounded-control bg-surface-muted" />
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* error */}
+      {loadFailed && (
+        <Card className="p-6 text-center">
+          <p className="mb-3 text-text-secondary">Không tải được bài đọc. Vui lòng thử lại.</p>
+          <Button
+            type="button"
+            onClick={() => {
+              __resetReadingsCache();
+              setLoadFailed(false);
+              load();
+            }}
+          >
+            Thử lại
+          </Button>
+        </Card>
+      )}
+
+      {/* grid 1 level hoặc list các section */}
+      {docs && !loadFailed && (
+        levelDocs ? (
+          <div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {levelDocs.map((d) => (
+                <ReadingCard key={d.id} doc={d} done={!!progress[d.id]} onOpen={() => setOpenId(d.id)} fixedWidth={false} />
+              ))}
+            </div>
+            {levelDocs.length === 0 && (
+              <p className="text-text-secondary">Chưa có bài đọc cho level này.</p>
+            )}
+            <Button type="button" variant="ghost" size="sm" onClick={() => chooseLevel("all")} className="mt-4">
+              ← Danh sách
+            </Button>
+          </div>
+        ) : (
+          LEVELS.filter((lv) => byLevel.has(lv)).map((lv) => (
+            <LevelSection
+              key={lv}
+              level={lv}
+              docs={byLevel.get(lv)!}
+              progress={progress}
+              onOpen={setOpenId}
+              onSeeAll={chooseLevel}
+            />
+          ))
+        )
+      )}
+      </>
+      )}
     </div>
   );
 }
 
-export default function ReadingClient() {
+export default function ReadingClient({ initLevel }: { initLevel?: string }) {
   return (
     <ToastProvider>
       <LoginProvider>
-        <ReadingClientInner />
+        <ReadingClientInner initLevel={initLevel} />
         <LoginModal />
       </LoginProvider>
     </ToastProvider>

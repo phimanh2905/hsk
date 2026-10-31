@@ -123,7 +123,9 @@ def main(argv: list[str] | None = None) -> int:
         from kokoro import KPipeline  # nặng — chỉ import khi render thật
         import soundfile
 
-        pipeline = KPipeline(lang_code="zh")
+        # Voice tiếng Trung (zf_*) chỉ có ở repo v1.1-zh — repo mặc định
+        # hexgrad/Kokoro-82M chỉ có voice tiếng Anh (404 khi fetch zf_001.pt).
+        pipeline = KPipeline(lang_code="zh", repo_id="hexgrad/Kokoro-82M-v1.1-zh")
 
     idx_path = args.out / "audio-index.json"
     index: dict[str, dict] = {}

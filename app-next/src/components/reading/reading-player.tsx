@@ -49,7 +49,7 @@ function renderZhWithEvidence(zh: string, ranges: ReadingEvidence[]) {
         key={`ev-${i}`}
         data-evidence
         data-testid="evidence-mark"
-        className="bg-main-hi/60 underline"
+        className="bg-amber-wash/60 underline"
       >
         {zh.slice(Math.max(s, pos), e)}
       </mark>,
@@ -74,15 +74,11 @@ export function ReadingPlayer({ doc, onComplete }: ReadingPlayerProps) {
   );
 
   const player = useReadingPlayer(sentences);
-  const [showPy, setShowPy] = useState(false);
+  const [showPy, setShowPy] = useState(() => readToggle("nhai.reading.pinyin"));
   const [showVi, setShowVi] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(() => doc.questions.map(() => null));
   const completedRef = useRef(false);
   const bodyRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setShowPy(readToggle("nhai.reading.pinyin"));
-  }, []);
 
   const togglePy = useCallback(() => {
     setShowPy((v) => {
@@ -243,8 +239,8 @@ export function ReadingPlayer({ doc, onComplete }: ReadingPlayerProps) {
                         className={cn(
                           "w-full justify-start text-left",
                           "zh",
-                          isAnswer && "border-transparent bg-success-soft hover:bg-success-soft",
-                          isWrongPick && "border-transparent bg-danger-soft hover:bg-danger-soft",
+                          isAnswer && "border-transparent bg-jade-wash hover:bg-jade-wash",
+                          isWrongPick && "border-transparent bg-rose-wash hover:bg-rose-wash",
                         )}
                         onClick={() => select(qi, oi)}
                       >

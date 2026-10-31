@@ -184,7 +184,9 @@ export async function generateReading(text: string): Promise<DraftDoc> {
     { role: "system", content: SYSTEM_PROMPT },
     { role: "user", content: text },
   ];
-  const MAX_ATTEMPTS = 3;
+  // AI_ROUTER (buffproxy smart-router) chọn model mỗi lần gọi — output lệch
+  // schema quan sát được ~2/3; 5 lần thử cho xác suất thành công ~87%.
+  const MAX_ATTEMPTS = 5;
   let lastRaw = "";
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     let parsed: unknown;

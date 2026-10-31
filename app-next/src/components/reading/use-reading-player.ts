@@ -146,6 +146,20 @@ export function useReadingPlayer(
     return a;
   }, []);
 
+  /* play() có thể reject (autoplay policy, AbortError khi bị interrupt) — nếu
+     không bắt, promise rejected unhandled; bắt xong dừng trạng thái playing. */
+  const stopPlaying = useCallback(() => {
+    playingRef.current = false;
+    setPlaying(false);
+  }, []);
+  const playSafe = useCallback(
+    (a: AudioLike | null | undefined) => {
+      const p = a?.play();
+      if (p && typeof p.catch === "function") p.catch(stopPlaying);
+    },
+    [stopPlaying]
+  );
+
   /* Chuyển sang câu i: pause câu cũ, reset, giữ playing hiện tại. */
   const goTo = useCallback((i: number) => {
     const list = sentencesRef.current;
@@ -158,8 +172,8 @@ export function useReadingPlayer(
     if (a) a.currentTime = 0;
     setCurTime(offsetsRef.current[i] ?? 0);
     setCharPos({ row: i, char: 0 });
-    if (playingRef.current) void a?.play();
-  }, [ensureAudio]);
+    if (playingRef.current) playSafe(a);
+  }, [ensureAudio, playSafe]);
 
   const handleEnded = useCallback(
     (i: number) => {
@@ -168,7 +182,7 @@ export function useReadingPlayer(
         const a = audiosRef.current.get(i);
         if (a) {
           a.currentTime = 0;
-          void a.play();
+          playSafe(a);
         }
         setCurTime(offsetsRef.current[i] ?? 0);
         setCharPos({ row: i, char: 0 });
@@ -184,7 +198,7 @@ export function useReadingPlayer(
         setCurTime(offsetsRef.current[i] + (sentencesRef.current[i]?.durSec ?? 0));
       }
     },
-    [goTo]
+    [goTo, playSafe]
   );
   endedHandlerRef.current = handleEnded;
 
@@ -197,9 +211,9 @@ export function useReadingPlayer(
       const a = ensureAudio(curIdxRef.current);
       playingRef.current = true;
       setPlaying(true);
-      void a?.play();
+      playSafe(a);
     }
-  }, [ensureAudio]);
+  }, [ensureAudio, playSafe]);
 
   const seekSentence = useCallback(
     (i: number) => {

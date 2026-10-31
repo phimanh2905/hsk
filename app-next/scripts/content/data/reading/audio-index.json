@@ -1,0 +1,994 @@
+{
+  "hsk1-reading-1": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 3.05
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 2.2
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 4.53
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.65
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 3.55
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 3.73
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 3.65
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 3.15
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 3.55
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 3.42
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 2.7
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 3.05
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.98
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 2.83
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 3.33
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 4.15
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 4.0
+      },
+      {
+        "audio": "sent-18.mp3",
+        "durSec": 2.3
+      }
+    ]
+  },
+  "hsk1-reading-2": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.15
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 3.33
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 3.98
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.35
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 3.45
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 2.9
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 3.55
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 3.48
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.35
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 4.33
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 3.75
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.5
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.55
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 2.88
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 2.45
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 3.92
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 4.25
+      }
+    ]
+  },
+  "hsk1-reading-3": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.17
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 2.45
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 2.48
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 4.2
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 2.67
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 2.6
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 2.52
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 3.4
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 2.65
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 3.58
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 3.6
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 3.55
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.35
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 3.42
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 2.83
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 3.85
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 3.7
+      },
+      {
+        "audio": "sent-18.mp3",
+        "durSec": 4.0
+      }
+    ]
+  },
+  "hsk2-reading-1": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 3.42
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.7
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 2.7
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.52
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 3.12
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 3.9
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 3.05
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 3.75
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.23
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 3.63
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 3.23
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 3.77
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.08
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 2.9
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 4.55
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 4.47
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 3.0
+      },
+      {
+        "audio": "sent-18.mp3",
+        "durSec": 4.38
+      },
+      {
+        "audio": "sent-19.mp3",
+        "durSec": 4.03
+      }
+    ]
+  },
+  "hsk2-reading-2": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 3.05
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 2.92
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 2.73
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.77
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.28
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 2.77
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.03
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 3.03
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 3.75
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 3.7
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 3.58
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.2
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 2.83
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 3.4
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 4.1
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 3.67
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 3.38
+      },
+      {
+        "audio": "sent-18.mp3",
+        "durSec": 2.92
+      },
+      {
+        "audio": "sent-19.mp3",
+        "durSec": 4.25
+      }
+    ]
+  },
+  "hsk2-reading-3": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 3.83
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 3.23
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 4.4
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 2.6
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 3.6
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 3.23
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 3.33
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 2.92
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 3.67
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 2.67
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 3.6
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 3.08
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.4
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 3.6
+      },
+      {
+        "audio": "sent-15.mp3",
+        "durSec": 2.9
+      },
+      {
+        "audio": "sent-16.mp3",
+        "durSec": 2.55
+      },
+      {
+        "audio": "sent-17.mp3",
+        "durSec": 3.35
+      },
+      {
+        "audio": "sent-18.mp3",
+        "durSec": 4.42
+      },
+      {
+        "audio": "sent-19.mp3",
+        "durSec": 3.48
+      },
+      {
+        "audio": "sent-20.mp3",
+        "durSec": 4.5
+      }
+    ]
+  },
+  "hsk3-reading-1": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.53
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.15
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 3.67
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 4.05
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.6
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.12
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 3.7
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.28
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.35
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 3.77
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.05
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.12
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.65
+      }
+    ]
+  },
+  "hsk3-reading-2": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.62
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 3.83
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 3.45
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.8
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.33
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.7
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.83
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.42
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.33
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 4.85
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.2
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.15
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 4.62
+      }
+    ]
+  },
+  "hsk3-reading-3": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.33
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 3.65
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 4.45
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 3.35
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 3.88
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.3
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.08
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.08
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.05
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 4.53
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.23
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.62
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 4.17
+      }
+    ]
+  },
+  "hsk4-reading-1": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.42
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.2
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 4.67
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 4.35
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.45
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.9
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.15
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.05
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 4.4
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 5.2
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.55
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 3.83
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 4.53
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 4.53
+      }
+    ]
+  },
+  "hsk4-reading-2": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.12
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.97
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 5.28
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 5.55
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 5.08
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 3.67
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.38
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.72
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 3.77
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 4.62
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.9
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.45
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 3.9
+      }
+    ]
+  },
+  "hsk4-reading-3": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 3.98
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.92
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 4.3
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 5.4
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 5.15
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 3.83
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.78
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.67
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 5.03
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 5.22
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 4.58
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.28
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 5.3
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 4.75
+      }
+    ]
+  },
+  "hsk5-reading-1": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.35
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 5.58
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 5.8
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 5.3
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.9
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.03
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 5.6
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.33
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 5.17
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 5.45
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 5.53
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 4.97
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 4.23
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 5.72
+      }
+    ]
+  },
+  "hsk5-reading-2": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 6.7
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 4.4
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 5.5
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 4.53
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 5.38
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 4.9
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 4.7
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 4.85
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 5.28
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 6.22
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 5.5
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 6.22
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 5.95
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 4.45
+      }
+    ]
+  },
+  "hsk5-reading-3": {
+    "sentences": [
+      {
+        "audio": "sent-1.mp3",
+        "durSec": 4.0
+      },
+      {
+        "audio": "sent-2.mp3",
+        "durSec": 5.58
+      },
+      {
+        "audio": "sent-3.mp3",
+        "durSec": 5.17
+      },
+      {
+        "audio": "sent-4.mp3",
+        "durSec": 5.78
+      },
+      {
+        "audio": "sent-5.mp3",
+        "durSec": 4.9
+      },
+      {
+        "audio": "sent-6.mp3",
+        "durSec": 5.22
+      },
+      {
+        "audio": "sent-7.mp3",
+        "durSec": 5.0
+      },
+      {
+        "audio": "sent-8.mp3",
+        "durSec": 5.45
+      },
+      {
+        "audio": "sent-9.mp3",
+        "durSec": 5.12
+      },
+      {
+        "audio": "sent-10.mp3",
+        "durSec": 5.58
+      },
+      {
+        "audio": "sent-11.mp3",
+        "durSec": 5.22
+      },
+      {
+        "audio": "sent-12.mp3",
+        "durSec": 6.22
+      },
+      {
+        "audio": "sent-13.mp3",
+        "durSec": 6.3
+      },
+      {
+        "audio": "sent-14.mp3",
+        "durSec": 5.58
+      }
+    ]
+  }
+}

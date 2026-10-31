@@ -170,6 +170,33 @@ describe("hybrid-store", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("readingProgress reverse-merge: server trả total thấp hơn local → không lùi total/completedAt (P2b)", async () => {
+    // Local rec không có updatedAt → server luôn thắng updatedAt. Nếu merge ngược
+    // ghi đè total từ server snapshot chậm hơn, total bị lùi. Fix: total = max,
+    // completedAt giữ local khi local không thua kém (total, attempts).
+    initHybridStoreFn();
+    localStorage.setItem(
+      "nhai.reading.progress",
+      JSON.stringify({ r1: { correct: 4, total: 10, attempts: 3, completedAt: "2026-10-24T10:00:00Z" } })
+    );
+    fetchMock.mockResolvedValue(
+      okRes({
+        readingProgress: [
+          { readingId: "r1", correct: 2, total: 5, attempts: 1, completedAt: "2026-10-23T09:00:00Z", updatedAt: 1000 },
+        ],
+        serverTime: 1,
+      })
+    );
+    hybridOnAuthChangeFn(true); // merge-on-login dùng luôn response trên
+    await settle();
+
+    const local = JSON.parse(localStorage.getItem("nhai.reading.progress") || "{}");
+    expect(local.r1.total).toBe(10); // không lùi từ 10 về 5
+    expect(local.r1.correct).toBe(4); // max counter
+    expect(local.r1.attempts).toBe(3); // max counter
+    expect(local.r1.completedAt).toBe("2026-10-24T10:00:00Z"); // giữ local mới hơn
+  });
+
   it("payload compute: studyDay từ bye.heat với correct 0; srs từ getAllSrs", async () => {
     initHybridStoreFn();
     hybridOnAuthChangeFn(true);

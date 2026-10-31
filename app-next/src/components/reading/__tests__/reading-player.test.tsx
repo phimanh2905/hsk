@@ -119,23 +119,23 @@ describe("ReadingPlayer", () => {
     expect(screen.getByText("Tạm biệt.")).toBeInTheDocument();
   });
 
-  it("chọn đúng → bg-success-soft, sai → bg-danger-soft + tô đáp án đúng + khóa chọn", () => {
+  it("chọn đúng → bg-jade-wash, sai → bg-rose-wash + tô đáp án đúng + khóa chọn", () => {
     setup();
     const q0 = screen.getByTestId("question-0");
     const q1 = screen.getByTestId("question-1");
 
     // Q1: chọn đúng
     fireEvent.click(within(q0).getByRole("button", { name: "你好。" }));
-    expect(within(q0).getByRole("button", { name: "你好。" })).toHaveClass("bg-success-soft");
+    expect(within(q0).getByRole("button", { name: "你好。" })).toHaveClass("bg-jade-wash");
 
-    // Q2: chọn sai → nút chọn bg-danger-soft, đáp án đúng được tô
+    // Q2: chọn sai → nút chọn bg-rose-wash, đáp án đúng được tô
     fireEvent.click(within(q1).getByRole("button", { name: "你好。" }));
-    expect(within(q1).getByRole("button", { name: "你好。" })).toHaveClass("bg-danger-soft");
-    expect(within(q1).getByRole("button", { name: "再见。" })).toHaveClass("bg-success-soft");
+    expect(within(q1).getByRole("button", { name: "你好。" })).toHaveClass("bg-rose-wash");
+    expect(within(q1).getByRole("button", { name: "再见。" })).toHaveClass("bg-jade-wash");
 
     // khóa chọn
     fireEvent.click(within(q1).getByRole("button", { name: "谢谢。" }));
-    expect(within(q1).getByRole("button", { name: "谢谢。" })).not.toHaveClass("bg-danger-soft");
+    expect(within(q1).getByRole("button", { name: "谢谢。" })).not.toHaveClass("bg-rose-wash");
   });
 
   it("evidence mark xuất hiện sau khi chọn + scrollIntoView mark đầu", () => {
@@ -147,7 +147,7 @@ describe("ReadingPlayer", () => {
 
     const mark = screen.getByTestId("evidence-mark");
     expect(mark).toHaveTextContent("你好");
-    expect(mark).toHaveClass("bg-main-hi/60");
+    expect(mark).toHaveClass("bg-amber-wash/60");
     expect(mark.scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "center" });
   });
 
@@ -162,7 +162,7 @@ describe("ReadingPlayer", () => {
     expect(onComplete).toHaveBeenCalledWith(2, 2);
 
     fireEvent.click(screen.getByRole("button", { name: "Làm lại" }));
-    expect(within(q0).getByRole("button", { name: "你好。" })).not.toHaveClass("bg-success-soft");
+    expect(within(q0).getByRole("button", { name: "你好。" })).not.toHaveClass("bg-jade-wash");
     expect(screen.queryByTestId("evidence-mark")).not.toBeInTheDocument();
 
     // làm lại hết → không gọi onComplete lần nữa
