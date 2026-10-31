@@ -96,7 +96,7 @@ test.describe("gated routes (session thật qua better-auth)", () => {
   // route phía client vẫn còn hiệu lực cho trang này.
   test("notebook detail render khi có session (client gate)", async ({ page }) => {
     await fakeLogin(page);
-    await page.goto("/notebook/vocab/vocab-hsk30");
+    await page.goto("/notebook/vocab?id=vocab-hsk30");
     await expect(page.getByText("Từ vực HSK 3.0")).toBeVisible();
     await expect(page.getByText("时间").first()).toBeVisible();
   });
@@ -116,7 +116,7 @@ test.describe("gated routes (session thật qua better-auth)", () => {
     await page.getByPlaceholder("Tên deck, ví dụ: Từ vựng phỏng vấn…").fill("Bộ từ e2e thứ hai");
     await page.getByText("Tạo deck", { exact: true }).click();
     await expect(page.getByText("Đã tạo deck “Bộ từ e2e thứ hai”")).toBeVisible();
-    await page.goto("/lesson/custom/nb-e2e");
+    await page.goto("/lesson/custom?deck=nb-e2e");
     await expect(page.getByText("Bộ e2e")).toBeVisible();
     await expect(page.getByText("时间").first()).toBeVisible();
   });

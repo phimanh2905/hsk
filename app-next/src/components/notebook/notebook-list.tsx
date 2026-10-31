@@ -114,7 +114,7 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
             <Card key={item.id} className="p-4 relative">
               <div className="flex items-start justify-between gap-2 mb-1">
                 <h3>
-                  <a href={`/notebook/${kind}/${item.id}`} className="font-extrabold hover:text-action-primary">
+                  <a href={`/notebook/${kind}?id=${item.id}`} className="font-extrabold hover:text-action-primary">
                     {item.name}
                   </a>
                 </h3>
@@ -147,7 +147,7 @@ function NotebookListInner({ kind }: { kind: "vocab" | "grammar" }) {
                     className="block w-full rounded px-3 py-1.5 text-left hover:bg-surface-paper"
                     onClick={() => {
                       setMenuFor(null);
-                      router.push(`/notebook/${kind}/${item.id}`);
+                      router.push(`/notebook/${kind}?id=${item.id}`);
                     }}
                   >
                     Mở

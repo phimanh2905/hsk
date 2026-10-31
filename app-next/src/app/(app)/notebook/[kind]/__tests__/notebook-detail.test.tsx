@@ -6,6 +6,10 @@ vi.mock("@/components/shell/login-modal", () => ({
   useLoginModal: () => ({ isOpen: false, openLogin: vi.fn(), close: vi.fn() }),
 }));
 
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => new URLSearchParams(window.location.search),
+}));
+
 beforeEach(() => localStorage.clear());
 
 describe("NotebookDetail (F5)", () => {

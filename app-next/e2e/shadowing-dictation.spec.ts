@@ -19,7 +19,10 @@ test.describe("WSD shadowing dictation", () => {
     await page.goto("/shadowing/EA3rwvr99Q0");
     // lấy nguyên văn câu 1 từ transcript (data-zh span đầu tiên)
     const answer = (await page.locator("[data-zh]").first().innerText()).replace(/\s+/g, "");
-    await page.keyboard.press("2");
+    await expect(async () => {
+      await page.keyboard.press("2");
+      await expect(page.getByTestId("dict-input")).toBeVisible();
+    }).toPass(); // phím có thể rơi vào khoảng render → effect gắn listener
     await page.getByTestId("dict-input").fill("这是完全错误的答案啊");
     await page.getByTestId("dict-check").click();
     await expect(page.getByTestId("dict-diff")).toBeVisible();
@@ -31,7 +34,11 @@ test.describe("WSD shadowing dictation", () => {
 
   test("arrange: tap mảnh → ghép; thiếu mảnh check → đỏ", async ({ page }) => {
     await page.goto("/shadowing/EA3rwvr99Q0");
-    await page.keyboard.press("2");
+    await expect(page.getByTestId("mode-shadow")).toBeVisible(); // studio render xong (client-fetch)
+    await expect(async () => {
+      await page.keyboard.press("2");
+      await expect(page.getByTestId("dict-box")).toBeVisible();
+    }).toPass(); // phím có thể rơi vào khoảng render → effect gắn listener
     await page.getByTestId("dict-variant-arrange").click();
     const bank = page.getByTestId("dict-arrange-bank");
     await expect(bank.getByTestId("dict-arrange-tile").first()).toBeVisible();
@@ -47,10 +54,19 @@ test.describe("WSD shadowing dictation", () => {
 
   test("variant và auto-pause nhớ localStorage", async ({ page }) => {
     await page.goto("/shadowing/EA3rwvr99Q0");
-    await page.keyboard.press("2");
+    await expect(page.getByTestId("mode-shadow")).toBeVisible(); // studio render xong (client-fetch)
+    // phím có thể rơi vào khoảng render → effect gắn listener; retry tới khi dict-box hiện
+    await expect(async () => {
+      await page.keyboard.press("2");
+      await expect(page.getByTestId("dict-box")).toBeVisible();
+    }).toPass();
     await page.getByTestId("dict-variant-arrange").click();
     await page.reload();
-    await page.keyboard.press("2");
+    await expect(page.getByTestId("mode-shadow")).toBeVisible(); // chờ hydration sau reload
+    await expect(async () => {
+      await page.keyboard.press("2");
+      await expect(page.getByTestId("dict-box")).toBeVisible();
+    }).toPass();
     await expect(page.getByTestId("dict-variant-arrange")).toHaveAttribute("aria-pressed", "true");
     // auto-pause chỉ hiện trên video có words
     const ap = page.getByTestId("auto-pause");
@@ -62,8 +78,11 @@ test.describe("WSD shadowing dictation", () => {
 
   test("pron panel render + nút ghi (không cần mic thật)", async ({ page }) => {
     await page.goto("/shadowing/EA3rwvr99Q0");
-    await page.keyboard.press("3");
-    await expect(page.getByTestId("pron-zh")).toBeVisible();
+    await expect(page.getByTestId("mode-shadow")).toBeVisible();
+    await expect(async () => {
+      await page.keyboard.press("3");
+      await expect(page.getByTestId("pron-zh")).toBeVisible();
+    }).toPass();
     await expect(page.getByTestId("pron-record")).toBeVisible();
   });
 });

@@ -79,6 +79,7 @@ const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" })
   const ctxA = await browser.newContext();
   const pageA = await ctxA.newPage();
   await pageA.goto("/lesson/hsk1/lesson-1");
+  await expect(pageA.locator('article[data-od-id="flashcard"]').first()).toBeVisible(); // client-fetch SSG
 
   // pinyin của thẻ đầu (hiển thị trên flashcard) — dùng để trả lời đúng quiz
   const py = await pageA.evaluate(() =>

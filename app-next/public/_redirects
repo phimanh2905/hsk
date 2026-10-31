@@ -1,0 +1,2 @@
+/lesson/custom/:deckId  /lesson/custom?deck=:deckId  302
+/notebook/:kind/:id     /notebook/:kind?id=:id       302

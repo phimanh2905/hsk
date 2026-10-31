@@ -1,9 +1,15 @@
 /* Route buổi học lộ trình pinyin (E3) — /roadmap/pinyin/session/[n].
-   Validate n trong 1..8 (số buổi của roadmapSessions), ngoài range → 404. */
+   SSG: generateStaticParams từ roadmapSessions (1..8), ngoài range → 404. */
 
 import { notFound } from "next/navigation";
 import SessionClient from "@/components/roadmap/session-client";
 import { roadmapSessions } from "@/content/roadmap";
+
+export const dynamicParams = false;
+
+export function generateStaticParams(): { n: string }[] {
+  return roadmapSessions.map((_, i) => ({ n: String(i + 1) }));
+}
 
 export default async function Page({ params }: { params: Promise<{ n: string }> }) {
   const { n } = await params;
