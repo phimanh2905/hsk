@@ -1,4 +1,4 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getEnv } from "@/lib/env";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createDb } from "@/lib/db";
@@ -6,12 +6,12 @@ import * as schema from "@/lib/db/schema";
 import { AUTH_BASE_PATH } from "@/lib/auth-base-path";
 import { resolveAuthSecrets } from "@/lib/auth-secrets";
 
-/* Auth được tạo lazily: `getCloudflareContext()` chỉ hợp lệ trong request context
+/* Auth được tạo lazily: env chỉ lấy được trong request context
    của Worker, không gọi được lúc import module (build, CLI, test). Cache giữ lại
    instance sau lần đầu để không dựng lại adapter mỗi request. */
 
 function createAuth() {
-  const { env } = getCloudflareContext();
+  const env = getEnv();
   const { BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = resolveAuthSecrets(
     env as Record<string, string | undefined>,
     process.env.NODE_ENV
