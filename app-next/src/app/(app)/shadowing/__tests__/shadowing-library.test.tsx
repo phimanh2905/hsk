@@ -79,3 +79,26 @@ describe("ShadowingLibrary (port shadow-header/daily-pick/filter-toolbar/video-g
     expect(screen.getByText("Chưa học")).toBeInTheDocument();
   });
 });
+
+describe("ShadowingLibrary — SSG client-fetch", () => {
+  it("không props: fetch /api/v1/content/shadowing → render grid", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ playlists: [], videos: videosFixture, subtitles: subsFixture }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ShadowingLibrary />);
+    expect(await screen.findByTestId("daily-pick")).toBeInTheDocument();
+    expect(screen.getByTestId("video-EA3rwvr99Q0")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledWith("/api/v1/content/shadowing");
+    vi.unstubAllGlobals();
+  });
+
+  it("không props + fetch fail → error message, không crash", async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new Error("down"));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ShadowingLibrary />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(/Không tải được dữ liệu shadowing/);
+    vi.unstubAllGlobals();
+  });
+});

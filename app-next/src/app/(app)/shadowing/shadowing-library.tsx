@@ -1,7 +1,8 @@
 "use client";
 /* Library /shadowing — port shadow-header / daily-pick / filter-toolbar / video-grid
-   của shadowing.html (spec 2026-10-05). Server serialize videos + subtitles vào props. */
-import { useMemo, useState } from "react";
+   của shadowing.html (spec 2026-10-05). SSG: data tự fetch qua
+   /api/v1/content/shadowing (props giữ lại cho unit test). */
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { topicVi, type ShadowingVideo, type SubtitleSentence, type ShadowingTopic } from "@/content/shadowing";
 import { pickDaily, syntheticLines } from "@/lib/shadowing/daily";
@@ -16,7 +17,21 @@ import { PracticeOverlay } from "./practice-overlay";
 import { Button } from "@/components/ui/button";
 import { Play, FileText } from "@/components/ui/icon";
 
-type Props = { videos: ShadowingVideo[]; subtitlesByVideo: Record<string, SubtitleSentence[]> };
+type Props = { videos?: ShadowingVideo[]; subtitlesByVideo?: Record<string, SubtitleSentence[]> };
+
+function LibrarySkeleton() {
+  return (
+    <div aria-busy="true" className="flex flex-col gap-5">
+      <div className="h-16 animate-pulse rounded-card bg-surface-muted" />
+      <div className="h-56 animate-pulse rounded-[20px] bg-surface-muted" />
+      <div className="grid gap-3.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={i} className="h-64 animate-pulse rounded-card bg-surface-muted" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const LEVELS = ["Tất cả", "HSK 1", "HSK 2", "HSK 3", "HSK 4-6"] as const;
 const SPEEDS = ["Tất cả", "Chậm · dễ nghe", "Tự nhiên · bản xứ"] as const;
@@ -48,7 +63,35 @@ function SegRow({ label, children }: { label: string; children: React.ReactNode 
   );
 }
 
-export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
+export default function ShadowingLibrary({ videos: videosProp, subtitlesByVideo: subsProp }: Props) {
+  /* SSG: fetch on-mount khi không nhận props (unit test truyền props thẳng). */
+  const [fetched, setFetched] = useState<{
+    videos: ShadowingVideo[];
+    subtitlesByVideo: Record<string, SubtitleSentence[]>;
+  } | null>(null);
+  const [loadError, setLoadError] = useState(false);
+
+  useEffect(() => {
+    if (videosProp && subsProp) return;
+    let cancelled = false;
+    fetch("/api/v1/content/shadowing")
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json() as Promise<{ videos: ShadowingVideo[]; subtitles: Record<string, SubtitleSentence[]> }>;
+      })
+      .then((d) => {
+        if (!cancelled) setFetched({ videos: d.videos, subtitlesByVideo: d.subtitles });
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [videosProp, subsProp]);
+
+  const videos = videosProp ?? fetched?.videos;
+  const subtitlesByVideo = subsProp ?? fetched?.subtitlesByVideo;
   const { metrics, progressMap } = useShadowingProgress();
   const { speak } = useTts();
   const toast = useToast();
@@ -61,16 +104,16 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
   const [drawerVideo, setDrawerVideo] = useState<ShadowingVideo | null>(null);
   const [practiceVideo, setPracticeVideo] = useState<ShadowingVideo | null>(null);
 
-  const daily = useMemo(() => pickDaily(videos, subtitlesByVideo, new Date()), [videos, subtitlesByVideo]);
+  const daily = useMemo(
+    () => (videos && videos.length && subtitlesByVideo ? pickDaily(videos, subtitlesByVideo, new Date()) : null),
+    [videos, subtitlesByVideo],
+  );
 
-  const linesOf = (v: ShadowingVideo): SubtitleSentence[] => subtitlesByVideo[v.id] ?? syntheticLines(v);
-  const dailyLines = linesOf(daily);
-  const firstDaily = dailyLines[0];
-  const firstZh = firstDaily.parts.map((p) => p.zh).join("");
+  const linesOf = (v: ShadowingVideo): SubtitleSentence[] => subtitlesByVideo?.[v.id] ?? syntheticLines(v);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return videos.filter((v) => {
+    return (videos ?? []).filter((v) => {
       if (!levelMatches(v.hsk, level)) return false;
       if (topic !== "Tất cả" && topicVi[v.topic] !== topic) return false;
       if (speed === "Chậm · dễ nghe" && v.spd > 0.85) return false;
@@ -84,6 +127,20 @@ export default function ShadowingLibrary({ videos, subtitlesByVideo }: Props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videos, level, topic, speed, q, subtitlesByVideo]);
+
+  if (!videos || !subtitlesByVideo || !daily) {
+    return loadError ? (
+      <p className="py-10 text-center text-[13.5px] text-text-secondary" role="alert">
+        Không tải được dữ liệu shadowing. Vui lòng thử lại sau.
+      </p>
+    ) : (
+      <LibrarySkeleton />
+    );
+  }
+
+  const dailyLines = linesOf(daily);
+  const firstDaily = dailyLines[0];
+  const firstZh = firstDaily.parts.map((p) => p.zh).join("");
 
   const practiceMinutes = Math.max(1, Math.round(dailyLines.length / 4));
 
