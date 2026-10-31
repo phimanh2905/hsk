@@ -59,6 +59,7 @@ export default function Topbar() {
               <div className="flex min-w-0 items-center gap-1.5">
                 <Link
                   href="/shadowing"
+                  prefetch={false}
                   aria-label="Về Thư viện Shadowing"
                   className="inline-flex shrink-0 items-center gap-0.5 rounded-control px-1.5 py-1 text-[12px] font-bold text-text-secondary hover:text-text-primary focus-visible:outline-none focus-visible:ring-3 ring-action-focus"
                 >

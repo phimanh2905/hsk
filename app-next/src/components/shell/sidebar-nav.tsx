@@ -158,7 +158,7 @@ export default function SidebarNav() {
             (collapsed ? "lg:flex-col lg:gap-2 lg:px-3" : "")
           }
         >
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" prefetch={false} className="flex items-center gap-2.5">
             <span className="zh grid h-10 w-10 shrink-0 place-items-center rounded-control bg-text-primary text-[23px] font-extrabold leading-none text-surface-paper dark:bg-action-primary dark:text-white">
               奈
             </span>
@@ -197,6 +197,7 @@ export default function SidebarNav() {
                     <li key={href} className="relative">
                       <Link
                         href={href}
+                        prefetch={false}
                         aria-current={active ? "page" : undefined}
                         aria-label={collapsed ? label : undefined}
                         onClick={close}
