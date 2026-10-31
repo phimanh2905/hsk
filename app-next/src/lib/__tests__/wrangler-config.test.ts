@@ -20,4 +20,10 @@ describe("wrangler.jsonc (prod)", () => {
     const dbs = cfg.d1_databases as Array<{ binding: string; database_name: string }>;
     expect(dbs.some((d) => d.binding === "DB" && d.database_name === "hsk")).toBe(true);
   });
+
+  it("assets.run_worker_first chặn /api/* và các route gated về worker", () => {
+    const rwf = (cfg.assets as { run_worker_first?: unknown } | undefined)?.run_worker_first;
+    expect(Array.isArray(rwf)).toBe(true);
+    expect(rwf as string[]).toContain("/api/*");
+  });
 });
