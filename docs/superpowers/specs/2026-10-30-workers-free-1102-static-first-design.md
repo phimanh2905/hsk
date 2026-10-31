@@ -26,7 +26,7 @@ Lưu ý: lỗi gốc 13:21 UTC không có log (Workers Logs mới bật 13:44, k
 
 ## 3. Vì sao CPU cao (đọc codebase)
 
-1. **Mọi request đều chạy qua Next bundle trong Worker, kể cả trang đã prerender và RSC prefetch `?_rsc=`** — asset serving của OpenNext không bypass worker cho các đường này. Cold start isolate = eval + init toàn bộ module graph Next server + app: chi phí thuần CPU, tính vào request đầu tiên.
+1. **Mọi request đều chạy qua Next bundle trong Worker, kể cả trang đã prerender và RSC prefetch `?_rsc=`** — asset serving của OpenNext không bypass worker cho các đường này. Build thực tế có ~87 trang prerendered (○/●); request tới path prerendered vẫn invoke Worker qua OpenNext handler (không phải asset hit), còn static chunks/audio mới rơi vào asset. Prerendered page hit = 1 invocation OpenNext rẻ hơn SSR nhưng vẫn ăn CPU + quota. Cold start isolate = eval + init toàn bộ module graph Next server + app: chi phí thuần CPU, tính vào request đầu tiên.
 2. **RSC prefetch nhân request**: 1 navigation của user = 2–25 request `?_rsc=` (đã đo burst 25 request/2s). Các request này thường rẻ (13–100 ms) nhưng cộng dồn CPU trên cùng isolate.
 3. **Trang `ƒ` đọc D1 lúc render**: `/lesson/[book]/[page]`, `/shadowing/[...videoId]`, `/progress`, `/my-vocab`, `/my-grammar`, `/notebook/[kind]/[id]`… — SSR + better-auth session check (`src/lib/auth.ts`, getAuth lazy + cache; verify chữ ký là CPU thuần) → 100–300 ms.
 4. **11 `page.tsx` import tĩnh dataset từ `src/content/`** (radicals 1508 dòng, pinyin 1405 dòng…) làm module graph phình → cold start dài hơn. (Theo kiến trúc hiện tại chỉ `vocab.ts` là seed source, phần khác vẫn runtime-import — xem memory hardcode-audit.)
@@ -47,14 +47,14 @@ Dòng cuối là chìa khóa của phương án A.
 
 ### A. Static-first + API Worker tách nhỏ — KHUYẾN NGHỊ
 
-Chuyển Next sang build tĩnh: **mọi trang + prefetch là static assets** (Worker 0 lần invoke → 0 ms CPU, 0 quota); **16 API route** chạy trong một Worker trần nhỏ (Hono/raw fetch + better-auth + D1 — KHÔNG chứa Next bundle), mount cùng origin tại `/api/*` bằng routing run-worker-first.
+Chuyển Next sang build tĩnh: **mọi trang + prefetch là static assets** (Worker 0 lần invoke → 0 ms CPU, 0 quota); **21 API route** (thêm 5 reading so với đếm ban đầu 16) chạy trong một Worker trần nhỏ (Hono/raw fetch + better-auth + D1 — KHÔNG chứa Next bundle), mount cùng origin tại `/api/*` bằng routing run-worker-first.
 
 - **Vì đạt mục tiêu**: ~99% traffic (pages + `_rsc`) thành asset hit miễn phí; API còn lại cold start vài ms, session check nằm dưới 10 ms (cần đo, xem §5).
 - **Khả thi với repo**: 89 đường đã prerender sẵn; `/lesson/*` + `/shadowing/[videoId]` chuyển `generateStaticParams` (tập bài học hữu hạn, vocab-meta build-time biết đủ); root layout không dùng `cookies()/headers()`; `vocab-client.ts` đã có pattern client-fetch + promise-cache để các trang dynamic học theo. SEO giữ nguyên (HTML prerender; content đổi vốn đã = redeploy).
 - **Đánh đổi**: server-gate (`redirect /?login=1` ở `/progress`, `/my-vocab`…) → client-gate; an toàn vì API vẫn tự check session, dữ liệu user là localStorage + rows của chính họ. Effort ~1 PR pipeline lớn (build/CI/preview) + regression flow Google OAuth (cookie path, redirect URI — path không đổi nên Google Console giữ nguyên).
 - **Triển khai theo giai đoạn**:
   - **G0 (quick wins, làm ngay, có giá trị kể cả khi chưa đi tiếp)**: `prefetch={false}` cho link nặng; cache-control cho `/api/v1/content/*` (data bất biến theo deploy — `max-age` dài + `s-maxage`); thêm `"observability": { "enabled": true }` vào `wrangler.jsonc` (xem §6); seed `content_grammars` remote (xem §6).
-  - **G1**: SSG toàn bộ trang `ƒ` (lesson, shadowing detail, notebook detail, session pinyin) — dữ liệu nạp client-side qua API + cache, hoặc prerender.
+  - **G1**: SSG toàn bộ trang `ƒ` (lesson, shadowing detail, notebook detail, session pinyin) — dữ liệu nạp client-side qua API + cache, hoặc prerender. Đếm lại build thực tế còn **3 trang thiếu trong danh sách SSG**: `/pinyin` (bỏ searchParams), `/certificate-test/[level]`, `/roadmap/pinyin/session/[n]`. Lưu ý thêm 2 route id-vô-hạn `/lesson/custom/[deckId]`, `/notebook/[kind]/[id]` phải đổi sang query param + `_redirects` (spec mới 2026-10-31 đã chi tiết hoá).
   - **G2**: `output: export` + port 16 API sang Worker trần; assets serve trước, chỉ `/api/*` vào Worker; cập nhật `pnpm preview`/CI/e2e.
 
 ### B. Giữ nguyên OpenNext, chỉ tune
@@ -74,10 +74,12 @@ Hai spike này là spike thật (throwaway), chạy trên Worker/preview tạm, 
 
 ## 6. Việc phụ phát hiện khi debug (làm độc lập, không chờ phương án)
 
-1. **Remote D1 `hsk` thiếu seed `content_grammars`** → prod `GET /api/v1/content/grammar?level=1` **500** ("Không đọc được dữ liệu ngữ pháp"), quiz ngữ pháp roadmap đang hỏng thật. Fix: `pnpm wrangler d1 execute hsk --remote --file drizzle/seeds/content-grammars.sql` (cần user xác nhận — ghi DB production).
+1. **Remote D1 `hsk` thiếu seed `content_grammars`** → prod `GET /api/v1/content/grammar?level=1` **500** ("Không đọc được dữ liệu ngữ pháp"), quiz ngữ pháp roadmap đang hỏng thật. **ĐÃ FIX** — seed remote đã apply (300 rows, merge PR #25 kèm migration/seed remote 2026-10-31). Fix: `pnpm wrangler d1 execute hsk --remote --file drizzle/seeds/content-grammars.sql` (cần user xác nhận — ghi DB production).
 2. **Observability bị CI deploy ghi đè TẮT**: user bật trên dashboard, nhưng deploy 29/10 23:59 UTC theo `wrangler.jsonc` (không khai `observability`) reset về disabled (`cf workers get byehsk` → `enabled: false`; 0 event từ 00:00 UTC). Fix bền: thêm block `"observability": { "enabled": true }` vào `wrangler.jsonc` (thuộc G0).
 
 ## 7. Quyết định còn mở
 
 - Chọn A / B / C (khuyến nghị: A, theo G0→G1→G2 + 2 spike §5).
 - Nếu A: chốt vị trí API Worker (Worker riêng + routes, hay cùng Worker chứa assets với run_worker_first theo path) — thuộc design doc sau khi chọn phương án.
+
+→ Spec triển khai chi tiết: `2026-10-31-static-first-api-worker-design.md` (owner chọn A ngày 2026-10-31).
