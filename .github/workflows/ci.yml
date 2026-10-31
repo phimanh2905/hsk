@@ -26,12 +26,12 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
-      - name: Build worker (kiểm tra đóng gói được)
+      - name: Build static export (kiểm tra export được)
         if: github.ref != 'refs/heads/main'
-        # vendor:kokoro copy bundle @uzen/kokoro-js ra public/ (script `deploy`
-        # đã tự chạy bước này; gọi binary trực tiếp thì phải chạy tay trước).
-        run: pnpm vendor:kokoro && pnpm exec opennextjs-cloudflare build
-      # Deploy: script `deploy` tự xoá .next (bỏ SSG cache cũ) rồi build + deploy.
+        # build:static tự chạy vendor:kokoro, stash src/app/api rồi next build
+        # output:export vào out/.
+        run: pnpm build:static
+      # Deploy: script `deploy` tự build:static (xoá .next + out, stash api) rồi deploy.
       # NEXT_PUBLIC_SITE_URL lấy từ app-next/.env.production đã commit — KHÔNG
       # truyền env ở đây: biến rỗng sẽ đè file .env và làm `new URL("")` nổ lúc build.
       - name: Deploy to Cloudflare Workers

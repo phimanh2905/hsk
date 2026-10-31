@@ -21,9 +21,17 @@ describe("wrangler.jsonc (prod)", () => {
     expect(dbs.some((d) => d.binding === "DB" && d.database_name === "hsk")).toBe(true);
   });
 
-  it("assets.run_worker_first chặn /api/* và các route gated về worker", () => {
-    const rwf = (cfg.assets as { run_worker_first?: unknown } | undefined)?.run_worker_first;
+  it("assets trỏ ra out/ (build output:export), run_worker_first chỉ còn /api/*", () => {
+    const assets = cfg.assets as
+      | { directory?: string; run_worker_first?: unknown }
+      | undefined;
+    expect(assets?.directory).toBe("out");
+    const rwf = assets?.run_worker_first;
     expect(Array.isArray(rwf)).toBe(true);
-    expect(rwf as string[]).toContain("/api/*");
+    expect(rwf as string[]).toEqual(["/api/*"]);
+  });
+
+  it("main trỏ Worker script src/worker/index.ts (không còn bundle OpenNext)", () => {
+    expect(cfg.main).toBe("src/worker/index.ts");
   });
 });

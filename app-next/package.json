@@ -11,8 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
-    "preview": "pnpm vendor:kokoro && rm -rf .next && opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "pnpm vendor:kokoro && rm -rf .next && opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+    "build:static": "pnpm vendor:kokoro && rm -rf .next out && node scripts/build-static.mjs",
+    "preview": "pnpm build:static && pnpm wrangler dev",
+    "deploy": "pnpm build:static && pnpm wrangler deploy"
   },
   "dependencies": {
     "@uzen/kokoro-js": "1.2.4",

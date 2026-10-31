@@ -11,7 +11,14 @@ if (process.env.NODE_ENV === "development") {
   initOpenNextCloudflareForDev({ configPath: "./wrangler.dev.jsonc" });
 }
 
+/* EXPORT_BUILD=1: build output:export (HTML thật vào out/) cho static-first prod.
+   Route handlers không export được — scripts/build-static.mjs stash src/app/api
+   trước khi build. Build thường (dev/e2e/opennext) giữ nguyên cấu hình cũ. */
+const isExport = process.env.EXPORT_BUILD === "1";
+
 const nextConfig: NextConfig = {
+  ...(isExport ? { output: "export" as const } : {}),
+  /* headers() bị export bỏ qua — _headers thay thế ở out/ (copy từ public/). */
   /* strict-origin-when-cross-origin: embed YouTube cần Referer/origin (error 153
      "Video player configuration error"); Kokoro TTS same-origin vẫn nhận origin
      như cũ nên không hồi quy. */
