@@ -88,10 +88,10 @@ describe("MyVocabRoot", () => {
     expect(document.querySelector('[data-od-id="vocab-drawer"]')).toBeNull();
   });
 
-  it("onStudy: deck user → /lesson/custom/<id>; deck due → /review", () => {
+  it("onStudy: deck user → /lesson/custom?deck=<id>; deck due → /review", () => {
     render(<MyVocabRoot />);
     act(() => (getByOD("deck-nb-1").querySelector("button:last-of-type") as HTMLElement).click());
-    expect(pushMock).toHaveBeenCalledWith("/lesson/custom/nb-1");
+    expect(pushMock).toHaveBeenCalledWith("/lesson/custom?deck=nb-1");
     act(() => (getByOD("deck-due").querySelector("button:last-of-type") as HTMLElement).click());
     expect(pushMock).toHaveBeenCalledWith("/review");
   });

@@ -130,7 +130,7 @@ export default function MyVocabRoot() {
 
   const study = (id: string) => {
     if (id === "due" || id === "star") router.push("/review");
-    else router.push(`/lesson/custom/${id}`);
+    else router.push(`/lesson/custom?deck=${id}`);
   };
 
   return (
