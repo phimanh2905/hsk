@@ -116,6 +116,7 @@ export interface ProgressStoreApi {
   setStationProgress(levelId: string, stationId: string, rec: StationProgress): void;
   getRoadmapGate(id: string): RoadmapGateRec | null;
   setRoadmapGate(id: string, pct: number): void;
+  listRoadmapGates(): Record<string, RoadmapGateRec>;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -632,6 +633,20 @@ export class ProgressStore implements ProgressStoreApi {
       window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
     } catch {
       /* silent */
+    }
+  }
+
+  /* Mọi gate đã biết (dùng cho push payload hybrid-sync). */
+  listRoadmapGates(): Record<string, RoadmapGateRec> {
+    try {
+      const all = readJSON<Record<string, RoadmapGateRec>>(ROADMAP_GATES_KEY, {});
+      const out: Record<string, RoadmapGateRec> = {};
+      for (const [id, rec] of Object.entries(all)) {
+        if (rec && typeof rec === "object" && typeof rec.pct === "number" && typeof rec.at === "number") out[id] = rec;
+      }
+      return out;
+    } catch {
+      return {};
     }
   }
 

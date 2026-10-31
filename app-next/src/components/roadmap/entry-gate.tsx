@@ -11,7 +11,7 @@ import { pinyinExamples } from "@/content/pinyin";
 import { useTts } from "@/lib/tts/use-tts";
 import { progressStore } from "@/lib/store/progress-store";
 import { GATE_STORE_ID, PASS_PCT, type GateStatus } from "@/lib/roadmap-progress";
-import type { QuizQuestion } from "@/lib/station-quiz";
+import { pickDistractors, type QuizQuestion } from "@/lib/station-quiz";
 
 const GATE_TOTAL = 12;
 
@@ -31,39 +31,42 @@ function shuffle<T>(arr: T[], rng: () => number): T[] {
 
 /* Sinh 12 câu hỏi gate từ pinyinExamples: mỗi entry = 1 câu nghe
    (audioText = hanzi, options = 4 pinyin có dấu) + readVariant fallback
-   (options = 4 hanzi). Distractor unique theo cả hanzi lẫn pinyin. Pure. */
+   (options = 4 hanzi). Distractor ưu tiên gần-âm (cùng thanh mẫu qua
+   pickDistractors), giữ ràng buộc unique theo cả hanzi lẫn pinyin —
+   pinyin trùng map-hanzi thì thay bằng candidate sau. Pure. */
 export function buildGateQuestions(rng: () => number = Math.random): QuizQuestion[] {
   const pool = Object.values(pinyinExamples).flat();
   const shuffled = shuffle(pool, rng);
+  const hanziOfPinyin = new Map(pool.map((e) => [e[1]!, e[0]!]));
   const picked = shuffled.slice(0, GATE_TOTAL);
   return picked.map(([hanzi, pinyin]) => {
-    // 3 distractor: pinyin khác đáp án, hanzi chưa xuất hiện (kể cả đáp án),
-    // pinyin không trùng nhau trong options
-    const chosen: string[][] = [];
-    const seenHanzi = new Set<string>([hanzi]);
-    const seenPinyin = new Set<string>([pinyin]);
-    for (const e of shuffled) {
-      if (chosen.length >= 3) break;
-      if (e[1] === pinyin || seenHanzi.has(e[0]) || seenPinyin.has(e[1])) continue;
-      chosen.push(e);
-      seenHanzi.add(e[0]);
-      seenPinyin.add(e[1]);
+    // pickDistractors trả đầy đủ pool (tier gần-âm trước, shuffle trong tier);
+    // duyệt theo thứ tự đó, bỏ pinyin/hanzi đã thấy cho tới đủ 3 distractor.
+    const ordered = pickDistractors(pinyin!, shuffled.map((e) => e[1]!), rng, shuffled.length - 1);
+    const seenHanzi = new Set<string>([hanzi!]);
+    const chosenPinyin: string[] = [];
+    for (const py of ordered) {
+      if (chosenPinyin.length >= 3) break;
+      const h = hanziOfPinyin.get(py);
+      if (h === undefined || seenHanzi.has(h)) continue;
+      chosenPinyin.push(py);
+      seenHanzi.add(h);
     }
-    const pinyinOpts = shuffle(chosen.map((e) => e[1]!), rng);
-    pinyinOpts.push(pinyin);
+    const pinyinOpts = shuffle(chosenPinyin, rng);
+    pinyinOpts.push(pinyin!);
     const options = shuffle(pinyinOpts, rng);
-    const readOpts = shuffle(chosen.map((e) => e[0]!), rng);
-    readOpts.push(hanzi);
+    const readOpts = shuffle(chosenPinyin.map((py) => hanziOfPinyin.get(py)!), rng);
+    readOpts.push(hanzi!);
     const readOptions = shuffle(readOpts, rng);
     return {
       prompt: "🔊 Nghe và chọn phiên âm đúng",
       options,
-      answerIndex: options.indexOf(pinyin),
+      answerIndex: options.indexOf(pinyin!),
       listen: {
-        audioText: hanzi,
+        audioText: hanzi!,
         readPrompt: `Từ nào đọc là “${pinyin}”?`,
         readOptions,
-        readAnswerIndex: readOptions.indexOf(hanzi),
+        readAnswerIndex: readOptions.indexOf(hanzi!),
       },
     };
   });

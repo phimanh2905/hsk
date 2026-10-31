@@ -359,6 +359,20 @@ export const readingUsage = sqliteTable("reading_usage", {
   count: integer("count").notNull(),
 }, (t) => [primaryKey({ columns: [t.userId, t.day] })]);
 
+/* Cổng đầu vào Roadmap Journey v2 (spec 2026-10-30 follow-up): kết quả kiểm tra
+   tốt nhất per gate id. Best-of hai chiều theo pct — pct cao hơn thắng, tie giữ
+   server; không tombstone. `at` = epoch ms client của lần ghi thắng. */
+export const roadmapGates = sqliteTable(
+  "roadmap_gates",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    gateId: text("gate_id").notNull(), // gate id roadmap, vd "hsk1"
+    pct: integer("pct").notNull(), // 0..100
+    at: integer("at").notNull(), // epoch ms — client clock
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.gateId] })]
+);
+
 /* ================= Wave 5 — review logs (W5.2) =================
    Append-only log mọi lần ôn; sync 1 chiều push (merge append-only theo
    (user_id, item_key, reviewed_at)). Không tombstone, không merge field-wise. */

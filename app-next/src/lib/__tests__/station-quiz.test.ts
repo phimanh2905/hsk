@@ -2,6 +2,8 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
   buildStationQuestions,
   levelPool,
+  pickDistractors,
+  pinyinInitial,
   sampleMilestoneQuestions,
   sampleWarmupQuestions,
   submitStationResult,
@@ -160,6 +162,65 @@ describe("station-quiz v2", () => {
   it("maxQuestions không đổi quiz curated ngắn (≤8 câu)", () => {
     const qs = buildStationQuestions(s1, undefined, () => 0.42, { maxQuestions: 8 });
     expect(qs).toHaveLength(s1.vocab.length + s1.gram.length);
+  });
+});
+
+describe("pickDistractors gần-âm", () => {
+  const det = () => {
+    let s = 42;
+    return () => (s = (s * 16807) % 2147483647) / 2147483647;
+  };
+
+  it("ưu tiên cùng thanh mẫu: answer 'bā', pool đủ → distractors cùng đầu 'b'", () => {
+    const pool = ["bā", "bǎ", "bái", "bàn", "mā", "mà", "mǎi", "shì", "nǐ", "hǎo", "xué", "shēng"];
+    const d = pickDistractors("bā", pool, det(), 3);
+    expect(d).toHaveLength(3);
+    expect(d.every((x) => x !== "bā")).toBe(true);
+    expect(new Set(d).size).toBe(3);
+    expect(d.filter((x) => pinyinInitial(x) === "b").length).toBeGreaterThanOrEqual(2); // pool có 3 item 'b'
+  });
+
+  it("pool không đủ cùng initial → bù random, luôn đủ want và unique", () => {
+    const d = pickDistractors("bā", ["bǎ", "shì", "nǐ"], det(), 3);
+    expect(d).toHaveLength(3);
+    expect(new Set(d).size).toBe(3);
+    expect(d).toContain("bǎ");
+  });
+
+  it("pinyinInitial: ký tự đầu, ü giữ nguyên (kể cả biến thể có dấu), w/y giữ nguyên", () => {
+    expect(pinyinInitial("bā")).toBe("b");
+    expect(pinyinInitial("zhōng")).toBe("z");
+    expect(pinyinInitial("shì")).toBe("s");
+    expect(pinyinInitial("wǒ")).toBe("w");
+    expect(pinyinInitial("nǐ hǎo")).toBe("n");
+    expect(pinyinInitial("ǜ")).toBe("ü");
+  });
+
+  it("listenQuestion: ≥60% distractors cùng initial khi pool dày", () => {
+    // Pool điều chỉnh so với brief (bạn/好/学 không có ứng viên cùng thanh mẫu
+    // → ratio chỉ ~0.56): b×6, m×4, sh×2, n×1 để mọi đáp án có ≥1 cặp gần-âm.
+    const vocab: StationPool["vocab"] = [
+      ["八", "bā", "tám"], ["把", "bǎ", "nắm"], ["白", "bái", "trắng"], ["办", "bàn", "làm"], ["爸", "bà", "bố"], ["笔", "bǐ", "bút"],
+      ["妈", "mā", "mẹ"], ["骂", "mà", "mắng"], ["买", "mǎi", "mua"], ["马", "mǎ", "ngựa"],
+      ["是", "shì", "là"], ["生", "shēng", "sinh"],
+    ];
+    let same = 0, total = 0;
+    for (let i = 0; i < 100; i++) {
+      const qs = buildStationQuestions(
+        { id: "t", no: "T", kind: "lesson", title: "T", zh: "", meta: "", vocab, gram: [] },
+        { vocab, gram: [] },
+        det(),
+        { listenEvery: 1 },
+      );
+      for (const q of qs.filter((q) => q.listen)) {
+        total++;
+        const answer = q.listen!.audioText; // hanzi
+        const ansPinyin = vocab.find((v) => v[0] === answer)![1];
+        same += q.options.filter((o) => pinyinInitial(o) === pinyinInitial(ansPinyin) && o !== ansPinyin).length;
+      }
+    }
+    expect(total).toBe(1200); // listenEvery=1 → 12 câu nghe/build × 100 build
+    expect(same / (total * 3)).toBeGreaterThanOrEqual(0.6);
   });
 });
 

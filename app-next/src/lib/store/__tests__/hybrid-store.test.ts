@@ -603,4 +603,89 @@ describe("hybrid-store", () => {
     expect(lastBody().reviewLogs).toEqual([]);
     expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").reviewLogs).toBeUndefined();
   });
+
+  it("setRoadmapGate → dirty roadmapGates; payload chứa { gateId, pct, at }", async () => {
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+
+    progressStore.setRoadmapGate("hsk1", 83);
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").roadmapGates).toBe(1);
+
+    await vi.advanceTimersByTimeAsync(5000);
+    const body = lastBody();
+    const gates = body.roadmapGates as Array<{ gateId: string; pct: number; at: number }>;
+    expect(gates).toEqual([{ gateId: "hsk1", pct: 83, at: expect.any(Number) }]);
+    // sau flush dirty cleared
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").roadmapGates).toBeUndefined();
+  });
+
+  it("login merge-push gồm roadmapGates", async () => {
+    progressStore.setRoadmapGate("hsk2", 45);
+    initHybridStoreFn();
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], serverTime: 1 }), { status: 200 })
+    );
+    hybridOnAuthChangeFn(true);
+    await settle();
+    const body = lastBody();
+    expect(body.roadmapGates).toEqual([{ gateId: "hsk2", pct: 45, at: expect.any(Number) }]);
+  });
+
+  it("pull-apply: server gate cao hơn → local cập nhật qua best-of; server thấp hơn → local giữ + dirty lại", async () => {
+    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ hsk1: { pct: 83, at: 100 } }));
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          srs: [],
+          studyDay: [],
+          lessonProgress: [],
+          roadmapGates: [
+            { gateId: "hsk1", pct: 40, at: 200 }, // thấp hơn local 83 → giữ local
+            { gateId: "hsk2", pct: 90, at: 300 }, // mới → set 90
+          ],
+          serverTime: 1,
+        }),
+        { status: 200 }
+      )
+    );
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const gates = JSON.parse(localStorage.getItem("bye.roadmap.gates.v1") || "{}");
+    expect(gates.hsk1).toEqual({ pct: 83, at: 100 }); // best-of chặn hạ
+    expect(gates.hsk2).toEqual({ pct: 90, at: expect.any(Number) });
+    // hsk1 local cao hơn server → dirty tích để push lần sau
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").roadmapGates).toBe(1);
+  });
+
+  it("pull-apply gate pct BẰNG local → không ghi, không tái dirty vòng lặp", async () => {
+    localStorage.setItem("bye.roadmap.gates.v1", JSON.stringify({ hsk1: { pct: 83, at: 100 } }));
+    initHybridStoreFn();
+    hybridOnAuthChangeFn(true);
+    await settle();
+    fetchMock.mockClear();
+
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({ srs: [], studyDay: [], lessonProgress: [], roadmapGates: [{ gateId: "hsk1", pct: 83, at: 500 }], serverTime: 1 }),
+        { status: 200 }
+      )
+    );
+    progressStore.addXp(1);
+    await vi.advanceTimersByTimeAsync(5000);
+
+    const gates = JSON.parse(localStorage.getItem("bye.roadmap.gates.v1") || "{}");
+    expect(gates.hsk1).toEqual({ pct: 83, at: 100 }); // tie giữ local (at cũ)
+    expect(JSON.parse(localStorage.getItem(DIRTY_KEY) || "{}").roadmapGates).toBeUndefined();
+  });
 });
