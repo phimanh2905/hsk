@@ -1,6 +1,12 @@
 import { getVocab, getVocabMeta, getVocabLesson } from "@/lib/content/vocab";
 import { getGrammar } from "@/lib/content/grammar";
-import { getShadowingPlaylists, getShadowingSubtitles, getShadowingVideos } from "@/lib/content/shadowing";
+import {
+  getShadowingPlaylists,
+  getShadowingSubtitles,
+  getShadowingSubtitlesByVideo,
+  getShadowingVideoById,
+  getShadowingVideos,
+} from "@/lib/content/shadowing";
 import { getReadings } from "@/lib/content/readings";
 import { json } from "./json";
 
@@ -49,8 +55,25 @@ export async function handleContentGrammar(): Promise<Response> {
   }
 }
 
-export async function handleContentShadowing(): Promise<Response> {
+export async function handleContentShadowing(req: Request): Promise<Response> {
+  const { searchParams } = new URL(req.url);
+  const videoId = searchParams.get("video");
+  const playlistId = searchParams.get("playlist");
   try {
+    /* Filter ?video=<id> — trả 1 video + subtitles của nó (SSG detail page). */
+    if (videoId) {
+      const video = await getShadowingVideoById(videoId);
+      if (!video) return json({ error: "Không tìm thấy video" }, { status: 404 });
+      const subtitles = await getShadowingSubtitlesByVideo(videoId);
+      return json({ video, subtitles: subtitles ?? [] }, { headers: { "Cache-Control": CACHE } });
+    }
+    /* Filter ?playlist=<id> — trả playlist + videos con. */
+    if (playlistId) {
+      const playlist = (await getShadowingPlaylists()).find((p) => p.id === playlistId);
+      if (!playlist) return json({ error: "Không tìm thấy playlist" }, { status: 404 });
+      const videos = (await getShadowingVideos()).filter((v) => v.playlistId === playlistId);
+      return json({ playlist, videos }, { headers: { "Cache-Control": CACHE } });
+    }
     const [playlists, videos, subtitles] = await Promise.all([
       getShadowingPlaylists(),
       getShadowingVideos(),

@@ -51,12 +51,12 @@ describe("GET /api/v1/content/shadowing", () => {
     vi.mocked(getShadowingPlaylists).mockResolvedValue([]);
     vi.mocked(getShadowingVideos).mockResolvedValue([]);
     vi.mocked(getShadowingSubtitles).mockResolvedValue({});
-    const res = await GET_SHADOWING();
+    const res = await GET_SHADOWING(new Request("http://localhost/api/v1/content/shadowing"));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ playlists: [], videos: [], subtitles: {} });
   });
   it("500 khi nguồn lỗi", async () => {
     vi.mocked(getShadowingVideos).mockRejectedValue(new Error("DB down"));
-    expect((await GET_SHADOWING()).status).toBe(500);
+    expect((await GET_SHADOWING(new Request("http://localhost/api/v1/content/shadowing"))).status).toBe(500);
   });
 });

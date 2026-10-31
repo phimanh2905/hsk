@@ -1,38 +1,34 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getShadowingSubtitlesByVideo, getShadowingVideoById } from "@/lib/content/shadowing";
-import type { SubtitleSentence } from "@/content/shadowing";
-import ShadowingStudio from "./shadowing-studio";
-
-/* Content đọc D1 qua content layer → page luôn dynamic (không query lúc build,
-   generateStaticParams đã bỏ). */
-export const dynamic = "force-dynamic";
+import ShadowingRemote from "./shadowing-remote";
+import { shadowingVideos } from "@/content/shadowing";
 
 /* T7 — catch-all: video audio có id chứa "/" ("hsk1/lesson-1") → params là
-   mảng segment, join lại thành id gốc. YouTube id 1 segment giữ nguyên. */
-function idFromParams(videoId: string | string[]): string {
-  return Array.isArray(videoId) ? videoId.join("/") : videoId;
+   mảng segment, join lại thành id gốc. YouTube id 1 segment giữ nguyên.
+
+   SSG: generateStaticParams từ dataset seed (src/content/shadowing.ts,
+   build-time import — nguồn truth của content_shadowing_videos); data render
+   client-fetch qua /api/v1/content/shadowing?video= trong ShadowingRemote. */
+export const dynamicParams = false;
+
+export function generateStaticParams(): { videoId: string[] }[] {
+  return shadowingVideos.map((v) => ({ videoId: v.id.split("/") }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ videoId: string | string[] }> }): Promise<Metadata> {
   const { videoId } = await params;
-  const video = await getShadowingVideoById(idFromParams(videoId));
+  const id = Array.isArray(videoId) ? videoId.join("/") : videoId;
+  const video = shadowingVideos.find((v) => v.id === id);
   return { title: video ? `${video.title} | Shadowing | Bye HSK` : "Shadowing | Bye HSK" };
 }
-const FALLBACK_SUBS = (durSec: number): SubtitleSentence[] => [
-  { n: 1, start: 0, end: durSec || 60, parts: [{ zh: "(Video này chưa có bản chép — đang cập nhật.)" }], pinyin: "", vi: "" },
-];
 
 export default async function ShadowingVideoPage({ params }: { params: Promise<{ videoId: string | string[] }> }) {
   const { videoId } = await params;
-  const video = await getShadowingVideoById(idFromParams(videoId));
-  if (!video) notFound();
-  const subs = (await getShadowingSubtitlesByVideo(video.id)) ?? FALLBACK_SUBS(video.durSec);
+  const id = Array.isArray(videoId) ? videoId.join("/") : videoId;
   return (
     <div className="hz-breakout pb-28 lg:pb-6">
       {/* pt-0 + header studio -mt-6: header dính sát topbar, bù đúng py-6 của (app)/layout */}
       <div className="mx-auto max-w-[1280px] px-4 pt-0 pb-4 lg:px-6">
-        <ShadowingStudio video={video} subtitles={subs} />
+        <ShadowingRemote key={id} videoId={id} />
       </div>
     </div>
   );
