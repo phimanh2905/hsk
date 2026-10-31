@@ -221,6 +221,28 @@ export const contentShadowingSubtitles = sqliteTable(
   (t) => [primaryKey({ columns: [t.videoId, t.chunk] })]
 );
 
+type ReadingSentenceRow = { zh: string; py: string; vi: string; audio: string | null; durSec: number };
+type ReadingVocabRow = { word: string; py: string; vi: string };
+type ReadingQuestionRow = { q: string; qVi: string; options: string[]; answer: number; evidence?: { si: number; s: number; e: number }[] };
+
+export const contentReadings = sqliteTable(
+  "content_readings",
+  {
+    id: text("id").primaryKey(),
+    level: text("level").notNull(),
+    ord: integer("ord").notNull(),
+    title: text("title").notNull(),
+    titleVi: text("title_vi").notNull(),
+    sentences: text("sentences", { mode: "json" }).$type<ReadingSentenceRow[]>().notNull(),
+    vocab: text("vocab", { mode: "json" }).$type<ReadingVocabRow[]>().notNull(),
+    questions: text("questions", { mode: "json" }).$type<ReadingQuestionRow[]>().notNull(),
+    audioDir: text("audio_dir").notNull(),
+    chars: integer("chars").notNull(),
+    durationSec: integer("duration_sec").notNull(),
+  },
+  (t) => [index("content_readings_level_idx").on(t.level)]
+);
+
 /* ================= HybridStore sync (spec 2026-10-24 Wave 4) =================
    localStorage-first: client ghi local + debounce POST /api/v1/sync; server chỉ
    lưu + merge. updatedAt/deletedAt là EPOCH MS do client sinh (so sánh clock
@@ -275,6 +297,80 @@ export const lessonProgress = sqliteTable(
     deletedAt: integer("deleted_at"),
   },
     (t) => [primaryKey({ columns: [t.userId, t.book, t.lesson] })]
+);
+
+/* Kết quả quiz bài đọc (spec 2026-10-30 §4.4). Không tombstone — không xóa,
+   chỉ ghi đè theo updatedAt lớn hơn thắng. */
+export const readingProgress = sqliteTable(
+  "reading_progress",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    readingId: text("reading_id").notNull(), // content_readings.id
+    correct: integer("correct").notNull().default(0),
+    total: integer("total").notNull().default(0),
+    attempts: integer("attempts").notNull().default(0),
+    completedAt: text("completed_at"), // ISO client
+    updatedAt: integer("updated_at").notNull(), // epoch ms — client clock
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.readingId] }),
+    index("reading_progress_user_idx").on(t.userId),
+  ]
+);
+
+/* ================= Reading Phase 2 — "Bài của tôi" ================= */
+
+/* Shape doc của bài AI generate. Khai báo structural ở đây (không import từ
+   lib/server) để schema.ts không kéo code runtime; sync-merge Task 5 dùng
+   chính type này. */
+export type DraftDocRow = {
+  sentences: { zh: string; py: string; vi: string }[];
+  vocab: { word: string; py: string; vi: string }[];
+  questions: {
+    q: string;
+    qVi: string;
+    options: string[];
+    answer: number;
+    evidence: { si: number; s: number; e: number }[];
+  }[];
+};
+
+/* Bài đọc AI lưu per-user, sync qua HybridStore (tombstone 90 ngày). */
+export const readingDrafts = sqliteTable(
+  "reading_drafts",
+  {
+    id: text("id").primaryKey(), // rd_{random 12}
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    textZh: text("text_zh").notNull(),
+    doc: text("doc", { mode: "json" }).$type<DraftDocRow>().notNull(),
+    chars: integer("chars").notNull(),
+    createdAt: integer("created_at").notNull(), // epoch ms server
+    updatedAt: integer("updated_at").notNull(),
+    deletedAt: integer("deleted_at"), // tombstone 90 ngày (pattern sync)
+  },
+  (t) => [index("reading_drafts_user_idx").on(t.userId)]
+);
+
+/* Quota generate theo ngày, PK (userId, day) — upsert count+1. */
+export const readingUsage = sqliteTable("reading_usage", {
+  userId: text("user_id").notNull(),
+  day: text("day").notNull(), // "YYYY-MM-DD" theo Asia/Ho_Chi_Minh
+  count: integer("count").notNull(),
+}, (t) => [primaryKey({ columns: [t.userId, t.day] })]);
+
+/* Cổng đầu vào Roadmap Journey v2 (spec 2026-10-30 follow-up): kết quả kiểm tra
+   tốt nhất per gate id. Best-of hai chiều theo pct — pct cao hơn thắng, tie giữ
+   server; không tombstone. `at` = epoch ms client của lần ghi thắng. */
+export const roadmapGates = sqliteTable(
+  "roadmap_gates",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    gateId: text("gate_id").notNull(), // gate id roadmap, vd "hsk1"
+    pct: integer("pct").notNull(), // 0..100
+    at: integer("at").notNull(), // epoch ms — client clock
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.gateId] })]
 );
 
 /* ================= Wave 5 — review logs (W5.2) =================

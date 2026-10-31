@@ -4,17 +4,21 @@ import { and, eq, isNotNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getAuth } from "@/lib/auth";
 import { createDb } from "@/lib/db";
-import { srsCards, studyDay, lessonProgress, reviewLogs } from "@/lib/db/schema";
+import { srsCards, studyDay, lessonProgress, reviewLogs, readingProgress, readingDrafts, roadmapGates } from "@/lib/db/schema";
 import {
   mergeSrs,
   mergeStudyDay,
   mergeLesson,
+  mergeReadingProgress,
+  mergeReadingDrafts,
   SRS_STATUSES,
   type SrsSyncStatus,
   type SyncSrsRecord,
   type SyncStudyDayRecord,
   type SyncLessonRecord,
+  type SyncReadingRecord,
   type SyncReviewLogRecord,
+  type SyncDraftRecord,
 } from "@/lib/store/sync-merge";
 
 const bodySchema = z.object({
@@ -72,7 +76,61 @@ const bodySchema = z.object({
     )
     .max(1000)
     .default([]),
+  readingProgress: z
+    .array(
+      z.object({
+        readingId: z.string().min(1).max(200),
+        correct: z.number().int().min(0),
+        total: z.number().int().min(0),
+        attempts: z.number().int().min(0),
+        completedAt: z.string().max(50),
+        updatedAt: z.number().int().positive(),
+      })
+    )
+    .max(500)
+    .default([]),
+  readingDrafts: z
+    .array(
+      z.object({
+        id: z.string().min(1).max(64),
+        title: z.string().max(255),
+        textZh: z.string().max(4000),
+        doc: z.object({
+          sentences: z.array(z.object({ zh: z.string().max(2000), py: z.string().max(2000), vi: z.string().max(2000) })),
+          vocab: z.array(z.object({ word: z.string().max(200), py: z.string().max(200), vi: z.string().max(500) })),
+          questions: z.array(
+            z.object({
+              q: z.string().max(2000),
+              qVi: z.string().max(2000),
+              options: z.array(z.string().max(500)),
+              answer: z.number().int().min(0),
+              evidence: z
+                .array(z.object({ si: z.number().int().min(0), s: z.number().int().min(0), e: z.number().int().min(0) }))
+                .optional(),
+            })
+          ),
+        }),
+        chars: z.number().int().min(0),
+        createdAt: z.number().int().positive(),
+        updatedAt: z.number().int().positive(),
+        deletedAt: z.number().int().nullable(),
+      })
+    )
+    .max(100)
+    .default([]),
+  roadmapGates: z
+    .array(
+      z.object({
+        gateId: z.string().min(1).max(200),
+        pct: z.number().int().min(0).max(100),
+        at: z.number().int().positive(),
+      })
+    )
+    .max(500)
+    .default([]),
 });
+
+type SyncRoadmapGateRecord = { gateId: string; pct: number; at: number };
 
 /* Payload legacy chưa có SM-2: ease 2.5, lapses 0, interval map theo status
    (learned→7, known→21 — cùng mapping backfill migration 0007). */
@@ -289,7 +347,155 @@ export async function POST(req: NextRequest) {
       }
   }
 
-  // 5) Purge tombstone >90 ngày
+  // 5) readingProgress (spec 2026-10-30 §4.4 — không tombstone).
+  const incReadingMap = new Map<string, SyncReadingRecord>();
+  for (const inc of body.readingProgress) {
+    const prev = incReadingMap.get(inc.readingId);
+    incReadingMap.set(inc.readingId, prev ? mergeReadingProgress(prev, inc) : inc);
+  }
+  const existingReadings = await db.select().from(readingProgress).where(eq(readingProgress.userId, userId));
+  const readingMap = new Map(existingReadings.map((r) => [r.readingId, r]));
+  const mergedReadings: SyncReadingRecord[] = [...incReadingMap.values()].map((inc) => {
+    const ex = readingMap.get(inc.readingId);
+    if (!ex) return inc;
+    return mergeReadingProgress(
+      {
+        readingId: ex.readingId,
+        correct: ex.correct,
+        total: ex.total,
+        attempts: ex.attempts,
+        completedAt: ex.completedAt ?? "",
+        updatedAt: ex.updatedAt,
+      },
+      inc
+    );
+  });
+  if (mergedReadings.length) {
+    for (const part of chunk(mergedReadings.map((r) => ({
+          userId,
+          readingId: r.readingId,
+          correct: r.correct,
+          total: r.total,
+          attempts: r.attempts,
+          completedAt: r.completedAt,
+          updatedAt: r.updatedAt,
+        })))) {
+        await db
+          .insert(readingProgress)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [readingProgress.userId, readingProgress.readingId],
+          set: {
+            correct: sql`excluded.correct`,
+            total: sql`excluded.total`,
+            attempts: sql`excluded.attempts`,
+            completedAt: sql`excluded.completed_at`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        });
+      }
+  }
+
+  // 6) readingDrafts (spec 2026-10-30 §4.3 — tombstone nằm trên record, merge
+  //    per-id updatedAt thắng; PK id — createdAt bất biến sau khi tạo).
+  const incDraftMap = new Map<string, SyncDraftRecord>();
+  for (const inc of body.readingDrafts) {
+    const prev = incDraftMap.get(inc.id);
+    incDraftMap.set(inc.id, prev ? mergeReadingDrafts(prev, inc) : inc);
+  }
+  const existingDrafts = await db.select().from(readingDrafts).where(eq(readingDrafts.userId, userId));
+  const draftMap = new Map(existingDrafts.map((r) => [r.id, r]));
+  const mergedDrafts: SyncDraftRecord[] = [...incDraftMap.values()].map((inc) => {
+    const ex = draftMap.get(inc.id);
+    if (!ex) return inc;
+    return mergeReadingDrafts(
+      {
+        id: ex.id,
+        title: ex.title,
+        textZh: ex.textZh,
+        doc: ex.doc,
+        chars: ex.chars,
+        createdAt: ex.createdAt,
+        updatedAt: ex.updatedAt,
+        deletedAt: ex.deletedAt,
+      },
+      inc
+    );
+  });
+  if (mergedDrafts.length) {
+    // DraftDocRow yêu cầu evidence luôn có — record từ client có thể thiếu
+    const toRowDoc = (r: SyncDraftRecord) => ({
+      ...r.doc,
+      questions: r.doc.questions.map((q) => ({ ...q, evidence: q.evidence ?? [] })),
+    });
+    for (const part of chunk(mergedDrafts.map((r) => ({
+          userId,
+          id: r.id,
+          title: r.title,
+          textZh: r.textZh,
+          doc: toRowDoc(r),
+          chars: r.chars,
+          createdAt: r.createdAt,
+          updatedAt: r.updatedAt,
+          deletedAt: r.deletedAt,
+        })))) {
+        await db
+          .insert(readingDrafts)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [readingDrafts.id],
+          // PK là id đơn (client sinh) — id có thể trùng draft của user khác.
+          // setWhere chặn UPDATE khi row hiện tại thuộc user khác: attacker không
+          // đè được title/textZh/doc của nạn nhân (row giữ nguyên, insert bị skip).
+          setWhere: eq(readingDrafts.userId, userId),
+          set: {
+            title: sql`excluded.title`,
+            textZh: sql`excluded.text_zh`,
+            doc: sql`excluded.doc`,
+            chars: sql`excluded.chars`,
+            updatedAt: sql`excluded.updated_at`,
+            deletedAt: sql`excluded.deleted_at`,
+          },
+        });
+      }
+  }
+
+  // 6b) roadmapGates — best-of hai chiều theo pct: incoming cao hơn thắng,
+  // tie/thấp hơn giữ server. Không tombstone.
+  const incGateMap = new Map<string, SyncRoadmapGateRecord>();
+  for (const inc of body.roadmapGates) {
+    const prev = incGateMap.get(inc.gateId);
+    incGateMap.set(inc.gateId, !prev || inc.pct > prev.pct ? inc : prev);
+  }
+  const existingGates = await db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId));
+  const gateMap = new Map(existingGates.map((r) => [r.gateId, r]));
+  const mergedGates: SyncRoadmapGateRecord[] = [...incGateMap.values()].map((inc) => {
+    const ex = gateMap.get(inc.gateId);
+    if (!ex) return inc;
+    return inc.pct > ex.pct ? inc : { gateId: ex.gateId, pct: ex.pct, at: ex.at };
+  });
+  if (mergedGates.length) {
+    for (const part of chunk(mergedGates.map((r) => ({
+          userId,
+          gateId: r.gateId,
+          pct: r.pct,
+          at: r.at,
+        })))) {
+        await db
+          .insert(roadmapGates)
+          .values(part)
+            .onConflictDoUpdate({
+          target: [roadmapGates.userId, roadmapGates.gateId],
+          // merge đã tính giá trị cuối ở bước map → ghi đè bằng excluded
+          set: {
+            pct: sql`excluded.pct`,
+            at: sql`excluded.at`,
+          },
+        });
+      }
+  }
+
+  // 7) Purge tombstone >90 ngày
   await db
     .delete(srsCards)
     .where(and(eq(srsCards.userId, userId), isNotNull(srsCards.deletedAt), lt(srsCards.deletedAt, now - TOMBSTONE_TTL_MS)));
@@ -302,13 +508,19 @@ export async function POST(req: NextRequest) {
         lt(lessonProgress.deletedAt, now - TOMBSTONE_TTL_MS)
       )
     );
+  await db
+    .delete(readingDrafts)
+    .where(and(eq(readingDrafts.userId, userId), isNotNull(readingDrafts.deletedAt), lt(readingDrafts.deletedAt, now - TOMBSTONE_TTL_MS)));
 
-  // 6) Trả về toàn bộ state server của user sau merge
-  const [finalSrs, finalDays, finalLessons, finalLogs] = await Promise.all([
+  // 7) Trả về toàn bộ state server của user sau merge
+  const [finalSrs, finalDays, finalLessons, finalLogs, finalReadings, finalDrafts, finalGates] = await Promise.all([
     db.select().from(srsCards).where(eq(srsCards.userId, userId)),
     db.select().from(studyDay).where(eq(studyDay.userId, userId)),
     db.select().from(lessonProgress).where(eq(lessonProgress.userId, userId)),
     db.select().from(reviewLogs).where(eq(reviewLogs.userId, userId)),
+    db.select().from(readingProgress).where(eq(readingProgress.userId, userId)),
+    db.select().from(readingDrafts).where(eq(readingDrafts.userId, userId)),
+    db.select().from(roadmapGates).where(eq(roadmapGates.userId, userId)),
   ]);
 
   const srsOut: SyncSrsRecord[] = finalSrs.map((r) => ({
@@ -345,11 +557,39 @@ export async function POST(req: NextRequest) {
     reviewedAt: r.reviewedAt,
   }));
 
+  const readingOut: SyncReadingRecord[] = finalReadings.map((r) => ({
+    readingId: r.readingId,
+    correct: r.correct,
+    total: r.total,
+    attempts: r.attempts,
+    completedAt: r.completedAt ?? "",
+    updatedAt: r.updatedAt,
+  }));
+
+  const draftsOut: SyncDraftRecord[] = finalDrafts.map((r) => ({
+    id: r.id,
+    title: r.title,
+    textZh: r.textZh,
+    doc: r.doc,
+    chars: r.chars,
+    createdAt: r.createdAt,
+    updatedAt: r.updatedAt,
+    deletedAt: r.deletedAt,
+  }));
+  const gatesOut: SyncRoadmapGateRecord[] = finalGates.map((r) => ({
+    gateId: r.gateId,
+    pct: r.pct,
+    at: r.at,
+  }));
+
   return NextResponse.json({
     serverTime: now,
     srs: srsOut,
     studyDay: studyDayOut,
     lessonProgress: lessonOut,
     reviewLogs: reviewLogsOut,
+    readingProgress: readingOut,
+    readingDrafts: draftsOut,
+    roadmapGates: gatesOut,
   });
 }

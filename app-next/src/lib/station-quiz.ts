@@ -21,7 +21,36 @@ export type StationPool = {
   gram: Array<[string, string]>;          // [tên mẫu, ý nghĩa]
 };
 
-type Rng = () => number;
+export type Rng = () => number;
+
+/** Thanh mẫu gần-âm (F2): ký tự đầu của pinyin. Các biến thể ü có dấu
+    (ǖǘǚǜ) quy về "ü"; w/y giữ nguyên (không quy về u/i); đa âm tiết chỉ
+    lấy âm đầu. */
+export function pinyinInitial(p: string): string {
+  const c = p.trimStart()[0] ?? "";
+  return "ǖǘǚǜ".includes(c) ? "ü" : c;
+}
+
+function pickDistractorsBy(
+  answer: string,
+  candidates: string[],
+  rng: Rng,
+  want: number,
+  keyOf: (c: string) => string,
+): string[] {
+  const uniq = [...new Set(candidates.filter((c) => c !== answer))];
+  const ansKey = keyOf(answer);
+  const same = shuffle(uniq.filter((c) => keyOf(c) === ansKey), rng);
+  const rest = shuffle(uniq.filter((c) => keyOf(c) !== ansKey), rng);
+  return [...same, ...rest].slice(0, want);
+}
+
+/** Distractor gần-âm: ưu tiên cùng thanh mẫu (pinyinInitial) rồi shuffle
+    trong tier, thiếu bù random từ phần còn lại. Trả đúng want item unique
+    ≠ answer (nếu pool đủ), không sort output theo similarity. */
+export function pickDistractors(answer: string, candidates: string[], rng: Rng, want: number): string[] {
+  return pickDistractorsBy(answer, candidates, rng, want, pinyinInitial);
+}
 
 function shuffle<T>(arr: T[], rng: Rng): T[] {
   const a = [...arr];
@@ -65,6 +94,35 @@ function gramOptionsFor(
   return optionsFor(answer, candidates, rng);
 }
 
+/** Câu nghe: phát hanzi (audioText), chọn pinyin đúng trong 4 phiên âm có dấu;
+    readVariant hỏi ngược "đọc là {pinyin}" → chọn hanzi. Distractor ưu tiên
+    gần-âm (cùng thanh mẫu — minimal pairs), pool mỏng thì bù random. */
+function listenQuestion(w: [string, string, string], pool: StationPool, rng: Rng): QuizQuestion {
+  const [zh, py] = w;
+  const hanziPinyin = new Map(pool.vocab.map(([z, p]) => [z, p]));
+  const pinyinPicks = pickDistractors(py, pool.vocab.map(([, p]) => p), rng, 3);
+  const readPicks = pickDistractorsBy(
+    zh,
+    pool.vocab.map(([z]) => z),
+    rng,
+    3,
+    (z) => pinyinInitial(hanziPinyin.get(z) ?? ""),
+  );
+  const options = shuffle([py, ...pinyinPicks], rng);
+  const readOptions = shuffle([zh, ...readPicks], rng);
+  return {
+    prompt: "Nghe từ rồi chọn phiên âm đúng.",
+    options,
+    answerIndex: options.indexOf(py),
+    listen: {
+      audioText: zh,
+      readPrompt: `Từ nào đọc là “${py}”?`,
+      readOptions,
+      readAnswerIndex: readOptions.indexOf(zh),
+    },
+  };
+}
+
 /** Câu hỏi nghĩa↔từ cho 1 từ vựng (dùng chung station + milestone). */
 function vocabMeaningQuestion(w: [string, string, string], pool: StationPool, rng: Rng, toZh?: boolean): QuizQuestion {
   const [zh, , vn] = w;
@@ -75,26 +133,6 @@ function vocabMeaningQuestion(w: [string, string, string], pool: StationPool, rn
   return flip
     ? { prompt: `Từ nào có nghĩa là “${vn}”?`, options, answerIndex }
     : { prompt: `“${zh}” có nghĩa là gì?`, options, answerIndex };
-}
-
-/** Câu nghe: phát hanzi (audioText), chọn pinyin đúng trong 4 phiên âm có dấu;
-    readVariant hỏi ngược "đọc là {pinyin}" → chọn hanzi. Distractor ưu tiên
-    pinyin/hanzi khác trong pool. */
-function listenQuestion(w: [string, string, string], pool: StationPool, rng: Rng): QuizQuestion {
-  const [zh, py] = w;
-  const pinyinOpts = optionsFor(py, pool.vocab.map(([, p]) => p), rng);
-  const readOpts = optionsFor(zh, pool.vocab.map(([z]) => z), rng);
-  return {
-    prompt: "Nghe từ rồi chọn phiên âm đúng.",
-    options: pinyinOpts.options,
-    answerIndex: pinyinOpts.answerIndex,
-    listen: {
-      audioText: zh,
-      readPrompt: `Từ nào đọc là “${py}”?`,
-      readOptions: readOpts.options,
-      readAnswerIndex: readOpts.answerIndex,
-    },
-  };
 }
 
 export function buildStationQuestions(

@@ -48,11 +48,46 @@ export type SyncReviewLogRecord = {
   reviewedAt: number;
 };
 
+/* Domain sync thứ 5 — quiz bài đọc (spec 2026-10-30 §4.4). Không tombstone. */
+export type SyncReadingRecord = {
+  readingId: string;
+  correct: number;
+  total: number;
+  attempts: number;
+  completedAt: string;
+  updatedAt: number;
+};
+
+/* Domain sync thứ 6 — bài đọc "Bài của tôi" (spec 2026-10-30 §4.3). Structural
+   mirror của SavedReadingDraft (progress-store) — không import store. */
+export type SyncDraftRecord = {
+  id: string;
+  title: string;
+  textZh: string;
+  doc: {
+    sentences: { zh: string; py: string; vi: string }[];
+    vocab: { word: string; py: string; vi: string }[];
+    questions: {
+      q: string;
+      qVi: string;
+      options: string[];
+      answer: number;
+      evidence?: { si: number; s: number; e: number }[];
+    }[];
+  };
+  chars: number;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt: number | null;
+};
+
 export type SyncPayload = {
   srs: SyncSrsRecord[];
   studyDay: SyncStudyDayRecord[];
   lessonProgress: SyncLessonRecord[];
   reviewLogs: SyncReviewLogRecord[];
+  readingProgress: SyncReadingRecord[];
+  readingDrafts: SyncDraftRecord[];
 };
 
 /** Tombstone thắng bản sống khi xóa xảy ra tại/sau lần ghi cuối của bản sống. */
@@ -108,8 +143,7 @@ export function mergeLesson(a: SyncLessonRecord, b: SyncLessonRecord): SyncLesso
 }
 
 /** W5.2 — reviewLogs: union theo khóa `${itemKey}@${reviewedAt}`, giữ bản a khi
-    trùng (append-only). Output sort theo khóa → tính xác định 2 chiều. */
-export function mergeReviewLogs(a: SyncReviewLogRecord[], b: SyncReviewLogRecord[]): SyncReviewLogRecord[] {
+    trùng (append-only). Output sort theo khóa → tính xác định 2 chiều. */export function mergeReviewLogs(a: SyncReviewLogRecord[], b: SyncReviewLogRecord[]): SyncReviewLogRecord[] {
   const byKey = new Map<string, SyncReviewLogRecord>();
   for (const rec of a) byKey.set(`${rec.itemKey}@${rec.reviewedAt}`, rec);
   for (const rec of b) {
@@ -117,4 +151,34 @@ export function mergeReviewLogs(a: SyncReviewLogRecord[], b: SyncReviewLogRecord
     if (!byKey.has(k)) byKey.set(k, rec);
   }
   return [...byKey.entries()].sort(([x], [y]) => (x < y ? -1 : x > y ? 1 : 0)).map(([, rec]) => rec);
+}
+
+/* Spec 2026-10-30 §4.3 — readingDrafts: toàn bộ trường theo bản updatedAt lớn hơn.
+   Tombstone chỉ thắng khi xóa xảy ra tại/sau lần ghi cuối của bản sống
+   (deletedAt >= updatedAt bên còn lại) — khác resolveTombstone (dùng cho
+   lessonProgress) nơi tombstone luôn thắng khi <= updatedAt winner. */
+export function mergeReadingDrafts(a: SyncDraftRecord, b: SyncDraftRecord): SyncDraftRecord {
+  const winner = a.updatedAt >= b.updatedAt ? a : b;
+  const loser = a.updatedAt >= b.updatedAt ? b : a;
+  const deletedAt =
+    winner.deletedAt != null
+      ? winner.deletedAt
+      : loser.deletedAt != null && loser.deletedAt >= winner.updatedAt
+        ? loser.deletedAt
+        : null;
+  return { ...winner, updatedAt: Math.max(a.updatedAt, b.updatedAt), deletedAt };
+}
+
+/* Spec 2026-10-30 §4.4 — readingProgress: counter (correct/attempts) max,
+   trường còn lại của bản updatedAt lớn hơn. Không tombstone. */
+export function mergeReadingProgress(a: SyncReadingRecord, b: SyncReadingRecord): SyncReadingRecord {
+  const winner = a.updatedAt >= b.updatedAt ? a : b;
+  return {
+    readingId: a.readingId,
+    correct: Math.max(a.correct, b.correct),
+    total: winner.total,
+    attempts: Math.max(a.attempts, b.attempts),
+    completedAt: winner.completedAt,
+    updatedAt: Math.max(a.updatedAt, b.updatedAt),
+  };
 }

@@ -45,8 +45,33 @@ export type HanziQuizRec = {
   last: number;     // epoch ms lần hoàn thành gần nhất
 };
 
-/* Bản nháp bài đọc (Wave 0 W0.4 — /reading auto-save), key bye.reading.drafts */
-export type ReadingDraft = { text: string; at: string };
+/* Bài đọc "Bài của tôi" (spec 2026-10-30 §4.3), key nhai.reading.drafts2 — thay
+   text-draft bye.reading.drafts cũ: draft-doc hoàn chỉnh do AI sinh, tombstone
+   deletedAt để sync. */
+export type SavedReadingDraft = {
+  id: string;
+  title: string;
+  textZh: string;
+  doc: {
+    sentences: { zh: string; py: string; vi: string }[];
+    vocab: { word: string; py: string; vi: string }[];
+    questions: {
+      q: string;
+      qVi: string;
+      options: string[];
+      answer: number;
+      evidence?: { si: number; s: number; e: number }[];
+    }[];
+  };
+  chars: number;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt?: number;
+};
+
+/* Kết quả quiz bài đọc (spec 2026-10-30 §4.4), key nhai.reading.progress:
+   Record<readingId, {correct, total, attempts, completedAt}> — correct giữ max. */
+export type ReadingProgressRec = { correct: number; total: number; attempts: number; completedAt: string };
 
 /* Stats chép chính tả per video/line (Task 2), key bye.shadowing.dictStats.<videoId> */
 export type DictLineStat = { lastScore: number; errors: number; replays: number };
@@ -91,6 +116,7 @@ export interface ProgressStoreApi {
   setStationProgress(levelId: string, stationId: string, rec: StationProgress): void;
   getRoadmapGate(id: string): RoadmapGateRec | null;
   setRoadmapGate(id: string, pct: number): void;
+  listRoadmapGates(): Record<string, RoadmapGateRec>;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -111,8 +137,11 @@ export interface ProgressStoreApi {
   recordHanziQuiz(ch: string, score?: number): void;
   getSoundRulesBest(): number;
   recordSoundRulesResult(correct: number): void;
-  getReadingDrafts(): ReadingDraft[];
-  saveReadingDraft(text: string): void;
+  getReadingDrafts(): SavedReadingDraft[];
+  upsertReadingDraft(d: SavedReadingDraft): void;
+  removeReadingDraft(id: string): void;
+  getReadingProgress(): Record<string, ReadingProgressRec>;
+  saveReadingProgress(id: string, correct: number, total: number): ReadingProgressRec;
   getDictStats(videoId: string): DictStats;
   recordDictCheck(videoId: string, lineN: number, score: number, errors: number): void;
   recordReplay(videoId: string, lineN: number): void;
@@ -220,6 +249,38 @@ function writeJSON(key: string, value: unknown): void {
   } catch {
     /* silent */
   }
+}
+
+/* ---------- reading "Bài của tôi" helpers ---------- */
+
+const READING_DRAFTS2_KEY = "nhai.reading.drafts2";
+const READING_TOMBSTONE_CAP = 100;
+
+export function isSavedReadingDraft(d: unknown): d is SavedReadingDraft {
+  if (!d || typeof d !== "object") return false;
+  const r = d as SavedReadingDraft;
+  const doc = r.doc;
+  return (
+    typeof r.id === "string" &&
+    r.id.length > 0 &&
+    typeof r.title === "string" &&
+    typeof r.textZh === "string" &&
+    !!doc &&
+    typeof doc === "object" &&
+    Array.isArray(doc.sentences) &&
+    Array.isArray(doc.vocab) &&
+    Array.isArray(doc.questions) &&
+    typeof r.chars === "number" &&
+    typeof r.createdAt === "number" &&
+    typeof r.updatedAt === "number" &&
+    (r.deletedAt === undefined || typeof r.deletedAt === "number")
+  );
+}
+
+/* Đọc raw (bao gồm tombstone) — validate từng record, lạ bị lọc. */
+function readRawReadingDrafts(): SavedReadingDraft[] {
+  const v = readJSON<unknown>(READING_DRAFTS2_KEY, []);
+  return Array.isArray(v) ? v.filter(isSavedReadingDraft) : [];
 }
 
 /* Ngày hiện tại theo múi giờ VN (Asia/Ho_Chi_Minh), dạng YYYY-MM-DD. */
@@ -575,6 +636,20 @@ export class ProgressStore implements ProgressStoreApi {
     }
   }
 
+  /* Mọi gate đã biết (dùng cho push payload hybrid-sync). */
+  listRoadmapGates(): Record<string, RoadmapGateRec> {
+    try {
+      const all = readJSON<Record<string, RoadmapGateRec>>(ROADMAP_GATES_KEY, {});
+      const out: Record<string, RoadmapGateRec> = {};
+      for (const [id, rec] of Object.entries(all)) {
+        if (rec && typeof rec === "object" && typeof rec.pct === "number" && typeof rec.at === "number") out[id] = rec;
+      }
+      return out;
+    } catch {
+      return {};
+    }
+  }
+
   /* ---------- migration 3 format SRS cũ ---------- */
 
   migrateLegacySrs(): void {
@@ -793,24 +868,69 @@ export class ProgressStore implements ProgressStoreApi {
     dispatchProgress();
   }
 
-  /* ---------- reading drafts (bye.reading.drafts — Wave 0 W0.4) ---------- */
+  /* ---------- reading "Bài của tôi" (nhai.reading.drafts2 — spec 2026-10-30 §4.3) ---------- */
 
-  getReadingDrafts(): ReadingDraft[] {
-    const v = readJSON<ReadingDraft[]>("bye.reading.drafts", []);
-    if (!Array.isArray(v)) return [];
-    return v.filter(
-      (d): d is ReadingDraft => !!d && typeof d === "object" && typeof d.text === "string" && typeof d.at === "string"
-    );
+  getReadingDrafts(): SavedReadingDraft[] {
+    return readRawReadingDrafts().filter((d) => d.deletedAt === undefined);
   }
 
-  saveReadingDraft(text: string): void {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    const drafts = this.getReadingDrafts();
-    if (drafts[0]?.text === trimmed) return; // dán lại đúng bài gần nhất — không nhân bản
-    drafts.unshift({ text: trimmed, at: new Date().toISOString() });
-    writeJSON("bye.reading.drafts", drafts.slice(0, 5));
+  upsertReadingDraft(d: SavedReadingDraft): void {
+    if (!isSavedReadingDraft(d)) return;
+    const all = readRawReadingDrafts();
+    const i = all.findIndex((x) => x.id === d.id);
+    if (i >= 0) all[i] = d;
+    else all.push(d);
+    writeJSON(READING_DRAFTS2_KEY, all);
     dispatchProgress();
+  }
+
+  removeReadingDraft(id: string): void {
+    const all = readRawReadingDrafts();
+    const i = all.findIndex((x) => x.id === id);
+    if (i < 0 || all[i].deletedAt !== undefined) return;
+    const deletedAt = Date.now();
+    all[i] = { ...all[i], deletedAt, updatedAt: deletedAt };
+    // tombstone quá cap bị purge hẳn (cũ nhất theo deletedAt)
+    const tombs = all.filter((d) => d.deletedAt !== undefined).sort((a, b) => a.deletedAt! - b.deletedAt!);
+    const purge = new Set(tombs.slice(0, Math.max(0, tombs.length - READING_TOMBSTONE_CAP)).map((d) => d.id));
+    writeJSON(READING_DRAFTS2_KEY, all.filter((d) => !purge.has(d.id)));
+    dispatchProgress();
+  }
+
+  /* ---------- reading quiz progress (nhai.reading.progress — spec 2026-10-30 §4.4) ---------- */
+
+  getReadingProgress(): Record<string, ReadingProgressRec> {
+    const v = readJSON<Record<string, ReadingProgressRec>>("nhai.reading.progress", {});
+    if (!v || typeof v !== "object") return {};
+    const out: Record<string, ReadingProgressRec> = {};
+    for (const [id, rec] of Object.entries(v)) {
+      if (
+        rec &&
+        typeof rec === "object" &&
+        typeof rec.correct === "number" &&
+        typeof rec.total === "number" &&
+        typeof rec.attempts === "number" &&
+        typeof rec.completedAt === "string"
+      ) {
+        out[id] = rec;
+      }
+    }
+    return out;
+  }
+
+  saveReadingProgress(id: string, correct: number, total: number): ReadingProgressRec {
+    const all = this.getReadingProgress();
+    const cur = all[id];
+    const rec: ReadingProgressRec = {
+      correct: Math.max(typeof cur?.correct === "number" ? cur.correct : 0, correct),
+      total,
+      attempts: (typeof cur?.attempts === "number" ? cur.attempts : 0) + 1,
+      completedAt: new Date().toISOString(),
+    };
+    all[id] = rec;
+    writeJSON("nhai.reading.progress", all);
+    dispatchProgress();
+    return rec;
   }
 
   /* ---------- dictation stats (bye.shadowing.dictStats.<videoId> — Task 2) ---------- */

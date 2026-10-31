@@ -31,16 +31,23 @@ function req(body?: unknown) {
   }) as unknown as import("next/server").NextRequest;
 }
 
-/** Route select 7 lần: 3 domain existing + 4 domain final (thêm reviewLogs). */
+/** Route select 14 lần: 7 domain existing (srs, studyDay, lessonProgress,
+    readingProgress, readingDrafts, roadmapGates) + 7 domain final (thêm reviewLogs). */
 function queueSelects(existing: Record<string, unknown[]>, final: Record<string, unknown[]>) {
   where
     .mockResolvedValueOnce(existing.srs ?? [])
     .mockResolvedValueOnce(existing.studyDay ?? [])
     .mockResolvedValueOnce(existing.lessonProgress ?? [])
+    .mockResolvedValueOnce(existing.readingProgress ?? [])
+    .mockResolvedValueOnce(existing.readingDrafts ?? [])
+    .mockResolvedValueOnce(existing.roadmapGates ?? [])
     .mockResolvedValueOnce(final.srs ?? [])
     .mockResolvedValueOnce(final.studyDay ?? [])
     .mockResolvedValueOnce(final.lessonProgress ?? [])
-    .mockResolvedValueOnce(final.reviewLogs ?? []);
+    .mockResolvedValueOnce(final.reviewLogs ?? [])
+    .mockResolvedValueOnce(final.readingProgress ?? [])
+    .mockResolvedValueOnce(final.readingDrafts ?? [])
+    .mockResolvedValueOnce(final.roadmapGates ?? []);
 }
 
 const srsFix = (over: Record<string, unknown>) => ({
@@ -232,7 +239,7 @@ describe("POST /api/v1/sync", () => {
       studyDay: [],
       lessonProgress: [{ book: "hsk1", lesson: "l9", modes: {}, knownCount: 0, updatedAt: 100, deletedAt: 1 }],
     }));
-    expect(deleteWhere).toHaveBeenCalledTimes(2);
+    expect(deleteWhere).toHaveBeenCalledTimes(3); // srs + lessonProgress + readingDrafts
   });
 
   it("payload > 9 cards: insert chunk ≤ 8 rows/statement (D1 100 bind params)", async () => {
@@ -272,5 +279,104 @@ describe("POST /api/v1/sync", () => {
     const dayArg = insertChain.values.mock.calls[1][0];
     expect(dayArg).toHaveLength(1);
     expect(dayArg[0]).toMatchObject({ date: "2026-10-24", xp: 30, correct: 8, updatedAt: 200 });
+  });
+
+  it("readingDrafts upsert setWhere theo userId — id trùng draft user khác không đè row nạn nhân", async () => {
+    // P0: PK reading_drafts là id đơn (client sinh). Attacker POST record cùng id
+    // với draft của nạn nhân → không có setWhere thì ON CONFLICT(id) đè title/
+    // textZh/doc của nạn nhân. Assert upsert có setWhere để SQL WHERE user_id = ? chặn.
+    getSession.mockResolvedValue({ user: { id: "attacker" } });
+    queueSelects({ srs: [], studyDay: [], lessonProgress: [] }, { srs: [], studyDay: [], lessonProgress: [] });
+    const res = await POST(req({
+      srs: [],
+      studyDay: [],
+      lessonProgress: [],
+      readingDrafts: [
+        {
+          id: "rd_victim",
+          title: "đè",
+          textZh: "đè",
+          doc: { sentences: [], vocab: [], questions: [] },
+          chars: 0,
+          createdAt: 1,
+          updatedAt: 999,
+          deletedAt: null,
+        },
+      ],
+    }));
+    expect(res.status).toBe(200);
+    const calls = insertChain.onConflictDoUpdate.mock.calls;
+    const conflictArg = calls[calls.length - 1][0];
+    expect(conflictArg.setWhere).toBeDefined();
+    // values mang userId của attacker — SQL setWhere so với chính user đang gọi
+    expect(insertChain.values.mock.calls[0][0][0]).toMatchObject({ userId: "attacker", id: "rd_victim" });
+  });
+});
+
+describe("POST /api/v1/sync — roadmapGates", () => {
+  it("400 khi gateId rỗng hoặc pct ngoài [0,100]", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const res = await POST(req({ roadmapGates: [{ gateId: "", pct: 83, at: 1 }] }));
+    expect(res.status).toBe(400);
+    const res2 = await POST(req({ roadmapGates: [{ gateId: "hsk1", pct: 101, at: 1 }] }));
+    expect(res2.status).toBe(400);
+  });
+
+  it("best-of: push 83 → row; push lại 90 → 90; push 40 → row vẫn 90 (tie/server thấp thua)", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    const lastInsert = () => insertChain.values.mock.calls[insertChain.values.mock.calls.length - 1][0];
+
+    // push 1: server trống → ghi 83
+    queueSelects({ roadmapGates: [] }, { roadmapGates: [] });
+    const res1 = await POST(req({ roadmapGates: [{ gateId: "hsk1", pct: 83, at: 1 }] }));
+    expect(res1.status).toBe(200);
+    expect(lastInsert()).toEqual([
+      expect.objectContaining({ userId: "u1", gateId: "hsk1", pct: 83, at: 1 }),
+    ]);
+
+    // push 2: server có 83 → incoming 90 cao hơn → ghi 90
+    queueSelects({ roadmapGates: [{ userId: "u1", gateId: "hsk1", pct: 83, at: 1 }] }, { roadmapGates: [] });
+    const res2 = await POST(req({ roadmapGates: [{ gateId: "hsk1", pct: 90, at: 2 }] }));
+    expect(res2.status).toBe(200);
+    expect(lastInsert()[0]).toMatchObject({ gateId: "hsk1", pct: 90, at: 2 });
+
+    // push 3: server có 90 → incoming 40 thấp hơn → giữ 90 (at cũ của server)
+    queueSelects({ roadmapGates: [{ userId: "u1", gateId: "hsk1", pct: 90, at: 2 }] }, { roadmapGates: [] });
+    const res3 = await POST(req({ roadmapGates: [{ gateId: "hsk1", pct: 40, at: 3 }] }));
+    expect(res3.status).toBe(200);
+    expect(lastInsert()[0]).toMatchObject({ gateId: "hsk1", pct: 90, at: 2 });
+  });
+
+  it("tie pct → giữ server (at cũ)", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    queueSelects({ roadmapGates: [{ userId: "u1", gateId: "hsk1", pct: 83, at: 1 }] }, { roadmapGates: [] });
+    const res = await POST(req({ roadmapGates: [{ gateId: "hsk1", pct: 83, at: 999 }] }));
+    expect(res.status).toBe(200);
+    expect(insertChain.values.mock.calls[0][0][0]).toMatchObject({ pct: 83, at: 1 });
+  });
+
+  it("dedupe batch cùng gateId — giữ bản pct cao hơn", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    queueSelects({ roadmapGates: [] }, { roadmapGates: [] });
+    await POST(req({
+      roadmapGates: [
+        { gateId: "hsk1", pct: 50, at: 1 },
+        { gateId: "hsk1", pct: 70, at: 2 },
+      ],
+    }));
+    const rows = insertChain.values.mock.calls[0][0];
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ gateId: "hsk1", pct: 70 });
+  });
+
+  it("response chứa roadmapGates server sau merge", async () => {
+    getSession.mockResolvedValue({ user: { id: "u1" } });
+    queueSelects(
+      { roadmapGates: [] },
+      { roadmapGates: [{ userId: "u1", gateId: "hsk1", pct: 90, at: 2 }] }
+    );
+    const res = await POST(req({ roadmapGates: [] }));
+    const json = await res.json();
+    expect(json.roadmapGates).toEqual([{ gateId: "hsk1", pct: 90, at: 2 }]);
   });
 });

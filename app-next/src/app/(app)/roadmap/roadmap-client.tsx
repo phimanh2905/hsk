@@ -62,6 +62,9 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   const lessonTotal = views.filter((v) => v.station.kind === "lesson").length;
   const activeView = views.find((v) => v.state === "active" && v.station.kind === "lesson") ?? null;
   const drawerView = views.find((v) => v.station.id === drawerId) ?? null;
+  // Trạm trước (tab Ôn nhanh): theo thứ tự views — idx-1; đầu chặng → null
+  const drawerIdx = drawerView ? views.findIndex((v) => v.station.id === drawerView.station.id) : -1;
+  const drawerPrev = drawerIdx > 0 ? (views[drawerIdx - 1]?.station ?? null) : null;
   // Tiếp tục học: bài active có lesson → /lesson; không (milestone) → /course/hsk2; hết → không link
   const continueLesson = activeView?.station.lesson;
   const continueHref = activeView
@@ -186,7 +189,13 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
         {level.status !== "upcoming" && level.stations.length > 0 && (
           <SerpentinePath views={views} onOpen={openDrawer} onContinue={onContinue} />
         )}
-        <StationDrawer view={drawerView} level={level} open={drawerId !== null} onClose={closeDrawer} />
+        <StationDrawer
+          view={drawerView}
+          level={level}
+          prevStation={drawerPrev}
+          open={drawerId !== null}
+          onClose={closeDrawer}
+        />
       </main>
     </>
   );
