@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getVocab } from "@/lib/content/vocab";
-import { generateExam } from "@/lib/exam/generate";
-import ExamRunner from "./exam-runner";
+import ExamRemote from "./exam-remote";
 
 /* W6.3 — /certificate-test/[level]: đề thi demo. Hiện chỉ HSK1 (từ vocab demo
-   HSK1 — gộp tất cả pages của book), level khác → notFound. */
+   HSK1 — gộp tất cả pages của book), level khác → 404 (dynamicParams=false).
+   SSG: exam build client-side bằng generateExam (pure, client-safe) trên data
+   fetch từ /api/v1/content/vocab — page không đọc D1 lúc build. */
+export const dynamicParams = false;
+
+export function generateStaticParams(): { level: string }[] {
+  return [{ level: "hsk1" }];
+}
 
 export async function generateMetadata({
   params,
@@ -25,10 +29,5 @@ export default async function CertificateExamPage({
   params: Promise<{ level: string }>;
 }) {
   const { level } = await params;
-  if (level !== "hsk1") notFound();
-
-  const data = await getVocab();
-  const words = Object.values(data["hsk1"] ?? {}).flatMap((l) => l.words);
-  const exam = generateExam(words, "hsk1");
-  return <ExamRunner exam={exam} />;
+  return <ExamRemote level={level} />;
 }
