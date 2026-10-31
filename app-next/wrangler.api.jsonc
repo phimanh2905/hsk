@@ -1,0 +1,16 @@
+{
+  // Worker API thuần — dev/debug bằng `pnpm wrangler dev -c wrangler.api.jsonc`.
+  // KHÔNG dùng khi deploy prod (wrangler.jsonc mới là config deploy).
+  "name": "byehsk-api-dev",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hsk-dev",
+      "database_id": "51aed180-9bd9-4933-b9ef-119036063f7c",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}
