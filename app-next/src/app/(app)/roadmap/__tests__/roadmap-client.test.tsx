@@ -135,6 +135,46 @@ describe("RoadmapClient", () => {
     expect(screen.queryByTestId("journey-start")).toBeNull();
   });
 
+  it("Task 6 — placement suggested hsk-2: cờ journey-start ở banner hsk-2, không ở pinyin; badge bỏ qua ở pinyin + hsk-1", () => {
+    localStorage.setItem(
+      "bye.onboarding.v1",
+      JSON.stringify({
+        goal: "hsk5",
+        minutes: 15,
+        placement: { suggestedStage: "hsk2", blocks: { hsk1: { correct: 3, total: 3 } }, seed: 1, at: Date.now() },
+        at: Date.now(),
+      }),
+    );
+    // Pinyin banner: KHÔNG cờ, NHƯNG có badge bỏ qua (pinyin < suggested hsk-2)
+    renderClient("pinyin");
+    expect(screen.queryByTestId("journey-start")).toBeNull();
+    // RTL không auto-cleanup giữa các renderClient trong cùng test → dùng getAllByTestId
+    expect(screen.getAllByTestId("skippable-badge")).toHaveLength(1);
+    expect(screen.getAllByTestId("skippable-badge")[0].textContent).toContain("Bỏ qua được (theo test)");
+    // hsk-1 banner: badge bỏ qua hiện (hsk-1 < hsk-2)
+    renderClient("hsk-1");
+    expect(screen.getAllByTestId("skippable-badge")).toHaveLength(2);
+    // Banner hsk-2: CÓ cờ (placement trùng trạm — badge không hiện ở chính suggested)
+    renderClient("hsk-2");
+    expect(screen.getByTestId("journey-start")).toBeTruthy();
+  });
+
+  it("Task 6 — gate hsk-1 exempt khi có suggestedStage hsk2: 'Cổng đầu vào: Đã miễn'", () => {
+    localStorage.setItem(
+      "bye.onboarding.v1",
+      JSON.stringify({
+        goal: "hsk5",
+        minutes: 15,
+        placement: { suggestedStage: "hsk2", blocks: { hsk1: { correct: 3, total: 3 } }, seed: 1, at: Date.now() },
+        at: Date.now(),
+      }),
+    );
+    renderClient("hsk-1");
+    expect(screen.getByTestId("entry-gate-status").textContent).toContain("Đã miễn");
+    // F2: exempt do placement (suggested hsk2 ≥ hsk1) → nhãn nói rõ nguồn gốc, không "Pinyin xong"
+    expect(screen.getByTestId("entry-gate-status").textContent).toContain("Đã miễn (theo test trình độ) ✅");
+  });
+
   it("Task 9 — banner hsk-1 gate locked: 'Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)'", () => {
     renderClient("hsk-1");
     expect(screen.getByText("Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)")).toBeTruthy();

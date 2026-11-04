@@ -15,7 +15,7 @@ import { StationQuiz } from "@/components/roadmap/station-quiz";
 import { EntryGate } from "@/components/roadmap/entry-gate";
 import { useStationVocab, type LessonRef } from "@/components/roadmap/use-station-vocab";
 import { progressStore } from "@/lib/store/progress-store";
-import { gateStatus, type GateStatus, type StationView } from "@/lib/roadmap-progress";
+import { gateStatus, suggestedStartStage, type GateStatus, type StationView } from "@/lib/roadmap-progress";
 import { levelPool, sampleWarmupQuestions, type QuizQuestion, type StationPool } from "@/lib/station-quiz";
 import type { Station, RoadmapLevel } from "@/content/roadmap-stations";
 
@@ -94,7 +94,7 @@ export function StationDrawer({
   useEffect(() => {
     const sync = () => {
       try {
-        setGate(gateStatus(level.id, progressStore, progressStore.getRoadmapDone().length));
+        setGate(gateStatus(level.id, progressStore, progressStore.getRoadmapDone().length, suggestedStartStage(progressStore.getOnboarding())));
       } catch {
         setGate(level.id === "hsk-1" ? "locked" : "open");
       }
@@ -217,7 +217,7 @@ export function StationDrawer({
 
   function refreshGate(): void {
     try {
-      setGate(gateStatus(level.id, progressStore, progressStore.getRoadmapDone().length));
+      setGate(gateStatus(level.id, progressStore, progressStore.getRoadmapDone().length, suggestedStartStage(progressStore.getOnboarding())));
     } catch {
       /* giữ trạng thái cũ */
     }

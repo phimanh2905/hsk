@@ -85,6 +85,21 @@ export type StationProgress = { pct: number; stars: 0 | 1 | 2 | 3 };
    key bye.roadmap.gates.v1: Record<gateId, { pct, at }> */
 export type RoadmapGateRec = { pct: number; at: number };
 
+/* Onboarding lần đầu (spec 2026-11-04): mục tiêu học + phút/ngày + kết quả
+   placement ladder, key bye.onboarding.v1 */
+export type GoalLevel = "hsk1" | "hsk2" | "hsk3" | "hsk4" | "hsk5";
+export type StageId = "pinyin" | "hsk1" | "hsk2" | "hsk3" | "hsk4" | "hsk5";
+export type PlacementBlocks = Partial<
+  Record<"hsk1" | "hsk2" | "hsk3" | "hsk4" | "hsk5", { correct: number; total: 3 }>
+>;
+export type OnboardingState = {
+  goal: GoalLevel;
+  minutes: 10 | 15 | 30;
+  skipped?: 1; // đã "Bỏ qua" — hero không hỏi lại; không có ý nghĩa học tập
+  placement?: { suggestedStage: StageId; blocks: PlacementBlocks; seed: number; at: number };
+  at: number;
+};
+
 export interface ProgressStoreApi {
   getXp(): number;
   getToday(): number;
@@ -117,6 +132,8 @@ export interface ProgressStoreApi {
   getRoadmapGate(id: string): RoadmapGateRec | null;
   setRoadmapGate(id: string, pct: number): void;
   listRoadmapGates(): Record<string, RoadmapGateRec>;
+  getOnboarding(): OnboardingState | null;
+  setOnboarding(s: OnboardingState): void;
   migrateLegacySrs(): void;
   getStreak(): number;
   getHeat(): Record<string, number> | null;
@@ -223,6 +240,9 @@ const ROADMAP_STATIONS_KEY = "bye.roadmap.stations.v1";
 
 /* Cổng đầu vào HSK (Roadmap Journey v2): Record<gateId, { pct, at }> — best-of theo pct */
 const ROADMAP_GATES_KEY = "bye.roadmap.gates.v1";
+
+/* Onboarding lần đầu (spec 2026-11-04) — goal/minutes/placement */
+const ONBOARDING_KEY = "bye.onboarding.v1";
 
 function readNumArray(key: string): number[] {
   const arr = readJSON<unknown>(key, []);
@@ -647,6 +667,28 @@ export class ProgressStore implements ProgressStoreApi {
       return out;
     } catch {
       return {};
+    }
+  }
+
+  /* ---------- onboarding lần đầu (bye.onboarding.v1 — spec 2026-11-04) ---------- */
+
+  getOnboarding(): OnboardingState | null {
+    try {
+      const v = readJSON<OnboardingState | null>(ONBOARDING_KEY, null);
+      if (!v || typeof v !== "object") return null;
+      if (typeof v.goal !== "string" || typeof v.minutes !== "number" || typeof v.at !== "number") return null;
+      return v;
+    } catch {
+      return null;
+    }
+  }
+
+  setOnboarding(s: OnboardingState): void {
+    try {
+      writeJSON(ONBOARDING_KEY, s);
+      window.dispatchEvent(new CustomEvent(PROGRESS_EVENT));
+    } catch {
+      /* silent */
     }
   }
 

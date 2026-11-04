@@ -10,8 +10,8 @@ import { MilestoneBanner } from "@/components/roadmap/milestone-banner";
 import { SerpentinePath } from "@/components/roadmap/serpentine-path";
 import { StationDrawer } from "@/components/roadmap/station-drawer";
 import { getRoadmapLevel, type LevelId, type RoadmapLevel } from "@/content/roadmap-stations";
-import { bannerSummary, gateStatus, overallRoadmapPct, useRoadmapProgress, PINYIN_SESSIONS, type GateStatus } from "@/lib/roadmap-progress";
-import { progressStore } from "@/lib/store/progress-store";
+import { bannerSummary, gateStatus, overallRoadmapPct, roadmapStageIndex, ROADMAP_STAGES, suggestedStartStage, useRoadmapProgress, PINYIN_SESSIONS, type GateStatus } from "@/lib/roadmap-progress";
+import { progressStore, type StageId } from "@/lib/store/progress-store";
 import { ReviewCard } from "@/components/roadmap/review-card";
 import { useToastSafe } from "@/components/shell/toast-provider";
 
@@ -49,12 +49,21 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
   useEffect(() => {
     if (!mounted) return;
     try {
-      setGate(gateStatus(level.id, progressStore, pinyinDone));
+      setGate(gateStatus(level.id, progressStore, pinyinDone, suggestedStartStage(progressStore.getOnboarding())));
     } catch {
       setGate(null);
     }
   }, [mounted, level.id, pinyinDone]);
   const pinyinPct = Math.round((pinyinDone / PINYIN_SESSIONS) * 100);
+  // Task 6: stage bắt đầu gợi ý từ placement (mount-gate, không đọc localStorage lúc render SSR)
+  const suggested = mounted ? suggestedStartStage(progressStore.getOnboarding()) : null;
+  // Cờ "Bắt đầu ở đây": ưu tiên placement, không có thì fallback trạm đầu (overall=0).
+  // So sánh qua index: level.id dùng gạch nối ("hsk-2") còn StageId là "hsk2".
+  const flagStageIndex = suggested != null ? roadmapStageIndex(suggested) : (overall === 0 ? roadmapStageIndex("pinyin") : -1);
+  const levelStageId = (id: string): StageId | null => {
+    const s = id.replace("-", "");
+    return (ROADMAP_STAGES as readonly string[]).includes(s) ? (s as StageId) : null;
+  };
 
   const summary = bannerSummary(level, views);
   const headerPct = mounted ? overall : 0;
@@ -123,12 +132,17 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
             currentLabel={
               pinyinDone === 0 ? (
                 <span className="flex flex-col gap-0.5">
-                  {mounted && overall === 0 && (
+                  {mounted && flagStageIndex === roadmapStageIndex("pinyin") && (
                     <span
                       data-testid="journey-start"
                       className="text-[11px] font-extrabold text-learning-streak"
                     >
                       🚩 Bắt đầu ở đây
+                    </span>
+                  )}
+                  {mounted && suggested != null && roadmapStageIndex("pinyin") < roadmapStageIndex(suggested) && (
+                    <span data-testid="skippable-badge" className="text-[11px] font-bold text-text-secondary">
+                      Bỏ qua được (theo test)
                     </span>
                   )}
                   Chưa bắt đầu · mở lộ trình Pinyin
@@ -157,14 +171,32 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
                 ) : (
                   "Chưa bắt đầu"
                 )}
+                {mounted && (() => {
+                  const stage = levelStageId(level.id);
+                  return stage != null && flagStageIndex === roadmapStageIndex(stage) && (
+                    <span data-testid="journey-start" className="text-[11px] font-extrabold text-learning-streak">
+                      🚩 Bắt đầu ở đây
+                    </span>
+                  );
+                })()}
+                {mounted && suggested != null && (() => {
+                  const stage = levelStageId(level.id);
+                  return stage != null && roadmapStageIndex(stage) < roadmapStageIndex(suggested) && (
+                    <span data-testid="skippable-badge" className="text-[11px] font-bold text-text-secondary">
+                      Bỏ qua được (theo test)
+                    </span>
+                  );
+                })()}
                 {level.id === "hsk-1" && gate && (
                   <span data-testid="entry-gate-status">
                     Cổng đầu vào:{" "}
                     {gate === "locked"
                       ? "Kiểm tra nghe pinyin (trong trạm 1)"
-                      : gate === "open"
-                        ? "Đã qua ✅"
-                        : "Đã miễn (Pinyin xong) ✅"}
+                        : gate === "open"
+                          ? "Đã qua ✅"
+                          : suggested != null && roadmapStageIndex(suggested) >= roadmapStageIndex("hsk1")
+                            ? "Đã miễn (theo test trình độ) ✅"
+                            : "Đã miễn (Pinyin xong) ✅"}
                   </span>
                 )}
               </span>
