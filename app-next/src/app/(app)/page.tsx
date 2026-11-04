@@ -1,6 +1,7 @@
 import Link from "next/link";
 import GlanceGreeting from "@/components/home/glance-greeting";
-import HeroAction from "@/components/home/hero-action";
+import HomeHero from "@/components/home/home-hero";
+import LandingIntro from "@/components/home/landing-intro";
 import HabitLoop from "@/components/home/habit-loop";
 import ProgressMatrix from "@/components/home/progress-matrix";
 
@@ -15,7 +16,8 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-4">
       <GlanceGreeting />
-      <HeroAction />
+      <HomeHero />
+      <LandingIntro />
       <HabitLoop />
       <ProgressMatrix />
       <footer className="py-4 text-center text-xs text-text-secondary">
