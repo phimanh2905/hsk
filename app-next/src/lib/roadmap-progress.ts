@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { roadmapLevels, type RoadmapLevel, type Station } from "@/content/roadmap-stations";
-import { progressStore, type StationProgress } from "@/lib/store/progress-store";
+import { progressStore, type StationProgress, type StageId } from "@/lib/store/progress-store";
 
 export type StationState = "done" | "active" | "locked";
 
@@ -17,6 +17,20 @@ export type StationView = {
 };
 
 export const PASS_PCT = 80;
+
+/* Task 6 (onboarding placement): thứ tự stage để so sánh placement vs trạm. */
+export const ROADMAP_STAGES: StageId[] = ["pinyin", "hsk1", "hsk2", "hsk3", "hsk4", "hsk5"];
+
+export function roadmapStageIndex(id: StageId): number {
+  return ROADMAP_STAGES.indexOf(id);
+}
+
+/** Stage bắt đầu gợi ý — chỉ khi user CÓ kết quả placement (skip-only không tính). */
+export function suggestedStartStage(
+  onboarding: { placement?: { suggestedStage: StageId } } | null,
+): StageId | null {
+  return onboarding?.placement?.suggestedStage ?? null;
+}
 
 /** Lộ trình Pinyin có 8 buổi (/roadmap/pinyin) — nền tảng cho level hsk-1. */
 export const PINYIN_SESSIONS = 8;
@@ -96,9 +110,16 @@ export type GateStore = {
   getRoadmapGate(id: string): { pct: number; at: number } | null;
 };
 
-/** Chỉ hsk-1 có gate (nền tảng pinyin). pinyinDoneCount ≥ 8 → exempt thay gate. */
-export function gateStatus(levelId: string, store: GateStore, pinyinDoneCount: number): GateStatus {
+/** Chỉ hsk-1 có gate (nền tảng pinyin). pinyinDoneCount ≥ 8 → exempt thay gate.
+    suggestedStage (placement): ≥ hsk1 → exempt luôn (user đã có trình độ nền). */
+export function gateStatus(
+  levelId: string,
+  store: GateStore,
+  pinyinDoneCount: number,
+  suggestedStage?: StageId | null,
+): GateStatus {
   if (levelId !== "hsk-1") return "open";
+  if (suggestedStage != null && roadmapStageIndex(suggestedStage) >= roadmapStageIndex("hsk1")) return "exempt";
   if (pinyinDoneCount >= PINYIN_SESSIONS) return "exempt";
   const gate = store.getRoadmapGate(GATE_STORE_ID);
   if (gate != null && gate.pct >= PASS_PCT) return "open";
