@@ -34,7 +34,10 @@ Bước 2 (offer): [Làm test trình độ ~3 phút] hoặc [Bỏ qua — bắt 
 Bước 3 (test → result): ladder test → "Bạn nên bắt đầu từ trạm X" → [Vào Journey]
 ```
 
-- Nút "Bỏ qua" luôn hiển thị mọi bước; cả flow đều optional — landing vẫn xem tự do.
+- Flow luôn thoát được ở mọi bước ("optional" — landing vẫn xem tự do): bước goal/offer có
+  nút Bỏ qua riêng; trong lúc test có nút X quay lại bước offer (nơi có Bỏ qua); màn kết quả
+  dẫn thẳng Journey. (Chỉnh 2026-11-04 sau review: bản trước ghi "nút Bỏ qua hiển thị mọi
+  bước" — thực tế chỉ cần luôn thoát được, không nhất thiết mỗi bước có nút riêng.)
 - Bước 2 chọn "Bỏ qua" → ghi goal, không ghi placement → `suggestedStage` = "pinyin".
 - Bước 3 chọn test → chạy ladder → ghi goal + placement result → nút dẫn `/roadmap`.
 - Đã có mục tiêu → hero như cũ ("Tiếp tục bài học" / progress hiện tại).
@@ -57,7 +60,9 @@ Bước 3 (test → result): ladder test → "Bạn nên bắt đầu từ trạ
 
 - Stage có index thấp hơn `suggestedStage` (trong pinyin → hsk5) hiển thị badge
   "Bỏ qua được (theo test)" nhưng **vẫn mở tự do** — không khóa, không ai bị cấm học lại.
-- Gate pinyin của hsk-1: nếu `suggestedStage ≥ hsk1` → `exempt` (ghi entry gates như đã đậu).
+- Gate pinyin của hsk-1: nếu `suggestedStage ≥ hsk1` → `exempt` — exempt là trạng thái
+  **computed** qua `gateStatus()` (UI đọc trực tiếp), KHÔNG ghi vào `bye.roadmap.gates.v1`.
+  (Chỉnh 2026-11-04 sau review — YAGNI: không có consumer nào đọc listRoadmapGates cho case này.)
 - Cờ "🚩 Bắt đầu ở đây" rời khỏi Pinyin, gắn vào stage `suggestedStage`.
 - Phân biệt 2 trường hợp:
   - **Có onboarding state nhưng bỏ qua test** → `suggestedStage = "pinyin"` (đã ghi rõ khi chốt

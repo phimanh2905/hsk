@@ -12,14 +12,26 @@ export const PLACEMENT_PASS = 2;
 export type PlacementQuestion = { kind: "meaning" | "cloze"; prompt: string; options: string[]; answer: string };
 export type PlacementBlock = { level: PlacementStage; questions: PlacementQuestion[] };
 
-/* Distractor deterministic: các từ kế tiếp trong danh sách, khác từ gốc (như exam/generate.ts optionSet). */
-function distractors(words: VocabWord[], idx: number, value: (w: VocabWord) => string): string[] {
-  const n = words.length;
+/* Entry kèm lesson để ưu tiên distractor cùng bài (spec §9: cùng lesson trước, thiếu mới lấy khác lesson). */
+type LessonEntry = { w: VocabWord; lesson: string };
+
+/* Distractor deterministic: ưu tiên các từ cùng lesson (theo thứ tự ổn định), thiếu thì duyệt toàn cục;
+   bỏ qua chính từ gốc, value trùng đáp án hoặc trùng nhau (như exam/generate.ts optionSet). */
+function distractors(entries: LessonEntry[], idx: number, value: (w: VocabWord) => string): string[] {
+  const target = entries[idx];
+  const own = value(target.w);
   const out: string[] = [];
-  for (let k = 1; out.length < 3 && k < n; k++) {
-    const v = value(words[(idx + k) % n]);
-    if (v !== value(words[idx]) && !out.includes(v)) out.push(v);
-  }
+  const pick = (pool: LessonEntry[]) => {
+    for (let k = 0; out.length < 3 && k < pool.length; k++) {
+      const e = pool[k];
+      if (e === target) continue;
+      const v = value(e.w);
+      if (v === own || out.includes(v)) continue;
+      out.push(v);
+    }
+  };
+  pick(entries.filter((e) => e.lesson === target.lesson));
+  pick(entries);
   return out;
 }
 
@@ -29,17 +41,17 @@ function rotate(arr: string[], shift: number): string[] {
   return arr.map((_, i) => arr[(i - (shift % n) + n) % n]);
 }
 
-function meaningQ(words: VocabWord[], idx: number): PlacementQuestion {
-  const w = words[idx];
-  const options = rotate([w.meaning, ...distractors(words, idx, (x) => x.meaning)], idx);
+function meaningQ(entries: LessonEntry[], idx: number): PlacementQuestion {
+  const w = entries[idx].w;
+  const options = rotate([w.meaning, ...distractors(entries, idx, (x) => x.meaning)], idx);
   return { kind: "meaning", prompt: `Từ ${w.hanzi} (${w.pinyin}) nghĩa là gì?`, options, answer: w.meaning };
 }
 
-function clozeQ(words: VocabWord[], idx: number): PlacementQuestion | null {
-  const w = words[idx];
+function clozeQ(entries: LessonEntry[], idx: number): PlacementQuestion | null {
+  const w = entries[idx].w;
   const pos = w.example.zh.indexOf(w.hanzi);
   if (pos < 0 || w.hanzi.length === 0) return null;
-  const options = rotate([w.hanzi, ...distractors(words, idx, (x) => x.hanzi)], idx);
+  const options = rotate([w.hanzi, ...distractors(entries, idx, (x) => x.hanzi)], idx);
   return {
     kind: "cloze",
     prompt: w.example.zh.slice(0, pos) + "__" + w.example.zh.slice(pos + w.hanzi.length),
@@ -48,9 +60,9 @@ function clozeQ(words: VocabWord[], idx: number): PlacementQuestion | null {
   };
 }
 
-function flatten(data: VocabData, level: PlacementStage): VocabWord[] {
+function flatten(data: VocabData, level: PlacementStage): LessonEntry[] {
   const lessons: Record<string, VocabLesson> = data[level] ?? {};
-  return Object.values(lessons).flatMap((l) => l.words);
+  return Object.entries(lessons).flatMap(([lesson, l]) => l.words.map((w) => ({ w, lesson })));
 }
 
 export function generatePlacementBlocks(data: VocabData, seed: number): PlacementBlock[] {

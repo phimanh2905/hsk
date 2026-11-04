@@ -145,12 +145,15 @@ describe("RoadmapClient", () => {
         at: Date.now(),
       }),
     );
-    // Pinyin banner: KHÔNG cờ
+    // Pinyin banner: KHÔNG cờ, NHƯNG có badge bỏ qua (pinyin < suggested hsk-2)
     renderClient("pinyin");
     expect(screen.queryByTestId("journey-start")).toBeNull();
+    // RTL không auto-cleanup giữa các renderClient trong cùng test → dùng getAllByTestId
+    expect(screen.getAllByTestId("skippable-badge")).toHaveLength(1);
+    expect(screen.getAllByTestId("skippable-badge")[0].textContent).toContain("Bỏ qua được (theo test)");
     // hsk-1 banner: badge bỏ qua hiện (hsk-1 < hsk-2)
     renderClient("hsk-1");
-    expect(screen.getByTestId("skippable-badge")).toBeTruthy();
+    expect(screen.getAllByTestId("skippable-badge")).toHaveLength(2);
     // Banner hsk-2: CÓ cờ (placement trùng trạm — badge không hiện ở chính suggested)
     renderClient("hsk-2");
     expect(screen.getByTestId("journey-start")).toBeTruthy();
@@ -168,6 +171,8 @@ describe("RoadmapClient", () => {
     );
     renderClient("hsk-1");
     expect(screen.getByTestId("entry-gate-status").textContent).toContain("Đã miễn");
+    // F2: exempt do placement (suggested hsk2 ≥ hsk1) → nhãn nói rõ nguồn gốc, không "Pinyin xong"
+    expect(screen.getByTestId("entry-gate-status").textContent).toContain("Đã miễn (theo test trình độ) ✅");
   });
 
   it("Task 9 — banner hsk-1 gate locked: 'Cổng đầu vào: Kiểm tra nghe pinyin (trong trạm 1)'", () => {

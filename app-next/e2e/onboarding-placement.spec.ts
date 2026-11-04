@@ -18,6 +18,9 @@ async function answerPlacement(page: Page, correct: boolean, last = false) {
   const progress = page.getByTestId("placement-progress");
   let n = 0;
   if (!last) {
+    // Chờ progress render "Câu N/15" TRƯỚC khi đọc số, tránh race Number(...) = 0
+    // (P2.11: textContent() có thể chạy trước khi câu hiện tại render xong).
+    await expect(progress).toHaveText(/Câu \d+\/15/);
     const before = await progress.textContent();
     n = Number(before?.match(/Câu (\d+)\/15/)?.[1] ?? 0);
   }
@@ -61,6 +64,14 @@ test.describe("Onboarding + placement", () => {
     // Badge bỏ qua ở trạm thấp hơn (banner hsk-1; pinyin banner không có badge)
     await page.goto(roadmapUrl("hsk-1"));
     await expect(page.getByTestId("skippable-badge")).toBeVisible();
+
+    // Absence checks (P2.11): cờ đã chuyển sang hsk-5 sau khi pass hết
+    await page.goto(roadmapUrl("pinyin"));
+    await expect(page.getByTestId("journey-start")).toHaveCount(0); // không còn journey ở pinyin
+    await page.goto(roadmapUrl("hsk-2"));
+    await expect(page.getByTestId("skippable-badge")).toHaveCount(0); // hsk-2 == suggested → không badge
+    await page.goto(roadmapUrl("hsk-5"));
+    await expect(page.getByTestId("skippable-badge")).toHaveCount(0); // trạm suggested / trên suggested không có badge
   });
 
   test("skip-only: goal → bỏ qua test → cờ vẫn ở pinyin", async ({ page }) => {

@@ -140,6 +140,11 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
                       🚩 Bắt đầu ở đây
                     </span>
                   )}
+                  {mounted && suggested != null && roadmapStageIndex("pinyin") < roadmapStageIndex(suggested) && (
+                    <span data-testid="skippable-badge" className="text-[11px] font-bold text-text-secondary">
+                      Bỏ qua được (theo test)
+                    </span>
+                  )}
                   Chưa bắt đầu · mở lộ trình Pinyin
                 </span>
               ) : `Đã hoàn thành ${pinyinDone}/${PINYIN_SESSIONS} buổi · ôn tập giữ streak`
@@ -187,9 +192,11 @@ export default function RoadmapClient({ levels }: { levels: RoadmapLevel[] }) {
                     Cổng đầu vào:{" "}
                     {gate === "locked"
                       ? "Kiểm tra nghe pinyin (trong trạm 1)"
-                      : gate === "open"
-                        ? "Đã qua ✅"
-                        : "Đã miễn (Pinyin xong) ✅"}
+                        : gate === "open"
+                          ? "Đã qua ✅"
+                          : suggested != null && roadmapStageIndex(suggested) >= roadmapStageIndex("hsk1")
+                            ? "Đã miễn (theo test trình độ) ✅"
+                            : "Đã miễn (Pinyin xong) ✅"}
                   </span>
                 )}
               </span>
