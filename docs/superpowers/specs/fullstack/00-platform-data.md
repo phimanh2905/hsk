@@ -103,6 +103,21 @@ reading_docs(id TEXT PK, user_id TEXT NOT NULL, title TEXT, text TEXT NOT NULL,
       audio_url TEXT, sentences_json TEXT,       -- [{zh, pinyin, vi, t0, t1}] karaoke
       questions_json TEXT, created_at INTEGER NOT NULL)          -- [SP5]
 
+-- Reading library v1 (2026-10-30, PR #25): nội dung D1 + tiến độ + bài AI của user.
+content_readings(id TEXT PK, level TEXT NOT NULL, ord INTEGER NOT NULL, title TEXT NOT NULL,
+      title_vi TEXT NOT NULL, sentences TEXT NOT NULL, -- JSON [{zh, py, vi, audio, durSec}]
+      vocab JSON, questions JSON, audio_dir TEXT NOT NULL, chars INTEGER NOT NULL,
+      duration_sec INTEGER NOT NULL, index content_readings_level_idx ON (level))
+reading_progress(user_id TEXT, reading_id TEXT, correct INTEGER, total INTEGER, attempts INTEGER,
+      completed_at TEXT, updated_at INTEGER, PK(user_id, reading_id),
+      index reading_progress_user_idx ON (user_id))             -- counter max, không tombstone
+reading_drafts(id TEXT PK, user_id TEXT REFERENCES users(id) ON DELETE CASCADE, title TEXT,
+      text_zh TEXT, doc JSON, chars INTEGER, created_at INTEGER, updated_at INTEGER,
+      deleted_at INTEGER, index reading_drafts_user_idx ON (user_id))  -- tombstone 90 ngày
+reading_usage(user_id TEXT, day TEXT, count INTEGER, PK(user_id, day))  -- quota generate/ngày
+roadmap_gates(user_id TEXT REFERENCES users(id) ON DELETE CASCADE, gate_id TEXT,
+      pct REAL, at INTEGER, PK(user_id, gate_id))              -- best-of theo pct, không tombstone
+
 shadowing_progress(user_id TEXT, video_id TEXT NOT NULL, percent INTEGER NOT NULL DEFAULT 0,
       plays INTEGER NOT NULL DEFAULT 0, last_at INTEGER NOT NULL,
       PRIMARY KEY(user_id, video_id))            -- [UPG-3, optional]
@@ -170,10 +185,11 @@ KV namespace KV_CACHE:
 3. **Pull:** sau login → `GET /api/v1/users/snapshot`; merge theo bảng §3.5; chỉ sau merge mới flush outbox.
 4. **Offline:** app dùng được 100% nhờ localStorage; hàng đợi giữ tới khi online (giới hạn 500 op, op cũ nhất gộp theo key).
 5. **Xung đột:** XP/page_dones/decks/battle = max/union (commutative, an toàn); srs = LWW; xoá deck = tombstone thắng nếu muộn hơn update. `shadowing_progress` (UPG-3, optional) sync qua outbox cùng `POST /users/sync`: merge = max(percent), sum(plays), max(last_at).
+   - **Domains (2026-10-30, map vào `sync-merge.ts` / `hybrid-store.ts`):** `srs` (LWW), `studyDay` (LWW), `lessonProgress` (LWW), `reviewLogs` (LWW), `readingProgress` (counter max `correct`/`attempts`, không `updatedAt` trên rec — giữ trên row), `readingDrafts` (LWW + tombstone 90 ngày), `roadmapGates` (best-of theo `pct`, tie giữ server).
 
 ## 6. API conventions
 
-- Base `/api/v1`, cùng domain (Route Handlers Next, chạy trên Worker qua OpenNext).
+- Base `/api/v1`. **Static-first (2026-11, W1):** route handlers là thin shim → logic ở `src/server/api/*.ts`; Worker entry `src/worker/router.ts` (`buildRouter`) mount 21 routes cho prod static (`out/` + `/api/*` qua `run_worker_first`).
 - Auth: session cookie (better-auth); route public không cần. CSRF theo better-auth.
 - Success `200 {data: ...}`; lỗi `{error: {code, message}}` + HTTP status đúng: 401 `UNAUTHENTICATED`, 403 `FORBIDDEN`, 404 `NOT_FOUND`, 422 `VALIDATION` (zod), 429 `RATE_LIMITED`, 402 `PAYMENT_REQUIRED`, 500 `INTERNAL`.
 - Rate limit mềm qua KV `rl:*` theo class: `write` (60/phút/IP), `ai` (20/ngày/user, entitlement tăng), `tts` (200/ngày/user).
@@ -217,6 +233,10 @@ User & sync (SP2):
 
 Công khai:
   GET  /books                        → metadata 7 sách (wrap của content module)
+  GET  /content/readings             → danh sách bài đọc theo level
+  GET  /content/vocab-lesson?book=&page= → từ vựng bài học (SSG lesson, client-fetch)
+  GET  /content/shadowing?video=|?playlist= → thư viện + chi tiết shadowing
+  GET  /content/grammar · /content/vocab · /content/vocab-meta
   GET  /leaderboard?tab=xp|battle    → qua KV snapshot §7
   POST /feedback
   POST /error-reports                 [BACKLOG]
@@ -226,6 +246,10 @@ Thanh toán (SP4):
   POST /payments/momo/create · POST /payments/momo/webhook
   POST /payments/stripe/checkout · POST /payments/stripe/webhook
   GET  /entitlements/me · POST /codes/redeem
+
+Reading AI (2026-10-30):
+  GET  /reading/drafts · POST /reading/drafts · PUT/DELETE /reading/drafts/:id
+  GET  /reading/quota · POST /reading/generate   → LLM helper + draft validation, quota atomic claim/ngày
 
 AI & TTS (SP5):
   POST /ai/chat                      → SSE stream (widget A5, Format bằng AI G7)
